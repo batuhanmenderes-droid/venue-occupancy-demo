@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261104b"></script>
+<script src="i18n.js?v=20261104c"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261104b">
+<link rel="stylesheet" href="theme.css?v=20261104c">
 </head>
 <body>
 <main>
@@ -127,8 +127,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261104b"></script>
-<script src="venue-state.js?v=20261104b"></script>
+<script src="levels.js?v=20261104c"></script>
+<script src="venue-state.js?v=20261104c"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -680,12 +680,21 @@ function statusChip(v) {
   return '';
 }
 
+// Status dot: closed grey, demo data yellow, active camera green.
+function statusLine(v, live) {
+  const [cls, text] = v.status?.state === 'closed' ? ['closed', t('closed')]
+    : v.simulated ? ['demo', t('demoData')]
+    : live ? ['live', t('cameraActive')]
+    : v.coming_soon ? ['soon', t('soon')] : ['', t('noData')];
+  return `<span class="status ${cls}"><span class="dot"></span>${text}</span>`;
+}
+
 function card(v) {
   const live = !!v.data || v.simulated;
   const media = v.latest && v.latest.file
     ? `<img src="${v.latest.file}" alt="${t('latestFrameAlt', v.name)}" loading="lazy">`
     : v.simulated
-      ? `<div class="none demo">${v.logo ? `<img class="biglogo" src="${v.logo}" alt="">` : ''}<span>${t('demoData')}</span></div>`
+      ? `<div class="none demo"><span>${t('demoData')}</span></div>`
       : `<div class="none">${live ? t('noFramesToday') : v.coming_soon ? t('soon') : t('noCamera')}</div>`;
   const stat = v.latest
     ? `<b>${v.latest.people}</b><span>${t('people')} · ${hm(v.latest.timestamp)}</span>`
@@ -696,7 +705,7 @@ function card(v) {
     <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}</div>
     <div class="body">
       <div class="top"><span class="name">${v.name}</span><span class="type">${typeName(v.type)}</span></div>
-      <span class="status ${live ? 'live' : v.coming_soon ? 'soon' : ''}"><span class="dot"></span>${v.simulated ? t('demoData') : live ? t('cameraActive') : v.coming_soon ? t('soon') : t('noData')}</span>
+      ${statusLine(v, live)}
       <div class="stat">${stat}<span class="arrow">›</span></div>
       ${v.rising ? `<div class="rising">${RISE_ICON}${t('rising')}</div>` : ''}
       <div class="updated"><span title="${v.updatedAt ? v.updatedAt.replace('T', ' ') : ''}">${live ? t('lastUpdate', ago(v.updatedAt)) : v.coming_soon ? t('soonCamera') : t('noUpdates')}</span><button class="gear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button></div>
