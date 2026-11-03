@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261103f"></script>
+<script src="i18n.js?v=20261103g"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   .grid2 { grid-template-columns: 1fr; }
 }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261103f">
+<link rel="stylesheet" href="theme.css?v=20261103g">
 </head>
 <body>
 <main class="venuepage">
@@ -120,7 +120,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
       <div class="card frame">
         <h2 data-i18n="selectedFrame"></h2>
         <p class="hint" id="frameTime">&nbsp;</p>
-        <div class="frameimg"><img id="frameImg" alt=""><span class="privacy" data-i18n="facesBlurred"></span></div>
+        <div class="frameimg"><img id="frameImg" alt=""></div>
         <div class="row"><div><span class="count" id="frameCount"></span> <span style="color:var(--ink-2)" data-i18n="people"></span></div></div>
         <div class="note" id="frameNote"></div>
       </div>
@@ -129,9 +129,15 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 
   <section id="tab-calendar" role="tabpanel" hidden>
     <div class="card">
-      <h2 data-i18n="calendarTitle"></h2>
-      <p class="hint" data-i18n="calendarHint"></p>
-      <div class="calendar" id="calendar"></div>
+      <h2 data-i18n="programTitle"></h2>
+      <p class="hint" data-i18n="programHint"></p>
+      <div class="program" id="program"></div>
+    </div>
+    <div class="card progchart">
+      <h2 data-i18n="programChartTitle"></h2>
+      <p class="hint" data-i18n="programChartHint"></p>
+      <div class="plegend" id="plegend"></div>
+      <div class="chart" id="pchart"><div class="tip" id="ptip"></div></div>
     </div>
   </section>
 
@@ -142,8 +148,8 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   <footer id="source"></footer>
 </main>
 
-<script src="levels.js?v=20261103f"></script>
-<script src="venue-state.js?v=20261103f"></script>
+<script src="levels.js?v=20261103g"></script>
+<script src="venue-state.js?v=20261103g"></script>
 <script>
 const $ = id => document.getElementById(id);
 const hm = ts => ts.slice(11, 16);
@@ -269,6 +275,7 @@ function showVTab(name) {
   }
   params.set('tab', name); history.replaceState(null, '', `?${params}`);
   if (name === 'density') renderChart();
+  if (name === 'calendar') renderProgramChart();
   if (name === 'website') renderWebsite();
 }
 document.querySelector('.vtabs').onclick = e => { const b = e.target.closest('[data-vtab]'); if (b) showVTab(b.dataset.vtab); };
@@ -283,7 +290,7 @@ async function load() {
   $('title').textContent = venue.name;
   showHeader(venue);
   showVTab(['density', 'calendar', 'website'].includes(params.get('tab')) ? params.get('tab') : 'density');
-  addEventListener('resize', renderChart);
+  addEventListener('resize', () => { renderChart(); renderProgramChart(); });
   if (venue.simulated) simVenue = venue;
   else if (venue.data) { dataUrl = venue.data; $('pill').hidden = false; countRule = localized(venue, 'count_rule'); }
   else { renderEmpty(); return; }
@@ -340,32 +347,95 @@ function renderRows() {
 }
 $('rows').onclick = e => { const r = e.target.closest('tr[data-i]'); if (r) select(+r.dataset.i); };
 
-// ---- Activity calendar: days × hours, each cell the busiest frame in that hour ----
+// ---- Activity calendar: a weekly programme, a different artist each night ----
+// Demo line-up for entertainment venues. Each artist plays a set inside 21:00–01:00; the expected
+// crowd builds before the set, peaks during it and thins after.
+const ARTISTS = [
+  { name: 'Deniz Sipahi', set: ['21:00', '22:30'], peak: 0.78 },
+  { name: 'Fırat Akarsel', set: ['21:30', '23:00'], peak: 0.86 },
+  { name: 'OA Music', set: ['22:00', '23:30'], peak: 0.7 },
+  { name: 'Jabbar', set: ['22:30', '00:00'], peak: 0.95 },
+  { name: 'Deeperrise', set: ['23:00', '00:30'], peak: 1 },
+  { name: 'Emre Koca', set: ['23:30', '01:00'], peak: 0.9 },
+];
+// Categorical series colours (fixed order, validated palette; dark-mode steps follow the theme).
+const SERIES = ['#2a78d6', '#eb6834', '#1baf7a', '#eda100', '#e87ba4', '#6250d6'];
+const SERIES_DARK = ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#9085e9'];
+const seriesColor = i => (matchMedia('(prefers-color-scheme: dark)').matches ? SERIES_DARK : SERIES)[i];
+const PROGRAM_TYPES = ['Kulüp', 'Bar', 'Pub', 'Meyhane'];
+const minOf = hhmm => { const [h, m] = hhmm.split(':').map(Number); return (h < 12 ? h + 24 : h) * 60 + m; };  // 01:00 → 25:00
+
+// The coming seven days starting today; six artists, rotated per venue, and one quiet night.
+function weekProgram() {
+  const off = [...(venue?.id || '')].reduce((a, c) => a + c.charCodeAt(0), 0);
+  return Array.from({ length: 7 }, (_, k) => {
+    const d = new Date(`${today()}T12:00:00`); d.setDate(d.getDate() + k);
+    const slot = (k + off) % 7;
+    return { day: localDay(d), artist: slot < 6 ? slot : null };
+  });
+}
+// Expected crowd (% of capacity) at minute m for an artist: rises into the set, holds, then fades.
+function expected(a, m) {
+  const s0 = minOf(a.set[0]), s1 = minOf(a.set[1]);
+  const before = 1 / (1 + Math.exp(-(m - (s0 - 20)) / 14));
+  const after = 1 / (1 + Math.exp((m - (s1 + 15)) / 16));
+  return Math.round(100 * a.peak * (0.18 + 0.82 * before * after));
+}
+
 function renderCalendar() {
-  const box = $('calendar');
-  if (!everything.length) { box.innerHTML = `<p class="empty">${t('noData')}</p>`; return; }
-  const hours = Array.from({ length: 24 }, (_, i) => (i + 6) % 24);  // business day 06 → 05
-  const byDay = new Map();
-  for (const f of everything) {
-    if (new Date(f.timestamp) > new Date()) continue;
-    const d = dayOf(f), h = new Date(f.timestamp).getHours();
-    const row = byDay.get(d) || {}; row[h] = Math.max(row[h] ?? 0, f.people); byDay.set(d, row);
+  const prog = $('program');
+  if (!PROGRAM_TYPES.includes(venue?.type)) {
+    prog.innerHTML = `<p class="empty">${t('noProgram')}</p>`;
+    document.querySelector('.progchart').hidden = true;
+    return;
   }
-  const ds = [...byDay.keys()].sort().reverse();
-  const head = `<div class="cal-row cal-head"><span></span>${hours.map(h => `<span>${h % 3 === 0 ? String(h).padStart(2, '0') : ''}</span>`).join('')}</div>`;
-  const rows = ds.map(d => `<div class="cal-row"><span class="cal-day">${d === today() ? t('today') : fmtDay(d)}</span>${hours.map(h => {
-    const n = byDay.get(d)[h];
-    if (n === undefined) return '<span class="cal-cell"></span>';
-    const lv = levelOf(n);
-    return `<button class="cal-cell" style="--c:${lv.color}" data-day="${d}" data-h="${h}" title="${fmtDay(d)} ${String(h).padStart(2, '0')}:00 · ${n} ${t('people')}">${n}</button>`;
-  }).join('')}</div>`).join('');
-  box.innerHTML = head + rows;
-  box.onclick = e => {
-    const c = e.target.closest('.cal-cell[data-day]'); if (!c) return;
-    showVTab('density'); setDay(c.dataset.day);
-    const i = frames.findIndex(f => new Date(f.timestamp).getHours() === +c.dataset.h);
-    if (i >= 0) select(i);
+  document.querySelector('.progchart').hidden = false;
+  prog.innerHTML = weekProgram().map(({ day: d, artist }) => {
+    const a = ARTISTS[artist];
+    return `<div class="pday${d === today() ? ' today' : ''}">
+      <span class="pdate">${d === today() ? t('today') : fmtDay(d)}</span>
+      ${a ? `<span class="partist"><i style="background:${seriesColor(artist)}"></i>${a.name}</span><span class="pset">${a.set[0]}–${a.set[1]}</span>`
+          : `<span class="poff">${t('noEvent')}</span>`}
+    </div>`;
+  }).join('');
+  $('plegend').innerHTML = ARTISTS.map((a, i) => `<span><i style="background:${seriesColor(i)}"></i>${a.name}</span>`).join('');
+  renderProgramChart();
+}
+
+function renderProgramChart() {
+  const box = $('pchart');
+  if (!box.clientWidth) return;
+  const W = Math.max(300, box.clientWidth), H = Math.round(Math.min(340, Math.max(240, W * 0.32)));
+  const m = { t: 12, r: 16, b: 26, l: 44 };
+  const m0 = minOf('21:00'), m1 = minOf('01:00');
+  const steps = Array.from({ length: (m1 - m0) / 10 + 1 }, (_, i) => m0 + i * 10);
+  const x = v => m.l + (v - m0) / (m1 - m0) * (W - m.l - m.r);
+  const y = v => H - m.b - v / 100 * (H - m.t - m.b);
+  const clock = v => `${String(Math.floor(v / 60) % 24).padStart(2, '0')}:${String(v % 60).padStart(2, '0')}`;
+  let g = '';
+  for (let v = 0; v <= 100; v += 25) {
+    g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--${v ? 'grid' : 'axis'})" stroke-width="1"/>`;
+    g += `<text x="${m.l - 6}" y="${y(v) + 4}" text-anchor="end">${v}%</text>`;
+  }
+  for (let v = m0; v <= m1; v += 30) g += `<text x="${x(v)}" y="${H - 6}" text-anchor="middle">${clock(v)}</text>`;
+  ARTISTS.forEach((a, i) => {
+    const d = steps.map((v, j) => `${j ? 'L' : 'M'}${x(v)},${y(expected(a, v))}`).join('');
+    g += `<path d="${d}" fill="none" stroke="${seriesColor(i)}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  });
+  g += `<line id="pcross" y1="${m.t}" y2="${H - m.b}" stroke="var(--axis)" stroke-width="1" visibility="hidden"/>`;
+  g += `<rect x="${m.l}" y="0" width="${W - m.l - m.r}" height="${H}" fill="transparent"/>`;
+  box.querySelector('svg')?.remove();
+  box.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t('programChartTitle')}">${g}</svg>`);
+  const svg = box.querySelector('svg'), tip = $('ptip'), cross = $('pcross');
+  svg.onmousemove = e => {
+    const r = svg.getBoundingClientRect(), k = r.width / W, px = (e.clientX - r.left) / k;
+    const v = steps.reduce((a, b) => Math.abs(x(b) - px) < Math.abs(x(a) - px) ? b : a);
+    cross.setAttribute('x1', x(v)); cross.setAttribute('x2', x(v)); cross.setAttribute('visibility', 'visible');
+    const rows = ARTISTS.map((a, i) => ({ a, i, n: expected(a, v) })).sort((p, q) => q.n - p.n);
+    tip.innerHTML = `<div class="ptime">${clock(v)}</div>` + rows.map(({ a, i, n }) => `<div class="prow"><i style="background:${seriesColor(i)}"></i>${a.name}<b>${n}%</b></div>`).join('');
+    tip.style.left = `${Math.min(x(v) * k, r.width - 110)}px`; tip.style.top = `${m.t * k + 10}px`; tip.style.display = 'block';
   };
+  svg.onmouseleave = () => { tip.style.display = 'none'; cross.setAttribute('visibility', 'hidden'); };
 }
 
 // ---- Website ----
