@@ -466,3 +466,26 @@ button.cal-cell:hover { outline: 2px solid var(--ink); }
 .talert { width: 15px; height: 15px; color: #ff453a; }
 .tspark { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 70%; pointer-events: none; }
 .tile.has-spark .meta { padding-top: 6px; }
+
+/* Map: venues under 20 people show their logo in black and white */
+.maplogo.is-low .logo img { filter: grayscale(1) contrast(1.05); }
+
+/* Tiles v3: medium-weight numbers with a soft gradient; charts sit behind everything */
+.venuepage .tile .bignum { font-weight: 500;
+  background: linear-gradient(180deg, var(--ink) 30%, color-mix(in srgb, var(--ink) 55%, var(--series))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.venuepage .tile > *:not(.tspark):not(.weekbars) { position: relative; z-index: 1; }
+.tspark { z-index: 0; height: 62%; }
+/* Busiest: two bars, last week vs today */
+.tile.has-bars .label, .tile.has-bars .value, .tile.has-bars .meta { margin-right: 96px; }
+.weekbars { position: absolute; right: 16px; top: 18px; bottom: 18px; width: 84px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; z-index: 0; }
+.wb { display: grid; grid-template-rows: auto 1fr auto; justify-items: center; align-items: end; gap: 4px; }
+.wb b { font: 600 13px var(--font-display); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.wb em { font: 500 10px var(--font-text); font-style: normal; color: var(--muted); white-space: nowrap; }
+.wbar { width: 100%; border-radius: 6px 6px 3px 3px; align-self: end; }
+.wb.prev .wbar { background: var(--fill-strong); }
+.wb.now .wbar { background: linear-gradient(180deg, var(--series), color-mix(in srgb, var(--series) 40%, transparent)); }
+.wb.now b { color: var(--ink); }
+/* People per m²: 40 cells, filled share = density */
+.m2grid { display: grid; grid-template-columns: repeat(20, 1fr); gap: 3px; width: 100%; margin-bottom: 4px; }
+.m2grid i { aspect-ratio: 1; border-radius: 2px; background: var(--fill); }
+.m2grid i.on { background: var(--series); box-shadow: 0 0 6px color-mix(in srgb, var(--series) 60%, transparent); }
