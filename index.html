@@ -197,6 +197,15 @@ function drawMap() {
     meters: HEAT.baseM + Math.min(v.latest.people, 100) * HEAT.perPersonM,
     minPx: HEAT.basePx + Math.min(v.latest.people, 100) * HEAT.perPersonPx,  // keeps the cloud readable when zoomed out
   })));
+  // Wind: from every other open venue within 2.5 km, colour drifts towards a venue that is getting busier.
+  const live = placed.filter(v => v.latest && v.status?.state !== 'closed');
+  heat.setFlows(live.filter(v => v.rising).flatMap(target => live
+    .filter(src => src !== target && map.distance(pins.get(src.id).latlng, pins.get(target.id).latlng) < 2500)
+    .map(src => ({
+      seed: `${src.id}>${target.id}`,
+      from: pins.get(src.id).latlng, to: pins.get(target.id).latlng,
+      color: HEAT.colors[LEVELS.indexOf(levelOf(src.latest.people))],
+    }))));
   const labels = placeLabels(placed, pins);
   for (const v of placed) {
     const n = v.latest ? v.latest.people : null;
@@ -209,7 +218,7 @@ function drawMap() {
       L.circleMarker([v.location.lat, v.location.lon], { radius: 3, weight: 1, color: '#ffffff', fillColor: lv ? lv.color : '#898781', fillOpacity: 1, interactive: false }).addTo(markers);
     }
     const m = L.marker(pin.latlng, {
-      icon: L.divIcon({ className: `maplogo${closed ? ' is-closed' : ''}`, html: `<div style="--lv:${lv && !closed ? lv.color : '#898781'};width:100%;height:100%">${logoHtml(v)}${closed ? `<span class="lockover">${LOCK_ICON}</span>` : ''}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
+      icon: L.divIcon({ className: `maplogo${closed ? ' is-closed' : ''}`, html: `<div style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'};width:100%;height:100%">${logoHtml(v)}${closed ? `<span class="lockover">${LOCK_ICON}</span>` : ''}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
       title: v.name,
     }).addTo(markers);
     const dir = labels.get(v.id);
@@ -476,6 +485,13 @@ const HeatBlobs = L.Layer.extend({
     L.DomUtil.remove(this._canvas);
     m.off('moveend resize', this._draw, this).off('zoomstart', this._hide, this).off('zoomend', this._show, this);
   },
+  setFlows(flows) {
+    this._flows = flows.map(f => {
+      const rnd = seeded(f.seed);
+      return { ...f, bend: (rnd() - 0.5) * 0.7, speed: 0.07 + rnd() * 0.05, phase: rnd(),
+        puffs: Array.from({ length: 9 }, (_, i) => ({ off: i / 9 + rnd() * 0.05, size: 0.7 + rnd() * 0.6, lane: (rnd() - 0.5) * 0.18 })) };
+    });
+  },
   setBlobs(blobs) {
     this._blobs = blobs.map(b => {
       const rnd = seeded(b.seed);
@@ -521,6 +537,28 @@ const HeatBlobs = L.Layer.extend({
         g.addColorStop(0, rgba(col, 0.32 * b.strength));
         g.addColorStop(0.5, rgba(col, 0.15 * b.strength));
         g.addColorStop(1, rgba(col, 0));
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    // Wind streams: soft puffs travel along a gently bent path from each source to the busier venue,
+    // fading in as they leave and out as they arrive.
+    for (const f of this._flows || []) {
+      const a = m.latLngToContainerPoint(f.from), b = m.latLngToContainerPoint(f.to);
+      const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+      const nx = -dy / len, ny = dx / len;
+      const cx = (a.x + b.x) / 2 + nx * len * f.bend, cy = (a.y + b.y) / 2 + ny * len * f.bend;
+      for (const p of f.puffs) {
+        const u = (time * f.speed + f.phase + p.off) % 1;
+        const iu = 1 - u;
+        let x = iu * iu * a.x + 2 * iu * u * cx + u * u * b.x;
+        let y = iu * iu * a.y + 2 * iu * u * cy + u * u * b.y;
+        x += nx * p.lane * len * Math.sin(u * Math.PI); y += ny * p.lane * len * Math.sin(u * Math.PI);
+        const r = Math.max(10, Math.min(46, len * 0.07)) * p.size * (0.6 + 0.6 * Math.sin(u * Math.PI));
+        const alpha = 0.55 * Math.sin(u * Math.PI) * HEAT.opacity;
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, rgba(f.color, alpha));
+        g.addColorStop(1, rgba(f.color, 0));
         ctx.fillStyle = g;
         ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
       }
