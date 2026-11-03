@@ -123,17 +123,21 @@ async function load() {
   const { venues } = await (await fetch('data/venues.json')).json();
   const now = new Date();
   const cards = await Promise.all(venues.map(withSettings).map(async v => {
-    let latest = null, updatedAt = '';
+    let latest = null, updatedAt = '', rising = false;
     if (v.simulated) {
       latest = simLatest(v, now);
       updatedAt = latest.timestamp;
+      rising = risingSim(v, now);
     } else if (v.data) {
       const { frames, updated_at } = await (await fetch(`${v.data}?t=${Date.now()}`)).json();
       updatedAt = updated_at || '';
       // Same rule as the venue page: a frame counts only once its time has passed.
-      latest = frames.filter(f => new Date(f.timestamp) <= now).pop() || null;
+      const due = frames.filter(f => new Date(f.timestamp) <= now);
+      latest = due[due.length - 1] || null;
+      rising = risingFromFrames(due);
     }
-    return { ...v, latest, updatedAt, status: venueStatus(v, now) };
+    const status = venueStatus(v, now);
+    return { ...v, latest, updatedAt, status, rising: rising && status.state !== 'closed' };
   }));
   document.title = `${t('venues')} · ${t('occupancy')}`;
   $('subtitle').textContent = t('listSub', venues.length, now.toTimeString().slice(0, 5));
@@ -213,11 +217,10 @@ function drawMap() {
       const offset = { top: [0, -PIN / 2 - 2], bottom: [0, PIN / 2 + 2], left: [-PIN / 2 - 2, 0], right: [PIN / 2 + 2, 0] }[dir];
       m.bindTooltip(v.coming_soon ? `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>`
         : closed ? `<span class="vclosed">${t('closed')}</span><span class="vname">${v.name}</span>`
-        : `<span class="vcount">${n === null ? '—' : n}${PERSON_ICON}</span><span class="vname">${v.name}</span>`,
+        : `<span class="vcount">${n === null ? '—' : n}${PERSON_ICON}</span><span class="vname">${v.name}</span>${v.rising ? `<span class="vrise">${RISE_ICON}${t('rising')}</span>` : ''}`,
         { permanent: true, direction: dir, offset, className: 'vlabel' });
     } else {
-      // No room for a full label: a small count badge on the logo, full label on hover.
-      if (n !== null && !closed) m.getElement()?.querySelector('div')?.insertAdjacentHTML('beforeend', `<span class="pinbadge">${n}</span>`);
+      // Not the busiest of its cluster: no permanent label; name and count only on hover.
       m.bindTooltip(`<span class="vcount">${closed ? t('closed') : n === null ? '—' : n}${closed ? '' : PERSON_ICON}</span><span class="vname">${v.name}</span>`,
         { direction: 'top', offset: [0, -PIN / 2 - 2], className: 'vlabel' });
     }
@@ -353,6 +356,7 @@ async function addBasemap() {
     L.marker([town.lat, town.lon], { icon: L.divIcon({ className: 'townlabel', html: `<span style="margin-top:${town.dy}px">${town.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1000 }).addTo(map);
 }
 
+const RISE_ICON = '<svg class="rise" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11.5l4-4 3 3 5-5.5M10 5h4v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const LOCK_ICON = '<svg class="lock" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M5.2 7V5.3a2.8 2.8 0 0 1 5.6 0V7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
 const GEAR_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M11.1 1.5l.4 2.1c.5.2 1 .5 1.4.8l2-.8 1.6 2.7-1.6 1.4a6 6 0 0 1 0 1.6l1.6 1.4-1.6 2.7-2-.8c-.4.3-.9.6-1.4.8l-.4 2.1H8l-.4-2.1c-.5-.2-1-.5-1.4-.8l-2 .8-1.6-2.7 1.6-1.4a6 6 0 0 1 0-1.6L2.6 6.3l1.6-2.7 2 .8c.4-.3.9-.6 1.4-.8L8 1.5h3.1zM9.6 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>';
 
@@ -527,6 +531,7 @@ const HeatBlobs = L.Layer.extend({
 // Greedy label layout: busiest venues first, each label tries top / right / left / bottom of its pin
 // and takes the first spot that overlaps no pin and no label already placed. Venues that find no spot
 // get no permanent label (see the badge fallback above).
+const CLUSTER_PX = 120;  // venues closer than this on screen count as one cluster
 function placeLabels(placed, pins) {
   const size = map.getSize();
   const boxes = placed.map(v => {
@@ -535,17 +540,19 @@ function placeLabels(placed, pins) {
   });
   const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
   const order = [...placed].sort((a, b) => (b.latest?.people ?? -1) - (a.latest?.people ?? -1));
-  const out = new Map();
+  const out = new Map(), labelled = [];
   for (const v of order) {
     const p = map.latLngToContainerPoint(pins.get(v.id).latlng);
-    const w = Math.max(56, v.name.length * 6.6 + 22), h = 46, g = PIN / 2 + 4;
+    const w = Math.max(v.rising ? 110 : 56, v.name.length * 6.6 + 22), h = v.rising ? 62 : 46, g = PIN / 2 + 4;
     const spots = {
       top: { x: p.x - w / 2, y: p.y - g - h, w, h }, right: { x: p.x + g, y: p.y - h / 2, w, h },
       left: { x: p.x - g - w, y: p.y - h / 2, w, h }, bottom: { x: p.x - w / 2, y: p.y + g, w, h },
     };
+    // In a cluster only the busiest venue keeps its label: skip any venue near one already labelled.
+    if (labelled.some(q => Math.hypot(q.x - p.x, q.y - p.y) < CLUSTER_PX)) continue;
     for (const [dir, box] of Object.entries(spots)) {
       const inside = box.x > 4 && box.y > 60 && box.x + box.w < size.x - 4 && box.y + box.h < size.y - 4;
-      if (inside && !boxes.some(b => hit(b, box))) { out.set(v.id, dir); boxes.push(box); break; }
+      if (inside && !boxes.some(b => hit(b, box))) { out.set(v.id, dir); boxes.push(box); labelled.push(p); break; }
     }
   }
   return out;
@@ -629,6 +636,7 @@ function card(v) {
       <div class="top"><span class="name">${v.name}</span><span class="type">${typeName(v.type)}</span></div>
       <span class="status ${live ? 'live' : v.coming_soon ? 'soon' : ''}"><span class="dot"></span>${v.simulated ? t('demoData') : live ? t('cameraActive') : v.coming_soon ? t('soon') : t('noData')}</span>
       <div class="stat">${stat}<span class="arrow">›</span></div>
+      ${v.rising ? `<div class="rising">${RISE_ICON}${t('rising')}</div>` : ''}
       <div class="updated"><span title="${v.updatedAt ? v.updatedAt.replace('T', ' ') : ''}">${live ? t('lastUpdate', ago(v.updatedAt)) : v.coming_soon ? t('soonCamera') : t('noUpdates')}</span><button class="gear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button></div>
     </div>
   </a>`;

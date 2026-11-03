@@ -84,3 +84,23 @@ function simLatest(v, at = new Date()) {
   const s = slotStart(at);
   return { file: null, timestamp: localIso(s), people: simCount(v, s), simulated: true };
 }
+
+// ---- Trend ----
+// "rising" when the latest count is clearly above where it stood up to an hour and a half ago
+// (the oldest frame 30–90 minutes back): at least +5 people and +15%.
+function isRising(latest, earlier) {
+  if (!latest || !earlier) return false;
+  const d = latest.people - earlier.people;
+  return d >= 5 && d >= earlier.people * 0.15;
+}
+function risingFromFrames(frames) {
+  const last = frames[frames.length - 1];
+  if (!last) return false;
+  const t = new Date(last.timestamp).getTime();
+  const back = frames.filter(f => { const m = (t - new Date(f.timestamp).getTime()) / 60000; return m >= 30 && m <= 90; });
+  return isRising(last, back[0]);  // frames are in time order, so back[0] is the oldest in the window
+}
+function risingSim(v, at = new Date()) {
+  const now = simLatest(v, at), before = simLatest(v, new Date(at.getTime() - 60 * 60000));
+  return isRising(now, before);
+}
