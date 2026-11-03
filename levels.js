@@ -1,11 +1,11 @@
 // Crowd levels shared by the venue list, heatmap and venue page.
-// Bands are inclusive: 0–10 blue, 11–20 green, 21–30 orange, 31–40 red, 41+ maroon.
+// Bands are inclusive: 0–10 blue, 11–20 green, 21–30 yellow, 31–40 orange, 41+ crimson (same as the map's heat colours).
 const LEVELS = [
-  { max: 10, range: '0–10', color: '#2a78d6' },
-  { max: 20, range: '11–20', color: '#1f9d55' },
-  { max: 30, range: '21–30', color: '#eb6834' },
-  { max: 40, range: '31–40', color: '#e34948' },
-  { max: Infinity, range: '41–100', color: '#8b1e3f' },
+  { max: 10, range: '0–10', color: '#0e6bdd' },
+  { max: 20, range: '11–20', color: '#16ca64' },
+  { max: 30, range: '21–30', color: '#ffc800' },
+  { max: 40, range: '31–40', color: '#dd5e27' },
+  { max: Infinity, range: '41–100', color: '#c11a4c' },
 ];
 // Level names come from i18n.js (t('levels')) in the current language.
 LEVELS.forEach((l, i) => Object.defineProperty(l, 'name', { get: () => t('levels')[i] }));
