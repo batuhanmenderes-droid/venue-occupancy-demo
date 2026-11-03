@@ -6,7 +6,7 @@
 <title>Venues · Occupancy</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
 <script src="i18n.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
@@ -163,7 +163,7 @@ $('tab-harita').onclick = () => showTab('harita');
 function initMap() {
   if (map) return;
   // Zoom is limited to 14 (both towns in view) … 16 (a few streets around a venue).
-  map = L.map('map', { scrollWheelZoom: true, minZoom: 14, maxZoom: 16 });
+  map = L.map('map', { scrollWheelZoom: true, minZoom: 14, maxZoom: 18 });
   // Akyaka in the north-west, Akçapınar to the south-east.
   map.fitBounds([[37.020, 28.318], [37.062, 28.366]]);
   heat = new HeatBlobs().addTo(map);
@@ -227,8 +227,8 @@ function drawMap() {
 
 // ---- Zoom limits panel ----
 // Min / max zoom the viewer may reach. Saved per browser; defaults keep both towns in view (14)
-// down to a few streets around a venue (16).
-const ZOOM_DEFAULT = { min: 14, max: 16 }, ZOOM_RANGE = [3, 19];
+// down to street level (18).
+const ZOOM_DEFAULT = { min: 14, max: 18 }, ZOOM_RANGE = [3, 19];
 function loadZoomLimits() {
   try { return { ...ZOOM_DEFAULT, ...JSON.parse(localStorage.getItem('zoomLimits') || '{}') }; } catch { return { ...ZOOM_DEFAULT }; }
 }
@@ -255,7 +255,10 @@ function addZoomPanel() {
       q('[data-now]').textContent = map.getZoom();
       for (const k of ['min', 'max']) { q(`[data-k="${k}"]`).value = lim[k]; q(`[data-o="${k}"]`).textContent = lim[k]; }
     };
-    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    q('.zp-toggle').onclick = () => {
+      const b = q('.zp-body'); b.hidden = !b.hidden;
+      const tg = q('.zp-toggle'); tg.setAttribute('aria-expanded', !b.hidden); tg.textContent = tg.textContent.replace(/[▾▴]$/, b.hidden ? '▾' : '▴');
+    };
     box.querySelectorAll('[data-k]').forEach(inp => inp.oninput = () => {
       lim[inp.dataset.k] = +inp.value;
       // Keep min ≤ max by pushing the other end along.
@@ -376,10 +379,10 @@ function rgba(hex, a) {
 // priority: strength rises from minStrength to full at fullAt people along a power `curve`;
 // colours: one per crowd level, with an optional second colour each level drifts to and back.
 const HEAT_DEFAULT = {
-  baseM: 120, perPersonM: 12, basePx: 34, perPersonPx: 2.4,
-  minStrength: 0.18, fullAt: 30, curve: 1.3, opacity: 1, blur: 8,
-  colors: ['#2a78d6', '#1f9d55', '#eb6834', '#e34948', '#8b1e3f'],
-  shift: [null, '#2a78d6', '#e0309a', null, null],
+  baseM: 10, perPersonM: 1, basePx: 90, perPersonPx: 1,
+  minStrength: 0.48, fullAt: 30, curve: 1.3, opacity: 1, blur: 8,
+  colors: ['#0e6bdd', '#16ca64', '#ffc800', '#dd5e27', '#c11a4c'],
+  shift: [null, '#13cbd8', '#e0962e', null, null],
 };
 let HEAT = loadHeat();
 function loadHeat() {
@@ -431,7 +434,10 @@ function addHeatPanel() {
       qa('[data-sc]').forEach(i => { i.checked = !!HEAT.shift[i.dataset.sc]; });
       qa('[data-s]').forEach(i => { i.value = HEAT.shift[i.dataset.s] || HEAT.colors[i.dataset.s]; i.disabled = !HEAT.shift[i.dataset.s]; });
     };
-    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    q('.zp-toggle').onclick = () => {
+      const b = q('.zp-body'); b.hidden = !b.hidden;
+      const tg = q('.zp-toggle'); tg.setAttribute('aria-expanded', !b.hidden); tg.textContent = tg.textContent.replace(/[▾▴]$/, b.hidden ? '▾' : '▴');
+    };
     qa('[data-h]').forEach(i => i.oninput = () => { HEAT[i.dataset.h] = +i.value; sync(); apply(); });
     qa('[data-c]').forEach(i => i.oninput = () => { HEAT.colors[i.dataset.c] = i.value; apply(); });
     qa('[data-sc]').forEach(i => i.onchange = () => { HEAT.shift[i.dataset.sc] = i.checked ? q(`[data-s="${i.dataset.sc}"]`).value : null; sync(); apply(); });
@@ -532,7 +538,7 @@ function placeLabels(placed, pins) {
   const out = new Map();
   for (const v of order) {
     const p = map.latLngToContainerPoint(pins.get(v.id).latlng);
-    const w = Math.max(48, v.name.length * 5.4 + 18), h = 36, g = PIN / 2 + 4;
+    const w = Math.max(56, v.name.length * 6.6 + 22), h = 46, g = PIN / 2 + 4;
     const spots = {
       top: { x: p.x - w / 2, y: p.y - g - h, w, h }, right: { x: p.x + g, y: p.y - h / 2, w, h },
       left: { x: p.x - g - w, y: p.y - h / 2, w, h }, bottom: { x: p.x - w / 2, y: p.y + g, w, h },

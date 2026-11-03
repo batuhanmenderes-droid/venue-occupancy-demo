@@ -142,9 +142,9 @@ select { appearance: none; padding-right: 28px; background-image: linear-gradien
 .legend .rows { gap: 6px; }
 .leaflet-tooltip.vlabel { border-radius: 12px; padding: 7px 10px; font: 500 12px/1.35 var(--font-text); color: var(--ink); }
 .leaflet-tooltip.vlabel { display: grid; gap: 2px; padding: 5px 8px 6px; border-radius: 9px !important; }
-.leaflet-tooltip.vlabel .vname { font: 500 10px/1.2 var(--font-text); color: var(--ink-2); }
-.leaflet-tooltip.vlabel .vcount { display: inline-flex; align-items: center; gap: 4px; font: 600 14px/1 var(--font-display); font-variant-numeric: tabular-nums; color: var(--ink); }
-.leaflet-tooltip.vlabel .vicon { width: 10px; height: 10px; color: var(--ink-2); }
+.leaflet-tooltip.vlabel .vname { font: 500 12px/1.2 var(--font-text); color: var(--ink-2); }
+.leaflet-tooltip.vlabel .vcount { display: inline-flex; align-items: center; gap: 4px; font: 800 18px/1 var(--font-display); font-variant-numeric: tabular-nums; color: var(--ink); }
+.leaflet-tooltip.vlabel .vicon { width: 12px; height: 12px; color: var(--ink-2); }
 .leaflet-tooltip.vlabel .vsoon { font: 600 12px/1.1 var(--font-display); color: var(--soon); }
 .tip { border-radius: 12px; padding: 8px 11px; font: 500 12px/1.35 var(--font-text); }
 .tip b { font-size: 20px; font-weight: 600; }
@@ -291,7 +291,7 @@ dialog.sheet .primary:hover { background: color-mix(in srgb, var(--series) 85%, 
 .sub.about { margin-top: 2px; color: var(--muted); }
 
 .pinbadge { position: absolute; top: -6px; right: -8px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px;
-  display: grid; place-items: center; font: 600 13px/1 var(--font-display); color: #fff; background: var(--lv, #636366);
+  display: grid; place-items: center; font: 800 13px/1 var(--font-display); color: #fff; background: var(--lv, #636366);
   box-shadow: 0 0 0 2px #000, 0 4px 10px rgba(0, 0, 0, 0.5); font-variant-numeric: tabular-nums; }
 
 /* Zoom limits panel (map, top right) */
@@ -324,3 +324,7 @@ body.mapmode .leaflet-top.leaflet-right { top: 56px; }  /* clear of the language
 .hp-row input[type=color] { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 8px; background: none; cursor: pointer; }
 .hp-row input[type=color]:disabled { opacity: .3; cursor: default; }
 .hp-row .hp-shift { display: flex !important; align-items: center; gap: 4px; font-size: 11px; }
+/* Collapsed panels: [hidden] must win over the panel's display: grid */
+.zoompanel .zp-body[hidden] { display: none; }
+.zoompanel .zp-toggle::after { content: ""; }
+.zoompanel .zp-toggle[aria-expanded="true"] { background: var(--surface); }
