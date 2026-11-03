@@ -97,7 +97,10 @@
         "open": "18:00",
         "close": "01:00"
       },
-      "description": ""
+      "description": "",
+      "categories": [
+        "food"
+      ]
     },
     {
       "id": "kucuk-akyaka",
@@ -117,7 +120,10 @@
         "open": "17:00",
         "close": "02:00"
       },
-      "description": ""
+      "description": "",
+      "categories": [
+        "activity"
+      ]
     },
     {
       "id": "rahat-social",
@@ -217,7 +223,10 @@
         "open": "16:00",
         "close": "01:00"
       },
-      "description": ""
+      "description": "",
+      "categories": [
+        "food"
+      ]
     },
     {
       "id": "kukla",

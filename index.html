@@ -170,7 +170,8 @@ const CATEGORIES = {
 };
 const pref = (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d; } };
 let category = pref('venueFilter', 'all'), sortBy = pref('venueSort', 'busy');
-const inCategory = v => category === 'all' || (CATEGORIES[category] || []).includes(v.type);
+// A venue's own `categories` in venues.json override the type-based grouping.
+const inCategory = v => category === 'all' || (v.categories ? v.categories.includes(category) : (CATEGORIES[category] || []).includes(v.type));
 // Busiest first, closed venues always at the end.
 function sorted(cards) {
   const closed = v => v.status?.state === 'closed' ? 1 : 0, n = v => v.latest?.people ?? -1;
