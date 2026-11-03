@@ -571,3 +571,16 @@ main:not(.venuepage) .grid { grid-template-columns: repeat(auto-fill, minmax(min
 .weekbars.n3 { width: 128px; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .tile.has-bars:has(.weekbars.n3) .label, .tile.has-bars:has(.weekbars.n3) .value, .tile.has-bars:has(.weekbars.n3) .meta { margin-right: 140px; }
 @media (max-width: 640px) { .weekbars.n3 { width: 112px; } .tile.has-bars:has(.weekbars.n3) .label, .tile.has-bars:has(.weekbars.n3) .value, .tile.has-bars:has(.weekbars.n3) .meta { margin-right: 122px; } }
+
+/* Map texture: a fine grid (32px) with stronger lines every 160px, fading towards the edges */
+.mapshade::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 160px 160px, 160px 160px, 32px 32px, 32px 32px;
+  -webkit-mask-image: radial-gradient(120% 100% at 50% 45%, #000 45%, transparent 100%);
+          mask-image: radial-gradient(120% 100% at 50% 45%, #000 45%, transparent 100%);
+}

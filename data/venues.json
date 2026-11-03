@@ -50,7 +50,8 @@
         "approx": false,
         "label": "Akyaka"
       },
-      "logo": "logos/kulup.png"
+      "logo": "logos/kulup.png?v=2",
+      "logo_scale": 0.84
     },
     {
       "id": "lemongrass-cafe",
@@ -309,12 +310,13 @@
         "approx": false,
         "label": "Akyaka"
       },
-      "logo": "logos/yelken.png",
+      "logo": "logos/yelken.png?v=2",
       "hours": {
         "open": "17:00",
         "close": "02:00"
       },
-      "description": ""
+      "description": "",
+      "logo_scale": 0.92
     },
     {
       "id": "akcapinar-tostcusu",
