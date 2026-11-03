@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261103d"></script>
+<script src="i18n.js?v=20261103f"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -77,58 +77,73 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   .grid2 { grid-template-columns: 1fr; }
 }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261103d">
+<link rel="stylesheet" href="theme.css?v=20261103f">
 </head>
 <body>
-<main>
-  <header>
-    <div>
-      <a class="back" href="./" data-i18n="back">‹ Venues</a>
-      <h1 id="title">Doluluk Paneli</h1>
-      <p class="sub" id="subtitle" data-i18n="loading">loading…</p>
-      <p class="sub about" id="about" hidden></p>
-    </div>
-    <div class="actions">
-      <select id="day" data-i18n-aria="day" hidden></select>
+<main class="venuepage">
+  <header class="vhead">
+    <a class="back" href="./" data-i18n="back">‹ Venues</a>
+    <div class="vtitle">
+      <span class="vlogo" id="vlogo"></span>
+      <div>
+        <h1 id="title"></h1>
+        <p class="vupdated" id="updated"></p>
+        <p class="vhours" id="about"></p>
+      </div>
       <span class="pill" id="pill" data-i18n="synthetic" hidden>Synthetic CCTV data</span>
     </div>
+    <p class="sub" id="subtitle" hidden></p>
   </header>
 
-  <section class="tiles" id="tiles"></section>
+  <nav class="vtabs" role="tablist">
+    <button role="tab" data-vtab="density" data-i18n="tabDensity">Density</button>
+    <button role="tab" data-vtab="calendar" data-i18n="tabCalendar">Activity calendar</button>
+    <button role="tab" data-vtab="website" data-i18n="tabWebsite">Website</button>
+  </nav>
 
-  <section class="grid2">
-    <div class="card">
-      <h2 data-i18n="chartTitle"></h2>
+  <section id="tab-density" role="tabpanel">
+    <section class="tiles" id="tiles"></section>
+    <div class="card chartcard">
+      <div class="chead"><h2 data-i18n="chartTitle"></h2><span class="daylabel" id="dayLabel"></span></div>
       <p class="hint" data-i18n="chartHint"></p>
       <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
-    </div>
-    <div class="card frame">
-      <h2 data-i18n="selectedFrame"></h2>
-      <p class="hint" id="frameTime">&nbsp;</p>
-      <img id="frameImg" alt="">
-      <div class="row">
-        <div><span class="count" id="frameCount"></span> <span style="color:var(--ink-2)" data-i18n="people"></span></div>
-        <div class="nav"><button id="prev" data-i18n-aria="prevAria" data-i18n="prev"></button><button id="next" data-i18n-aria="nextAria" data-i18n="next"></button></div>
+      <div class="dayslider">
+        <input type="range" id="daySlider" min="0" max="0" step="1" data-i18n-aria="day">
+        <div class="dayticks" id="dayTicks"></div>
       </div>
-      <div class="note" id="frameNote"></div>
+    </div>
+    <section class="grid2 lower">
+      <div class="card">
+        <h2 data-i18n="tableView"></h2>
+        <div class="tablewrap"><table><thead><tr><th data-i18n="thTime"></th><th data-i18n="thPeople"></th><th data-i18n="thNote"></th></tr></thead><tbody id="rows"></tbody></table></div>
+      </div>
+      <div class="card frame">
+        <h2 data-i18n="selectedFrame"></h2>
+        <p class="hint" id="frameTime">&nbsp;</p>
+        <div class="frameimg"><img id="frameImg" alt=""><span class="privacy" data-i18n="facesBlurred"></span></div>
+        <div class="row"><div><span class="count" id="frameCount"></span> <span style="color:var(--ink-2)" data-i18n="people"></span></div></div>
+        <div class="note" id="frameNote"></div>
+      </div>
+    </section>
+  </section>
+
+  <section id="tab-calendar" role="tabpanel" hidden>
+    <div class="card">
+      <h2 data-i18n="calendarTitle"></h2>
+      <p class="hint" data-i18n="calendarHint"></p>
+      <div class="calendar" id="calendar"></div>
     </div>
   </section>
 
-  <section class="card">
-    <h2 data-i18n="allFrames"></h2>
-    <p class="hint" data-i18n="allFramesHint"></p>
-    <div class="strip" id="strip"></div>
-    <details>
-      <summary data-i18n="tableView"></summary>
-      <table><thead><tr><th data-i18n="thTime"></th><th data-i18n="thPeople"></th><th data-i18n="thNote"></th></tr></thead><tbody id="rows"></tbody></table>
-    </details>
+  <section id="tab-website" role="tabpanel" hidden>
+    <div class="card webcard" id="web"></div>
   </section>
 
   <footer id="source"></footer>
 </main>
 
-<script src="levels.js?v=20261103d"></script>
-<script src="venue-state.js?v=20261103d"></script>
+<script src="levels.js?v=20261103f"></script>
+<script src="venue-state.js?v=20261103f"></script>
 <script>
 const $ = id => document.getElementById(id);
 const hm = ts => ts.slice(11, 16);
@@ -141,9 +156,22 @@ const dayOf = f => {
   return localDay(d);
 };
 const localDay = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-// everything = every analysed frame of the venue; all = the selected day's frames;
+const today = () => dayOf({ timestamp: new Date() });
+// everything = every frame of the venue; all = the selected day's frames;
 // frames = the selected day's frames whose timestamp has already passed.
-let countRule = '', everything = [], all = [], frames = [], current = 0, points = [], day = '', updatedAt = '', dataUrl = '';
+let venue = null, countRule = '', everything = [], all = [], frames = [], days = [], current = 0, points = [], day = '', updatedAt = '', dataUrl = '';
+
+// Floor area used for the people-per-m² estimate when a venue has no `area_m2` of its own.
+const AREA_BY_TYPE = { Kulüp: 400, Pub: 160, Bar: 140, Meyhane: 160, Restoran: 220, Kafe: 120, Spor: 250, Otel: 300, Plaj: 15000 };
+
+function ago(ts) {
+  if (!ts) return t('agoNone');
+  const min = Math.floor((Date.now() - new Date(ts)) / 60000);
+  if (min < 1) return t('agoNow');
+  if (min < 60) return t('agoMin', min);
+  if (min < 1440) return t('agoHour', Math.floor(min / 60));
+  return t('agoDay', Math.floor(min / 1440));
+}
 
 // ?saat=14:30 shows the selected day as it would look at that time.
 function now() {
@@ -162,146 +190,201 @@ function setDay(d) {
   frames = []; points = []; current = 0;
   params.set('gun', day);
   history.replaceState(null, '', `?${params}`);
-  refresh();
+  syncSlider();
+  refresh(true);
 }
 
+// ---- Day timeline slider ----
 function renderDays() {
-  const days = [...new Set([...everything.map(dayOf), dayOf({ timestamp: new Date() })])].sort();
-  if (!days.includes(day)) days.push(day);
-  $('day').innerHTML = days.map(d => `<option value="${d}"${d === day ? ' selected' : ''}>${d}${d === dayOf({ timestamp: new Date() }) ? ` (${t('today')})` : ''}</option>`).join('');
-  $('day').hidden = false;
+  days = [...new Set([...everything.map(dayOf), today()])].sort();
+  if (!days.includes(day)) { days.push(day); days.sort(); }
+  const s = $('daySlider');
+  s.max = days.length - 1;
+  $('dayTicks').innerHTML = days.map(d => `<span>${d === today() ? t('today') : fmtDay(d)}</span>`).join('');
+  syncSlider();
 }
+const fmtDay = d => new Date(`${d}T12:00:00`).toLocaleDateString(LANG === 'tr' ? 'tr-TR' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+function syncSlider() {
+  const i = days.indexOf(day);
+  if (i >= 0) $('daySlider').value = i;
+  $('dayLabel').textContent = day === today() ? `${t('today')} · ${fmtDay(day)}` : fmtDay(day);
+  $('dayTicks').querySelectorAll('span').forEach((el, j) => el.classList.toggle('on', j === i));
+}
+$('daySlider').oninput = e => setDay(days[+e.target.value]);
 
-// The routine pushes new frames to GitHub; re-read the data so they show up without a page reload.
-// Opening hours, open/closed state and the description under the title.
-function showAbout(v) {
+// ---- Header ----
+function showHeader(v) {
   const st = venueStatus(v);
   const hours = v.hours ? t('hoursLine', v.hours.open, v.hours.close) : t('alwaysLine');
   const state = st.state === 'closed' ? ` · ${t('closed')}` : st.state === 'closing' ? ` · ${t('closingSoon')}` : '';
-  const desc = v.description ? ` · ${v.description}` : '';
-  $('about').textContent = `${hours}${state}${desc}`;
-  $('about').hidden = false;
+  $('about').textContent = `${hours}${state}${v.description ? ` · ${v.description}` : ''}`;
+  $('updated').textContent = v.coming_soon ? t('soon') : updatedAt ? t('lastUpdate', ago(updatedAt)) : t('noUpdates');
+  $('vlogo').innerHTML = v.logo ? `<img src="${v.logo}" alt="">` : '';
 }
 
 let simVenue = null;
 async function reload() {
   let data;
   if (simVenue) {
-    // Demo venue: build today's (and yesterday's) 40-minute frames instead of reading a data file.
-    const today = dayOf({ timestamp: new Date() });
-    const y = new Date(`${today}T12:00:00`); y.setDate(y.getDate() - 1);
-    data = { frames: [...simFrames(simVenue, localDay(y)), ...simFrames(simVenue, today)], updated_at: simLatest(simVenue).timestamp };
+    // Demo venue: build the last week's 40-minute frames instead of reading a data file.
+    const out = [];
+    for (let k = 6; k >= 0; k--) {
+      const d = new Date(`${today()}T12:00:00`); d.setDate(d.getDate() - k);
+      out.push(...simFrames(simVenue, localDay(d)));
+    }
+    data = { frames: out, updated_at: simLatest(simVenue).timestamp };
     $('source').textContent = t('demoNote');
   } else {
     data = await (await fetch(`${dataUrl}?t=${Date.now()}`)).json();
     $('source').textContent = t('source');
   }
   updatedAt = data.updated_at || '';
+  showHeader(venue);
   const before = everything.length;
   everything = data.frames;
-  if (!day) day = params.get('gun') || dayOf({ timestamp: new Date() });
+  if (!day) day = params.get('gun') || today();
   renderDays();
+  renderCalendar();
   if (everything.length !== before) setDay(day); else refresh();
 }
 
-function refresh() {
+function refresh(force) {
   const at = now();
   const due = all.filter(f => new Date(f.timestamp) <= at);
   const followLatest = current >= frames.length - 1;
   const changed = due.length !== frames.length;
   frames = due;
-  renderTiles(at);
-  if (!changed && points.length) return;
-  renderStrip();
+  renderTiles();
+  if (!changed && points.length && !force) return;
+  renderRows();
   renderChart();
-  if (frames.length) select(followLatest ? frames.length - 1 : current);
+  if (frames.length) select(followLatest ? frames.length - 1 : current); else clearFrame();
 }
 
+// ---- Tabs ----
+function showVTab(name) {
+  for (const k of ['density', 'calendar', 'website']) {
+    $(`tab-${k}`).hidden = k !== name;
+    document.querySelector(`[data-vtab="${k}"]`).setAttribute('aria-selected', k === name);
+  }
+  params.set('tab', name); history.replaceState(null, '', `?${params}`);
+  if (name === 'density') renderChart();
+  if (name === 'website') renderWebsite();
+}
+document.querySelector('.vtabs').onclick = e => { const b = e.target.closest('[data-vtab]'); if (b) showVTab(b.dataset.vtab); };
+
 async function load() {
-  const id = new URLSearchParams(location.search).get('mekan') || 'lemongrass-cafe';
+  const id = params.get('mekan') || 'lemongrass-cafe';
   const { venues } = await (await fetch(`data/venues.json?t=${Date.now()}`)).json();
   const found = venues.find(v => v.id === id);
   if (!found) { location.replace('./'); return; }
-  const venue = withSettings(found);
-  showAbout(venue);
+  venue = withSettings(found);
   document.title = `${venue.name} · ${t('occupancy')}`;
   $('title').textContent = venue.name;
+  showHeader(venue);
+  showVTab(['density', 'calendar', 'website'].includes(params.get('tab')) ? params.get('tab') : 'density');
   addEventListener('resize', renderChart);
-  if (venue.simulated) { simVenue = venue; $('day').onchange = e => setDay(e.target.value); await reload(); setInterval(() => reload().catch(() => {}), 60000); return; }
-  if (!venue.data) { renderEmpty(venue); return; }
-  dataUrl = venue.data;
-  $('pill').hidden = false;
-  countRule = localized(venue, 'count_rule');
-  $('day').onchange = e => setDay(e.target.value);
+  if (venue.simulated) simVenue = venue;
+  else if (venue.data) { dataUrl = venue.data; $('pill').hidden = false; countRule = localized(venue, 'count_rule'); }
+  else { renderEmpty(); return; }
   await reload();
   setInterval(() => reload().catch(() => {}), 60000);
 }
-load().catch(() => {
-  $('subtitle').textContent = t('readError');
-});
+load().catch(() => { $('subtitle').hidden = false; $('subtitle').textContent = t('readError'); });
 
-// A venue with no camera yet: same layout, every value blank.
-function renderEmpty(venue) {
-  $('subtitle').textContent = `${typeName(venue.type)} · ${venue.coming_soon ? t('soon') : t('notConnected')}`;
-  const dash = '<span style="color:var(--muted)">—</span>';
-  $('tiles').innerHTML = [[t('tileLast'), t('people')], [t('tilePeak'), t('people')], [t('tileAvg'), t('perFrame')], [t('tileCount'), t('frames')]]
-    .map(([l, m]) => `<div class="card tile"><div class="label">${l}</div><div class="value">${dash}</div><div class="meta">${m}</div></div>`).join('');
+// A venue with no camera and no demo data: same layout, every value blank.
+function renderEmpty() {
+  renderTiles();
   renderChart();
-  $('frameImg').replaceWith(Object.assign(document.createElement('div'), { className: 'placeholder', textContent: venue.coming_soon ? t('soonPlaceholder') : t('noFramesVenue') }));
-  $('frameTime').textContent = t('framesWillAppear');
-  $('frameCount').textContent = '—';
-  $('prev').disabled = $('next').disabled = true;
-  $('strip').innerHTML = `<div class="empty" style="grid-column:1/-1">${t('noFramesYet')}</div>`;
+  renderCalendar();
   $('rows').innerHTML = `<tr><td colspan="3" class="empty">${t('noData')}</td></tr>`;
+  clearFrame(venue.coming_soon ? t('soonPlaceholder') : t('noFramesVenue'));
 }
 
-function renderTiles(at) {
-  const clock = at.toTimeString().slice(0, 5);
-  const updated = updatedAt ? t('lastAnalysis', `${updatedAt.slice(0, 10) === day ? '' : updatedAt.slice(0, 10) + ' '}${updatedAt.slice(11, 16)}`) : t('noAnalysis');
-  $('subtitle').textContent = frames.length
-    ? `CAM 01 · ${hm(frames[0].timestamp)}–${hm(frames[frames.length - 1].timestamp)} · ${t('asOf', clock)}`
-    : `CAM 01 · ${t('asOf', clock)}`;
-  if (countRule) $('subtitle').textContent += ` · ${countRule}`;
+// ---- Density tiles ----
+function stars(score) {  // score 0..5 in half steps
+  return Array.from({ length: 5 }, (_, i) => {
+    const fill = Math.max(0, Math.min(1, score - i));
+    return `<span class="star" style="--fill:${fill * 100}%"></span>`;
+  }).join('');
+}
+function renderTiles() {
+  const dash = '<span style="color:var(--muted)">—</span>';
+  const area = venue?.area_m2 || AREA_BY_TYPE[venue?.type] || 150;
   if (!frames.length) {
-    $('tiles').innerHTML = `<div class="card tile" style="grid-column:1/-1"><div class="label">${t('noAnalysedDay')}</div><div class="meta">${t('analysedHourly', updated)}</div></div>`;
+    $('tiles').innerHTML = [[t('tileLastMeasure'), t('people')], [t('tilePeak'), t('people')], [t('tilePerM2'), t('perM2Meta', area)], [t('tilePopularity'), t('popularityMeta')]]
+      .map(([l, m]) => `<div class="card tile"><div class="label">${l}</div><div class="value">${dash}</div><div class="meta">${m}</div></div>`).join('');
     return;
   }
-  const progress = [t('tileCount'), frames.length, `${t('frames')} · ${updated}`];
   const last = frames[frames.length - 1];
   const peak = Math.max(...frames.map(f => f.people));
   const peakTimes = frames.filter(f => f.people === peak).map(f => hm(f.timestamp));
   const avg = frames.reduce((s, f) => s + f.people, 0) / frames.length;
-  const tiles = [
-    [t('tileLast'), last.people, `${t('people')} · ${hm(last.timestamp)}<br>${levelBadge(last.people)}`],
+  // Popularity: where the day's peak and average sit on the five crowd levels, as 1–5 stars in half steps.
+  const lvl = n => LEVELS.indexOf(levelOf(n));
+  const score = Math.round((1 + (lvl(peak) * 0.6 + lvl(Math.round(avg)) * 0.4)) * 2) / 2;
+  const density = last.people / area;
+  $('tiles').innerHTML = [
+    [t('tileLastMeasure'), last.people, `${t('people')} · ${hm(last.timestamp)}<br>${levelBadge(last.people)}`],
     [t('tilePeak'), peak, `${t('people')} · ${peakTimes.join(', ')}<br>${levelBadge(peak)}`],
-    [t('tileAvg'), decimal(avg.toFixed(1)), t('perFrameSoFar')],
-    progress,
-  ];
-  $('tiles').innerHTML = tiles.map(([l, v, m]) =>
-    `<div class="card tile"><div class="label">${l}</div><div class="value">${v}</div><div class="meta">${m}</div></div>`).join('');
+    [t('tilePerM2'), decimal(density < 0.1 ? density.toFixed(3) : density.toFixed(2)), t('perM2Meta', area)],
+    [t('tilePopularity'), `<span class="stars" aria-label="${score} / 5">${stars(score)}</span>`, `${decimal(score.toFixed(1))} / 5 · ${t('popularityMeta')}`],
+  ].map(([l, v, m]) => `<div class="card tile"><div class="label">${l}</div><div class="value">${v}</div><div class="meta">${m}</div></div>`).join('');
 }
 
-function renderStrip() {
-  if (!frames.length) {
-    $('strip').innerHTML = `<div class="empty" style="grid-column:1/-1">${t('noFramesDay')}</div>`;
-    $('rows').innerHTML = `<tr><td colspan="3" class="empty">${t('noData')}</td></tr>`;
-    $('frameTime').textContent = '\u00a0'; $('frameCount').textContent = '—'; $('frameNote').textContent = '';
-    return;
+// ---- Table (click a row to show its frame) ----
+function renderRows() {
+  if (!frames.length) { $('rows').innerHTML = `<tr><td colspan="3" class="empty">${t('noData')}</td></tr>`; return; }
+  $('rows').innerHTML = frames.map((f, i) =>
+    `<tr data-i="${i}"><td>${hms(f.timestamp)}</td><td class="n">${f.people}</td><td>${localized(f, 'note')}</td></tr>`).join('');
+}
+$('rows').onclick = e => { const r = e.target.closest('tr[data-i]'); if (r) select(+r.dataset.i); };
+
+// ---- Activity calendar: days × hours, each cell the busiest frame in that hour ----
+function renderCalendar() {
+  const box = $('calendar');
+  if (!everything.length) { box.innerHTML = `<p class="empty">${t('noData')}</p>`; return; }
+  const hours = Array.from({ length: 24 }, (_, i) => (i + 6) % 24);  // business day 06 → 05
+  const byDay = new Map();
+  for (const f of everything) {
+    if (new Date(f.timestamp) > new Date()) continue;
+    const d = dayOf(f), h = new Date(f.timestamp).getHours();
+    const row = byDay.get(d) || {}; row[h] = Math.max(row[h] ?? 0, f.people); byDay.set(d, row);
   }
-  $('strip').innerHTML = frames.map((f, i) =>
-    `<button class="thumb" data-i="${i}" aria-label="${hms(f.timestamp)}, ${f.people} ${t('people')}">${f.file ? `<img loading="lazy" src="${f.file}" alt="">` : `<div class="thumbph">${t('demoData')}</div>`}<span>${hm(f.timestamp)}<b>${f.people}</b></span></button>`).join('');
-  $('strip').onclick = e => { const b = e.target.closest('.thumb'); if (b) select(+b.dataset.i); };
-  $('rows').innerHTML = frames.map(f =>
-    `<tr><td>${hms(f.timestamp)}</td><td class="n">${f.people}</td><td>${localized(f, 'note')}</td></tr>`).join('');
+  const ds = [...byDay.keys()].sort().reverse();
+  const head = `<div class="cal-row cal-head"><span></span>${hours.map(h => `<span>${h % 3 === 0 ? String(h).padStart(2, '0') : ''}</span>`).join('')}</div>`;
+  const rows = ds.map(d => `<div class="cal-row"><span class="cal-day">${d === today() ? t('today') : fmtDay(d)}</span>${hours.map(h => {
+    const n = byDay.get(d)[h];
+    if (n === undefined) return '<span class="cal-cell"></span>';
+    const lv = levelOf(n);
+    return `<button class="cal-cell" style="--c:${lv.color}" data-day="${d}" data-h="${h}" title="${fmtDay(d)} ${String(h).padStart(2, '0')}:00 · ${n} ${t('people')}">${n}</button>`;
+  }).join('')}</div>`).join('');
+  box.innerHTML = head + rows;
+  box.onclick = e => {
+    const c = e.target.closest('.cal-cell[data-day]'); if (!c) return;
+    showVTab('density'); setDay(c.dataset.day);
+    const i = frames.findIndex(f => new Date(f.timestamp).getHours() === +c.dataset.h);
+    if (i >= 0) select(i);
+  };
 }
 
+// ---- Website ----
+function renderWebsite() {
+  const box = $('web');
+  if (box.dataset.done) return;
+  box.dataset.done = 1;
+  if (!venue?.website) { box.innerHTML = `<p class="empty">${t('noWebsite')}</p>`; return; }
+  box.innerHTML = `<div class="webbar"><span>${venue.website.replace(/^https?:\/\//, '')}</span><a href="${venue.website}" target="_blank" rel="noopener">${t('openSite')} ↗</a></div>
+    <iframe src="${venue.website}" title="${venue.name}" loading="lazy" referrerpolicy="no-referrer"></iframe>`;
+}
+
+// ---- Chart ----
 function renderChart() {
   const box = $('chart');
-  const W = Math.max(300, box.clientWidth), H = Math.round(Math.min(320, W * 0.5));
-  const m = { t: 12, r: 12, b: 26, l: 30 };
+  if (!box.clientWidth) return;
+  const W = Math.max(300, box.clientWidth), H = Math.round(Math.min(340, Math.max(220, W * 0.3)));
+  const m = { t: 12, r: 12, b: 26, l: 40 };
   const secs = f => { const [h, mi, s] = hms(f.timestamp).split(':').map(Number); return (f.timestamp.slice(0, 10) > day ? 86400 : 0) + h * 3600 + mi * 60 + s; };
-  // The time axis spans the whole day so the line grows as frames come due.
-  // At least 08:00–24:00 so a day in progress keeps a stable axis; wider if frames fall outside it.
   const t0 = Math.min(8 * 3600, all.length ? Math.floor(secs(all[0]) / 3600) * 3600 : Infinity);
   const t1 = Math.max(24 * 3600, all.length ? Math.ceil(secs(all[all.length - 1]) / 3600) * 3600 : 0);
   // A "nice" tick step (1, 2 or 5 × 10ⁿ) giving about five gridlines, whether the peak is 10 or 1,200.
@@ -312,29 +395,24 @@ function renderChart() {
   const x = s => m.l + (s - t0) / (t1 - t0) * (W - m.l - m.r);
   const y = v => H - m.b - v / max * (H - m.t - m.b);
   points = frames.map((f, i) => ({ i, x: x(secs(f)), y: y(f.people) }));
-
   let g = '';
   for (let v = 0; v <= max; v += tick) {
     g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--${v ? 'grid' : 'axis'})" stroke-width="1"/>`;
     g += `<text x="${m.l - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
   }
-  const step = W < 520 ? 2 : 1;
-  for (let h = t0 / 3600; h <= t1 / 3600; h += step * (W < 720 ? 2 : 1))
+  for (let h = t0 / 3600; h <= t1 / 3600; h += W < 720 ? 2 : 1)
     g += `<text x="${x(h * 3600)}" y="${H - 6}" text-anchor="middle">${String(h % 24).padStart(2, '0')}:00</text>`;
   if (points.length) {
     const line = points.map((p, i) => `${i ? 'L' : 'M'}${p.x},${p.y}`).join('');
     const area = `${line}L${points[points.length - 1].x},${y(0)}L${points[0].x},${y(0)}Z`;
-    // iOS-style area: the series colour fading to nothing at the baseline.
     g += `<defs><linearGradient id="areaFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--series);stop-opacity:.32"/><stop offset="1" style="stop-color:var(--series);stop-opacity:0"/></linearGradient></defs>`;
     g += `<path d="${area}" fill="url(#areaFade)"/>`;
     g += `<path d="${line}" fill="none" stroke="var(--series)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
   }
   g += `<line id="cross" y1="${m.t}" y2="${H - m.b}" stroke="var(--axis)" stroke-width="1" visibility="hidden"/>`;
-  // Each point takes its crowd-level colour.
   g += points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${levelOf(frames[p.i].people).color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
   g += `<circle id="sel" r="7" fill="none" stroke="var(--series)" stroke-width="2"/>`;
-  g += `<rect id="hit" x="${m.l}" y="0" width="${W - m.l - m.r}" height="${H}" fill="transparent" style="cursor:pointer"/>`;
-
+  g += `<rect x="${m.l}" y="0" width="${W - m.l - m.r}" height="${H}" fill="transparent" style="cursor:pointer"/>`;
   box.querySelector('svg')?.remove();
   box.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t('chartAria')}">${g}</svg>`);
   const svg = box.querySelector('svg'), tip = $('tip'), cross = $('cross');
@@ -352,7 +430,6 @@ function renderChart() {
   };
   svg.onmouseleave = () => { tip.style.display = 'none'; cross.setAttribute('visibility', 'hidden'); };
   svg.onclick = e => select(nearest(e).i);
-  markSelected();
 }
 
 function markSelected() {
@@ -360,27 +437,33 @@ function markSelected() {
   if (!sel) return;
   sel.setAttribute('visibility', p ? 'visible' : 'hidden');
   if (p) { sel.setAttribute('cx', p.x); sel.setAttribute('cy', p.y); }
-  if ($('frameImg')) $('frameImg').style.visibility = p ? 'visible' : 'hidden';
 }
 
+// ---- Selected frame (blurred so no one can be recognised) ----
+function clearFrame(msg) {
+  $('frameImg').removeAttribute('src');
+  $('frameImg').closest('.frameimg').classList.add('empty');
+  $('frameTime').textContent = msg || ' ';
+  $('frameCount').textContent = '—';
+  $('frameNote').textContent = '';
+}
 function select(i) {
   if (!frames.length) return;
   current = Math.max(0, Math.min(frames.length - 1, i));
   const f = frames[current];
+  const wrap = $('frameImg').closest('.frameimg');
+  wrap.classList.remove('empty');
+  wrap.classList.toggle('demo', !f.file);
   $('frameImg').src = f.file || (simVenue?.logo ?? '');
-  $('frameImg').classList.toggle('demo', !f.file);
   $('frameImg').alt = t('frameAlt', hms(f.timestamp));
-  $('frameTime').textContent = `${f.timestamp.slice(0, 10)} · ${hms(f.timestamp)} · ${f.camera}`;
+  $('frameTime').textContent = `${fmtDay(dayOf(f))} · ${hms(f.timestamp)} · ${f.camera}`;
   $('frameCount').textContent = f.people;
   const note = localized(f, 'note');
   $('frameNote').innerHTML = `${levelBadge(f.people)}${note ? ' · ' : ''}`;
   $('frameNote').append(note);
-  document.querySelectorAll('.thumb').forEach(b => b.setAttribute('aria-current', +b.dataset.i === current));
+  document.querySelectorAll('#rows tr').forEach(r => r.classList.toggle('on', +r.dataset.i === current));
   markSelected();
 }
-$('prev').onclick = () => select(current - 1);
-$('next').onclick = () => select(current + 1);
-addEventListener('keydown', e => { if (e.key === 'ArrowLeft') select(current - 1); if (e.key === 'ArrowRight') select(current + 1); });
 </script>
 </body>
 </html>
