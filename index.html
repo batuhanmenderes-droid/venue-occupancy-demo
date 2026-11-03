@@ -142,14 +142,14 @@ $('tab-harita').onclick = () => showTab('harita');
 // ---- Heatmap (Akyaka + Akçapınar) ----
 function initMap() {
   if (map) return;
-  map = L.map('map', { scrollWheelZoom: true });
+  // Zoom is limited to 14 (both towns in view) … 16 (a few streets around a venue).
+  map = L.map('map', { scrollWheelZoom: true, minZoom: 14, maxZoom: 16 });
   // Akyaka in the north-west, Akçapınar to the south-east.
   map.fitBounds([[37.020, 28.318], [37.062, 28.366]]);
   heat = new HeatBlobs().addTo(map);
   markers = L.layerGroup().addTo(map);
   map.on('zoomend', drawMap);
   addBasemap();
-  addZoomPanel();
   drawMap();
 }
 
@@ -199,56 +199,6 @@ const TOWNS = [
   { name: 'Akyaka', lat: 37.0580, lon: 28.3271, dy: 0 },
   { name: 'Akçapınar', lat: 37.0258, lon: 28.3579, dy: 38 },  // below the Lemongrass pin
 ];
-
-// ---- Zoom limits panel ----
-// Min / max zoom the viewer may reach. Saved per browser; defaults cover the whole Gökova bay (11)
-// down to street level (18).
-const ZOOM_DEFAULT = { min: 11, max: 18 }, ZOOM_RANGE = [3, 19];
-function loadZoomLimits() {
-  try { return { ...ZOOM_DEFAULT, ...JSON.parse(localStorage.getItem('zoomLimits') || '{}') }; } catch { return { ...ZOOM_DEFAULT }; }
-}
-function addZoomPanel() {
-  const lim = loadZoomLimits();
-  const apply = () => {
-    map.setMinZoom(lim.min); map.setMaxZoom(lim.max);
-    try { localStorage.setItem('zoomLimits', JSON.stringify(lim)); } catch {}
-  };
-  apply();
-  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
-    const box = L.DomUtil.create('div', 'zoompanel');
-    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
-    box.innerHTML = `<button class="zp-toggle" aria-expanded="false">${t('zoomPanel')} ▾</button>
-      <div class="zp-body" hidden>
-        <div class="zp-now">${t('zoomNow')} <b data-now></b></div>
-        <label>${t('zoomMin')} <span><input type="range" data-k="min" min="${ZOOM_RANGE[0]}" max="${ZOOM_RANGE[1]}"><output data-o="min"></output></span></label>
-        <label>${t('zoomMax')} <span><input type="range" data-k="max" min="${ZOOM_RANGE[0]}" max="${ZOOM_RANGE[1]}"><output data-o="max"></output></span></label>
-        <div class="zp-actions"><button data-set="min">${t('zoomSetMin')}</button><button data-set="max">${t('zoomSetMax')}</button></div>
-        <button class="zp-reset">${t('zoomReset')}</button>
-      </div>`;
-    const q = sel => box.querySelector(sel);
-    const sync = () => {
-      q('[data-now]').textContent = map.getZoom();
-      for (const k of ['min', 'max']) { q(`[data-k="${k}"]`).value = lim[k]; q(`[data-o="${k}"]`).textContent = lim[k]; }
-    };
-    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
-    box.querySelectorAll('[data-k]').forEach(inp => inp.oninput = () => {
-      lim[inp.dataset.k] = +inp.value;
-      // Keep min ≤ max by pushing the other end along.
-      if (lim.min > lim.max) inp.dataset.k === 'min' ? (lim.max = lim.min) : (lim.min = lim.max);
-      apply(); sync();
-    });
-    box.querySelectorAll('[data-set]').forEach(btn => btn.onclick = () => {
-      lim[btn.dataset.set] = map.getZoom();
-      if (lim.min > lim.max) btn.dataset.set === 'min' ? (lim.max = lim.min) : (lim.min = lim.max);
-      apply(); sync();
-    });
-    q('.zp-reset').onclick = () => { Object.assign(lim, ZOOM_DEFAULT); apply(); sync(); };
-    map.on('zoomend', sync);
-    sync();
-    return box;
-  } });
-  new Ctl().addTo(map);
-}
 
 function addBasemap() {
   L.tileLayer(BASEMAP, { attribution: 'Tiles &copy; Esri', maxZoom: 19, maxNativeZoom: 14 }).addTo(map);
