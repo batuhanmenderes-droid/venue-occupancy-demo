@@ -19,7 +19,7 @@
     {
       "id": "no22-riders-inn",
       "name": "No22 Riders Inn",
-      "type": "Bar",
+      "type": "Kulüp",
       "folder": "no22riders-cctv",
       "data": "data/no22-riders-inn.json",
       "location": {
@@ -122,7 +122,7 @@
     {
       "id": "rahat-social",
       "name": "Rahat Social",
-      "type": "Bar",
+      "type": "Kafe",
       "folder": null,
       "data": null,
       "simulated": true,
@@ -134,15 +134,15 @@
       },
       "logo": "logos/rahatsocial.png",
       "hours": {
-        "open": "12:00",
-        "close": "02:00"
+        "open": "09:00",
+        "close": "00:00"
       },
       "description": ""
     },
     {
       "id": "dane-gokova",
       "name": "Dane Gökova",
-      "type": "Otel",
+      "type": "Kulüp",
       "folder": null,
       "data": null,
       "simulated": true,
@@ -154,8 +154,8 @@
       },
       "logo": "logos/danegokova.png",
       "hours": {
-        "open": "08:00",
-        "close": "23:00"
+        "open": "22:00",
+        "close": "04:00"
       },
       "description": ""
     },
@@ -182,7 +182,7 @@
     {
       "id": "chicken-loop",
       "name": "Chicken Loop",
-      "type": "Kafe",
+      "type": "Restoran",
       "folder": null,
       "data": null,
       "simulated": true,
@@ -194,15 +194,15 @@
       },
       "logo": "logos/chickenloop.png",
       "hours": {
-        "open": "09:00",
-        "close": "20:00"
+        "open": "11:00",
+        "close": "23:00"
       },
       "description": ""
     },
     {
       "id": "back-loop",
       "name": "Back Loop",
-      "type": "Bar",
+      "type": "Meyhane",
       "folder": null,
       "data": null,
       "simulated": true,
@@ -282,7 +282,7 @@
     {
       "id": "yelken",
       "name": "Yelken",
-      "type": "Otel",
+      "type": "Pub",
       "folder": null,
       "data": null,
       "simulated": true,
@@ -294,8 +294,8 @@
       },
       "logo": "logos/yelken.png",
       "hours": {
-        "open": "07:00",
-        "close": "00:00"
+        "open": "17:00",
+        "close": "02:00"
       },
       "description": ""
     },
@@ -342,7 +342,7 @@
     {
       "id": "edit",
       "name": "Edit.",
-      "type": "Kafe",
+      "type": "Kulüp",
       "folder": null,
       "data": null,
       "simulated": true,
@@ -354,15 +354,15 @@
       },
       "logo": "logos/edit.png",
       "hours": {
-        "open": "09:00",
-        "close": "22:00"
+        "open": "21:00",
+        "close": "04:00"
       },
       "description": ""
     },
     {
       "id": "okapi-suites",
       "name": "Okapi Suites",
-      "type": "Otel",
+      "type": "Kulüp",
       "folder": null,
       "data": null,
       "simulated": true,
@@ -373,7 +373,10 @@
         "label": "Akçapınar"
       },
       "logo": "logos/okapi.png",
-      "hours": null,
+      "hours": {
+        "open": "22:00",
+        "close": "04:00"
+      },
       "description": ""
     },
     {

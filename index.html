@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js"></script>
+<script src="i18n.js?v=20261103c"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,14 +78,27 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="theme.css?v=20261103c">
 </head>
 <body>
 <main>
   <p class="sub" id="subtitle" hidden></p>
-  <div class="tabs" role="tablist">
-    <button class="tab" role="tab" id="tab-liste" aria-controls="view-liste" data-i18n="tabList">List view</button>
-    <button class="tab" role="tab" id="tab-harita" aria-controls="view-harita" data-i18n="tabMap">Heatmap</button>
+  <div class="topbar">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-liste" aria-controls="view-liste" data-i18n="tabList">List view</button>
+      <button class="tab" role="tab" id="tab-harita" aria-controls="view-harita" data-i18n="tabMap">Heatmap</button>
+    </div>
+    <div class="filters" role="group" data-i18n-aria="filterAria">
+      <button data-cat="all" data-i18n="filterAll">All</button>
+      <button data-cat="fun" data-i18n="filterFun">Entertainment</button>
+      <button data-cat="food" data-i18n="filterFood">Food</button>
+      <button data-cat="activity" data-i18n="filterActivity">Activity</button>
+    </div>
+    <select id="sort" data-i18n-aria="sortAria">
+      <option value="busy" data-i18n="sortBusy">Busiest first</option>
+      <option value="quiet" data-i18n="sortQuiet">Quietest first</option>
+      <option value="name" data-i18n="sortName">Name A–Z</option>
+    </select>
   </div>
   <section id="view-liste" role="tabpanel"><div class="grid" id="grid"></div></section>
   <section id="view-harita" role="tabpanel" hidden>
@@ -112,8 +125,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js"></script>
-<script src="venue-state.js"></script>
+<script src="levels.js?v=20261103c"></script>
+<script src="venue-state.js?v=20261103c"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -141,10 +154,40 @@ async function load() {
   }));
   document.title = `${t('venues')} · ${t('occupancy')}`;
   $('subtitle').textContent = t('listSub', venues.length, now.toTimeString().slice(0, 5));
-  $('grid').innerHTML = cards.map(card).join('');
   lastCards = cards;
+  renderGrid();
   if (map) drawMap();
 }
+
+// ---- Category filter + sort (filter applies to list and map, sort to the list) ----
+// Entertainment: pubs, bars, taverns, night clubs · Food: restaurants, taverns, cafes · Activity: gym, beach.
+const CATEGORIES = {
+  fun: ['Pub', 'Bar', 'Meyhane', 'Kulüp'],
+  food: ['Restoran', 'Meyhane', 'Kafe'],
+  activity: ['Spor', 'Plaj'],
+};
+const pref = (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d; } };
+let category = pref('venueFilter', 'all'), sortBy = pref('venueSort', 'busy');
+const inCategory = v => category === 'all' || (CATEGORIES[category] || []).includes(v.type);
+// Busiest first, closed venues always at the end.
+function sorted(cards) {
+  const closed = v => v.status?.state === 'closed' ? 1 : 0, n = v => v.latest?.people ?? -1;
+  const by = { busy: (a, b) => n(b) - n(a), quiet: (a, b) => n(a) - n(b), name: (a, b) => a.name.localeCompare(b.name, LANG) }[sortBy];
+  return [...cards].sort((a, b) => closed(a) - closed(b) || by(a, b));
+}
+function renderGrid() { $('grid').innerHTML = sorted(lastCards.filter(inCategory)).map(card).join(''); }
+function syncFilters() {
+  document.querySelectorAll('.filters [data-cat]').forEach(b => b.setAttribute('aria-pressed', b.dataset.cat === category));
+  $('sort').value = sortBy;
+}
+document.querySelector('.filters').onclick = e => {
+  const b = e.target.closest('[data-cat]'); if (!b) return;
+  category = b.dataset.cat;
+  try { localStorage.setItem('venueFilter', category); } catch {}
+  syncFilters(); renderGrid(); if (map) drawMap();
+};
+$('sort').onchange = e => { sortBy = e.target.value; try { localStorage.setItem('venueSort', sortBy); } catch {} renderGrid(); };
+syncFilters();
 
 // ---- Tabs ----
 let lastCards = [], map = null, markers = null, heat = null;
@@ -181,7 +224,7 @@ function initMap() {
 
 function drawMap() {
   if (!map) return;
-  const placed = lastCards.filter(v => v.location);
+  const placed = lastCards.filter(v => v.location && inCategory(v));
   markers.clearLayers();
   const pins = spreadPins(placed);
   // Each venue gets an organic heat cloud in its level colour around its (possibly spread) pin;

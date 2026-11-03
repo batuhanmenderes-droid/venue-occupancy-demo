@@ -2,7 +2,7 @@
 //
 // Hours and description come from data/venues.json and can be overridden per browser from the settings
 // dialog (localStorage "venueSettings"). Venues marked `simulated` have no camera yet: their count is a
-// made-up demo value that changes every 40 minutes, 5–10 at busy times and lower or 0 at quiet times.
+// made-up demo value that changes every 40 minutes, following a daily curve for its category (CURVES).
 
 const SIM_SLOT_MIN = 40;
 
@@ -48,9 +48,23 @@ function simRandom(seed) {
   x = Math.imul(x ^ (x >>> 13), 3266489909);
   return ((x ^ (x >>> 16)) >>> 0) / 4294967296;
 }
-// How busy a typical evening-leaning venue is at this hour (0..1).
-function dayCurve(hour) {
-  const pts = [[0, 0.55], [2, 0.25], [4, 0], [9, 0], [11, 0.3], [14, 0.5], [17, 0.6], [20, 1], [22, 0.95], [24, 0.55]];
+// How busy a venue of each category is through the day (0..1), as [hour, level] points.
+// The curves hand the crowd on through the night: tavern (meyhane) dinners peak 18–22, then people
+// move on to bars and clubs; bars are steady all day, dip at 22 as the crowd heads to the clubs and
+// peak after midnight when it comes back, emptying from 02; clubs fill 22–00 and thin out after.
+const CURVES = {
+  Meyhane:  [[0, 0.25], [1, 0.05], [2, 0], [14, 0], [15, 0.15], [17, 0.4], [18, 0.85], [19, 1], [21, 1], [22, 0.8], [23, 0.5], [24, 0.25]],
+  Bar:      [[0, 0.9], [1, 1], [2, 0.9], [3, 0.4], [4, 0.1], [5, 0], [11, 0], [12, 0.4], [16, 0.5], [21, 0.55], [22, 0.4], [23, 0.35], [24, 0.9]],
+  Pub:      [[0, 0.9], [1, 1], [2, 0.85], [3, 0.35], [4, 0.05], [5, 0], [11, 0], [12, 0.4], [16, 0.5], [21, 0.55], [22, 0.4], [23, 0.35], [24, 0.9]],
+  Kulüp:    [[0, 0.95], [1, 0.75], [2, 0.6], [3, 0.4], [4, 0.1], [5, 0], [20, 0], [21, 0.15], [22, 0.45], [23, 0.85], [24, 0.95]],
+  Restoran: [[0, 0.05], [1, 0], [10, 0], [11, 0.25], [12, 0.75], [13, 1], [15, 0.85], [17, 0.75], [18, 0.6], [20, 0.5], [22, 0.25], [24, 0.05]],
+  Kafe:     [[0, 0.1], [1, 0], [7, 0], [8, 0.25], [10, 0.6], [13, 0.75], [16, 0.7], [18, 0.5], [21, 0.35], [23, 0.2], [24, 0.1]],
+  Spor:     [[0, 0], [6, 0], [7, 0.5], [8, 0.8], [10, 0.4], [13, 0.2], [17, 0.6], [19, 1], [21, 0.5], [22, 0], [24, 0]],
+  Otel:     [[0, 0.3], [6, 0.2], [9, 0.6], [12, 0.5], [18, 0.6], [22, 0.5], [24, 0.3]],
+};
+CURVES.default = CURVES.Bar;
+function dayCurve(hour, type) {
+  const pts = CURVES[type] || CURVES.default;
   for (let i = 1; i < pts.length; i++) {
     const [h1, v1] = pts[i - 1], [h2, v2] = pts[i];
     if (hour <= h2) return v1 + (v2 - v1) * (hour - h1) / (h2 - h1);
@@ -92,12 +106,11 @@ function simCount(v, at) {
   if (isClosed(v, at)) return 0;
   if (v.sim_profile === 'beach') return beachCount(v, at);
   const hour = at.getHours() + at.getMinutes() / 60;
-  const busy = dayCurve(hour);
+  const busy = dayCurve(hour, v.type);
   const r = simRandom(`${v.id}:${slotStart(at).getTime()}`);
-  if (busy < 0.15 || r < 0.06) return 0;                   // quiet hours, and the odd empty moment
-  const level = Math.min(1, Math.max(0, busy * 0.85 + (r - 0.5) * 0.5));
-  // Halved for the demo: quiet 0–6, busy 5–10.
-  return Math.round((busy < 0.45 ? level * 12 : 10 + level * 10) / 2);
+  if (busy < 0.08 || r < 0.04) return 0;                   // quiet hours, and the odd empty moment
+  // Demo scale (halved): up to ~10 people at a category's peak, with ±15% noise.
+  return Math.max(0, Math.round(10 * busy * (0.85 + r * 0.3)));
 }
 // One simulated frame per 40-minute slot of a business day (06:00 → 06:00), up to `until`.
 function simFrames(v, day, until = new Date()) {

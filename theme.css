@@ -230,7 +230,7 @@ footer { margin-top: 20px; font-size: 12px; line-height: 1.6; }
 /* Full-screen map: the map fills the window; tabs float top-left, language switch top-right. */
 body.mapmode { overflow: hidden; }
 body.mapmode main { padding: 0; max-width: none; }
-body.mapmode .tabs { position: fixed; top: 14px; left: 16px; z-index: 1000; margin: 0;
+body.mapmode .tabs { margin: 0;
   background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
   box-shadow: var(--shadow-float), var(--highlight); }
 body.mapmode .mapwrap { position: fixed; inset: 0; border: 0; border-radius: 0; box-shadow: none; }
@@ -334,3 +334,18 @@ body.mapmode .leaflet-top.leaflet-right { top: 56px; }  /* clear of the language
 .rising .rise, .vrise .rise { width: 13px; height: 13px; }
 .rising { padding: 6px 9px; border-radius: 999px; background: rgba(255, 159, 10, 0.14); justify-self: start; align-self: flex-start; }
 .leaflet-tooltip.vlabel .vrise { font-size: 11px; margin-top: 2px; }
+
+/* Top bar: view tabs, category filter, sort */
+.topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 24px; padding-right: 90px; }
+.topbar .tabs { margin: 0; }
+.filters { display: inline-flex; gap: 0; padding: 3px; border-radius: 14px; background: var(--fill); }
+.filters button { font: 600 13px/1 var(--font-text); background: transparent; color: var(--ink-2); padding: 10px 16px; border-radius: 11px; }
+.filters button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.04); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .filters button[aria-pressed="true"] { background: #636366; } }
+:root[data-theme="dark"] .filters button[aria-pressed="true"] { background: #636366; }
+#sort { padding: 11px 32px 11px 14px; border-radius: 14px; font-size: 13px; }
+body.mapmode #sort { display: none; }
+body.mapmode .topbar { position: fixed; top: 14px; left: 16px; z-index: 1000; margin: 0; padding: 0; }
+body.mapmode .topbar > .tabs, body.mapmode .topbar > .filters {
+  background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: var(--shadow-float), var(--highlight); }
