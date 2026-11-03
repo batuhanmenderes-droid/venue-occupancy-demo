@@ -73,7 +73,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .leaflet-tooltip.vlabel b { font-size: 14px; font-variant-numeric: tabular-nums; }
 .leaflet-tooltip.vlabel::before { display: none; }
 .leaflet-container { font: inherit; }
-.heatcanvas { position: absolute; pointer-events: none; filter: blur(6px); transition: opacity .2s; }
+.heatcanvas { position: absolute; pointer-events: none; filter: blur(8px) saturate(1.15); transition: opacity .2s; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
@@ -162,7 +162,8 @@ function drawMap() {
   heat.setBlobs(placed.filter(v => v.latest).map(v => ({
     seed: v.id,
     latlng: pins.get(v.id).latlng,
-    level: LEVELS.indexOf(levelOf(v.latest.people)),
+    color: levelOf(v.latest.people).color,
+    strength: 0.45 + 0.55 * Math.min(v.latest.people / 50, 1),
     meters: 120 + Math.min(v.latest.people, 100) * 12,  // 0 → 120 m, 25 → 420 m, 50 → 720 m
     minPx: 34 + Math.min(v.latest.people, 100) * 2.4,  // keeps the cloud readable when zoomed out
   })));
@@ -180,7 +181,7 @@ function drawMap() {
       title: v.name,
     }).addTo(markers);
     const offset = { top: [0, -PIN / 2 - 2], left: [-PIN / 2 - 2, 0], right: [PIN / 2 + 2, 0] }[pin.dir];
-    m.bindTooltip(v.coming_soon ? `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>` : `<span class="vname">${v.name}</span><span class="vcount">${n === null ? '—' : n}${PERSON_ICON}</span>`,
+    m.bindTooltip(v.coming_soon ? `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>` : `<span class="vcount">${n === null ? '—' : n}${PERSON_ICON}</span><span class="vname">${v.name}</span>`,
       { permanent: true, direction: pin.dir, offset, className: 'vlabel' });
     m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
   }
@@ -208,24 +209,6 @@ function addBasemap() {
 const PERSON_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="4.6" r="2.9" fill="currentColor"/><path d="M2.6 14.4c0-3.1 2.4-5.4 5.4-5.4s5.4 2.3 5.4 5.4z" fill="currentColor"/></svg>';
 
 // ---- Organic heat clouds ----
-// Outward colour ramp, from the edge (grey) to the hottest level. A venue's core uses its own level
-// colour and fades through every lower level: e.g. orange → yellow → green → blue → grey.
-const RAMP = ['#8e8e93', '#0a84ff', '#30d158', '#ffd60a', '#ff9f0a', '#ff453a', '#a2223f'];
-const LEVEL_TO_RAMP = [1, 2, 4, 5, 6];  // Quiet, Normal, Busy, Crowded, Very crowded
-function rampLut(level) {
-  const top = LEVEL_TO_RAMP[level], colors = RAMP.slice(0, top + 1);
-  const lut = new Uint8ClampedArray(256 * 4);
-  const hex = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
-  for (let k = 0; k < 256; k++) {
-    const t = k / 255;                       // 0 = thin edge, 1 = dense core
-    const pos = t * (colors.length - 1), i = Math.min(colors.length - 2, Math.floor(pos)), f = pos - i;
-    const a = hex(colors[i]), c = hex(colors[i + 1] || colors[i]);
-    const edge = Math.min(1, t / 0.12);      // soft outer fade into the 20% grey
-    const alpha = (0.2 + 0.45 * Math.pow(t, 0.8)) * edge;
-    lut.set([a[0] + (c[0] - a[0]) * f, a[1] + (c[1] - a[1]) * f, a[2] + (c[2] - a[2]) * f, alpha * 255], k * 4);
-  }
-  return lut;
-}
 
 // A canvas layer that draws each venue as a cluster of soft radial gradients ("lobes") placed by a
 // per-venue seeded random, then blurred, so the glow reads as a loose crowd rather than a circle.
@@ -248,7 +231,7 @@ const HeatBlobs = L.Layer.extend({
     m.on('zoomstart', this._hide, this);
     m.on('zoomend', this._show, this);
     this._still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const tick = () => { this._draw(); if (!this._still) this._raf = setTimeout(() => requestAnimationFrame(tick), 90); };
+    const tick = () => { this._draw(); if (!this._still) this._raf = setTimeout(() => requestAnimationFrame(tick), 40); };
     tick();
     return this;
   },
@@ -262,9 +245,9 @@ const HeatBlobs = L.Layer.extend({
       const rnd = seeded(b.seed);
       const lobes = Array.from({ length: 11 }, (_, i) => ({
         ang: rnd() * Math.PI * 2, dist: i === 0 ? 0 : 0.15 + rnd() * 0.5, size: i === 0 ? 0.75 : 0.32 + rnd() * 0.42,
-        speed: 0.15 + rnd() * 0.35, phase: rnd() * Math.PI * 2,
+        speed: 0.6 + rnd() * 0.9, phase: rnd() * Math.PI * 2, wave: 1.2 + rnd() * 1.6,
       }));
-      return { ...b, lobes, lut: rampLut(b.level) };
+      return { ...b, lobes };
     });
     if (this._map) this._draw();
   },
@@ -280,40 +263,29 @@ const HeatBlobs = L.Layer.extend({
     const ctx = c.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, size.x, size.y);
+    ctx.globalCompositeOperation = 'lighter';  // overlapping lobes add up into a denser core
     const time = this._still ? 0 : performance.now() / 1000;
     for (const b of this._blobs) {
       const p = m.latLngToContainerPoint(b.latlng);
       const mpp = 40075016.686 * Math.cos(b.latlng.lat * Math.PI / 180) / Math.pow(2, m.getZoom() + 8);
       const R = Math.max(b.meters / mpp, b.minPx);
-      // 1) Density mask: lobes as white radial falloffs, summed, in an offscreen canvas around the pin.
-      const half = Math.ceil(R * 1.25), side = half * 2;
-      const off = this._mask || (this._mask = document.createElement('canvas'));  // not _off: Leaflet's Evented owns that name
-      if (off.width < side || off.height < side) { off.width = off.height = side; }
-      const o = off.getContext('2d', { willReadFrequently: true });
-      o.setTransform(1, 0, 0, 1, 0, 0);
-      o.clearRect(0, 0, side, side);
-      o.globalCompositeOperation = 'lighter';
       for (const l of b.lobes) {
-        const wob = Math.sin(time * l.speed + l.phase);
-        const x = half + Math.cos(l.ang + wob * 0.25) * l.dist * R;
-        const y = half + Math.sin(l.ang + wob * 0.25) * l.dist * R;
-        const r = R * l.size * (1 + wob * 0.08);
-        const g = o.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0, 'rgba(255,255,255,0.55)');
-        g.addColorStop(1, 'rgba(255,255,255,0)');
-        o.fillStyle = g;
-        o.beginPath(); o.arc(x, y, r, 0, Math.PI * 2); o.fill();
+        // Two waves per lobe: one sways it around the pin, one swells and shrinks it, so the cloud
+        // ripples outward like a moving crowd.
+        const sway = Math.sin(time * l.speed + l.phase);
+        const swell = Math.sin(time * l.speed * l.wave + l.phase * 1.7);
+        const ang = l.ang + sway * 0.6;
+        const dist = l.dist * (1 + swell * 0.28);
+        const x = p.x + Math.cos(ang) * dist * R;
+        const y = p.y + Math.sin(ang) * dist * R;
+        const r = R * l.size * (1 + swell * 0.22);
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, rgba(b.color, 0.42 * b.strength));
+        g.addColorStop(0.5, rgba(b.color, 0.2 * b.strength));
+        g.addColorStop(1, rgba(b.color, 0));
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
       }
-      // 2) Colour the mask with the venue's ramp: dense core = its level colour, stepping down the
-      //    lower levels towards the edge and ending in grey at 20% opacity.
-      const img = o.getImageData(0, 0, side, side), px = img.data, lut = b.lut;
-      for (let i = 0; i < px.length; i += 4) {
-        const k = Math.min(255, px[i + 3] * 1.15) | 0;
-        if (!k) continue;
-        px[i] = lut[k * 4]; px[i + 1] = lut[k * 4 + 1]; px[i + 2] = lut[k * 4 + 2]; px[i + 3] = lut[k * 4 + 3];
-      }
-      o.putImageData(img, 0, 0);
-      ctx.drawImage(off, 0, 0, side, side, p.x - half, p.y - half, side, side);
     }
   },
 });
