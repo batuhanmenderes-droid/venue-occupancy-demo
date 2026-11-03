@@ -64,14 +64,20 @@
       "type": "Plaj",
       "folder": null,
       "data": null,
-      "coming_soon": true,
       "location": {
         "lat": 37.037453,
         "lon": 28.3294399,
         "approx": false,
         "label": "Kite Plajı, Akyaka"
       },
-      "logo": "logos/kitebeach.png"
+      "logo": "logos/kitebeach.png",
+      "simulated": true,
+      "sim_profile": "beach",
+      "hours": {
+        "open": "08:00",
+        "close": "20:00"
+      },
+      "description": ""
     },
     {
       "id": "rahat-meyhane",

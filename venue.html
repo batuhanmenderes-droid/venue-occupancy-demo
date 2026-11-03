@@ -219,7 +219,7 @@ function refresh() {
 
 async function load() {
   const id = new URLSearchParams(location.search).get('mekan') || 'lemongrass-cafe';
-  const { venues } = await (await fetch('data/venues.json')).json();
+  const { venues } = await (await fetch(`data/venues.json?t=${Date.now()}`)).json();
   const found = venues.find(v => v.id === id);
   if (!found) { location.replace('./'); return; }
   const venue = withSettings(found);
@@ -304,13 +304,17 @@ function renderChart() {
   // At least 08:00–24:00 so a day in progress keeps a stable axis; wider if frames fall outside it.
   const t0 = Math.min(8 * 3600, all.length ? Math.floor(secs(all[0]) / 3600) * 3600 : Infinity);
   const t1 = Math.max(24 * 3600, all.length ? Math.ceil(secs(all[all.length - 1]) / 3600) * 3600 : 0);
-  const max = Math.max(10, Math.ceil(Math.max(0, ...frames.map(f => f.people)) / 5) * 5);
+  // A "nice" tick step (1, 2 or 5 × 10ⁿ) giving about five gridlines, whether the peak is 10 or 1,200.
+  const peakN = Math.max(10, ...frames.map(f => f.people));
+  const raw = peakN / 5, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const tick = [1, 2, 5, 10].map(k => k * mag).find(k => k >= raw);
+  const max = Math.ceil(peakN / tick) * tick;
   const x = s => m.l + (s - t0) / (t1 - t0) * (W - m.l - m.r);
   const y = v => H - m.b - v / max * (H - m.t - m.b);
   points = frames.map((f, i) => ({ i, x: x(secs(f)), y: y(f.people) }));
 
   let g = '';
-  for (let v = 0; v <= max; v += 5) {
+  for (let v = 0; v <= max; v += tick) {
     g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--${v ? 'grid' : 'axis'})" stroke-width="1"/>`;
     g += `<text x="${m.l - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
   }

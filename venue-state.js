@@ -60,8 +60,37 @@ function dayCurve(hour) {
 const slotStart = at => new Date(Math.floor(at.getTime() / (SIM_SLOT_MIN * 60000)) * SIM_SLOT_MIN * 60000);
 const localIso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}T${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:00`;
 
+// Local sunset (hours, local clock) for a lat/lon, NOAA approximation; good to a few minutes.
+function sunsetHour(at, lat = 37.05, lon = 28.33) {
+  const rad = Math.PI / 180;
+  const start = new Date(at.getFullYear(), 0, 0);
+  const day = Math.floor((at - start) / 86400000);
+  const g = 2 * Math.PI / 365 * (day - 1);
+  const eqt = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+  const decl = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+  const ha = Math.acos(Math.cos(90.833 * rad) / (Math.cos(lat * rad) * Math.cos(decl)) - Math.tan(lat * rad) * Math.tan(decl)) / rad;
+  const utcMin = 720 - 4 * (lon - ha) - eqt;               // minutes after UTC midnight
+  return (utcMin - at.getTimezoneOffset()) / 60;
+}
+
+// Beach profile (Kitebeach): fills from 11:00 to 13:00, stays at its 1000–1200 peak until 16:00,
+// eases off after 16:00 and empties abruptly once the sun has set.
+function beachCount(v, at) {
+  const h = at.getHours() + at.getMinutes() / 60, sunset = sunsetHour(at, v.location?.lat, v.location?.lon);
+  const r = simRandom(`${v.id}:${slotStart(at).getTime()}`);
+  let base;
+  if (h < 11) base = 40 + (h - 8) / 3 * 160;                         // 08–11: early kiters, up to ~200
+  else if (h < 13) base = 200 + (h - 11) / 2 * 900;                   // 11–13: filling up to ~1100
+  else if (h < 16) base = 1100;                                       // 13–16: peak
+  else if (h < sunset) base = 1100 - (h - 16) / Math.max(0.5, sunset - 16) * 700;  // easing off to ~400
+  else base = 400 * Math.exp(-(h - sunset) * 6);                      // after sunset: empties fast
+  const jitter = h >= 13 && h < 16 ? (r - 0.5) * 200 : (r - 0.5) * base * 0.15;
+  return Math.max(0, Math.round(h >= 13 && h < 16 ? Math.min(1200, Math.max(1000, base + jitter)) : base + jitter));
+}
+
 function simCount(v, at) {
   if (isClosed(v, at)) return 0;
+  if (v.sim_profile === 'beach') return beachCount(v, at);
   const hour = at.getHours() + at.getMinutes() / 60;
   const busy = dayCurve(hour);
   const r = simRandom(`${v.id}:${slotStart(at).getTime()}`);

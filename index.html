@@ -120,7 +120,7 @@ const $ = id => document.getElementById(id);
 const hm = ts => ts.slice(11, 16);
 
 async function load() {
-  const { venues } = await (await fetch('data/venues.json')).json();
+  const { venues } = await (await fetch(`data/venues.json?t=${Date.now()}`)).json();
   const now = new Date();
   const cards = await Promise.all(venues.map(withSettings).map(async v => {
     let latest = null, updatedAt = '', rising = false;
