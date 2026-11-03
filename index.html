@@ -665,7 +665,9 @@ function ago(ts) {
 // Round venue logo; falls back to initials until logos/<id>.png exists.
 function logoHtml(v) {
   const initials = v.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  return `<span class="logo">${initials}${v.logo ? `<img src="${v.logo}" alt="${t('logoAlt', v.name)}" onerror="this.remove()">` : ''}</span>`;
+  // logo_scale (venues.json) overrides the default zoom for logos that have no margin of their own.
+  const fit = v.logo_scale ? ` style="transform:scale(${v.logo_scale})"` : '';
+  return `<span class="logo">${initials}${v.logo ? `<img src="${v.logo}" alt="${t('logoAlt', v.name)}"${fit} onerror="this.remove()">` : ''}</span>`;
 }
 
 // "Closed · opens 18:00" / "Closing soon · 23:00" chip shown on the card photo.

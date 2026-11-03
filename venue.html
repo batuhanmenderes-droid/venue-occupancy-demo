@@ -237,7 +237,7 @@ function showHeader(v) {
   const state = st.state === 'closed' ? ` · ${t('closed')}` : st.state === 'closing' ? ` · ${t('closingSoon')}` : '';
   $('about').textContent = `${hours}${state}${v.description ? ` · ${v.description}` : ''}`;
   $('updated').textContent = v.coming_soon ? t('soon') : updatedAt ? t('lastUpdate', ago(updatedAt)) : t('noUpdates');
-  $('vlogo').innerHTML = v.logo ? `<img src="${v.logo}" alt="">` : '';
+  $('vlogo').innerHTML = v.logo ? `<img src="${v.logo}" alt=""${v.logo_scale ? ` style="transform:scale(${v.logo_scale});clip-path:none"` : ''}>` : '';
 }
 
 let simVenue = null;
