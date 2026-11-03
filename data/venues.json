@@ -30,7 +30,11 @@
       },
       "logo": "logos/no22riders.png",
       "website": "https://no22ridersinn.com/home/",
-      "background": "backgrounds/no22.webp"
+      "background": "backgrounds/no22.webp",
+      "record": {
+        "people": 137,
+        "at": "2026-10-27T23:42:00"
+      }
     },
     {
       "id": "kulup",
