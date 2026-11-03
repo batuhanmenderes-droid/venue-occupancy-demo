@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
 <script src="i18n.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -81,8 +82,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 </head>
 <body>
 <main>
-  <h1 data-i18n="venues">Venues</h1>
-  <p class="sub" id="subtitle" data-i18n="loading">loading…</p>
+  <p class="sub" id="subtitle" hidden></p>
   <div class="tabs" role="tablist">
     <button class="tab" role="tab" id="tab-liste" aria-controls="view-liste" data-i18n="tabList">List view</button>
     <button class="tab" role="tab" id="tab-harita" aria-controls="view-harita" data-i18n="tabMap">Heatmap</button>
@@ -97,6 +97,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
   </section>
 </main>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
 <script src="levels.js"></script>
 
 <script>
@@ -133,6 +135,7 @@ function showTab(name) {
   $('tab-harita').setAttribute('aria-selected', harita);
   $('view-liste').hidden = harita;
   $('view-harita').hidden = !harita;
+  document.body.classList.toggle('mapmode', harita);
   history.replaceState(null, '', `#${harita ? 'harita' : 'liste'}`);
   if (harita) { initMap(); map.invalidateSize(); drawMap(); }
 }
@@ -200,9 +203,66 @@ const TOWNS = [
   { name: 'Akçapınar', lat: 37.0258, lon: 28.3579, dy: 38 },  // below the Lemongrass pin
 ];
 
-function addBasemap() {
-  L.tileLayer(BASEMAP, { attribution: 'Tiles &copy; Esri', maxZoom: 19, maxNativeZoom: 14 }).addTo(map);
+// Subtle gradient over the basemap, under the heat clouds and pins: a soft light from the top-left
+// and a gentle darkening towards the bottom edge.
+function addShade() {
+  const pane = map.createPane('shade');
+  pane.style.zIndex = 250;  // above tiles (200), below overlays (400)
+  pane.style.pointerEvents = 'none';
+  const div = L.DomUtil.create('div', 'mapshade', pane);
+  const place = () => {
+    const size = map.getSize();
+    L.DomUtil.setPosition(div, map.containerPointToLayerPoint([0, 0]));
+    div.style.width = `${size.x}px`; div.style.height = `${size.y}px`;
+  };
+  map.on('move zoom resize viewreset', place);
+  place();
+}
+
+// Vector basemap (OpenFreeMap "dark", OpenMapTiles data) drawn by MapLibre at screen resolution, so it
+// stays sharp at every zoom. All symbol layers are dropped: no road, street or place names.
+// Falls back to the Esri raster canvas when WebGL or the style is unavailable.
+const VECTOR_STYLE = 'https://tiles.openfreemap.org/styles/dark';
+// Repaint the vector layers in the greys of the earlier raster look (dark land, near-black water,
+// light-grey roads), so the contrast stays the same while every line is drawn sharp.
+const MAP_COLORS = {
+  land: '#1f1f20', water: '#0a0a0b', landuse: '#232324', green: '#212122', building: '#2a2a2b',
+  motorway: '#5a5a5d', major: '#4a4a4d', minor: '#38383b', path: '#2c2c2f', rail: '#303033',
+};
+function recolor(l) {
+  const id = l.id, paint = { ...(l.paint || {}) };
+  const set = (prop, c) => { paint[prop] = c; return { ...l, paint }; };
+  if (l.type === 'background') return set('background-color', MAP_COLORS.land);
+  if (/boundary|casing|aeroway|pier/.test(id)) return null;
+  if (l.type === 'fill') {
+    if (/water/.test(id)) return set('fill-color', MAP_COLORS.water);
+    if (/building/.test(id)) return set('fill-color', MAP_COLORS.building);
+    if (/wood|park|glacier|ice/.test(id)) return set('fill-color', MAP_COLORS.green);
+    return set('fill-color', MAP_COLORS.landuse);
+  }
+  if (l.type === 'line') {
+    if (/water/.test(id)) return set('line-color', MAP_COLORS.water);
+    if (/dashline/.test(id)) return null;
+    if (/rail/.test(id)) return set('line-color', MAP_COLORS.rail);
+    if (/motorway/.test(id)) return set('line-color', MAP_COLORS.motorway);
+    if (/major/.test(id)) return set('line-color', MAP_COLORS.major);
+    if (/path/.test(id)) return set('line-color', MAP_COLORS.path);
+    return set('line-color', MAP_COLORS.minor);
+  }
+  return l;
+}
+async function addBasemap() {
   map.getPane('tilePane').style.filter = BASEMAP_FILTER;
+  try {
+    if (!L.maplibreGL || !window.maplibregl || !document.createElement('canvas').getContext('webgl2')) throw new Error('no WebGL basemap');
+    const style = await (await fetch(VECTOR_STYLE)).json();
+    style.layers = style.layers.filter(l => l.type !== 'symbol').map(recolor).filter(Boolean);
+    map.getPane('tilePane').style.filter = 'none';  // colours are baked into the style instead
+    L.maplibreGL({ style, attribution: '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
+  } catch {
+    L.tileLayer(BASEMAP, { attribution: 'Tiles &copy; Esri', maxZoom: 19, maxNativeZoom: 14 }).addTo(map);
+  }
+  addShade();
   for (const town of TOWNS)
     L.marker([town.lat, town.lon], { icon: L.divIcon({ className: 'townlabel', html: `<span style="margin-top:${town.dy}px">${town.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1000 }).addTo(map);
 }
@@ -375,6 +435,7 @@ function card(v) {
 
 setInterval(() => load().catch(() => {}), 60000);
 load().catch(() => {
+  $('subtitle').hidden = false;
   $('subtitle').textContent = t('readError');
 });
 </script>

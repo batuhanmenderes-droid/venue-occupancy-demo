@@ -217,3 +217,24 @@ footer { margin-top: 20px; font-size: 12px; line-height: 1.6; }
   h1 { font-size: 30px; }
 }
 
+
+/* Subtle gradient over the map (see addShade) */
+.mapshade {
+  position: absolute; left: 0; top: 0;
+  background:
+    radial-gradient(120% 90% at 18% 0%, rgba(255, 255, 255, 0.07), transparent 55%),
+    radial-gradient(90% 70% at 100% 100%, rgba(10, 132, 255, 0.06), transparent 60%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.32));
+}
+
+/* Full-screen map: the map fills the window; tabs float top-left, language switch top-right. */
+body.mapmode { overflow: hidden; }
+body.mapmode main { padding: 0; max-width: none; }
+body.mapmode .tabs { position: fixed; top: 14px; left: 16px; z-index: 1000; margin: 0;
+  background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: var(--shadow-float), var(--highlight); }
+body.mapmode .mapwrap { position: fixed; inset: 0; border: 0; border-radius: 0; box-shadow: none; }
+body.mapmode #map { height: 100vh; min-height: 0; border-radius: 0; }
+body.mapmode .maphint { display: none; }
+body.mapmode .leaflet-top.leaflet-left { top: 78px; }
+main:not(.x) > .tabs { margin-top: 0; }
