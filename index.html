@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261103t"></script>
+<script src="i18n.js?v=20261103w"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261103t">
+<link rel="stylesheet" href="theme.css?v=20261103w">
 </head>
 <body>
 <main>
@@ -127,8 +127,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261103t"></script>
-<script src="venue-state.js?v=20261103t"></script>
+<script src="levels.js?v=20261103w"></script>
+<script src="venue-state.js?v=20261103w"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -213,7 +213,7 @@ $('tab-harita').onclick = () => showTab('harita');
 function initMap() {
   if (map) return;
   // Zoom is limited to 14 (both towns in view) … 16 (a few streets around a venue).
-  map = L.map('map', { scrollWheelZoom: true, minZoom: 14, maxZoom: 18 });
+  map = L.map('map', { scrollWheelZoom: true, minZoom: innerWidth < 640 ? 13 : 14, maxZoom: 18 });
   // Akyaka in the north-west, Akçapınar to the south-east.
   map.fitBounds([[37.020, 28.318], [37.062, 28.366]]);
   heat = new HeatBlobs().addTo(map);
@@ -284,7 +284,8 @@ function loadZoomLimits() {
 function addZoomPanel() {
   const lim = loadZoomLimits();
   const apply = () => {
-    map.setMinZoom(lim.min); map.setMaxZoom(lim.max);
+    // Phones get one more step out so both towns fit on a narrow screen.
+    map.setMinZoom(innerWidth < 640 ? Math.min(lim.min, 13) : lim.min); map.setMaxZoom(lim.max);
     try { localStorage.setItem('zoomLimits', JSON.stringify(lim)); } catch {}
   };
   apply();
@@ -593,7 +594,7 @@ function placeLabels(placed, pins) {
   });
   const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
   const order = [...placed].sort((a, b) => (b.latest?.people ?? -1) - (a.latest?.people ?? -1));
-  const out = new Map(), labelled = [];
+  const out = new Map(), labelled = [], labelBoxes = [];
   for (const v of order) {
     const p = map.latLngToContainerPoint(pins.get(v.id).latlng);
     const w = Math.max(v.rising ? 110 : 56, v.name.length * 6.6 + 22), h = v.rising ? 62 : 46, g = PIN / 2 + 4;
@@ -603,10 +604,12 @@ function placeLabels(placed, pins) {
     };
     // In a cluster only the busiest venue keeps its label: skip any venue near one already labelled.
     if (labelled.some(q => Math.hypot(q.x - p.x, q.y - p.y) < CLUSTER_PX)) continue;
-    for (const [dir, box] of Object.entries(spots)) {
-      const inside = box.x > 4 && box.y > 60 && box.x + box.w < size.x - 4 && box.y + box.h < size.y - 4;
-      if (inside && !boxes.some(b => hit(b, box))) { out.set(v.id, dir); boxes.push(box); labelled.push(p); break; }
-    }
+    const inside = box => box.x > 4 && box.y > 60 && box.x + box.w < size.x - 4 && box.y + box.h < size.y - 4;
+    let found = Object.entries(spots).find(([, box]) => inside(box) && !boxes.some(b => hit(b, box)));
+    // A cluster's busiest venue always gets a label: if every spot touches a pin, accept one that
+    // only covers pins, as long as it stays clear of other labels.
+    if (!found) found = Object.entries(spots).find(([, box]) => inside(box) && !labelBoxes.some(b => hit(b, box)));
+    if (found) { const [dir, box] = found; out.set(v.id, dir); boxes.push(box); labelBoxes.push(box); labelled.push(p); }
   }
   return out;
 }

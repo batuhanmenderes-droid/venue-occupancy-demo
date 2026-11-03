@@ -525,3 +525,43 @@ body.has-bg .frameimg, body.has-bg .placeholder { background: rgba(255, 255, 255
 .directions svg { width: 24px; height: 24px; color: rgba(255, 255, 255, 0.25); }
 .directions[hidden] { display: none; }
 @media (max-width: 640px) { .directions { width: 100%; justify-content: center; margin: 10px 0 0; } }
+
+/* ---- Responsive: the list view uses the full window width ---- */
+body:not(.mapmode) main:not(.venuepage) { max-width: none; padding: 28px clamp(16px, 2.5vw, 40px) 48px; }
+main:not(.venuepage) .grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: clamp(12px, 1.4vw, 20px); }
+@media (min-width: 1800px) { main:not(.venuepage) .grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); } }
+.venuepage { max-width: 1400px; }
+
+/* Phones */
+@media (max-width: 640px) {
+  .langswitch { top: 10px; right: 10px; }
+  .topbar { margin-top: 44px; gap: 8px; }
+  body.mapmode .topbar { top: 52px; width: calc(100% - 24px); }
+  .topbar .tabs { width: 100%; }
+  .topbar .tabs .tab { flex: 1; min-width: 0; padding: 11px 10px; font-size: 14px; }
+  .subbar { width: 100%; justify-content: space-between; }
+  .filters { flex: 1; }
+  .filters button { flex: 1; width: auto; }
+  body.mapmode .leaflet-top.leaflet-left { top: 150px; }
+  body.mapmode .leaflet-top.leaflet-right { top: 150px; }
+  .legend { right: 8px; bottom: 8px; padding: 10px; font-size: 11px; }
+  .zoompanel .zp-body, .heatpanel .zp-body { width: min(290px, calc(100vw - 24px)); }
+  .venuepage { padding: 56px 14px 40px; }
+  .vtitle { gap: 12px; }
+  .vtitle h1 { font-size: 30px; }
+  .vlogo, .vlogo img { width: 54px; height: 54px; }
+  .vtabs { display: flex; width: 100%; overflow-x: auto; }
+  .vtabs button { flex: 1; white-space: nowrap; padding: 10px 12px; font-size: 13px; }
+  .venuepage .tile .bignum { font-size: 52px; }
+  .venuepage .tile { min-height: 170px; }
+  .program { grid-template-columns: 1fr 1fr; }
+  .menu { columns: 1; }
+  .webcard iframe { height: 70vh; }
+  dialog.sheet .times { grid-template-columns: 1fr; }
+}
+/* Tablets */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .venuepage .tiles { grid-template-columns: repeat(3, 1fr); }
+  .venuepage .tile .bignum { font-size: 52px; }
+  .program { grid-template-columns: repeat(4, 1fr); }
+}
