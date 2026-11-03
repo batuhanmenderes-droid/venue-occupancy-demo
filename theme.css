@@ -493,3 +493,18 @@ button.cal-cell:hover { outline: 2px solid var(--ink); }
 
 /* Pin size follows the crowd level (--s from PIN_SCALE) */
 .maplogo > div { transform: scale(var(--s, 1)); transition: transform .3s; }
+
+/* Venue page background image: 12px blur under a 90% black veil */
+.vbg { position: fixed; inset: -40px; z-index: -2; background: center / cover no-repeat; filter: blur(12px); }
+.vbg::after { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); }
+body.has-bg { background: #000; }
+/* Glass panels over the background */
+body.has-bg .card, body.has-bg .vtabs, body.has-bg .pill, body.has-bg .back, body.has-bg select, body.has-bg .langswitch {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(170%); backdrop-filter: blur(28px) saturate(170%);
+  border: 0.5px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 10px 40px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+body.has-bg .vtabs button[aria-selected="true"] { background: rgba(255, 255, 255, 0.16); }
+body.has-bg .pday, body.has-bg .delta, body.has-bg .m2grid i:not(.on), body.has-bg .wb.prev .wbar { background: rgba(255, 255, 255, 0.07); }
+body.has-bg .frameimg, body.has-bg .placeholder { background: rgba(255, 255, 255, 0.05); }

@@ -29,7 +29,8 @@
         "label": "Karanfil Sokak, Akyaka"
       },
       "logo": "logos/no22riders.png",
-      "website": "https://no22ridersinn.com/home/"
+      "website": "https://no22ridersinn.com/home/",
+      "background": "backgrounds/no22.webp"
     },
     {
       "id": "kulup",
