@@ -446,3 +446,23 @@ button.cal-cell:hover { outline: 2px solid var(--ink); }
 .mdesc { font: 400 12px var(--font-text); color: var(--muted); }
 .mdots { border-bottom: 1px dotted var(--axis); transform: translateY(-4px); }
 .mprice { font: 700 16px var(--font-display); color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* Density tiles v2: 64px numbers with a person icon, change chips, sparkline behind Busiest */
+.venuepage .tile { position: relative; overflow: hidden; min-height: 196px; display: flex; flex-direction: column; }
+.venuepage .tile .label { position: relative; font: 600 13px var(--font-text); color: var(--ink-2); margin-bottom: 6px; }
+.venuepage .tile .value { position: relative; display: flex; align-items: flex-end; gap: 8px; margin: 2px 0 12px; }
+.venuepage .tile .bignum { font: 700 64px/0.9 var(--font-display); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--ink); }
+.venuepage .tile .tperson { width: 26px; height: 26px; color: var(--ink-2); margin-bottom: 4px; }
+.venuepage .tile .tunit { font: 600 18px var(--font-display); color: var(--ink-2); margin-bottom: 6px; }
+.venuepage .tile .stars { margin: 14px 0 6px; }
+.venuepage .tile .star { width: 34px; height: 34px; }
+.venuepage .tile .meta { position: relative; margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.tmeta { font: 500 12px var(--font-text); color: var(--muted); }
+.delta { display: inline-flex; align-items: center; gap: 4px; font: 700 13px var(--font-display); padding: 5px 9px; border-radius: 999px; background: var(--fill); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.delta.up { color: #ff9f0a; background: rgba(255, 159, 10, 0.14); }
+.delta.down { color: #0a84ff; background: rgba(10, 132, 255, 0.14); }
+.delta.none { font: 500 12px var(--font-text); }
+.alertchip { display: inline-flex; align-items: center; gap: 5px; font: 600 12px var(--font-text); color: #ff453a; }
+.talert { width: 15px; height: 15px; color: #ff453a; }
+.tspark { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 70%; pointer-events: none; }
+.tile.has-spark .meta { padding-top: 6px; }
