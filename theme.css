@@ -435,3 +435,14 @@ button.cal-cell:hover { outline: 2px solid var(--ink); }
 #ptip .prow { display: grid; grid-template-columns: 12px 1fr auto; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
 #ptip .prow b { font: 700 13px var(--font-display); color: var(--ink); }
 @media (max-width: 820px) { .program { grid-template-columns: repeat(2, 1fr); } }
+
+/* Menu */
+.menu { columns: 2 320px; column-gap: 28px; margin-top: 10px; }
+.msec { break-inside: avoid; margin-bottom: 22px; }
+.msec h3 { font: 600 20px/1.2 var(--font-display); margin: 0 0 10px; color: var(--ink); }
+.mitem { display: grid; grid-template-columns: auto 1fr auto; align-items: baseline; gap: 8px; padding: 7px 0; }
+.mitem > div { display: grid; gap: 2px; }
+.mname { font: 500 14px var(--font-text); color: var(--ink); }
+.mdesc { font: 400 12px var(--font-text); color: var(--muted); }
+.mdots { border-bottom: 1px dotted var(--axis); transform: translateY(-4px); }
+.mprice { font: 700 16px var(--font-display); color: var(--ink); font-variant-numeric: tabular-nums; }
