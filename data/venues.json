@@ -72,6 +72,286 @@
         "label": "Kite Plajı, Akyaka"
       },
       "logo": "logos/kitebeach.png"
+    },
+    {
+      "id": "rahat-meyhane",
+      "name": "Rahat Meyhane",
+      "type": "Meyhane",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0520866,
+        "lon": 28.3277923,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/rahatmeyhane.png",
+      "hours": {
+        "open": "18:00",
+        "close": "01:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "kucuk-akyaka",
+      "name": "Küçük",
+      "type": "Bar",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0539959,
+        "lon": 28.3432161,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kucukakyaka.png",
+      "hours": {
+        "open": "17:00",
+        "close": "02:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "rahat-social",
+      "name": "Rahat Social",
+      "type": "Bar",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.057157,
+        "lon": 28.3262423,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/rahatsocial.png",
+      "hours": {
+        "open": "12:00",
+        "close": "02:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "dane-gokova",
+      "name": "Dane Gökova",
+      "type": "Otel",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.028469,
+        "lon": 28.3588752,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/danegokova.png",
+      "hours": {
+        "open": "08:00",
+        "close": "23:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "muhtar",
+      "name": "Muhtar",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0261761,
+        "lon": 28.3591953,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/muhtar.png",
+      "hours": {
+        "open": "11:00",
+        "close": "23:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "chicken-loop",
+      "name": "Chicken Loop",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0265205,
+        "lon": 28.358654,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/chickenloop.png",
+      "hours": {
+        "open": "09:00",
+        "close": "20:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "back-loop",
+      "name": "Back Loop",
+      "type": "Bar",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0258867,
+        "lon": 28.3556907,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/backloop.png",
+      "hours": {
+        "open": "16:00",
+        "close": "01:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "kukla",
+      "name": "Kukla Pub",
+      "type": "Pub",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0518376,
+        "lon": 28.3258831,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kukla.png",
+      "hours": {
+        "open": "19:00",
+        "close": "03:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "suma",
+      "name": "Suma",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.052071,
+        "lon": 28.3269782,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/suma.png",
+      "hours": {
+        "open": "12:00",
+        "close": "00:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "west-cafe-bistro",
+      "name": "West Cafe Bistro",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0547467,
+        "lon": 28.3404817,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/westcafebistro.png",
+      "hours": {
+        "open": "08:30",
+        "close": "23:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "yelken",
+      "name": "Yelken",
+      "type": "Otel",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0522577,
+        "lon": 28.3257767,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/yelken.png",
+      "hours": {
+        "open": "07:00",
+        "close": "00:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "akcapinar-tostcusu",
+      "name": "Akçapınar Tostçusu",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0272759,
+        "lon": 28.3588719,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/akcapinartostcusu.png",
+      "hours": {
+        "open": "07:30",
+        "close": "22:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "sepia",
+      "name": "Sepia",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0260481,
+        "lon": 28.3555526,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/sepia.png",
+      "hours": {
+        "open": "10:00",
+        "close": "00:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "edit",
+      "name": "Edit.",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0267831,
+        "lon": 28.3587541,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/edit.png",
+      "hours": {
+        "open": "09:00",
+        "close": "22:00"
+      },
+      "description": ""
     }
   ]
 }

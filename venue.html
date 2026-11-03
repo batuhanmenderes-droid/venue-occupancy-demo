@@ -86,6 +86,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
       <a class="back" href="./" data-i18n="back">‹ Venues</a>
       <h1 id="title">Doluluk Paneli</h1>
       <p class="sub" id="subtitle" data-i18n="loading">loading…</p>
+      <p class="sub about" id="about" hidden></p>
     </div>
     <div class="actions">
       <select id="day" data-i18n-aria="day" hidden></select>
@@ -127,6 +128,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 </main>
 
 <script src="levels.js"></script>
+<script src="venue-state.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 const hm = ts => ts.slice(11, 16);
@@ -171,10 +173,30 @@ function renderDays() {
 }
 
 // The routine pushes new frames to GitHub; re-read the data so they show up without a page reload.
+// Opening hours, open/closed state and the description under the title.
+function showAbout(v) {
+  const st = venueStatus(v);
+  const hours = v.hours ? t('hoursLine', v.hours.open, v.hours.close) : t('alwaysLine');
+  const state = st.state === 'closed' ? ` · ${t('closed')}` : st.state === 'closing' ? ` · ${t('closingSoon')}` : '';
+  const desc = v.description ? ` · ${v.description}` : '';
+  $('about').textContent = `${hours}${state}${desc}`;
+  $('about').hidden = false;
+}
+
+let simVenue = null;
 async function reload() {
-  const data = await (await fetch(`${dataUrl}?t=${Date.now()}`)).json();
+  let data;
+  if (simVenue) {
+    // Demo venue: build today's (and yesterday's) 40-minute frames instead of reading a data file.
+    const today = dayOf({ timestamp: new Date() });
+    const y = new Date(`${today}T12:00:00`); y.setDate(y.getDate() - 1);
+    data = { frames: [...simFrames(simVenue, localDay(y)), ...simFrames(simVenue, today)], updated_at: simLatest(simVenue).timestamp };
+    $('source').textContent = t('demoNote');
+  } else {
+    data = await (await fetch(`${dataUrl}?t=${Date.now()}`)).json();
+    $('source').textContent = t('source');
+  }
   updatedAt = data.updated_at || '';
-  $('source').textContent = t('source');
   const before = everything.length;
   everything = data.frames;
   if (!day) day = params.get('gun') || dayOf({ timestamp: new Date() });
@@ -198,11 +220,14 @@ function refresh() {
 async function load() {
   const id = new URLSearchParams(location.search).get('mekan') || 'lemongrass-cafe';
   const { venues } = await (await fetch('data/venues.json')).json();
-  const venue = venues.find(v => v.id === id);
-  if (!venue) { location.replace('./'); return; }
+  const found = venues.find(v => v.id === id);
+  if (!found) { location.replace('./'); return; }
+  const venue = withSettings(found);
+  showAbout(venue);
   document.title = `${venue.name} · ${t('occupancy')}`;
   $('title').textContent = venue.name;
   addEventListener('resize', renderChart);
+  if (venue.simulated) { simVenue = venue; $('day').onchange = e => setDay(e.target.value); await reload(); setInterval(() => reload().catch(() => {}), 60000); return; }
   if (!venue.data) { renderEmpty(venue); return; }
   dataUrl = venue.data;
   $('pill').hidden = false;
@@ -264,7 +289,7 @@ function renderStrip() {
     return;
   }
   $('strip').innerHTML = frames.map((f, i) =>
-    `<button class="thumb" data-i="${i}" aria-label="${hms(f.timestamp)}, ${f.people} ${t('people')}"><img loading="lazy" src="${f.file}" alt=""><span>${hm(f.timestamp)}<b>${f.people}</b></span></button>`).join('');
+    `<button class="thumb" data-i="${i}" aria-label="${hms(f.timestamp)}, ${f.people} ${t('people')}">${f.file ? `<img loading="lazy" src="${f.file}" alt="">` : `<div class="thumbph">${t('demoData')}</div>`}<span>${hm(f.timestamp)}<b>${f.people}</b></span></button>`).join('');
   $('strip').onclick = e => { const b = e.target.closest('.thumb'); if (b) select(+b.dataset.i); };
   $('rows').innerHTML = frames.map(f =>
     `<tr><td>${hms(f.timestamp)}</td><td class="n">${f.people}</td><td>${localized(f, 'note')}</td></tr>`).join('');
@@ -338,7 +363,8 @@ function select(i) {
   if (!frames.length) return;
   current = Math.max(0, Math.min(frames.length - 1, i));
   const f = frames[current];
-  $('frameImg').src = f.file;
+  $('frameImg').src = f.file || (simVenue?.logo ?? '');
+  $('frameImg').classList.toggle('demo', !f.file);
   $('frameImg').alt = t('frameAlt', hms(f.timestamp));
   $('frameTime').textContent = `${f.timestamp.slice(0, 10)} · ${hms(f.timestamp)} · ${f.camera}`;
   $('frameCount').textContent = f.people;

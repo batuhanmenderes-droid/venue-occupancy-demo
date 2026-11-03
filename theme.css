@@ -238,3 +238,58 @@ body.mapmode #map { height: 100vh; min-height: 0; border-radius: 0; }
 body.mapmode .maphint { display: none; }
 body.mapmode .leaflet-top.leaflet-left { top: 78px; }
 main:not(.x) > .tabs { margin-top: 0; }
+
+/* ---- Open / closed states ---- */
+.chip { position: absolute; top: 12px; left: 12px; z-index: 1; display: inline-flex; align-items: center; gap: 6px;
+  font: 600 12px/1 var(--font-text); padding: 7px 10px; border-radius: 999px; color: #fff;
+  background: rgba(0, 0, 0, 0.55); -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%);
+  box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.18); }
+.chip em { font-style: normal; font-weight: 500; opacity: 0.75; }
+.chip .lock { width: 12px; height: 12px; }
+.chip.closing { background: rgba(255, 159, 10, 0.9); color: #000; }
+.venue.is-closed .media > img, .venue.is-closed .media .none { filter: grayscale(1) brightness(0.45); }
+.venue.is-closed .logo { filter: grayscale(1) brightness(0.6); }
+.venue.is-closed .stat b { color: var(--muted); }
+.media .none.demo { display: grid; place-items: center; gap: 10px; align-content: center; background: radial-gradient(80% 80% at 50% 40%, var(--fill-strong), var(--surface-2)); }
+.media .none.demo .biglogo { position: static; width: 84px; height: 84px; border-radius: 50%; object-fit: cover; transform: scale(1.14); clip-path: circle(42%); box-shadow: none; }
+.media .none.demo span { font: 600 11px/1 var(--font-text); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+/* Last update row with the settings gear on the right */
+.updated { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.gear { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border-radius: 50%; color: var(--ink-2); background: var(--fill); }
+.gear svg { width: 16px; height: 16px; }
+.gear:hover { color: var(--ink); background: var(--fill-strong); }
+
+/* Map: closed venues get an 80% black veil and a lock over the logo */
+.maplogo .lockover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.8); display: grid; place-items: center; color: #fff; }
+.maplogo .lockover .lock { width: 16px; height: 16px; }
+.maplogo > div { position: relative; }
+.leaflet-tooltip.vlabel .vclosed { font: 600 20px/1 var(--font-display); color: var(--ink-2); }
+
+/* Settings sheet (iOS-style modal) */
+dialog.sheet { border: 0; padding: 0; width: min(440px, calc(100vw - 32px)); border-radius: 22px; color: var(--ink);
+  background: var(--sheen), var(--surface); box-shadow: var(--shadow-float), var(--highlight); }
+dialog.sheet::backdrop { background: rgba(0, 0, 0, 0.45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+dialog.sheet form { display: grid; gap: 14px; padding: 22px; }
+dialog.sheet h2 { font-size: 24px; margin: 0; }
+dialog.sheet .hint { margin: -8px 0 0; }
+dialog.sheet label { display: grid; gap: 6px; font: 500 12px var(--font-text); color: var(--ink-2); }
+dialog.sheet label.row { display: flex; align-items: center; justify-content: space-between; font-size: 14px; color: var(--ink); background: var(--fill); padding: 12px 14px; border-radius: 12px; }
+dialog.sheet .times { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+dialog.sheet input[type=time], dialog.sheet textarea { font: 500 15px var(--font-text); color: var(--ink); background: var(--fill); border: 0; border-radius: 12px; padding: 12px 14px; outline: none; }
+dialog.sheet input[type=time]:disabled { opacity: 0.4; }
+dialog.sheet input:focus, dialog.sheet textarea:focus { box-shadow: 0 0 0 2px var(--series); }
+dialog.sheet textarea { resize: vertical; line-height: 1.5; }
+dialog.sheet input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--live); }
+dialog.sheet .actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+dialog.sheet .primary { background: var(--series); color: #fff; }
+dialog.sheet .primary:hover { background: color-mix(in srgb, var(--series) 85%, #000); }
+
+/* Demo venues on the venue page: logo in place of the camera frame */
+.frame img.demo { object-fit: contain; padding: 18%; background: radial-gradient(80% 80% at 50% 40%, var(--fill-strong), var(--surface-2)); }
+.thumbph { aspect-ratio: 4 / 3; display: grid; place-items: center; font: 600 10px/1 var(--font-text); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--surface-2); }
+.sub.about { margin-top: 2px; color: var(--muted); }
+
+.pinbadge { position: absolute; top: -6px; right: -8px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px;
+  display: grid; place-items: center; font: 600 13px/1 var(--font-display); color: #fff; background: var(--lv, #636366);
+  box-shadow: 0 0 0 2px #000, 0 4px 10px rgba(0, 0, 0, 0.5); font-variant-numeric: tabular-nums; }

@@ -39,7 +39,12 @@ const STRINGS = {
     lastAnalysis: t => `last analysis ${t}`, noAnalysis: 'no analysis yet',
     asOf: clock => `as of ${clock}`, frameAlt: t => `${t} camera frame`,
     source: 'People are counted by looking at each frame; the time is read from the stamp at the bottom of the frame. Frames are analysed hourly as their time comes.',
-    types: { Pub: 'Pub', Bar: 'Bar', Kulüp: 'Club', Kafe: 'Cafe', Plaj: 'Beach' },
+    types: { Pub: 'Pub', Bar: 'Bar', Kulüp: 'Club', Kafe: 'Cafe', Plaj: 'Beach', Meyhane: 'Tavern', Otel: 'Hotel', Restoran: 'Restaurant' },
+    closed: 'Closed', opensAt: t => `opens ${t}`, closingSoon: 'Closing soon', demoData: 'Demo data',
+    settingsFor: name => `Settings for ${name}`, settingsHint: 'Opening hours and a short description. Saved in this browser.',
+    alwaysOpen: 'Open 24 hours', opens: 'Opens', closes: 'Closes', description: 'Description',
+    descPlaceholder: 'What is this place like?', cancel: 'Cancel', save: 'Save',
+    hoursLine: (o, c) => `Open ${o}–${c}`, alwaysLine: 'Open 24 hours', demoNote: 'Demo data: counts are made up and change every 40 minutes.',
     levels: ['Quiet', 'Normal', 'Busy', 'Crowded', 'Very crowded'],
   },
   tr: {
@@ -72,7 +77,12 @@ const STRINGS = {
     lastAnalysis: t => `son analiz ${t}`, noAnalysis: 'henüz analiz yok',
     asOf: clock => `saat ${clock} itibarıyla`, frameAlt: t => `${t} kamera karesi`,
     source: 'Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.',
-    types: { Pub: 'Pub', Bar: 'Bar', Kulüp: 'Kulüp', Kafe: 'Kafe', Plaj: 'Plaj' },
+    types: { Pub: 'Pub', Bar: 'Bar', Kulüp: 'Kulüp', Kafe: 'Kafe', Plaj: 'Plaj', Meyhane: 'Meyhane', Otel: 'Otel', Restoran: 'Restoran' },
+    closed: 'Kapalı', opensAt: t => `${t}'de açılır`, closingSoon: 'Kapanıyor', demoData: 'Demo verisi',
+    settingsFor: name => `${name} ayarları`, settingsHint: 'Açılış-kapanış saatleri ve kısa bir açıklama. Bu tarayıcıda saklanır.',
+    alwaysOpen: '24 saat açık', opens: 'Açılış', closes: 'Kapanış', description: 'Açıklama',
+    descPlaceholder: 'Burası nasıl bir yer?', cancel: 'Vazgeç', save: 'Kaydet',
+    hoursLine: (o, c) => `Açık ${o}–${c}`, alwaysLine: '24 saat açık', demoNote: 'Demo verisi: sayılar uydurmadır ve 40 dakikada bir değişir.',
     levels: ['Sakin', 'Normal', 'Hareketli', 'Kalabalık', 'Çok kalabalık'],
   },
 };
@@ -89,6 +99,7 @@ const decimal = x => LANG === 'tr' ? String(x).replace('.', ',') : String(x);
 function applyStaticText() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.setAttribute('placeholder', t(el.dataset.i18nPlaceholder)));
 }
 
 function addLangSwitch() {
