@@ -467,8 +467,9 @@ button.cal-cell:hover { outline: 2px solid var(--ink); }
 .tspark { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 70%; pointer-events: none; }
 .tile.has-spark .meta { padding-top: 6px; }
 
-/* Map: venues under 20 people show their logo in black and white */
+/* Map: venues under 10 people show their logo in black and white under a 20% black veil */
 .maplogo.is-low .logo img { filter: grayscale(1) contrast(1.05); }
+.maplogo.is-low .logo::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.2); }
 
 /* Tiles v3: medium-weight numbers with a soft gradient; charts sit behind everything */
 .venuepage .tile .bignum { font-weight: 500;

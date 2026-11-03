@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261103l"></script>
+<script src="i18n.js?v=20261103m"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261103l">
+<link rel="stylesheet" href="theme.css?v=20261103m">
 </head>
 <body>
 <main>
@@ -127,8 +127,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261103l"></script>
-<script src="venue-state.js?v=20261103l"></script>
+<script src="levels.js?v=20261103m"></script>
+<script src="venue-state.js?v=20261103m"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -255,7 +255,7 @@ function drawMap() {
       L.circleMarker([v.location.lat, v.location.lon], { radius: 3, weight: 1, color: '#ffffff', fillColor: lv ? lv.color : '#898781', fillOpacity: 1, interactive: false }).addTo(markers);
     }
     const m = L.marker(pin.latlng, {
-      icon: L.divIcon({ className: `maplogo${closed ? ' is-closed' : ''}${n !== null && n < 20 ? ' is-low' : ''}`, html: `<div style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'};--s:${lv && !closed ? PIN_SCALE[LEVELS.indexOf(lv)] : 0.9};width:100%;height:100%">${logoHtml(v)}${closed ? `<span class="lockover">${LOCK_ICON}</span>` : ''}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
+      icon: L.divIcon({ className: `maplogo${closed ? ' is-closed' : ''}${n !== null && n < 10 ? ' is-low' : ''}`, html: `<div style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'};--s:${lv && !closed ? PIN_SCALE[LEVELS.indexOf(lv)] : 0.9};width:100%;height:100%">${logoHtml(v)}${closed ? `<span class="lockover">${LOCK_ICON}</span>` : ''}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
       title: v.name,
     }).addTo(markers);
     const dir = labels.get(v.id);
