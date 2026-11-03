@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261103c"></script>
+<script src="i18n.js?v=20261103d"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,27 +78,29 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261103c">
+<link rel="stylesheet" href="theme.css?v=20261103d">
 </head>
 <body>
 <main>
   <p class="sub" id="subtitle" hidden></p>
   <div class="topbar">
     <div class="tabs" role="tablist">
-      <button class="tab" role="tab" id="tab-liste" aria-controls="view-liste" data-i18n="tabList">List view</button>
-      <button class="tab" role="tab" id="tab-harita" aria-controls="view-harita" data-i18n="tabMap">Heatmap</button>
+      <button class="tab" role="tab" id="tab-liste" aria-controls="view-liste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="3.5" y="13" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="13" width="7" height="7" rx="2" fill="currentColor"/></svg><span data-i18n="tabList">List view</span></button>
+      <button class="tab" role="tab" id="tab-harita" aria-controls="view-harita"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 3.5 6.6v13l5.5-2.1 6 2.1 5.5-2.1v-13L15 6.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 4.5v13M15 6.6v13" stroke="currentColor" stroke-width="1.8"/></svg><span data-i18n="tabMap">Heatmap</span></button>
     </div>
+    <div class="subbar">
     <div class="filters" role="group" data-i18n-aria="filterAria">
-      <button data-cat="all" data-i18n="filterAll">All</button>
-      <button data-cat="fun" data-i18n="filterFun">Entertainment</button>
-      <button data-cat="food" data-i18n="filterFood">Food</button>
-      <button data-cat="activity" data-i18n="filterActivity">Activity</button>
+      <button data-cat="all" data-i18n-aria="filterAll" data-i18n-title="filterAll"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="7" r="2.6" fill="currentColor"/><circle cx="17" cy="7" r="2.6" fill="currentColor"/><circle cx="7" cy="17" r="2.6" fill="currentColor"/><circle cx="17" cy="17" r="2.6" fill="currentColor"/></svg></button>
+      <button data-cat="fun" data-i18n-aria="filterFun" data-i18n-title="filterFun"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14l-7 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 12v7M8 20h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.2 6.5h9.6" stroke="currentColor" stroke-width="1.8"/></svg></button>
+      <button data-cat="food" data-i18n-aria="filterFood" data-i18n-title="filterFood"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M4.5 3v5a2.5 2.5 0 0 0 5 0V3M7 11v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17 21V3c-2.2 1.2-3.5 4-3.5 7.5V13H17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg></button>
+      <button data-cat="activity" data-i18n-aria="filterActivity" data-i18n-title="filterActivity"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="14.5" cy="4.5" r="2" fill="currentColor"/><path d="M6 21l3-6 3 2.5V21M9 15l1.5-5.5L14 11l3 2.5M10.5 9.5 7 11M14 11l-1.5 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <select id="sort" data-i18n-aria="sortAria">
       <option value="busy" data-i18n="sortBusy">Busiest first</option>
       <option value="quiet" data-i18n="sortQuiet">Quietest first</option>
       <option value="name" data-i18n="sortName">Name A–Z</option>
     </select>
+    </div>
   </div>
   <section id="view-liste" role="tabpanel"><div class="grid" id="grid"></div></section>
   <section id="view-harita" role="tabpanel" hidden>
@@ -125,8 +127,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261103c"></script>
-<script src="venue-state.js?v=20261103c"></script>
+<script src="levels.js?v=20261103d"></script>
+<script src="venue-state.js?v=20261103d"></script>
 
 <script>
 const $ = id => document.getElementById(id);

@@ -349,3 +349,15 @@ body.mapmode .topbar { position: fixed; top: 14px; left: 16px; z-index: 1000; ma
 body.mapmode .topbar > .tabs, body.mapmode .topbar > .filters {
   background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
   box-shadow: var(--shadow-float), var(--highlight); }
+
+/* Top bar v2: centred view tabs with icons; icon-only category filters (and sort) underneath */
+.topbar { flex-direction: column; align-items: center; gap: 10px; padding-right: 0; }
+.topbar .tabs .tab { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.topbar .tabs .tab svg { width: 18px; height: 18px; flex: none; }
+.subbar { display: flex; align-items: center; gap: 8px; }
+.filters button { display: grid; place-items: center; width: 44px; height: 36px; padding: 0; }
+.filters button svg { width: 19px; height: 19px; }
+body.mapmode .topbar { left: 50%; transform: translateX(-50%); top: 12px; }
+body.mapmode .subbar .filters { background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: var(--shadow-float), var(--highlight); }
+@media (max-width: 640px) { .topbar .tabs .tab { min-width: 0; padding: 11px 16px; } }
