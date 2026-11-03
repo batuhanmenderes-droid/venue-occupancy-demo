@@ -515,3 +515,13 @@ body.has-bg .frameimg, body.has-bg .placeholder { background: rgba(255, 255, 255
 .vname { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .stars.small { gap: 2px; }
 .stars.small .star { width: 18px; height: 18px; }
+
+/* Get directions: large primary button at the top right of the venue header */
+.directions { margin-left: auto; align-self: center; display: inline-flex; align-items: center; gap: 10px; padding: 16px 24px; border-radius: 16px;
+  font: 600 17px/1 var(--font-text); color: #fff; text-decoration: none; background: linear-gradient(180deg, #2b8cff, #0a6cf0);
+  box-shadow: 0 10px 28px -8px rgba(10, 108, 240, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25); transition: transform .15s, box-shadow .15s; }
+.directions:hover { transform: translateY(-1px); box-shadow: 0 14px 32px -8px rgba(10, 108, 240, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+.directions:active { transform: scale(0.98); }
+.directions svg { width: 24px; height: 24px; color: rgba(255, 255, 255, 0.25); }
+.directions[hidden] { display: none; }
+@media (max-width: 640px) { .directions { width: 100%; justify-content: center; margin: 10px 0 0; } }

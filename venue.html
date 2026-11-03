@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261103r"></script>
+<script src="i18n.js?v=20261103s"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   .grid2 { grid-template-columns: 1fr; }
 }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261103r">
+<link rel="stylesheet" href="theme.css?v=20261103s">
 </head>
 <body>
 <main class="venuepage">
@@ -90,7 +90,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
         <p class="vupdated" id="updated"></p>
         <p class="vhours" id="about"></p>
       </div>
-      <span class="pill" id="pill" data-i18n="synthetic" hidden>Synthetic CCTV data</span>
+      <a class="directions" id="directions" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5 21.5 12 12 21.5 2.5 12z" fill="currentColor"/><path d="M9 14v-2.5a1.5 1.5 0 0 1 1.5-1.5H15m-2-2 2 2-2 2" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="getDirections">Get directions</span></a>
     </div>
     <p class="sub" id="subtitle" hidden></p>
   </header>
@@ -157,9 +157,9 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   <footer id="source"></footer>
 </main>
 
-<script src="levels.js?v=20261103r"></script>
-<script src="venue-state.js?v=20261103r"></script>
-<script src="menu.js?v=20261103r"></script>
+<script src="levels.js?v=20261103s"></script>
+<script src="venue-state.js?v=20261103s"></script>
+<script src="menu.js?v=20261103s"></script>
 <script>
 const $ = id => document.getElementById(id);
 const hm = ts => ts.slice(11, 16);
@@ -306,11 +306,16 @@ async function load() {
     document.body.insertAdjacentHTML('afterbegin', `<div class="vbg" aria-hidden="true" style="background-image:url('${venue.background}')"></div>`);
     document.body.classList.add('has-bg');
   }
+  // Directions open Google Maps with a route from the viewer's current location to the venue.
+  if (venue.location) {
+    $('directions').href = `https://www.google.com/maps/dir/?api=1&destination=${venue.location.lat},${venue.location.lon}`;
+    $('directions').hidden = false;
+  }
   showHeader(venue);
   showVTab(['density', 'calendar', 'menu', 'website'].includes(params.get('tab')) ? params.get('tab') : 'density');
   addEventListener('resize', () => { renderChart(); renderProgramChart(); });
   if (venue.simulated) simVenue = venue;
-  else if (venue.data) { dataUrl = venue.data; $('pill').hidden = false; countRule = localized(venue, 'count_rule'); }
+  else if (venue.data) { dataUrl = venue.data; countRule = localized(venue, 'count_rule'); }
   else { renderEmpty(); return; }
   await reload();
   setInterval(() => reload().catch(() => {}), 60000);
