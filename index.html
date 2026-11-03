@@ -163,6 +163,7 @@ function drawMap() {
     seed: v.id,
     latlng: pins.get(v.id).latlng,
     color: levelOf(v.latest.people).color,
+    alt: SHIFT[LEVELS.indexOf(levelOf(v.latest.people))] || null,
     strength: 0.45 + 0.55 * Math.min(v.latest.people / 50, 1),
     meters: 120 + Math.min(v.latest.people, 100) * 12,  // 0 → 120 m, 25 → 420 m, 50 → 720 m
     minPx: 34 + Math.min(v.latest.people, 100) * 2.4,  // keeps the cloud readable when zoomed out
@@ -222,6 +223,13 @@ function rgba(hex, a) {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 }
+// Some levels drift towards a second colour and back: Normal (green) ↔ blue, Busy (orange) ↔ magenta.
+const SHIFT = { 1: '#2a78d6', 2: '#e0309a' };
+function mixHex(a, b, f) {
+  const x = parseInt(a.slice(1), 16), y = parseInt(b.slice(1), 16);
+  const ch = s => Math.round(((x >> s) & 255) + (((y >> s) & 255) - ((x >> s) & 255)) * f);
+  return '#' + ((ch(16) << 16) | (ch(8) << 8) | ch(0)).toString(16).padStart(6, '0');
+}
 const HeatBlobs = L.Layer.extend({
   onAdd(m) {
     this._blobs = this._blobs || [];
@@ -279,10 +287,12 @@ const HeatBlobs = L.Layer.extend({
         const x = p.x + Math.cos(ang) * dist * R;
         const y = p.y + Math.sin(ang) * dist * R;
         const r = R * l.size * (1 + swell * 0.22);
+        // Each lobe crosses to the second colour and back on its own phase, so both tints live in the cloud.
+        const col = b.alt ? mixHex(b.color, b.alt, (Math.sin(time * 0.45 + l.phase * 2.3) + 1) / 2) : b.color;
         const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0, rgba(b.color, 0.42 * b.strength));
-        g.addColorStop(0.5, rgba(b.color, 0.2 * b.strength));
-        g.addColorStop(1, rgba(b.color, 0));
+        g.addColorStop(0, rgba(col, 0.42 * b.strength));
+        g.addColorStop(0.5, rgba(col, 0.2 * b.strength));
+        g.addColorStop(1, rgba(col, 0));
         ctx.fillStyle = g;
         ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
       }
@@ -314,7 +324,11 @@ function spreadPins(placed) {
   for (const p of pts) {
     const dx = p.x - p.home.x, dy = p.y - p.home.y;
     const moved = Math.hypot(dx, dy) > 2;
-    const dir = !moved ? 'top' : Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : 'top';
+    // Labels are wide (32px count): a pin with a neighbour close enough for their labels to touch
+    // puts its label on the side away from it.
+    const near = pts.find(o => o !== p && Math.abs(o.x - p.x) < 170 && Math.abs(o.y - p.y) < 80);
+    const dir = near ? (near.x > p.x ? 'left' : 'right')
+      : !moved ? 'top' : Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : 'top';
     out.set(p.id, { latlng: map.layerPointToLatLng(L.point(p.x, p.y)), moved, dir });
   }
   return out;
