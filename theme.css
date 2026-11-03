@@ -494,8 +494,8 @@ button.cal-cell:hover { outline: 2px solid var(--ink); }
 /* Pin size follows the crowd level (--s from PIN_SCALE) */
 .maplogo > div { transform: scale(var(--s, 1)); transition: transform .3s; }
 
-/* Venue page background image: 12px blur under a 90% black veil */
-.vbg { position: fixed; inset: -40px; z-index: -2; background: center / cover no-repeat; filter: blur(12px); }
+/* Venue page background image: 6px blur under a 90% black veil */
+.vbg { position: fixed; inset: -40px; z-index: -2; background: center / cover no-repeat; filter: blur(6px); }
 .vbg::after { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); }
 body.has-bg { background: #000; }
 /* Glass panels over the background */
