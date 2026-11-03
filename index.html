@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261103n"></script>
+<script src="i18n.js?v=20261103o"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261103n">
+<link rel="stylesheet" href="theme.css?v=20261103o">
 </head>
 <body>
 <main>
@@ -127,8 +127,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261103n"></script>
-<script src="venue-state.js?v=20261103n"></script>
+<script src="levels.js?v=20261103o"></script>
+<script src="venue-state.js?v=20261103o"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -431,6 +431,7 @@ function rgba(hex, a) {
 const HEAT_DEFAULT = {
   baseM: 10, perPersonM: 1, basePx: 90, perPersonPx: 1,
   minStrength: 0.48, fullAt: 30, curve: 1.3, opacity: 1, blur: 8,
+  speed: 0.35, spin: 0.6, spiral: 0.6,
   colors: ['#0e6bdd', '#16ca64', '#ffc800', '#dd5e27', '#c11a4c'],
   shift: [null, '#13cbd8', '#e0962e', null, null],
 };
@@ -467,6 +468,10 @@ function addHeatPanel() {
         ${slider('curve', t('heatCurve'), 0.3, 3, 0.1)}
         ${slider('opacity', t('heatOpacity'), 0.2, 2, 0.05)}
         ${slider('blur', t('heatBlur'), 0, 24, 1, 'px')}
+        <h4>${t('heatMotion')}</h4>
+        ${slider('speed', t('heatSpeed'), 0, 2, 0.05)}
+        ${slider('spin', t('heatSpin'), 0, 2, 0.05)}
+        ${slider('spiral', t('heatSpiral'), 0, 1, 0.05)}
         <h4>${t('heatColors')}</h4>
         <div class="hp-colors">${LEVELS.map((l, i) => `
           <div class="hp-row"><span>${l.name}</span>
@@ -551,25 +556,27 @@ const HeatBlobs = L.Layer.extend({
       const p = m.latLngToContainerPoint(b.latlng);
       const mpp = 40075016.686 * Math.cos(b.latlng.lat * Math.PI / 180) / Math.pow(2, m.getZoom() + 8);
       const R = Math.max(b.meters / mpp, b.minPx);
-      for (const l of b.lobes) {
-        // Two waves per lobe: one sways it around the pin, one swells and shrinks it, so the cloud
-        // ripples outward like a moving crowd.
-        const sway = Math.sin(time * l.speed + l.phase);
-        const swell = Math.sin(time * l.speed * l.wave + l.phase * 1.7);
-        const ang = l.ang + sway * 0.6;
-        const dist = l.dist * (1 + swell * 0.28);
+      const tt = time * HEAT.speed;
+      b.lobes.forEach((l, li) => {
+        // Tornado: lobes orbit the pin, faster near the centre, and (with spiral > 0) drift outward
+        // from the core, growing and fading as they go, then start again at the centre.
+        const core = li === 0;
+        const prog = core ? 0 : (tt * l.speed * 0.12 + l.phase / (2 * Math.PI)) % 1;
+        const dist = core ? 0 : l.dist * (1 - HEAT.spiral) + HEAT.spiral * (0.05 + prog * 0.75);
+        const ang = l.ang + tt * HEAT.spin * (0.35 + 1.2 * (1 - Math.min(1, dist)));
         const x = p.x + Math.cos(ang) * dist * R;
         const y = p.y + Math.sin(ang) * dist * R;
-        const r = R * l.size * (1 + swell * 0.22);
+        const r = R * l.size * (core ? 1 : 0.75 + 0.45 * prog * HEAT.spiral + 0.25 * (1 - HEAT.spiral));
+        const fade = core ? 1 : 1 - HEAT.spiral + HEAT.spiral * Math.sin(Math.PI * Math.min(1, prog * 1.15));
         // Each lobe crosses to the second colour and back on its own phase, so both tints live in the cloud.
-        const col = b.alt ? mixHex(b.color, b.alt, (Math.sin(time * 0.45 + l.phase * 2.3) + 1) / 2) : b.color;
+        const col = b.alt ? mixHex(b.color, b.alt, (Math.sin(tt * 0.45 + l.phase * 2.3) + 1) / 2) : b.color;
         const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0, rgba(col, 0.32 * b.strength));
-        g.addColorStop(0.5, rgba(col, 0.15 * b.strength));
+        g.addColorStop(0, rgba(col, 0.32 * b.strength * fade));
+        g.addColorStop(0.5, rgba(col, 0.15 * b.strength * fade));
         g.addColorStop(1, rgba(col, 0));
         ctx.fillStyle = g;
         ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
-      }
+      });
     }
   },
 });
