@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261104a"></script>
+<script src="i18n.js?v=20261104b"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261104a">
+<link rel="stylesheet" href="theme.css?v=20261104b">
 </head>
 <body>
 <main>
@@ -127,8 +127,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261104a"></script>
-<script src="venue-state.js?v=20261104a"></script>
+<script src="levels.js?v=20261104b"></script>
+<script src="venue-state.js?v=20261104b"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -346,12 +346,21 @@ function addShade() {
   pane.style.zIndex = 250;  // above tiles (200), below overlays (400)
   pane.style.pointerEvents = 'none';
   const div = L.DomUtil.create('div', 'mapshade', pane);
+  const grid = L.DomUtil.create('div', 'mapgrid', div);
+  // The grid is tied to the ground: cells are 32 px at zoom 14 and double with each zoom step, and the
+  // lines stay anchored to a fixed point on the map while panning.
+  const ORIGIN = L.latLng(37.04, 28.34);
   const place = () => {
     const size = map.getSize();
     L.DomUtil.setPosition(div, map.containerPointToLayerPoint([0, 0]));
     div.style.width = `${size.x}px`; div.style.height = `${size.y}px`;
+    const cell = 32 * Math.pow(2, map.getZoom() - 14), major = cell * 5;
+    const o = map.latLngToContainerPoint(ORIGIN);
+    const mod = (a, m) => ((a % m) + m) % m;
+    grid.style.backgroundSize = `${major}px ${major}px, ${major}px ${major}px, ${cell}px ${cell}px, ${cell}px ${cell}px`;
+    grid.style.backgroundPosition = [major, major, cell, cell].map(c => `${mod(o.x, c)}px ${mod(o.y, c)}px`).join(', ');
   };
-  map.on('move zoom resize viewreset', place);
+  map.on('move zoom zoomanim resize viewreset', place);
   place();
 }
 

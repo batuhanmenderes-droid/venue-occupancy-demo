@@ -36,7 +36,7 @@
         "at": "2026-10-27T23:42:00"
       },
       "area_m2": 250,
-      "logo_scale": 0.78
+      "logo_scale": 1
     },
     {
       "id": "kulup",
@@ -51,7 +51,7 @@
         "label": "Akyaka"
       },
       "logo": "logos/kulup.png?v=2",
-      "logo_scale": 0.84
+      "logo_scale": 1
     },
     {
       "id": "lemongrass-cafe",
@@ -316,7 +316,7 @@
         "close": "02:00"
       },
       "description": "",
-      "logo_scale": 0.92
+      "logo_scale": 1
     },
     {
       "id": "akcapinar-tostcusu",
