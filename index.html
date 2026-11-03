@@ -144,7 +144,7 @@ async function load() {
 
 // ---- Tabs ----
 let lastCards = [], map = null, markers = null, heat = null;
-$('legendRows').innerHTML = LEVELS.map(l => levelBadge(l.max === Infinity ? 41 : l.max)).join('');
+queueMicrotask(renderLegend);  // after the HEAT settings further down are initialised
 
 function showTab(name) {
   const harita = name === 'harita';
@@ -171,6 +171,7 @@ function initMap() {
   map.on('zoomend moveend', drawMap);
   addBasemap();
   addZoomPanel();
+  addHeatPanel();
   drawMap();
 }
 
@@ -186,11 +187,11 @@ function drawMap() {
   heat.setBlobs(placed.filter(v => v.latest && v.status?.state !== 'closed').sort((a, b) => a.latest.people - b.latest.people).map(v => ({
     seed: v.id,
     latlng: pins.get(v.id).latlng,
-    color: levelOf(v.latest.people).color,
-    alt: SHIFT[LEVELS.indexOf(levelOf(v.latest.people))] || null,
-    strength: 0.18 + 0.82 * Math.pow(Math.min(v.latest.people / 30, 1), 1.3),
-    meters: 120 + Math.min(v.latest.people, 100) * 12,  // 0 → 120 m, 25 → 420 m, 50 → 720 m
-    minPx: 34 + Math.min(v.latest.people, 100) * 2.4,  // keeps the cloud readable when zoomed out
+    color: HEAT.colors[LEVELS.indexOf(levelOf(v.latest.people))],
+    alt: HEAT.shift[LEVELS.indexOf(levelOf(v.latest.people))] || null,
+    strength: HEAT.opacity * (HEAT.minStrength + (1 - HEAT.minStrength) * Math.pow(Math.min(v.latest.people / HEAT.fullAt, 1), HEAT.curve)),
+    meters: HEAT.baseM + Math.min(v.latest.people, 100) * HEAT.perPersonM,
+    minPx: HEAT.basePx + Math.min(v.latest.people, 100) * HEAT.perPersonPx,  // keeps the cloud readable when zoomed out
   })));
   const labels = placeLabels(placed, pins);
   for (const v of placed) {
@@ -370,7 +371,78 @@ function rgba(hex, a) {
   return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 }
 // Some levels drift towards a second colour and back: Normal (green) ↔ blue, Busy (orange) ↔ magenta.
-const SHIFT = { 1: '#2a78d6', 2: '#e0309a' };
+// ---- Heat cloud settings (panel on the map, saved per browser) ----
+// size: baseM + people × perPersonM metres (never below basePx + people × perPersonPx on screen);
+// priority: strength rises from minStrength to full at fullAt people along a power `curve`;
+// colours: one per crowd level, with an optional second colour each level drifts to and back.
+const HEAT_DEFAULT = {
+  baseM: 120, perPersonM: 12, basePx: 34, perPersonPx: 2.4,
+  minStrength: 0.18, fullAt: 30, curve: 1.3, opacity: 1, blur: 8,
+  colors: ['#2a78d6', '#1f9d55', '#eb6834', '#e34948', '#8b1e3f'],
+  shift: [null, '#2a78d6', '#e0309a', null, null],
+};
+let HEAT = loadHeat();
+function loadHeat() {
+  try {
+    const s = JSON.parse(localStorage.getItem('heatSettings') || '{}');
+    return { ...HEAT_DEFAULT, ...s, colors: s.colors || [...HEAT_DEFAULT.colors], shift: s.shift || [...HEAT_DEFAULT.shift] };
+  } catch { return structuredClone(HEAT_DEFAULT); }
+}
+function saveHeat() { try { localStorage.setItem('heatSettings', JSON.stringify(HEAT)); } catch {} }
+
+function renderLegend() {
+  $('legendRows').innerHTML = LEVELS.map((l, i) =>
+    `<span class="level" style="--lv:${HEAT.colors[i]}"><span class="lv-dot"></span>${l.name} · ${l.range}</span>`).join('');
+}
+
+function addHeatPanel() {
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel heatpanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    const slider = (k, label, min, max, step, unit = '') =>
+      `<label>${label} <span><input type="range" data-h="${k}" min="${min}" max="${max}" step="${step}"><output data-ho="${k}"></output>${unit ? `<small>${unit}</small>` : ''}</span></label>`;
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false">${t('heatPanel')} ▾</button>
+      <div class="zp-body" hidden>
+        <h4>${t('heatSize')}</h4>
+        ${slider('baseM', t('heatBaseM'), 0, 600, 10, 'm')}
+        ${slider('perPersonM', t('heatPerPersonM'), 0, 40, 1, 'm')}
+        ${slider('basePx', t('heatBasePx'), 0, 150, 2, 'px')}
+        ${slider('perPersonPx', t('heatPerPersonPx'), 0, 8, 0.2, 'px')}
+        <h4>${t('heatPriority')}</h4>
+        ${slider('minStrength', t('heatMinStrength'), 0, 1, 0.02)}
+        ${slider('fullAt', t('heatFullAt'), 5, 60, 1)}
+        ${slider('curve', t('heatCurve'), 0.3, 3, 0.1)}
+        ${slider('opacity', t('heatOpacity'), 0.2, 2, 0.05)}
+        ${slider('blur', t('heatBlur'), 0, 24, 1, 'px')}
+        <h4>${t('heatColors')}</h4>
+        <div class="hp-colors">${LEVELS.map((l, i) => `
+          <div class="hp-row"><span>${l.name}</span>
+            <input type="color" data-c="${i}" aria-label="${l.name}">
+            <label class="hp-shift"><input type="checkbox" data-sc="${i}"> ${t('heatShift')}</label>
+            <input type="color" data-s="${i}" aria-label="${l.name} ${t('heatShift')}"></div>`).join('')}
+        </div>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel), qa = sel => box.querySelectorAll(sel);
+    const apply = () => { saveHeat(); document.querySelector('.heatcanvas')?.style.setProperty('filter', `blur(${HEAT.blur}px) saturate(1.15)`); renderLegend(); drawMap(); };
+    const sync = () => {
+      qa('[data-h]').forEach(i => { i.value = HEAT[i.dataset.h]; q(`[data-ho="${i.dataset.h}"]`).textContent = HEAT[i.dataset.h]; });
+      qa('[data-c]').forEach(i => { i.value = HEAT.colors[i.dataset.c]; });
+      qa('[data-sc]').forEach(i => { i.checked = !!HEAT.shift[i.dataset.sc]; });
+      qa('[data-s]').forEach(i => { i.value = HEAT.shift[i.dataset.s] || HEAT.colors[i.dataset.s]; i.disabled = !HEAT.shift[i.dataset.s]; });
+    };
+    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    qa('[data-h]').forEach(i => i.oninput = () => { HEAT[i.dataset.h] = +i.value; sync(); apply(); });
+    qa('[data-c]').forEach(i => i.oninput = () => { HEAT.colors[i.dataset.c] = i.value; apply(); });
+    qa('[data-sc]').forEach(i => i.onchange = () => { HEAT.shift[i.dataset.sc] = i.checked ? q(`[data-s="${i.dataset.sc}"]`).value : null; sync(); apply(); });
+    qa('[data-s]').forEach(i => i.oninput = () => { HEAT.shift[i.dataset.s] = i.value; apply(); });
+    q('.zp-reset').onclick = () => { HEAT = structuredClone(HEAT_DEFAULT); sync(); apply(); };
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
+  document.querySelector('.heatcanvas')?.style.setProperty('filter', `blur(${HEAT.blur}px) saturate(1.15)`);
+}
 function mixHex(a, b, f) {
   const x = parseInt(a.slice(1), 16), y = parseInt(b.slice(1), 16);
   const ch = s => Math.round(((x >> s) & 255) + (((y >> s) & 255) - ((x >> s) & 255)) * f);

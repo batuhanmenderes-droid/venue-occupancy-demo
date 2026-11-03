@@ -313,3 +313,14 @@ dialog.sheet .primary:hover { background: color-mix(in srgb, var(--series) 85%, 
 .zoompanel .zp-reset { background: transparent; color: var(--series); }
 
 body.mapmode .leaflet-top.leaflet-right { top: 56px; }  /* clear of the language switch */
+
+/* Heat cloud settings panel (shares the zoom panel's look) */
+.heatpanel .zp-body { width: 290px; max-height: calc(100vh - 220px); overflow: auto; }
+.heatpanel h4 { margin: 6px 0 0; font: 600 11px/1 var(--font-text); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.heatpanel small { color: var(--muted); font-size: 11px; width: 16px; }
+.heatpanel output { font-size: 14px; min-width: 34px; }
+.hp-colors { display: grid; gap: 6px; }
+.hp-row { display: grid; grid-template-columns: 1fr 28px auto 28px; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-2); }
+.hp-row input[type=color] { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 8px; background: none; cursor: pointer; }
+.hp-row input[type=color]:disabled { opacity: .3; cursor: default; }
+.hp-row .hp-shift { display: flex !important; align-items: center; gap: 4px; font-size: 11px; }
