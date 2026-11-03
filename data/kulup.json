@@ -1,0 +1,126 @@
+{
+  "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
+  "updated_at": "2026-11-03T19:41:01",
+  "frames": [
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_10-00-00.jpg",
+      "timestamp": "2026-11-03T10:00:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_10-45-00.jpg",
+      "timestamp": "2026-11-03T10:45:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_11-30-00.jpg",
+      "timestamp": "2026-11-03T11:30:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_12-15-00.jpg",
+      "timestamp": "2026-11-03T12:15:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_13-00-00.jpg",
+      "timestamp": "2026-11-03T13:00:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_13-45-00.jpg",
+      "timestamp": "2026-11-03T13:45:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_14-30-00.jpg",
+      "timestamp": "2026-11-03T14:30:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_15-15-00.jpg",
+      "timestamp": "2026-11-03T15:15:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_16-00-00.jpg",
+      "timestamp": "2026-11-03T16:00:00",
+      "camera": "CAM 01",
+      "people": 3,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_16-30-00.jpg",
+      "timestamp": "2026-11-03T16:30:00",
+      "camera": "CAM 01",
+      "people": 6,
+      "note": "Arka planda uzakta 1 kişi dahil.",
+      "note_en": "Includes 1 distant person in the background."
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_17-00-00.jpg",
+      "timestamp": "2026-11-03T17:00:00",
+      "camera": "CAM 01",
+      "people": 6,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_17-30-00.jpg",
+      "timestamp": "2026-11-03T17:30:00",
+      "camera": "CAM 01",
+      "people": 8,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_18-00-00.jpg",
+      "timestamp": "2026-11-03T18:00:00",
+      "camera": "CAM 01",
+      "people": 7,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_18-45-00.jpg",
+      "timestamp": "2026-11-03T18:45:00",
+      "camera": "CAM 01",
+      "people": 13,
+      "note": "Kalabalık; ±2 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±2."
+    },
+    {
+      "file": "kulup-cctv/2026-11-03/2026-11-03_19-30-00.jpg",
+      "timestamp": "2026-11-03T19:30:00",
+      "camera": "CAM 01",
+      "people": 24,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    }
+  ]
+}

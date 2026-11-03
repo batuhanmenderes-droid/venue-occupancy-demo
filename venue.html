@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Occupancy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<script src="i18n.js"></script>
+<style>
+:root {
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --series: #2a78d6; --series-soft: rgba(42,120,214,0.10);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --series: #3987e5; --series-soft: rgba(57,135,229,0.14);
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --series: #3987e5; --series-soft: rgba(57,135,229,0.14);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 28px 16px 48px; }
+header { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; justify-content: space-between; margin-bottom: 20px; }
+h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
+.sub { color: var(--ink-2); margin: 2px 0 0; }
+.back { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-2); text-decoration: none; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px 4px 8px; margin-bottom: 12px; }
+.back:hover { color: var(--ink); border-color: var(--axis); }
+.empty { color: var(--muted); font-size: 13px; padding: 24px 0; text-align: center; }
+.placeholder { width: 100%; aspect-ratio: 4 / 3; border-radius: 8px; border: 1px dashed var(--axis); display: grid; place-items: center; color: var(--muted); font-size: 13px; text-align: center; padding: 16px; }
+.actions { display: flex; gap: 8px; align-items: center; }
+select { font: inherit; font-size: 13px; color: var(--ink); background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px; }
+.pill { font-size: 12px; color: var(--ink-2); border: 1px solid var(--border); border-radius: 999px; padding: 3px 10px; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+.tile .label { color: var(--ink-2); font-size: 13px; }
+.tile .value { font-size: 30px; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.tile .meta { color: var(--muted); font-size: 12px; }
+.grid2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; margin-bottom: 12px; }
+h2 { font-size: 15px; margin: 0 0 2px; }
+.hint { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; font-size: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); white-space: nowrap; transform: translate(-50%, -110%); display: none; }
+.tip b { font-size: 14px; }
+.frame img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; display: block; background: #000; }
+.frame .row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px; }
+.frame .count { font-size: 22px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.frame .note { color: var(--ink-2); font-size: 13px; min-height: 1.4em; margin-top: 4px; }
+.nav { display: flex; gap: 6px; }
+button { font: inherit; font-size: 13px; color: var(--ink); background: transparent; border: 1px solid var(--border); border-radius: 8px; padding: 4px 10px; cursor: pointer; }
+button:hover { border-color: var(--axis); }
+.strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.thumb { border: 2px solid transparent; border-radius: 8px; padding: 0; overflow: hidden; text-align: left; background: var(--surface); }
+.thumb img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
+.thumb span { display: flex; justify-content: space-between; padding: 4px 6px; font-size: 12px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.thumb span b { color: var(--ink); }
+.thumb[aria-current="true"] { border-color: var(--series); }
+details { margin-top: 12px; }
+summary { cursor: pointer; color: var(--ink-2); font-size: 13px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+th { color: var(--ink-2); font-weight: 500; }
+td.n { text-align: right; }
+footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
+@media (max-width: 820px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .grid2 { grid-template-columns: 1fr; }
+}
+</style>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <a class="back" href="./" data-i18n="back">‹ Venues</a>
+      <h1 id="title">Doluluk Paneli</h1>
+      <p class="sub" id="subtitle" data-i18n="loading">loading…</p>
+    </div>
+    <div class="actions">
+      <select id="day" data-i18n-aria="day" hidden></select>
+      <span class="pill" id="pill" data-i18n="synthetic" hidden>Synthetic CCTV data</span>
+    </div>
+  </header>
+
+  <section class="tiles" id="tiles"></section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2 data-i18n="chartTitle"></h2>
+      <p class="hint" data-i18n="chartHint"></p>
+      <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
+    </div>
+    <div class="card frame">
+      <h2 data-i18n="selectedFrame"></h2>
+      <p class="hint" id="frameTime">&nbsp;</p>
+      <img id="frameImg" alt="">
+      <div class="row">
+        <div><span class="count" id="frameCount"></span> <span style="color:var(--ink-2)" data-i18n="people"></span></div>
+        <div class="nav"><button id="prev" data-i18n-aria="prevAria" data-i18n="prev"></button><button id="next" data-i18n-aria="nextAria" data-i18n="next"></button></div>
+      </div>
+      <div class="note" id="frameNote"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 data-i18n="allFrames"></h2>
+    <p class="hint" data-i18n="allFramesHint"></p>
+    <div class="strip" id="strip"></div>
+    <details>
+      <summary data-i18n="tableView"></summary>
+      <table><thead><tr><th data-i18n="thTime"></th><th data-i18n="thPeople"></th><th data-i18n="thNote"></th></tr></thead><tbody id="rows"></tbody></table>
+    </details>
+  </section>
+
+  <footer id="source"></footer>
+</main>
+
+<script src="levels.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const hm = ts => ts.slice(11, 16);
+const hms = ts => ts.slice(11, 19);
+const params = new URLSearchParams(location.search);
+// Business day: frames before 06:00 belong to the previous day, so a night that runs past midnight stays on one page.
+const dayOf = f => {
+  const d = new Date(f.timestamp);
+  if (d.getHours() < 6) d.setDate(d.getDate() - 1);
+  return localDay(d);
+};
+const localDay = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+// everything = every analysed frame of the venue; all = the selected day's frames;
+// frames = the selected day's frames whose timestamp has already passed.
+let countRule = '', everything = [], all = [], frames = [], current = 0, points = [], day = '', updatedAt = '', dataUrl = '';
+
+// ?saat=14:30 shows the selected day as it would look at that time.
+function now() {
+  const q = params.get('saat');
+  if (q) {
+    const at = new Date(`${day}T${q.length === 5 ? q + ':00' : q}`);
+    if (at.getHours() < 6) at.setDate(at.getDate() + 1);
+    return at;
+  }
+  return new Date();
+}
+
+function setDay(d) {
+  day = d;
+  all = everything.filter(f => dayOf(f) === day);
+  frames = []; points = []; current = 0;
+  params.set('gun', day);
+  history.replaceState(null, '', `?${params}`);
+  refresh();
+}
+
+function renderDays() {
+  const days = [...new Set([...everything.map(dayOf), dayOf({ timestamp: new Date() })])].sort();
+  if (!days.includes(day)) days.push(day);
+  $('day').innerHTML = days.map(d => `<option value="${d}"${d === day ? ' selected' : ''}>${d}${d === dayOf({ timestamp: new Date() }) ? ` (${t('today')})` : ''}</option>`).join('');
+  $('day').hidden = false;
+}
+
+// The routine pushes new frames to GitHub; re-read the data so they show up without a page reload.
+async function reload() {
+  const data = await (await fetch(`${dataUrl}?t=${Date.now()}`)).json();
+  updatedAt = data.updated_at || '';
+  $('source').textContent = t('source');
+  const before = everything.length;
+  everything = data.frames;
+  if (!day) day = params.get('gun') || dayOf({ timestamp: new Date() });
+  renderDays();
+  if (everything.length !== before) setDay(day); else refresh();
+}
+
+function refresh() {
+  const at = now();
+  const due = all.filter(f => new Date(f.timestamp) <= at);
+  const followLatest = current >= frames.length - 1;
+  const changed = due.length !== frames.length;
+  frames = due;
+  renderTiles(at);
+  if (!changed && points.length) return;
+  renderStrip();
+  renderChart();
+  if (frames.length) select(followLatest ? frames.length - 1 : current);
+}
+
+async function load() {
+  const id = new URLSearchParams(location.search).get('mekan') || 'lemongrass-cafe';
+  const { venues } = await (await fetch('data/venues.json')).json();
+  const venue = venues.find(v => v.id === id);
+  if (!venue) { location.replace('./'); return; }
+  document.title = `${venue.name} · ${t('occupancy')}`;
+  $('title').textContent = venue.name;
+  addEventListener('resize', renderChart);
+  if (!venue.data) { renderEmpty(venue); return; }
+  dataUrl = venue.data;
+  $('pill').hidden = false;
+  countRule = localized(venue, 'count_rule');
+  $('day').onchange = e => setDay(e.target.value);
+  await reload();
+  setInterval(() => reload().catch(() => {}), 60000);
+}
+load().catch(() => {
+  $('subtitle').textContent = t('readError');
+});
+
+// A venue with no camera yet: same layout, every value blank.
+function renderEmpty(venue) {
+  $('subtitle').textContent = `${typeName(venue.type)} · ${venue.coming_soon ? t('soon') : t('notConnected')}`;
+  const dash = '<span style="color:var(--muted)">—</span>';
+  $('tiles').innerHTML = [[t('tileLast'), t('people')], [t('tilePeak'), t('people')], [t('tileAvg'), t('perFrame')], [t('tileCount'), t('frames')]]
+    .map(([l, m]) => `<div class="card tile"><div class="label">${l}</div><div class="value">${dash}</div><div class="meta">${m}</div></div>`).join('');
+  renderChart();
+  $('frameImg').replaceWith(Object.assign(document.createElement('div'), { className: 'placeholder', textContent: venue.coming_soon ? t('soonPlaceholder') : t('noFramesVenue') }));
+  $('frameTime').textContent = t('framesWillAppear');
+  $('frameCount').textContent = '—';
+  $('prev').disabled = $('next').disabled = true;
+  $('strip').innerHTML = `<div class="empty" style="grid-column:1/-1">${t('noFramesYet')}</div>`;
+  $('rows').innerHTML = `<tr><td colspan="3" class="empty">${t('noData')}</td></tr>`;
+}
+
+function renderTiles(at) {
+  const clock = at.toTimeString().slice(0, 5);
+  const updated = updatedAt ? t('lastAnalysis', `${updatedAt.slice(0, 10) === day ? '' : updatedAt.slice(0, 10) + ' '}${updatedAt.slice(11, 16)}`) : t('noAnalysis');
+  $('subtitle').textContent = frames.length
+    ? `CAM 01 · ${hm(frames[0].timestamp)}–${hm(frames[frames.length - 1].timestamp)} · ${t('asOf', clock)}`
+    : `CAM 01 · ${t('asOf', clock)}`;
+  if (countRule) $('subtitle').textContent += ` · ${countRule}`;
+  if (!frames.length) {
+    $('tiles').innerHTML = `<div class="card tile" style="grid-column:1/-1"><div class="label">${t('noAnalysedDay')}</div><div class="meta">${t('analysedHourly', updated)}</div></div>`;
+    return;
+  }
+  const progress = [t('tileCount'), frames.length, `${t('frames')} · ${updated}`];
+  const last = frames[frames.length - 1];
+  const peak = Math.max(...frames.map(f => f.people));
+  const peakTimes = frames.filter(f => f.people === peak).map(f => hm(f.timestamp));
+  const avg = frames.reduce((s, f) => s + f.people, 0) / frames.length;
+  const tiles = [
+    [t('tileLast'), last.people, `${t('people')} · ${hm(last.timestamp)}<br>${levelBadge(last.people)}`],
+    [t('tilePeak'), peak, `${t('people')} · ${peakTimes.join(', ')}<br>${levelBadge(peak)}`],
+    [t('tileAvg'), decimal(avg.toFixed(1)), t('perFrameSoFar')],
+    progress,
+  ];
+  $('tiles').innerHTML = tiles.map(([l, v, m]) =>
+    `<div class="card tile"><div class="label">${l}</div><div class="value">${v}</div><div class="meta">${m}</div></div>`).join('');
+}
+
+function renderStrip() {
+  if (!frames.length) {
+    $('strip').innerHTML = `<div class="empty" style="grid-column:1/-1">${t('noFramesDay')}</div>`;
+    $('rows').innerHTML = `<tr><td colspan="3" class="empty">${t('noData')}</td></tr>`;
+    $('frameTime').textContent = '\u00a0'; $('frameCount').textContent = '—'; $('frameNote').textContent = '';
+    return;
+  }
+  $('strip').innerHTML = frames.map((f, i) =>
+    `<button class="thumb" data-i="${i}" aria-label="${hms(f.timestamp)}, ${f.people} ${t('people')}"><img loading="lazy" src="${f.file}" alt=""><span>${hm(f.timestamp)}<b>${f.people}</b></span></button>`).join('');
+  $('strip').onclick = e => { const b = e.target.closest('.thumb'); if (b) select(+b.dataset.i); };
+  $('rows').innerHTML = frames.map(f =>
+    `<tr><td>${hms(f.timestamp)}</td><td class="n">${f.people}</td><td>${localized(f, 'note')}</td></tr>`).join('');
+}
+
+function renderChart() {
+  const box = $('chart');
+  const W = Math.max(300, box.clientWidth), H = Math.round(Math.min(320, W * 0.5));
+  const m = { t: 12, r: 12, b: 26, l: 30 };
+  const secs = f => { const [h, mi, s] = hms(f.timestamp).split(':').map(Number); return (f.timestamp.slice(0, 10) > day ? 86400 : 0) + h * 3600 + mi * 60 + s; };
+  // The time axis spans the whole day so the line grows as frames come due.
+  // At least 08:00–24:00 so a day in progress keeps a stable axis; wider if frames fall outside it.
+  const t0 = Math.min(8 * 3600, all.length ? Math.floor(secs(all[0]) / 3600) * 3600 : Infinity);
+  const t1 = Math.max(24 * 3600, all.length ? Math.ceil(secs(all[all.length - 1]) / 3600) * 3600 : 0);
+  const max = Math.max(10, Math.ceil(Math.max(0, ...frames.map(f => f.people)) / 5) * 5);
+  const x = s => m.l + (s - t0) / (t1 - t0) * (W - m.l - m.r);
+  const y = v => H - m.b - v / max * (H - m.t - m.b);
+  points = frames.map((f, i) => ({ i, x: x(secs(f)), y: y(f.people) }));
+
+  let g = '';
+  for (let v = 0; v <= max; v += 5) {
+    g += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--${v ? 'grid' : 'axis'})" stroke-width="1"/>`;
+    g += `<text x="${m.l - 6}" y="${y(v) + 4}" text-anchor="end">${v}</text>`;
+  }
+  const step = W < 520 ? 2 : 1;
+  for (let h = t0 / 3600; h <= t1 / 3600; h += step * (W < 720 ? 2 : 1))
+    g += `<text x="${x(h * 3600)}" y="${H - 6}" text-anchor="middle">${String(h % 24).padStart(2, '0')}:00</text>`;
+  if (points.length) {
+    const line = points.map((p, i) => `${i ? 'L' : 'M'}${p.x},${p.y}`).join('');
+    const area = `${line}L${points[points.length - 1].x},${y(0)}L${points[0].x},${y(0)}Z`;
+    // iOS-style area: the series colour fading to nothing at the baseline.
+    g += `<defs><linearGradient id="areaFade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--series);stop-opacity:.32"/><stop offset="1" style="stop-color:var(--series);stop-opacity:0"/></linearGradient></defs>`;
+    g += `<path d="${area}" fill="url(#areaFade)"/>`;
+    g += `<path d="${line}" fill="none" stroke="var(--series)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  }
+  g += `<line id="cross" y1="${m.t}" y2="${H - m.b}" stroke="var(--axis)" stroke-width="1" visibility="hidden"/>`;
+  // Each point takes its crowd-level colour.
+  g += points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${levelOf(frames[p.i].people).color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
+  g += `<circle id="sel" r="7" fill="none" stroke="var(--series)" stroke-width="2"/>`;
+  g += `<rect id="hit" x="${m.l}" y="0" width="${W - m.l - m.r}" height="${H}" fill="transparent" style="cursor:pointer"/>`;
+
+  box.querySelector('svg')?.remove();
+  box.insertAdjacentHTML('afterbegin', `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t('chartAria')}">${g}</svg>`);
+  const svg = box.querySelector('svg'), tip = $('tip'), cross = $('cross');
+  const nearest = e => {
+    const r = svg.getBoundingClientRect(), px = (e.clientX - r.left) * W / r.width;
+    return points.reduce((a, b) => Math.abs(b.x - px) < Math.abs(a.x - px) ? b : a);
+  };
+  markSelected();
+  if (!points.length) return;
+  svg.onmousemove = e => {
+    const p = nearest(e), f = frames[p.i], r = svg.getBoundingClientRect(), k = r.width / W;
+    cross.setAttribute('x1', p.x); cross.setAttribute('x2', p.x); cross.setAttribute('visibility', 'visible');
+    tip.innerHTML = `${hms(f.timestamp)}<br><b>${f.people}</b> ${t('people')}`;
+    tip.style.left = p.x * k + 'px'; tip.style.top = p.y * k + 'px'; tip.style.display = 'block';
+  };
+  svg.onmouseleave = () => { tip.style.display = 'none'; cross.setAttribute('visibility', 'hidden'); };
+  svg.onclick = e => select(nearest(e).i);
+  markSelected();
+}
+
+function markSelected() {
+  const p = points[current], sel = $('sel');
+  if (!sel) return;
+  sel.setAttribute('visibility', p ? 'visible' : 'hidden');
+  if (p) { sel.setAttribute('cx', p.x); sel.setAttribute('cy', p.y); }
+  if ($('frameImg')) $('frameImg').style.visibility = p ? 'visible' : 'hidden';
+}
+
+function select(i) {
+  if (!frames.length) return;
+  current = Math.max(0, Math.min(frames.length - 1, i));
+  const f = frames[current];
+  $('frameImg').src = f.file;
+  $('frameImg').alt = t('frameAlt', hms(f.timestamp));
+  $('frameTime').textContent = `${f.timestamp.slice(0, 10)} · ${hms(f.timestamp)} · ${f.camera}`;
+  $('frameCount').textContent = f.people;
+  const note = localized(f, 'note');
+  $('frameNote').innerHTML = `${levelBadge(f.people)}${note ? ' · ' : ''}`;
+  $('frameNote').append(note);
+  document.querySelectorAll('.thumb').forEach(b => b.setAttribute('aria-current', +b.dataset.i === current));
+  markSelected();
+}
+$('prev').onclick = () => select(current - 1);
+$('next').onclick = () => select(current + 1);
+addEventListener('keydown', e => { if (e.key === 'ArrowLeft') select(current - 1); if (e.key === 'ArrowRight') select(current + 1); });
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+{
+  "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
+  "updated_at": "2026-11-03T19:41:01",
+  "frames": [
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_090000.jpg",
+      "timestamp": "2026-11-03T09:00:00",
+      "camera": "CAM 01",
+      "people": 2,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_092842.jpg",
+      "timestamp": "2026-11-03T09:28:42",
+      "camera": "CAM 01",
+      "people": 2,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_095723.jpg",
+      "timestamp": "2026-11-03T09:57:23",
+      "camera": "CAM 01",
+      "people": 5,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_102605.jpg",
+      "timestamp": "2026-11-03T10:26:05",
+      "camera": "CAM 01",
+      "people": 5,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_105447.jpg",
+      "timestamp": "2026-11-03T10:54:47",
+      "camera": "CAM 01",
+      "people": 9,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_112329.jpg",
+      "timestamp": "2026-11-03T11:23:29",
+      "camera": "CAM 01",
+      "people": 9,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_115210.jpg",
+      "timestamp": "2026-11-03T11:52:10",
+      "camera": "CAM 01",
+      "people": 21,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_122052.jpg",
+      "timestamp": "2026-11-03T12:20:52",
+      "camera": "CAM 01",
+      "people": 21,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_124934.jpg",
+      "timestamp": "2026-11-03T12:49:34",
+      "camera": "CAM 01",
+      "people": 25,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_131816.jpg",
+      "timestamp": "2026-11-03T13:18:16",
+      "camera": "CAM 01",
+      "people": 21,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_134657.jpg",
+      "timestamp": "2026-11-03T13:46:57",
+      "camera": "CAM 01",
+      "people": 9,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_141539.jpg",
+      "timestamp": "2026-11-03T14:15:39",
+      "camera": "CAM 01",
+      "people": 9,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_144421.jpg",
+      "timestamp": "2026-11-03T14:44:21",
+      "camera": "CAM 01",
+      "people": 21,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_151303.jpg",
+      "timestamp": "2026-11-03T15:13:03",
+      "camera": "CAM 01",
+      "people": 25,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_154144.jpg",
+      "timestamp": "2026-11-03T15:41:44",
+      "camera": "CAM 01",
+      "people": 25,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_161026.jpg",
+      "timestamp": "2026-11-03T16:10:26",
+      "camera": "CAM 01",
+      "people": 21,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_163908.jpg",
+      "timestamp": "2026-11-03T16:39:08",
+      "camera": "CAM 01",
+      "people": 21,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_170750.jpg",
+      "timestamp": "2026-11-03T17:07:50",
+      "camera": "CAM 01",
+      "people": 25,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_173631.jpg",
+      "timestamp": "2026-11-03T17:36:31",
+      "camera": "CAM 01",
+      "people": 21,
+      "note": "Kalabalık; ±3 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_180513.jpg",
+      "timestamp": "2026-11-03T18:05:13",
+      "camera": "CAM 01",
+      "people": 9,
+      "note": "Loş ışık.",
+      "note_en": "Dim light."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_183355.jpg",
+      "timestamp": "2026-11-03T18:33:55",
+      "camera": "CAM 01",
+      "people": 9,
+      "note": "Karanlık kare; loş ışık.",
+      "note_en": "Dark frame; dim light."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_190237.jpg",
+      "timestamp": "2026-11-03T19:02:37",
+      "camera": "CAM 01",
+      "people": 7,
+      "note": "Karanlık kare; sağ kenarda yarım görünen 1 kişi dahil.",
+      "note_en": "Dark frame; includes 1 person half-visible at the right edge."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_193118.jpg",
+      "timestamp": "2026-11-03T19:31:18",
+      "camera": "CAM 01",
+      "people": 2,
+      "note": "Karanlık kare.",
+      "note_en": "Dark frame."
+    }
+  ]
+}

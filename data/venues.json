@@ -1,0 +1,77 @@
+{
+  "venues": [
+    {
+      "id": "poison-pub",
+      "name": "Poison Pub",
+      "type": "Pub",
+      "folder": "poisonpub-cctv",
+      "data": "data/poison-pub.json",
+      "count_rule": "Yalnızca kameraya yakın kişiler sayılır.",
+      "location": {
+        "lat": 37.0518952,
+        "lon": 28.3260592,
+        "approx": false,
+        "label": "Karanfil Sokak, Akyaka"
+      },
+      "logo": "logos/poisonpub.png",
+      "count_rule_en": "Only people close to the camera are counted."
+    },
+    {
+      "id": "no22-riders-inn",
+      "name": "No22 Riders Inn",
+      "type": "Bar",
+      "folder": "no22riders-cctv",
+      "data": "data/no22-riders-inn.json",
+      "location": {
+        "lat": 37.0514953,
+        "lon": 28.3276248,
+        "approx": false,
+        "label": "Karanfil Sokak, Akyaka"
+      },
+      "logo": "logos/no22riders.png"
+    },
+    {
+      "id": "kulup",
+      "name": "Kulüp",
+      "type": "Kulüp",
+      "folder": "kulup-cctv",
+      "data": "data/kulup.json",
+      "location": {
+        "lat": 37.053901,
+        "lon": 28.342248,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kulup.png"
+    },
+    {
+      "id": "lemongrass-cafe",
+      "name": "Lemongrass Cafe",
+      "type": "Kafe",
+      "folder": "Lemongrass-cctv",
+      "data": "data/lemongrass-cafe.json",
+      "location": {
+        "lat": 37.0262,
+        "lon": 28.3585,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/lemongrass.png"
+    },
+    {
+      "id": "kitebeach-akyaka",
+      "name": "Kitebeach Akyaka",
+      "type": "Plaj",
+      "folder": null,
+      "data": null,
+      "coming_soon": true,
+      "location": {
+        "lat": 37.037453,
+        "lon": 28.3294399,
+        "approx": false,
+        "label": "Kite Plajı, Akyaka"
+      },
+      "logo": "logos/kitebeach.png"
+    }
+  ]
+}

@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Venues · Occupancy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<script src="i18n.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root {
+  --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
+  --grid: #e1e0d9; --axis: #c3c2b7; --border: rgba(11,11,11,0.10);
+  --series: #2a78d6; --live: #006300;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --series: #3987e5; --live: #0ca30c;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #0d0d0d; --surface: #1a1a19; --ink: #f0efec; --ink-2: #c3c2b7; --muted: #898781;
+  --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+  --series: #3987e5; --live: #0ca30c;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--page); color: var(--ink); font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+main { max-width: 1120px; margin: 0 auto; padding: 28px 16px 48px; }
+h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
+.sub { color: var(--ink-2); margin: 2px 0 20px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.venue { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; color: inherit; text-decoration: none; transition: border-color .15s, transform .15s; }
+.venue:hover { border-color: var(--axis); transform: translateY(-1px); }
+.venue:focus-visible { outline: 2px solid var(--series); outline-offset: 2px; }
+.media { aspect-ratio: 4 / 3; background: var(--grid); position: relative; }
+.media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.logo { width: 44px; height: 44px; border-radius: 50%; flex: none; position: relative; overflow: hidden; background: var(--grid); box-shadow: 0 0 0 3px var(--lv, var(--border)); display: grid; place-items: center; font-weight: 700; font-size: 14px; color: var(--ink-2); }
+.logo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.14); } /* logos are screenshots with a dark margin: zoom past it */
+.media .logo { position: absolute; right: 12px; bottom: -22px; box-shadow: 0 0 0 3px var(--surface), 0 0 0 6px var(--lv, var(--border)); }
+.media { overflow: visible; }
+.body { padding-top: 14px; }
+.top { padding-right: 56px; }
+.maplogo { background: none; border: 0; }
+.maplogo .logo { width: 100%; height: 100%; box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--lv, #898781), 0 4px 12px rgba(0,0,0,.35); cursor: pointer; }
+.media .none { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; border-bottom: 1px dashed var(--axis); }
+.body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.name { font-weight: 600; font-size: 16px; }
+.type { color: var(--muted); font-size: 12px; }
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-2); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--axis); }
+.status.live .dot { background: var(--live); }
+.status.soon .dot { background: #eda100; }
+.media .none.soon, .media .none { text-align: center; }
+.stat { display: flex; align-items: baseline; gap: 6px; margin-top: auto; }
+.stat b { font-size: 26px; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--ink-2); font-size: 13px; }
+.arrow { margin-left: auto; color: var(--muted); }
+.tabs { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); margin-bottom: 16px; }
+.tab { font: inherit; font-size: 13px; color: var(--ink-2); background: transparent; border: 0; border-radius: 7px; padding: 6px 14px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--grid); color: var(--ink); font-weight: 600; }
+.mapwrap { position: relative; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface); }
+#map { height: min(70vh, 620px); min-height: 360px; }
+.legend { position: absolute; right: 12px; bottom: 12px; z-index: 500; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 12px; color: var(--ink-2); }
+.legend .rows { display: grid; gap: 4px; margin-top: 6px; }
+.venue { border-left: 4px solid var(--lv, var(--border)); }
+.maphint { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.leaflet-tooltip.vlabel { background: var(--surface); color: var(--ink); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.15); font: 12px/1.3 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 4px 8px; }
+.leaflet-tooltip.vlabel b { font-size: 14px; font-variant-numeric: tabular-nums; }
+.leaflet-tooltip.vlabel::before { display: none; }
+.leaflet-container { font: inherit; }
+.heatcanvas { position: absolute; pointer-events: none; filter: blur(6px); transition: opacity .2s; }
+.townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
+.updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
+</style>
+<link rel="stylesheet" href="theme.css">
+</head>
+<body>
+<main>
+  <h1 data-i18n="venues">Venues</h1>
+  <p class="sub" id="subtitle" data-i18n="loading">loading…</p>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="tab-liste" aria-controls="view-liste" data-i18n="tabList">List view</button>
+    <button class="tab" role="tab" id="tab-harita" aria-controls="view-harita" data-i18n="tabMap">Heatmap</button>
+  </div>
+  <section id="view-liste" role="tabpanel"><div class="grid" id="grid"></div></section>
+  <section id="view-harita" role="tabpanel" hidden>
+    <div class="mapwrap">
+      <div id="map" data-i18n-aria="mapAria"></div>
+      <div class="legend"><div data-i18n="legendTitle">People in the latest frame</div><div class="rows" id="legendRows"></div></div>
+    </div>
+    <p class="maphint" data-i18n="mapHint"></p>
+  </section>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="levels.js"></script>
+
+<script>
+const $ = id => document.getElementById(id);
+const hm = ts => ts.slice(11, 16);
+
+async function load() {
+  const { venues } = await (await fetch('data/venues.json')).json();
+  const now = new Date();
+  const cards = await Promise.all(venues.map(async v => {
+    let latest = null, updatedAt = '';
+    if (v.data) {
+      const { frames, updated_at } = await (await fetch(`${v.data}?t=${Date.now()}`)).json();
+      updatedAt = updated_at || '';
+      // Same rule as the venue page: a frame counts only once its time has passed.
+      latest = frames.filter(f => new Date(f.timestamp) <= now).pop() || null;
+    }
+    return { ...v, latest, updatedAt };
+  }));
+  document.title = `${t('venues')} · ${t('occupancy')}`;
+  $('subtitle').textContent = t('listSub', venues.length, now.toTimeString().slice(0, 5));
+  $('grid').innerHTML = cards.map(card).join('');
+  lastCards = cards;
+  if (map) drawMap();
+}
+
+// ---- Tabs ----
+let lastCards = [], map = null, markers = null, heat = null;
+$('legendRows').innerHTML = LEVELS.map(l => levelBadge(l.max === Infinity ? 41 : l.max)).join('');
+
+function showTab(name) {
+  const harita = name === 'harita';
+  $('tab-liste').setAttribute('aria-selected', !harita);
+  $('tab-harita').setAttribute('aria-selected', harita);
+  $('view-liste').hidden = harita;
+  $('view-harita').hidden = !harita;
+  history.replaceState(null, '', `#${harita ? 'harita' : 'liste'}`);
+  if (harita) { initMap(); map.invalidateSize(); drawMap(); }
+}
+$('tab-liste').onclick = () => showTab('liste');
+$('tab-harita').onclick = () => showTab('harita');
+
+// ---- Heatmap (Akyaka + Akçapınar) ----
+function initMap() {
+  if (map) return;
+  map = L.map('map', { scrollWheelZoom: true });
+  // Akyaka in the north-west, Akçapınar to the south-east.
+  map.fitBounds([[37.020, 28.318], [37.062, 28.366]]);
+  heat = new HeatBlobs().addTo(map);
+  markers = L.layerGroup().addTo(map);
+  map.on('zoomend', drawMap);
+  addBasemap();
+  drawMap();
+}
+
+function drawMap() {
+  if (!map) return;
+  const placed = lastCards.filter(v => v.location);
+  markers.clearLayers();
+  const pins = spreadPins(placed);
+  // Each venue gets an organic heat cloud in its level colour around its (possibly spread) pin;
+  // the cloud grows and thickens with the crowd.
+  heat.setBlobs(placed.filter(v => v.latest).map(v => ({
+    seed: v.id,
+    latlng: pins.get(v.id).latlng,
+    level: LEVELS.indexOf(levelOf(v.latest.people)),
+    meters: 120 + Math.min(v.latest.people, 100) * 12,  // 0 → 120 m, 25 → 420 m, 50 → 720 m
+    minPx: 34 + Math.min(v.latest.people, 100) * 2.4,  // keeps the cloud readable when zoomed out
+  })));
+  for (const v of placed) {
+    const n = v.latest ? v.latest.people : null;
+    const lv = levelOf(n);
+    const pin = pins.get(v.id);
+    // A pin pushed off its spot keeps a thin line and a dot at the true location.
+    if (pin.moved) {
+      L.polyline([[v.location.lat, v.location.lon], pin.latlng], { color: '#ffffff', weight: 1.5, opacity: 0.8, interactive: false }).addTo(markers);
+      L.circleMarker([v.location.lat, v.location.lon], { radius: 3, weight: 1, color: '#ffffff', fillColor: lv ? lv.color : '#898781', fillOpacity: 1, interactive: false }).addTo(markers);
+    }
+    const m = L.marker(pin.latlng, {
+      icon: L.divIcon({ className: 'maplogo', html: `<div style="--lv:${lv ? lv.color : '#898781'};width:100%;height:100%">${logoHtml(v)}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
+      title: v.name,
+    }).addTo(markers);
+    const offset = { top: [0, -PIN / 2 - 2], left: [-PIN / 2 - 2, 0], right: [PIN / 2 + 2, 0] }[pin.dir];
+    m.bindTooltip(v.coming_soon ? `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>` : `<span class="vname">${v.name}</span><span class="vcount">${n === null ? '—' : n}${PERSON_ICON}</span>`,
+      { permanent: true, direction: pin.dir, offset, className: 'vlabel' });
+    m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
+  }
+}
+
+// ---- Basemap ----
+// Fixed look: Esri dark gray canvas without any road or street names. The canvas adds street
+// names from zoom 15, so tiles are capped at 14 and scaled up beyond. Only the two town names
+// are drawn on top, as our own labels.
+const BASEMAP = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
+const BASEMAP_FILTER = 'brightness(72%) contrast(140%) saturate(0%)';
+const TOWNS = [
+  { name: 'Akyaka', lat: 37.0580, lon: 28.3271, dy: 0 },
+  { name: 'Akçapınar', lat: 37.0258, lon: 28.3579, dy: 38 },  // below the Lemongrass pin
+];
+
+function addBasemap() {
+  L.tileLayer(BASEMAP, { attribution: 'Tiles &copy; Esri', maxZoom: 19, maxNativeZoom: 14 }).addTo(map);
+  map.getPane('tilePane').style.filter = BASEMAP_FILTER;
+  for (const town of TOWNS)
+    L.marker([town.lat, town.lon], { icon: L.divIcon({ className: 'townlabel', html: `<span style="margin-top:${town.dy}px">${town.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1000 }).addTo(map);
+}
+
+// Small person glyph shown next to the head count on map labels.
+const PERSON_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="4.6" r="2.9" fill="currentColor"/><path d="M2.6 14.4c0-3.1 2.4-5.4 5.4-5.4s5.4 2.3 5.4 5.4z" fill="currentColor"/></svg>';
+
+// ---- Organic heat clouds ----
+// Outward colour ramp, from the edge (grey) to the hottest level. A venue's core uses its own level
+// colour and fades through every lower level: e.g. orange → yellow → green → blue → grey.
+const RAMP = ['#8e8e93', '#0a84ff', '#30d158', '#ffd60a', '#ff9f0a', '#ff453a', '#a2223f'];
+const LEVEL_TO_RAMP = [1, 2, 4, 5, 6];  // Quiet, Normal, Busy, Crowded, Very crowded
+function rampLut(level) {
+  const top = LEVEL_TO_RAMP[level], colors = RAMP.slice(0, top + 1);
+  const lut = new Uint8ClampedArray(256 * 4);
+  const hex = h => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  for (let k = 0; k < 256; k++) {
+    const t = k / 255;                       // 0 = thin edge, 1 = dense core
+    const pos = t * (colors.length - 1), i = Math.min(colors.length - 2, Math.floor(pos)), f = pos - i;
+    const a = hex(colors[i]), c = hex(colors[i + 1] || colors[i]);
+    const edge = Math.min(1, t / 0.12);      // soft outer fade into the 20% grey
+    const alpha = (0.2 + 0.45 * Math.pow(t, 0.8)) * edge;
+    lut.set([a[0] + (c[0] - a[0]) * f, a[1] + (c[1] - a[1]) * f, a[2] + (c[2] - a[2]) * f, alpha * 255], k * 4);
+  }
+  return lut;
+}
+
+// A canvas layer that draws each venue as a cluster of soft radial gradients ("lobes") placed by a
+// per-venue seeded random, then blurred, so the glow reads as a loose crowd rather than a circle.
+// The lobes drift slowly; with reduced motion the cloud stays still.
+function seeded(str) {
+  let h = 2166136261;
+  for (const c of str) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+  return () => ((h = Math.imul(h ^ (h >>> 15), 2246822507) ^ Math.imul(h ^ (h >>> 13), 3266489909)) >>> 0) / 4294967296;
+}
+function rgba(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+}
+const HeatBlobs = L.Layer.extend({
+  onAdd(m) {
+    this._blobs = this._blobs || [];
+    this._canvas = L.DomUtil.create('canvas', 'heatcanvas');
+    m.getPanes().overlayPane.appendChild(this._canvas);
+    m.on('moveend resize', this._draw, this);
+    m.on('zoomstart', this._hide, this);
+    m.on('zoomend', this._show, this);
+    this._still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const tick = () => { this._draw(); if (!this._still) this._raf = setTimeout(() => requestAnimationFrame(tick), 90); };
+    tick();
+    return this;
+  },
+  onRemove(m) {
+    clearTimeout(this._raf);
+    L.DomUtil.remove(this._canvas);
+    m.off('moveend resize', this._draw, this).off('zoomstart', this._hide, this).off('zoomend', this._show, this);
+  },
+  setBlobs(blobs) {
+    this._blobs = blobs.map(b => {
+      const rnd = seeded(b.seed);
+      const lobes = Array.from({ length: 11 }, (_, i) => ({
+        ang: rnd() * Math.PI * 2, dist: i === 0 ? 0 : 0.15 + rnd() * 0.5, size: i === 0 ? 0.75 : 0.32 + rnd() * 0.42,
+        speed: 0.15 + rnd() * 0.35, phase: rnd() * Math.PI * 2,
+      }));
+      return { ...b, lobes, lut: rampLut(b.level) };
+    });
+    if (this._map) this._draw();
+  },
+  _hide() { this._canvas.style.opacity = 0; },
+  _show() { this._draw(); this._canvas.style.opacity = 1; },
+  _draw() {
+    const m = this._map; if (!m) return;
+    const size = m.getSize(), dpr = window.devicePixelRatio || 1, c = this._canvas;
+    L.DomUtil.setPosition(c, m.containerPointToLayerPoint([0, 0]));
+    if (c.width !== size.x * dpr || c.height !== size.y * dpr) {
+      c.width = size.x * dpr; c.height = size.y * dpr; c.style.width = `${size.x}px`; c.style.height = `${size.y}px`;
+    }
+    const ctx = c.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, size.x, size.y);
+    const time = this._still ? 0 : performance.now() / 1000;
+    for (const b of this._blobs) {
+      const p = m.latLngToContainerPoint(b.latlng);
+      const mpp = 40075016.686 * Math.cos(b.latlng.lat * Math.PI / 180) / Math.pow(2, m.getZoom() + 8);
+      const R = Math.max(b.meters / mpp, b.minPx);
+      // 1) Density mask: lobes as white radial falloffs, summed, in an offscreen canvas around the pin.
+      const half = Math.ceil(R * 1.25), side = half * 2;
+      const off = this._mask || (this._mask = document.createElement('canvas'));  // not _off: Leaflet's Evented owns that name
+      if (off.width < side || off.height < side) { off.width = off.height = side; }
+      const o = off.getContext('2d', { willReadFrequently: true });
+      o.setTransform(1, 0, 0, 1, 0, 0);
+      o.clearRect(0, 0, side, side);
+      o.globalCompositeOperation = 'lighter';
+      for (const l of b.lobes) {
+        const wob = Math.sin(time * l.speed + l.phase);
+        const x = half + Math.cos(l.ang + wob * 0.25) * l.dist * R;
+        const y = half + Math.sin(l.ang + wob * 0.25) * l.dist * R;
+        const r = R * l.size * (1 + wob * 0.08);
+        const g = o.createRadialGradient(x, y, 0, x, y, r);
+        g.addColorStop(0, 'rgba(255,255,255,0.55)');
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        o.fillStyle = g;
+        o.beginPath(); o.arc(x, y, r, 0, Math.PI * 2); o.fill();
+      }
+      // 2) Colour the mask with the venue's ramp: dense core = its level colour, stepping down the
+      //    lower levels towards the edge and ending in grey at 20% opacity.
+      const img = o.getImageData(0, 0, side, side), px = img.data, lut = b.lut;
+      for (let i = 0; i < px.length; i += 4) {
+        const k = Math.min(255, px[i + 3] * 1.15) | 0;
+        if (!k) continue;
+        px[i] = lut[k * 4]; px[i + 1] = lut[k * 4 + 1]; px[i + 2] = lut[k * 4 + 2]; px[i + 3] = lut[k * 4 + 3];
+      }
+      o.putImageData(img, 0, 0);
+      ctx.drawImage(off, 0, 0, side, side, p.x - half, p.y - half, side, side);
+    }
+  },
+});
+
+// Pins closer than MIN_GAP pixels are pushed apart on screen; zooming in shrinks the push until
+// every pin sits on its true location. Labels go to the side the pin was pushed towards.
+const PIN = 42, MIN_GAP = PIN + 10;
+function spreadPins(placed) {
+  const pts = placed.map(v => ({ id: v.id, home: map.latLngToLayerPoint([v.location.lat, v.location.lon]) }));
+  pts.forEach(p => { p.x = p.home.x; p.y = p.home.y; });
+  for (let iter = 0; iter < 30; iter++) {
+    let moved = false;
+    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {
+      const a = pts[i], b = pts[j];
+      let dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
+      if (d >= MIN_GAP) continue;
+      if (d < 0.01) { dx = 1; dy = 0; d = 1; }  // same spot: split sideways
+      const push = (MIN_GAP - d) / 2;
+      a.x -= dx / d * push; a.y -= dy / d * push;
+      b.x += dx / d * push; b.y += dy / d * push;
+      moved = true;
+    }
+    if (!moved) break;
+  }
+  const out = new Map();
+  for (const p of pts) {
+    const dx = p.x - p.home.x, dy = p.y - p.home.y;
+    const moved = Math.hypot(dx, dy) > 2;
+    const dir = !moved ? 'top' : Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : 'top';
+    out.set(p.id, { latlng: map.layerPointToLatLng(L.point(p.x, p.y)), moved, dir });
+  }
+  return out;
+}
+
+showTab(location.hash === '#harita' ? 'harita' : 'liste');
+
+// "az önce", "15 dk önce", "2 sa önce", "1 gün önce"
+function ago(ts) {
+  if (!ts) return t('agoNone');
+  const min = Math.floor((Date.now() - new Date(ts)) / 60000);
+  if (min < 1) return t('agoNow');
+  if (min < 60) return t('agoMin', min);
+  if (min < 1440) return t('agoHour', Math.floor(min / 60));
+  return t('agoDay', Math.floor(min / 1440));
+}
+
+// Round venue logo; falls back to initials until logos/<id>.png exists.
+function logoHtml(v) {
+  const initials = v.name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  return `<span class="logo">${initials}${v.logo ? `<img src="${v.logo}" alt="${t('logoAlt', v.name)}" onerror="this.remove()">` : ''}</span>`;
+}
+
+function card(v) {
+  const live = !!v.data;
+  const media = v.latest
+    ? `<img src="${v.latest.file}" alt="${t('latestFrameAlt', v.name)}" loading="lazy">`
+    : `<div class="none">${live ? t('noFramesToday') : v.coming_soon ? t('soon') : t('noCamera')}</div>`;
+  const stat = v.latest
+    ? `<b>${v.latest.people}</b><span>${t('people')} · ${hm(v.latest.timestamp)}</span>`
+    : `<b style="color:var(--muted)">—</b><span>${t('people')}</span>`;
+  const lv = v.latest ? levelOf(v.latest.people) : null;
+  return `<a class="venue" href="venue.html?mekan=${v.id}"${lv ? ` style="--lv:${lv.color}"` : ''}>
+    <div class="media" style="position:relative">${media}${logoHtml(v)}</div>
+    <div class="body">
+      <div class="top"><span class="name">${v.name}</span><span class="type">${typeName(v.type)}</span></div>
+      <span class="status ${live ? 'live' : v.coming_soon ? 'soon' : ''}"><span class="dot"></span>${live ? t('cameraActive') : v.coming_soon ? t('soon') : t('noData')}</span>
+      <div class="stat">${stat}<span class="arrow">›</span></div>
+      <div class="updated" title="${v.updatedAt ? v.updatedAt.replace('T', ' ') : ''}">${live ? t('lastUpdate', ago(v.updatedAt)) : v.coming_soon ? t('soonCamera') : t('noUpdates')}</div>
+    </div>
+  </a>`;
+}
+
+setInterval(() => load().catch(() => {}), 60000);
+load().catch(() => {
+  $('subtitle').textContent = t('readError');
+});
+</script>
+</body>
+</html>
