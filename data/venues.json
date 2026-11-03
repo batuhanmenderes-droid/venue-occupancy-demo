@@ -352,6 +352,43 @@
         "close": "22:00"
       },
       "description": ""
+    },
+    {
+      "id": "okapi-suites",
+      "name": "Okapi Suites",
+      "type": "Otel",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0261125,
+        "lon": 28.3531944,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/okapi.png",
+      "hours": null,
+      "description": ""
+    },
+    {
+      "id": "soul-fit",
+      "name": "Soul Fit",
+      "type": "Spor",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0560692,
+        "lon": 28.3369522,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/soulfit.png",
+      "hours": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "description": ""
     }
   ]
 }

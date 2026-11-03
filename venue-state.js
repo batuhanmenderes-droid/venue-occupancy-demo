@@ -2,7 +2,7 @@
 //
 // Hours and description come from data/venues.json and can be overridden per browser from the settings
 // dialog (localStorage "venueSettings"). Venues marked `simulated` have no camera yet: their count is a
-// made-up demo value that changes every 40 minutes, 10–20 at busy times and lower or 0 at quiet times.
+// made-up demo value that changes every 40 minutes, 5–10 at busy times and lower or 0 at quiet times.
 
 const SIM_SLOT_MIN = 40;
 
@@ -67,7 +67,8 @@ function simCount(v, at) {
   const r = simRandom(`${v.id}:${slotStart(at).getTime()}`);
   if (busy < 0.15 || r < 0.06) return 0;                   // quiet hours, and the odd empty moment
   const level = Math.min(1, Math.max(0, busy * 0.85 + (r - 0.5) * 0.5));
-  return Math.round(busy < 0.45 ? level * 12 : 10 + level * 10); // quiet: 0–12, busy: 10–20
+  // Halved for the demo: quiet 0–6, busy 5–10.
+  return Math.round((busy < 0.45 ? level * 12 : 10 + level * 10) / 2);
 }
 // One simulated frame per 40-minute slot of a business day (06:00 → 06:00), up to `until`.
 function simFrames(v, day, until = new Date()) {

@@ -170,6 +170,7 @@ function initMap() {
   markers = L.layerGroup().addTo(map);
   map.on('zoomend moveend', drawMap);
   addBasemap();
+  addZoomPanel();
   drawMap();
 }
 
@@ -180,12 +181,14 @@ function drawMap() {
   const pins = spreadPins(placed);
   // Each venue gets an organic heat cloud in its level colour around its (possibly spread) pin;
   // the cloud grows and thickens with the crowd.
-  heat.setBlobs(placed.filter(v => v.latest && v.status?.state !== 'closed').map(v => ({
+  // Quiet venues first, busy ones last and stronger, so a crowded spot's colour wins over the
+  // greens and blues of several quiet neighbours.
+  heat.setBlobs(placed.filter(v => v.latest && v.status?.state !== 'closed').sort((a, b) => a.latest.people - b.latest.people).map(v => ({
     seed: v.id,
     latlng: pins.get(v.id).latlng,
     color: levelOf(v.latest.people).color,
     alt: SHIFT[LEVELS.indexOf(levelOf(v.latest.people))] || null,
-    strength: 0.45 + 0.55 * Math.min(v.latest.people / 50, 1),
+    strength: 0.18 + 0.82 * Math.pow(Math.min(v.latest.people / 30, 1), 1.3),
     meters: 120 + Math.min(v.latest.people, 100) * 12,  // 0 → 120 m, 25 → 420 m, 50 → 720 m
     minPx: 34 + Math.min(v.latest.people, 100) * 2.4,  // keeps the cloud readable when zoomed out
   })));
@@ -219,6 +222,56 @@ function drawMap() {
     }
     m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
   }
+}
+
+// ---- Zoom limits panel ----
+// Min / max zoom the viewer may reach. Saved per browser; defaults keep both towns in view (14)
+// down to a few streets around a venue (16).
+const ZOOM_DEFAULT = { min: 14, max: 16 }, ZOOM_RANGE = [3, 19];
+function loadZoomLimits() {
+  try { return { ...ZOOM_DEFAULT, ...JSON.parse(localStorage.getItem('zoomLimits') || '{}') }; } catch { return { ...ZOOM_DEFAULT }; }
+}
+function addZoomPanel() {
+  const lim = loadZoomLimits();
+  const apply = () => {
+    map.setMinZoom(lim.min); map.setMaxZoom(lim.max);
+    try { localStorage.setItem('zoomLimits', JSON.stringify(lim)); } catch {}
+  };
+  apply();
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false">${t('zoomPanel')} ▾</button>
+      <div class="zp-body" hidden>
+        <div class="zp-now">${t('zoomNow')} <b data-now></b></div>
+        <label>${t('zoomMin')} <span><input type="range" data-k="min" min="${ZOOM_RANGE[0]}" max="${ZOOM_RANGE[1]}"><output data-o="min"></output></span></label>
+        <label>${t('zoomMax')} <span><input type="range" data-k="max" min="${ZOOM_RANGE[0]}" max="${ZOOM_RANGE[1]}"><output data-o="max"></output></span></label>
+        <div class="zp-actions"><button data-set="min">${t('zoomSetMin')}</button><button data-set="max">${t('zoomSetMax')}</button></div>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel);
+    const sync = () => {
+      q('[data-now]').textContent = map.getZoom();
+      for (const k of ['min', 'max']) { q(`[data-k="${k}"]`).value = lim[k]; q(`[data-o="${k}"]`).textContent = lim[k]; }
+    };
+    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    box.querySelectorAll('[data-k]').forEach(inp => inp.oninput = () => {
+      lim[inp.dataset.k] = +inp.value;
+      // Keep min ≤ max by pushing the other end along.
+      if (lim.min > lim.max) inp.dataset.k === 'min' ? (lim.max = lim.min) : (lim.min = lim.max);
+      apply(); sync();
+    });
+    box.querySelectorAll('[data-set]').forEach(btn => btn.onclick = () => {
+      lim[btn.dataset.set] = map.getZoom();
+      if (lim.min > lim.max) btn.dataset.set === 'min' ? (lim.max = lim.min) : (lim.min = lim.max);
+      apply(); sync();
+    });
+    q('.zp-reset').onclick = () => { Object.assign(lim, ZOOM_DEFAULT); apply(); sync(); };
+    map.on('zoomend', sync);
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
 }
 
 // ---- Basemap ----
@@ -407,7 +460,7 @@ function placeLabels(placed, pins) {
   const out = new Map();
   for (const v of order) {
     const p = map.latLngToContainerPoint(pins.get(v.id).latlng);
-    const w = Math.max(84, v.name.length * 6.6 + 26), h = 62, g = PIN / 2 + 4;
+    const w = Math.max(48, v.name.length * 5.4 + 18), h = 36, g = PIN / 2 + 4;
     const spots = {
       top: { x: p.x - w / 2, y: p.y - g - h, w, h }, right: { x: p.x + g, y: p.y - h / 2, w, h },
       left: { x: p.x - g - w, y: p.y - h / 2, w, h }, bottom: { x: p.x - w / 2, y: p.y + g, w, h },
@@ -446,7 +499,7 @@ function spreadPins(placed) {
     const moved = Math.hypot(dx, dy) > 2;
     // Labels are wide (32px count): a pin with a neighbour close enough for their labels to touch
     // puts its label on the side away from it.
-    const near = pts.find(o => o !== p && Math.abs(o.x - p.x) < 170 && Math.abs(o.y - p.y) < 80);
+    const near = pts.find(o => o !== p && Math.abs(o.x - p.x) < 110 && Math.abs(o.y - p.y) < 50);
     const dir = near ? (near.x > p.x ? 'left' : 'right')
       : !moved ? 'top' : Math.abs(dx) >= Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : 'top';
     out.set(p.id, { latlng: map.layerPointToLatLng(L.point(p.x, p.y)), moved, dir });

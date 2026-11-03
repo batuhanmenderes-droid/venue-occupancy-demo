@@ -141,11 +141,11 @@ select { appearance: none; padding-right: 28px; background-image: linear-gradien
 .legend > div:first-child { font-weight: 600; color: var(--ink); margin-bottom: 4px; }
 .legend .rows { gap: 6px; }
 .leaflet-tooltip.vlabel { border-radius: 12px; padding: 7px 10px; font: 500 12px/1.35 var(--font-text); color: var(--ink); }
-.leaflet-tooltip.vlabel { display: grid; gap: 2px; padding: 8px 12px 9px; }
-.leaflet-tooltip.vlabel .vname { font: 500 12px/1.2 var(--font-text); color: var(--ink-2); }
-.leaflet-tooltip.vlabel .vcount { display: inline-flex; align-items: center; gap: 6px; font: 600 32px/1 var(--font-display); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; color: var(--ink); }
-.leaflet-tooltip.vlabel .vicon { width: 16px; height: 16px; color: var(--ink-2); margin-top: 4px; }
-.leaflet-tooltip.vlabel .vsoon { font: 600 15px/1.1 var(--font-display); color: var(--soon); }
+.leaflet-tooltip.vlabel { display: grid; gap: 2px; padding: 5px 8px 6px; border-radius: 9px !important; }
+.leaflet-tooltip.vlabel .vname { font: 500 10px/1.2 var(--font-text); color: var(--ink-2); }
+.leaflet-tooltip.vlabel .vcount { display: inline-flex; align-items: center; gap: 4px; font: 600 14px/1 var(--font-display); font-variant-numeric: tabular-nums; color: var(--ink); }
+.leaflet-tooltip.vlabel .vicon { width: 10px; height: 10px; color: var(--ink-2); }
+.leaflet-tooltip.vlabel .vsoon { font: 600 12px/1.1 var(--font-display); color: var(--soon); }
 .tip { border-radius: 12px; padding: 8px 11px; font: 500 12px/1.35 var(--font-text); }
 .tip b { font-size: 20px; font-weight: 600; }
 .langswitch { border-radius: 999px !important; padding: 3px !important; }
@@ -264,7 +264,7 @@ main:not(.x) > .tabs { margin-top: 0; }
 .maplogo .lockover { position: absolute; inset: 0; border-radius: 50%; background: rgba(0, 0, 0, 0.8); display: grid; place-items: center; color: #fff; }
 .maplogo .lockover .lock { width: 16px; height: 16px; }
 .maplogo > div { position: relative; }
-.leaflet-tooltip.vlabel .vclosed { font: 600 20px/1 var(--font-display); color: var(--ink-2); }
+.leaflet-tooltip.vlabel .vclosed { font: 600 13px/1 var(--font-display); color: var(--ink-2); }
 
 /* Settings sheet (iOS-style modal) */
 dialog.sheet { border: 0; padding: 0; width: min(440px, calc(100vw - 32px)); border-radius: 22px; color: var(--ink);
@@ -293,3 +293,23 @@ dialog.sheet .primary:hover { background: color-mix(in srgb, var(--series) 85%, 
 .pinbadge { position: absolute; top: -6px; right: -8px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px;
   display: grid; place-items: center; font: 600 13px/1 var(--font-display); color: #fff; background: var(--lv, #636366);
   box-shadow: 0 0 0 2px #000, 0 4px 10px rgba(0, 0, 0, 0.5); font-variant-numeric: tabular-nums; }
+
+/* Zoom limits panel (map, top right) */
+.zoompanel { display: grid; justify-items: end; gap: 6px; font: 500 13px var(--font-text); color: var(--ink); }
+.zoompanel .zp-toggle, .zoompanel .zp-body {
+  background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  border: 0.5px solid var(--border); box-shadow: var(--shadow-float), var(--highlight);
+}
+.zoompanel .zp-toggle { border-radius: 999px; padding: 8px 14px; }
+.zoompanel .zp-body { width: 250px; border-radius: var(--radius-m); padding: 14px; display: grid; gap: 10px; }
+.zoompanel .zp-now { color: var(--ink-2); }
+.zoompanel .zp-now b { font: 600 20px/1 var(--font-display); color: var(--ink); margin-left: 6px; }
+.zoompanel label { display: grid; gap: 6px; color: var(--ink-2); font-size: 12px; }
+.zoompanel label span { display: flex; align-items: center; gap: 10px; }
+.zoompanel input[type=range] { flex: 1; accent-color: var(--series); }
+.zoompanel output { font: 600 17px/1 var(--font-display); color: var(--ink); min-width: 22px; text-align: right; font-variant-numeric: tabular-nums; }
+.zoompanel .zp-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.zoompanel .zp-actions button, .zoompanel .zp-reset { font-size: 12px; padding: 7px 8px; }
+.zoompanel .zp-reset { background: transparent; color: var(--series); }
+
+body.mapmode .leaflet-top.leaflet-right { top: 56px; }  /* clear of the language switch */
