@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106y"></script>
+<script src="i18n.js?v=20261106z"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106y">
+<link rel="stylesheet" href="theme.css?v=20261106z">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -163,9 +163,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106y"></script>
-<script src="venue-state.js?v=20261106y"></script>
-<script src="menu.js?v=20261106y"></script>
+<script src="levels.js?v=20261106z"></script>
+<script src="venue-state.js?v=20261106z"></script>
+<script src="menu.js?v=20261106z"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -939,7 +939,7 @@ function addTreePanel() {
 // ---- Wooden houses with orange roofs (draggable in edit mode) ----
 // A starter set around Akyaka and Akçapınar; in the Houses panel you can add, drag, remove (double-click)
 // and resize them. Positions and size are saved per browser.
-const HOUSE_SVG = '<svg viewBox="0 0 32 30" aria-hidden="true"><path d="M5 14h22v14H5z" fill="#b07a4a"/><path d="M5 17.5h22M5 21h22M5 24.5h22" stroke="#8a5a32" stroke-width=".9"/><path d="M13.5 20h5v8h-5z" fill="#6b4226"/><path d="M7.5 18h4v3.6h-4zM20.5 18h4v3.6h-4z" fill="#f4e1b8" stroke="#6b4226" stroke-width=".8"/><path d="M2 15.2 16 3.5l14 11.7-1.6 1.9L16 6.7 3.6 17.1z" fill="#e8742c"/><path d="M3.6 17.1 16 6.7l12.4 10.4" fill="none" stroke="#c4561a" stroke-width="1"/><path d="M22 7.5h3v4.4l-3-2.5z" fill="#8a5a32"/></svg>';
+const HOUSE_SVG = '<svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="#3a2618" stroke-width=".5" stroke-linejoin="round"><path d="M4 25 20 33l16-8-16-8z" fill="rgba(0,0,0,.12)" stroke="none"/><path d="M4 24 20 32V22L4 14z" fill="#9c6638"/><path d="M20 32 36 24V14L20 22z" fill="#c68a52"/><path d="M20 25.3l16-8M20 28.6l16-8M4 17.3l16 8M4 20.6l16 8" fill="none" stroke-opacity=".45"/><path d="M25 29.5l4.6-2.3v-6.4L25 23.1z" fill="#6e4425"/><path d="M7.5 19.4l4.8 2.4v3.6l-4.8-2.4zM31 21.3l3-1.5v-3.2l-3 1.5z" fill="#f6e3b5"/><path d="M4 14 12 10 20 6l-4-2-14 7z" fill="#b8541f"/><path d="M2.4 14.8 12 10 28 2l9.6 12.8L20 23.6z" fill="#ef7f34"/><path d="M2.4 14.8 12 10l8 13.6z" fill="#b97a46"/><path d="M12 10 28 2" fill="none"/><path d="M28.5 4.6h2.6v4.2l-2.6-1.3z" fill="#7a4b2a"/></g></svg>';  // isometric wooden house, orange gable roof, hairline outlines
 const HOUSES_DEFAULT = [
   [37.0594, 28.3262], [37.0601, 28.3301], [37.0586, 28.3338], [37.0562, 28.3355], [37.0612, 28.3348],
   [37.0285, 28.3532], [37.0298, 28.3561], [37.0271, 28.3601], [37.0247, 28.3548], [37.0232, 28.3589],
@@ -961,14 +961,20 @@ function drawHouses() {
   map.getContainer().style.setProperty('--house-k', HOUSE_SIZE);
   HOUSES.forEach((pos, i) => {
     const m = L.marker(pos, { pane: 'houses', draggable: true, keyboard: false, title: houseEdit ? t('houseHint') : '',
-      icon: L.divIcon({ className: 'house', html: HOUSE_SVG, iconSize: [32, 30], iconAnchor: [16, 28] }) }).addTo(houseGroup);
+      icon: L.divIcon({ className: 'house', html: HOUSE_SVG, iconSize: [40, 40], iconAnchor: [20, 30] }) }).addTo(houseGroup);
     houseEdit ? m.dragging.enable() : m.dragging.disable();
     m.on('dragend', () => { const ll = m.getLatLng(); HOUSES[i] = [+ll.lat.toFixed(6), +ll.lng.toFixed(6)]; saveHouses(); });
     m.on('dblclick', e => { if (!houseEdit) return; L.DomEvent.stop(e); HOUSES.splice(i, 1); saveHouses(); drawHouses(); housePanelSync?.(); });
   });
 }
 let housePanelSync = null;
+// In edit mode a click on an empty spot of the map adds a house there.
+function onMapClickAddHouse(e) {
+  if (!houseEdit) return;
+  HOUSES.push([+e.latlng.lat.toFixed(6), +e.latlng.lng.toFixed(6)]); saveHouses(); drawHouses(); housePanelSync?.();
+}
 function addHousePanel() {
+  map.on('click', onMapClickAddHouse);
   const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
     const box = L.DomUtil.create('div', 'zoompanel housepanel');
     L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
