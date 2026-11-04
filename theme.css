@@ -823,3 +823,4 @@ body:has(.tabbar) .langswitch { display: none; }
 @media (prefers-reduced-motion: reduce) { .sheet { transition: none; } }
 .lv-range input[data-lo] { width: 46px; }
 #recSheet .sheet-title { visibility: hidden; }  /* the collapsible Recommendations pane carries the title */
+.heatcanvas { mix-blend-mode: multiply; }  /* heat clouds multiply onto the basemap */
