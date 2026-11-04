@@ -188,7 +188,7 @@ select { appearance: none; padding-right: 28px; background-image: linear-gradien
 #map { height: min(72vh, 660px); border-radius: var(--radius-l); }
 .maphint { margin-top: 12px; font-size: 12px; color: var(--muted); }
 .maplogo .logo { box-shadow: 0 0 0 4px var(--lv, #8e8e93), 0 8px 18px rgba(0, 0, 0, 0.5); }  /* 4px ring in the crowd-level colour */
-.townlabel span { font: 600 14px/1 var(--font-display) !important; letter-spacing: 0.22em !important; color: rgba(255, 255, 255, 0.7) !important; }
+.townlabel span { font: 600 14px/1 var(--font-display) !important; letter-spacing: 0.22em !important; color: color-mix(in srgb, var(--map-town, #fff) 70%, transparent) !important; }
 
 /* ---- Venue page ---- */
 header { margin-bottom: 24px; align-items: flex-end; }
@@ -224,7 +224,7 @@ footer { margin-top: 20px; font-size: 12px; line-height: 1.6; }
   background:
     radial-gradient(120% 90% at 18% 0%, rgba(255, 255, 255, 0.07), transparent 55%),
     radial-gradient(90% 70% at 100% 100%, rgba(10, 132, 255, 0.06), transparent 60%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.32));
+    linear-gradient(180deg, transparent 55%, color-mix(in srgb, var(--map-shade, #000) 32%, transparent));
 }
 
 /* Full-screen map: the map fills the window; tabs float top-left, language switch top-right. */
@@ -577,10 +577,10 @@ main:not(.venuepage) .grid { grid-template-columns: repeat(auto-fill, minmax(min
 .mapgrid {
   position: absolute; inset: 0; pointer-events: none;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.0225) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.0225) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.0175) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.0175) 1px, transparent 1px);
+    linear-gradient(color-mix(in srgb, var(--map-grid, #fff) 2.25%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--map-grid, #fff) 2.25%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--map-grid, #fff) 1.75%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--map-grid, #fff) 1.75%, transparent) 1px, transparent 1px);
   -webkit-mask-image: radial-gradient(120% 100% at 50% 45%, #000 45%, transparent 100%);
           mask-image: radial-gradient(120% 100% at 50% 45%, #000 45%, transparent 100%);
 }
@@ -594,3 +594,14 @@ main:not(.venuepage) .grid { grid-template-columns: repeat(auto-fill, minmax(min
 .status.demo .dot { background: #ffd60a; box-shadow: 0 0 0 3px rgba(255, 214, 10, 0.22); }
 .status.closed .dot { background: #8e8e93; box-shadow: 0 0 0 3px rgba(142, 142, 147, 0.22); }
 .status.closed { color: var(--muted); }
+
+/* Map background follows the palette's land colour while tiles load */
+#map.leaflet-container { background: var(--map-land, #1f1f20); }
+.mappanel .hp-row { grid-template-columns: 1fr auto; }
+/* "Show on map" checkbox, top-right of each card photo */
+.mapcheck { position: absolute; top: 10px; right: 10px; z-index: 2; width: 28px; height: 28px; padding: 0; display: grid; place-items: center;
+  border-radius: 8px; border: 1.5px solid rgba(255, 255, 255, 0.85); background: rgba(0, 0, 0, 0.45); color: transparent; cursor: pointer;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: background .15s, border-color .15s; }
+.mapcheck svg { width: 16px; height: 16px; }
+.mapcheck[aria-checked="true"] { background: var(--series, #0a84ff); border-color: var(--series, #0a84ff); color: #fff; }
+.mapcheck:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }

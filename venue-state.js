@@ -87,19 +87,19 @@ function sunsetHour(at, lat = 37.05, lon = 28.33) {
   return (utcMin - at.getTimezoneOffset()) / 60;
 }
 
-// Beach profile (Kitebeach): fills from 11:00 to 13:00, stays at its 1000–1200 peak until 16:00,
-// eases off after 16:00 and empties abruptly once the sun has set.
+// Beach profile (Kitebeach): 30–50 early kiters 09:00–10:00, fills up from 10:00, swings between
+// 1000 and 1200 from 12:00 to 16:00, eases off after 16:00 and empties abruptly once the sun has set.
 function beachCount(v, at) {
   const h = at.getHours() + at.getMinutes() / 60, sunset = sunsetHour(at, v.location?.lat, v.location?.lon);
   const r = simRandom(`${v.id}:${slotStart(at).getTime()}`);
+  if (h >= 12 && h < 16) return Math.round(1000 + r * 200);                 // 12–16: peak, 1000–1200
+  if (h >= 9 && h < 10) return Math.round(30 + r * 20);                     // 09–10: 30–50
   let base;
-  if (h < 11) base = 40 + (h - 8) / 3 * 160;                         // 08–11: early kiters, up to ~200
-  else if (h < 13) base = 200 + (h - 11) / 2 * 900;                   // 11–13: filling up to ~1100
-  else if (h < 16) base = 1100;                                       // 13–16: peak
-  else if (h < sunset) base = 1100 - (h - 16) / Math.max(0.5, sunset - 16) * 700;  // easing off to ~400
-  else base = 400 * Math.exp(-(h - sunset) * 6);                      // after sunset: empties fast
-  const jitter = h >= 13 && h < 16 ? (r - 0.5) * 200 : (r - 0.5) * base * 0.15;
-  return Math.max(0, Math.round(h >= 13 && h < 16 ? Math.min(1200, Math.max(1000, base + jitter)) : base + jitter));
+  if (h < 9) base = 10 + (h - 8) * 20;                                       // 08–09: a handful
+  else if (h < 12) base = 50 + Math.pow((h - 10) / 2, 1.6) * 950;            // 10–12: filling up to ~1000
+  else if (h < sunset) base = 1100 - (h - 16) / Math.max(0.5, sunset - 16) * 700;  // 16–sunset: easing off to ~400
+  else base = 400 * Math.exp(-(h - sunset) * 6);                             // after sunset: empties fast
+  return Math.max(0, Math.round(base + (r - 0.5) * base * 0.15));
 }
 
 function simCount(v, at) {

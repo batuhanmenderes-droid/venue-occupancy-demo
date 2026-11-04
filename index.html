@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261104c"></script>
+<script src="i18n.js?v=20261104d"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261104c">
+<link rel="stylesheet" href="theme.css?v=20261104d">
 </head>
 <body>
 <main>
@@ -127,8 +127,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261104c"></script>
-<script src="venue-state.js?v=20261104c"></script>
+<script src="levels.js?v=20261104d"></script>
+<script src="venue-state.js?v=20261104d"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -171,6 +171,9 @@ const CATEGORIES = {
 const pref = (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d; } };
 let category = pref('venueFilter', 'all'), sortBy = pref('venueSort', 'busy');
 // A venue's own `categories` in venues.json override the type-based grouping.
+// Venues unticked in the list (top-right checkbox on each card) are left off the map.
+let mapHidden = new Set((() => { try { return JSON.parse(localStorage.getItem('mapHidden') || '[]'); } catch { return []; } })());
+const onMap = v => !mapHidden.has(v.id);
 const inCategory = v => category === 'all' || (v.categories ? v.categories.includes(category) : (CATEGORIES[category] || []).includes(v.type));
 // Busiest first, closed venues always at the end.
 function sorted(cards) {
@@ -222,12 +225,13 @@ function initMap() {
   addBasemap();
   addZoomPanel();
   addHeatPanel();
+  addMapColorPanel();
   drawMap();
 }
 
 function drawMap() {
   if (!map) return;
-  const placed = lastCards.filter(v => v.location && inCategory(v));
+  const placed = lastCards.filter(v => v.location && inCategory(v) && onMap(v));
   markers.clearLayers();
   const pins = spreadPins(placed);
   // Each venue gets an organic heat cloud in its level colour around its (possibly spread) pin;
@@ -328,6 +332,41 @@ function addZoomPanel() {
   new Ctl().addTo(map);
 }
 
+// ---- Map colour panel (saved per browser; Dark / Light presets) ----
+const MAP_KEYS = ['land', 'water', 'landuse', 'green', 'building', 'motorway', 'major', 'minor', 'path', 'rail', 'town', 'grid', 'shade'];
+function addMapColorPanel() {
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel mappanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false">${t('mapPanel')} ▾</button>
+      <div class="zp-body" hidden>
+        <div class="zp-actions"><button data-preset="dark">${t('mapDark')}</button><button data-preset="light">${t('mapLight')}</button></div>
+        <div class="hp-colors">${MAP_KEYS.map(k => `
+          <div class="hp-row"><span>${t('mapKeys')[k]}</span><input type="color" data-m="${k}" aria-label="${t('mapKeys')[k]}"></div>`).join('')}
+        </div>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel), qa = sel => box.querySelectorAll(sel);
+    const sync = () => qa('[data-m]').forEach(i => { i.value = MAP_COLORS[i.dataset.m]; });
+    let pending = 0;
+    const apply = () => {
+      try { localStorage.setItem('mapColors', JSON.stringify(MAP_COLORS)); } catch {}
+      applyMapCss();
+      cancelAnimationFrame(pending); pending = requestAnimationFrame(repaintBasemap);
+    };
+    q('.zp-toggle').onclick = () => {
+      const b = q('.zp-body'); b.hidden = !b.hidden;
+      const tg = q('.zp-toggle'); tg.setAttribute('aria-expanded', !b.hidden); tg.textContent = tg.textContent.replace(/[▾▴]$/, b.hidden ? '▾' : '▴');
+    };
+    qa('[data-m]').forEach(i => i.oninput = () => { MAP_COLORS[i.dataset.m] = i.value; apply(); });
+    qa('[data-preset]').forEach(b => b.onclick = () => { MAP_COLORS = { ...MAP_PRESETS[b.dataset.preset] }; sync(); apply(); });
+    q('.zp-reset').onclick = () => { MAP_COLORS = { ...MAP_DEFAULT }; sync(); apply(); };
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
+}
+
 // ---- Basemap ----
 // Fixed look: Esri dark gray canvas without any road or street names. The canvas adds street
 // names from zoom 15, so tiles are capped at 14 and scaled up beyond. Only the two town names
@@ -370,10 +409,30 @@ function addShade() {
 const VECTOR_STYLE = 'https://tiles.openfreemap.org/styles/dark';
 // Repaint the vector layers in the greys of the earlier raster look (dark land, near-black water,
 // light-grey roads), so the contrast stays the same while every line is drawn sharp.
-const MAP_COLORS = {
-  land: '#1f1f20', water: '#0a0a0b', landuse: '#232324', green: '#212122', building: '#2a2a2b',
-  motorway: '#5a5a5d', major: '#4a4a4d', minor: '#38383b', path: '#2c2c2f', rail: '#303033',
+const MAP_PRESETS = {
+  dark: {
+    land: '#1f1f20', water: '#0a0a0b', landuse: '#232324', green: '#212122', building: '#2a2a2b',
+    motorway: '#5a5a5d', major: '#4a4a4d', minor: '#38383b', path: '#2c2c2f', rail: '#303033',
+    town: '#ffffff', grid: '#ffffff', shade: '#000000',
+  },
+  light: {
+    land: '#f1f0ed', water: '#c4d3e0', landuse: '#ebe9e5', green: '#dfe6d9', building: '#dad7d2',
+    motorway: '#ffffff', major: '#ffffff', minor: '#fbfaf8', path: '#e2e0dc', rail: '#cfccc7',
+    town: '#3a3a3c', grid: '#000000', shade: '#ffffff',
+  },
 };
+const MAP_DEFAULT = MAP_PRESETS.dark;
+let MAP_COLORS = loadMapColors();
+function loadMapColors() {
+  try { return { ...MAP_DEFAULT, ...JSON.parse(localStorage.getItem('mapColors') || '{}') }; } catch { return { ...MAP_DEFAULT }; }
+}
+// Town names, grid lines and the bottom shading follow the palette through CSS variables.
+function applyMapCss() {
+  const st = document.documentElement.style;
+  st.setProperty('--map-town', MAP_COLORS.town); st.setProperty('--map-grid', MAP_COLORS.grid);
+  st.setProperty('--map-shade', MAP_COLORS.shade); st.setProperty('--map-land', MAP_COLORS.land);
+}
+applyMapCss();
 function recolor(l) {
   const id = l.id, paint = { ...(l.paint || {}) };
   const set = (prop, c) => { paint[prop] = c; return { ...l, paint }; };
@@ -396,14 +455,22 @@ function recolor(l) {
   }
   return l;
 }
+let baseStyle = null, glLayer = null;
+// Repaint the vector basemap with the current MAP_COLORS (raster fallback only follows the CSS parts).
+function repaintBasemap() {
+  applyMapCss();
+  const gl = glLayer?.getMaplibreMap?.();
+  if (gl && baseStyle) gl.setStyle({ ...baseStyle, layers: baseStyle.layers.map(recolor).filter(Boolean) });
+}
 async function addBasemap() {
   map.getPane('tilePane').style.filter = BASEMAP_FILTER;
   try {
     if (!L.maplibreGL || !window.maplibregl || !document.createElement('canvas').getContext('webgl2')) throw new Error('no WebGL basemap');
     const style = await (await fetch(VECTOR_STYLE)).json();
-    style.layers = style.layers.filter(l => l.type !== 'symbol').map(recolor).filter(Boolean);
+    baseStyle = { ...style, layers: style.layers.filter(l => l.type !== 'symbol') };
+    style.layers = baseStyle.layers.map(recolor).filter(Boolean);
     map.getPane('tilePane').style.filter = 'none';  // colours are baked into the style instead
-    L.maplibreGL({ style, attribution: '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
+    glLayer = L.maplibreGL({ style, attribution: '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
   } catch {
     L.tileLayer(BASEMAP, { attribution: 'Tiles &copy; Esri', maxZoom: 19, maxNativeZoom: 14 }).addTo(map);
   }
@@ -414,6 +481,7 @@ async function addBasemap() {
 
 const RISE_ICON = '<svg class="rise" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11.5l4-4 3 3 5-5.5M10 5h4v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const LOCK_ICON = '<svg class="lock" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M5.2 7V5.3a2.8 2.8 0 0 1 5.6 0V7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
+const CHECK_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4l3 3 6-6.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const GEAR_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M11.1 1.5l.4 2.1c.5.2 1 .5 1.4.8l2-.8 1.6 2.7-1.6 1.4a6 6 0 0 1 0 1.6l1.6 1.4-1.6 2.7-2-.8c-.4.3-.9.6-1.4.8l-.4 2.1H8l-.4-2.1c-.5-.2-1-.5-1.4-.8l-2 .8-1.6-2.7 1.6-1.4a6 6 0 0 1 0-1.6L2.6 6.3l1.6-2.7 2 .8c.4-.3.9-.6 1.4-.8L8 1.5h3.1zM9.6 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>';
 
 // Small person glyph shown next to the head count on map labels.
@@ -702,7 +770,7 @@ function card(v) {
   const lv = v.latest ? levelOf(v.latest.people) : null;
   const closed = v.status?.state === 'closed';
   return `<a class="venue${closed ? ' is-closed' : ''}" href="venue.html?mekan=${v.id}"${lv && !closed ? ` style="--lv:${lv.color}"` : ''}>
-    <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}</div>
+    <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}<button class="mapcheck" role="checkbox" aria-checked="${onMap(v)}" data-mapcheck="${v.id}" title="${t('showOnMap')}" aria-label="${t('showOnMap')}: ${v.name}">${CHECK_ICON}</button></div>
     <div class="body">
       <div class="top"><span class="name">${v.name}</span><span class="type">${typeName(v.type)}</span></div>
       ${statusLine(v, live)}
@@ -716,6 +784,16 @@ function card(v) {
 // ---- Venue settings (opening hours + description) ----
 let editing = null;
 $('grid').addEventListener('click', e => {
+  const chk = e.target.closest('[data-mapcheck]');
+  if (chk) {
+    e.preventDefault(); e.stopPropagation();
+    const id = chk.dataset.mapcheck;
+    mapHidden.has(id) ? mapHidden.delete(id) : mapHidden.add(id);
+    try { localStorage.setItem('mapHidden', JSON.stringify([...mapHidden])); } catch {}
+    chk.setAttribute('aria-checked', !mapHidden.has(id));
+    if (map) drawMap();
+    return;
+  }
   const btn = e.target.closest('[data-settings]');
   if (!btn) return;
   e.preventDefault(); e.stopPropagation();
