@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106a"></script>
+<script src="i18n.js?v=20261106b"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106a">
+<link rel="stylesheet" href="theme.css?v=20261106b">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -149,8 +149,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106a"></script>
-<script src="venue-state.js?v=20261106a"></script>
+<script src="levels.js?v=20261106b"></script>
+<script src="venue-state.js?v=20261106b"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -573,8 +573,6 @@ const WindLayer = L.Layer.extend({
 // "Gökova Körfezi" label.
 let windLayer = null, windCtl = null;
 const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-// The wind readout can be dragged anywhere (mouse or touch); its offset from the label is remembered.
-// Double-click puts it back to the default spot.
 // Today's wind (00–24) under the readout: wind speed as an area + line coloured by strength band, gusts
 // as a faint dashed line, a dot at the current hour and a few hour ticks.
 function windChart(hours) {
@@ -598,29 +596,8 @@ function windChart(hours) {
     <line x1="${x(nh)}" x2="${x(nh)}" y1="${top - 4}" y2="${y(0)}" stroke="currentColor" stroke-width="1" opacity=".25"/>
     <circle cx="${x(nh)}" cy="${y(nv)}" r="3.5" fill="${WIND_BANDS[windBand(nv)].color}" stroke="#fff" stroke-width="1.5"/>${ticks}</svg>`;
 }
-const WIND_READ_DEFAULT = { x: -18, y: -150 };  // default spot, relative to its place under the label
-function makeMovable(el) {
-  if (el.dataset.movable) return;
-  el.dataset.movable = '1';
-  let off = { ...WIND_READ_DEFAULT };
-  try { off = { ...off, ...JSON.parse(localStorage.getItem('windReadOffset2') || '{}') }; } catch {}
-  const apply = () => { el.style.translate = `${off.x}px ${off.y}px`; };
-  const save = () => { try { localStorage.setItem('windReadOffset2', JSON.stringify(off)); } catch {} };
-  apply();
-  el.addEventListener('pointerdown', e => {
-    e.stopPropagation(); e.preventDefault();
-    map.dragging.disable();
-    el.setPointerCapture(e.pointerId); el.classList.add('dragging');
-    const sx = e.clientX - off.x, sy = e.clientY - off.y;
-    const move = ev => { off = { x: ev.clientX - sx, y: ev.clientY - sy }; apply(); };
-    const up = () => {
-      el.removeEventListener('pointermove', move); el.removeEventListener('pointerup', up); el.removeEventListener('pointercancel', up);
-      el.classList.remove('dragging'); map.dragging.enable(); save();
-    };
-    el.addEventListener('pointermove', move); el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
-  });
-  el.addEventListener('dblclick', e => { e.stopPropagation(); off = { ...WIND_READ_DEFAULT }; apply(); save(); });
-}
+// The wind readout sits at a fixed spot relative to the "Gökova Körfezi" label (no longer draggable).
+const WIND_READ_OFFSET = { x: -70, y: -153 };
 function addWindControl() {
   windLayer = new WindLayer().addTo(map);
   windCtl = { update() {
@@ -629,8 +606,8 @@ function addWindControl() {
     const f = windField, dir = COMPASS[Math.round(f.from / 45) % 8];
     el.style.setProperty('--wc', WIND_BANDS[windBand(f.speed)].color);
     el.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><div class="wr-top"><b>${Math.round(f.speed)}</b> / ${Math.round(f.gust)} ${t('knots')}</div><i>${t('windFrom', dir)}</i>${windChart(f.hours)}`;
-    el.title = `${t('windSource')} · ${t('windDrag')}`;
-    makeMovable(el);
+    el.title = t('windSource');
+    el.style.translate = `${WIND_READ_OFFSET.x}px ${WIND_READ_OFFSET.y}px`;
     if (windLayer?._still) windLayer._drawStill();
   } };
   map.attributionControl.addAttribution('Wind &copy; <a href="https://open-meteo.com">Open-Meteo</a>');
