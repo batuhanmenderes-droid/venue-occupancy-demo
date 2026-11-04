@@ -666,7 +666,7 @@ body.mapmode .vbg-list { display: none; }
 
 /* ---- Disco-ball pin (night clubs) ---- */
 .is-disco .disco { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; background: #8a8c94;
-  box-shadow: 0 0 0 4px var(--lv, #8e8e93), 0 8px 18px rgba(0, 0, 0, 0.45); animation: discoGlow 3.2s ease-in-out infinite; }
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45); animation: discoGlow 3.2s ease-in-out infinite; }
 .is-disco .facets { position: absolute; inset: 0; border-radius: 50%;
   background: url("backgrounds/disco-facets.svg") 0 0 / 56px 56px repeat; animation: discoSpin 4s linear infinite; }  /* ~9 facets across a 42px pin */
 /* Sphere shading: a bright highlight top-left, darker rim, so the flat scroll reads as a turning ball */
@@ -689,11 +689,11 @@ body.mapmode .vbg-list { display: none; }
 .is-disco .lockover { z-index: 3; }
 @keyframes discoSpin { to { background-position: -56px 0; } }
 @keyframes discoGlow {
-  0%, 100% { box-shadow: 0 0 0 4px var(--lv, #8e8e93), 0 0 8px 1px rgba(255, 255, 255, 0.25), 0 8px 18px rgba(0, 0, 0, 0.45); }
-  50% { box-shadow: 0 0 0 4px var(--lv, #8e8e93), 0 0 18px 5px rgba(214, 226, 255, 0.55), 0 8px 18px rgba(0, 0, 0, 0.45); }
+  0%, 100% { box-shadow: 0 0 8px 1px rgba(255, 255, 255, 0.25), 0 8px 18px rgba(0, 0, 0, 0.45); }
+  50% { box-shadow: 0 0 18px 5px rgba(214, 226, 255, 0.55), 0 8px 18px rgba(0, 0, 0, 0.45); }
 }
 @keyframes discoGlint { 0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); } 45%, 55% { opacity: 1; transform: scale(1) rotate(45deg); } }
 @media (prefers-reduced-motion: reduce) { .is-disco .facets, .is-disco .disco, .is-disco .glint { animation: none; } }
 /* Disco badge on list cards (same place as the round logo) */
 .media .discowrap { position: absolute; right: 12px; bottom: -24px; width: 48px; height: 48px; z-index: 1; border-radius: 50%; isolation: isolate; }
-.media .discowrap .disco { box-shadow: 0 0 0 3px var(--surface), 0 0 0 5px var(--lv, var(--border)), 0 6px 16px rgba(0, 0, 0, 0.35); animation: none; }
+.media .discowrap .disco { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35); animation: none; }
