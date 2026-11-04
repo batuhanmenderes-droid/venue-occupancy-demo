@@ -1012,3 +1012,5 @@ dialog.sheet { position: fixed; inset: 0; margin: auto; max-height: calc(100dvh 
 body.kites-edit .leaflet-container.kites-off .leaflet-kites-pane { display: block; }
 /* Grid overlay on the map removed */
 .mapgrid { display: none !important; }
+/* No wind particles while Kitebeach is closed */
+body.kite-closed .windcanvas { display: none; }
