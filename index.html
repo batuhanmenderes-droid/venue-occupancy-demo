@@ -447,13 +447,15 @@ function addZoomPanel() {
 }
 
 // ---- Map boundaries panel ----
-// Limits how far the viewer can pan. The area is saved per browser; by default it covers both towns
-// and the bay. "Use current view" takes the visible map as the new area; extra room adds a margin
-// around it. While the panel is open the area is outlined on the map.
-const BOUNDS_DEFAULT = { on: true, hard: true, pad: 10, area: [[37.012, 28.305], [37.08, 28.395]] };
+// Limits how far the viewer can pan. By default the area is exactly the zoomed-out view (zoom 14 on a
+// desktop: Akyaka, Akçapınar and the bay), so fully zoomed out the map cannot move at all, and once zoomed
+// in it pans only inside that area. "Use current view" takes the visible map as the new area; extra room
+// adds a margin around it. Saved per browser only once changed. While the panel is open the area is outlined.
+const BOUNDS_DEFAULT = { on: true, hard: true, pad: 0, area: [[37.0015, 28.2837], [37.0796, 28.4144]] };
+const BOUNDS_KEY = 'mapBounds2';  // new key: earlier saves (wider default, extra room) are ignored
 function loadMapBounds() {
   try {
-    const b = { ...BOUNDS_DEFAULT, ...JSON.parse(localStorage.getItem('mapBounds') || '{}') };
+    const b = { ...BOUNDS_DEFAULT, ...JSON.parse(localStorage.getItem(BOUNDS_KEY) || '{}') };
     const ok = Array.isArray(b.area) && b.area.flat().length === 4 && b.area.flat().every(Number.isFinite);
     return ok ? b : { ...BOUNDS_DEFAULT };
   } catch { return { ...BOUNDS_DEFAULT }; }
@@ -466,8 +468,8 @@ function addBoundsPanel() {
     map.options.maxBoundsViscosity = bnd.hard ? 1 : 0.6;
     map.setMaxBounds(bnd.on ? limits() : null);
     outline?.setBounds(limits()).setStyle({ opacity: bnd.on ? 0.9 : 0.35 });
-    try { localStorage.setItem('mapBounds', JSON.stringify(bnd)); } catch {}
   };
+  const save = () => { apply(); try { localStorage.setItem(BOUNDS_KEY, JSON.stringify(bnd)); } catch {} };
   apply();
   const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
     const box = L.DomUtil.create('div', 'zoompanel boundspanel');
@@ -496,14 +498,14 @@ function addBoundsPanel() {
       q('.zp-toggle').setAttribute('aria-expanded', !b.hidden);
       showOutline(!b.hidden);
     };
-    box.querySelectorAll('[data-c]').forEach(c => c.onchange = () => { bnd[c.dataset.c] = c.checked; apply(); });
-    q('[data-pad]').oninput = e => { bnd.pad = +e.target.value; apply(); sync(); };
+    box.querySelectorAll('[data-c]').forEach(c => c.onchange = () => { bnd[c.dataset.c] = c.checked; save(); });
+    q('[data-pad]').oninput = e => { bnd.pad = +e.target.value; save(); sync(); };
     q('[data-use]').onclick = () => {
       const v = map.getBounds();
       bnd.area = [[v.getSouth(), v.getWest()], [v.getNorth(), v.getEast()]]; bnd.on = true;
-      apply(); sync();
+      save(); sync();
     };
-    q('.zp-reset').onclick = () => { Object.assign(bnd, structuredClone(BOUNDS_DEFAULT)); apply(); sync(); };
+    q('.zp-reset').onclick = () => { Object.assign(bnd, structuredClone(BOUNDS_DEFAULT)); apply(); try { localStorage.removeItem(BOUNDS_KEY); } catch {} sync(); };
     sync();
     return box;
   } });
