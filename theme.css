@@ -973,3 +973,10 @@ body.houses-remove .house { pointer-events: auto !important; cursor: not-allowed
 body.houses-remove .house svg { outline: 1.5px dashed rgba(255, 59, 48, .9); outline-offset: 2px; border-radius: 4px; }
 body.houses-remove .house:hover svg { opacity: .55; }
 .roadpanel .hp-row { grid-template-columns: 1fr auto; }
+
+/* Map tilt (see applyTilt): the whole map plane leans back a little */
+.leaflet-container.tilted { background: var(--map-land, #f1f0ed); }
+.leaflet-container.tilted .leaflet-map-pane { rotate: x var(--map-tilt, 0deg); transform-origin: var(--tilt-o, 50% 50%); }
+.set-range { display: inline-flex; align-items: center; gap: 8px; }
+.set-range input { width: 130px; accent-color: var(--series, #0a84ff); }
+.set-range output { font: 600 13px var(--font-display); min-width: 30px; text-align: right; color: var(--ink); }

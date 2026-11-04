@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261107f"></script>
+<script src="i18n.js?v=20261107g"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261107f">
+<link rel="stylesheet" href="theme.css?v=20261107g">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -108,6 +108,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
       <div class="seg" id="setLang"><button data-lang="tr">Türkçe</button><button data-lang="en">English</button></div></div>
     <div class="set-row"><span data-i18n="setAppearance">Appearance</span>
       <div class="seg" id="setTheme"><button data-theme="auto" data-i18n="setAuto">Auto</button><button data-theme="light" data-i18n="setLight">Light</button><button data-theme="dark" data-i18n="setDark">Dark</button></div></div>
+    <div class="set-row"><span data-i18n="setTilt">Map tilt</span>
+      <span class="set-range"><input type="range" id="setTiltRange" min="0" max="40" step="1"><output id="setTiltOut"></output></span></div>
   </div>
   <p class="set-note" data-i18n="setAutoNote"></p>
 </section>
@@ -163,9 +165,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261107f"></script>
-<script src="venue-state.js?v=20261107f"></script>
-<script src="menu.js?v=20261107f"></script>
+<script src="levels.js?v=20261107g"></script>
+<script src="venue-state.js?v=20261107g"></script>
+<script src="menu.js?v=20261107g"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -316,6 +318,7 @@ function initMap() {
   addHousePanel();
   addKites();
   addKitePanel();
+  setupTilt();
   drawMap();
 }
 
@@ -1140,6 +1143,36 @@ function addRoadPanel() {
   new Ctl().addTo(map);
 }
 
+// ---- Map tilt: a slight isometric look ----
+// The map plane (tiles, clouds, pins, labels) is tilted back around the screen's middle with a long
+// perspective, so it reads almost isometric. Clicks are mapped back onto the tilted plane, so adding a house
+// or kitesurfer still lands where you click. 0° turns it off. Saved per browser.
+const TILT_PERSPECTIVE = 2600;
+let mapTilt = (() => { try { const v = localStorage.getItem('mapTilt'); return v === null ? 22 : +v; } catch { return 22; } })();
+function applyTilt() {
+  if (!map) return;
+  const c = map.getContainer(), sz = map.getSize();
+  c.style.setProperty('--map-tilt', `${mapTilt}deg`);
+  c.style.setProperty('--tilt-o', `${sz.x / 2}px ${sz.y / 2}px`);
+  c.style.perspective = mapTilt ? `${TILT_PERSPECTIVE}px` : '';
+  c.classList.toggle('tilted', mapTilt > 0);
+}
+function setupTilt() {
+  const base = L.Map.prototype.mouseEventToContainerPoint;
+  // Undo the tilt for a screen point: intersect the view ray with the tilted plane (rotation about the
+  // horizontal centre line, perspective origin in the middle of the map).
+  map.mouseEventToContainerPoint = function (e) {
+    const p = base.call(this, e);
+    if (!mapTilt) return p;
+    const { x: w, y: h } = this.getSize(), th = mapTilt * Math.PI / 180, d = TILT_PERSPECTIVE;
+    const cx = w / 2, cy = h / 2, Y = d * (p.y - cy) / (d * Math.cos(th) + (p.y - cy) * Math.sin(th));
+    const k = d / (d - Y * Math.sin(th));
+    return L.point(cx + (p.x - cx) / k, cy + Y);
+  };
+  map.on('resize', applyTilt);
+  applyTilt();
+}
+
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----
 const MAP_KEYS = ['land', 'water', 'landuse', 'green', 'building', 'motorway', 'major', 'lane', 'minor', 'joint', 'path', 'rail', 'town', 'grid', 'shade'];
 function addMapColorPanel() {
@@ -1294,7 +1327,10 @@ function styleLayers(base) {
     const r = recolor(l); if (!r) continue;
     if (/^highway_(major|motorway)_inner$/.test(r.id)) {
       out.push({ ...r, paint: { ...r.paint, 'line-width': zwk([11, 1.6, 13, 4.5, 15, 11, 17, 26], ROAD.road) } });
+      // Divided roads come as two one-way carriageways; giving each a centre line made two dash rows,
+      // so one-way pieces get none and every road shows a single dashed line.
       out.push({ ...r, id: `${r.id}_lane`, minzoom: 12, layout: { ...(r.layout || {}), 'line-cap': 'butt' },
+        filter: ['all', r.filter || true, ['!=', ['coalesce', ['get', 'oneway'], 0], 1], ['!=', ['coalesce', ['get', 'oneway'], 0], -1]],
         paint: { 'line-color': MAP_COLORS.lane, 'line-width': zwk([12, 0.25, 14, 0.5, 16, 0.9, 17, 1.3], ROAD.lane), 'line-dasharray': [ROAD.dash, ROAD.dash * 1.6] } });
     } else if (r.id === 'highway_minor') {
       out.push({ ...r, paint: { ...r.paint, 'line-width': zwk([12, 1, 14, 3.2, 16, 8.5, 17, 15], ROAD.street) } });
@@ -1751,7 +1787,10 @@ $('setLang').onclick = e => {
 $('setTheme').onclick = e => {
   const tp = e.target.closest('[data-theme]')?.dataset.theme; if (!tp) return;
   try { localStorage.setItem('themePref', tp); } catch {}
-  applyTheme(); syncSettings();
+  applyTheme(); const syncTiltUi = () => { $('setTiltRange').value = mapTilt; $('setTiltOut').textContent = `${mapTilt}°`; };
+$('setTiltRange').oninput = e => { mapTilt = +e.target.value; try { localStorage.setItem('mapTilt', mapTilt); } catch {} syncTiltUi(); applyTilt(); };
+syncTiltUi();
+syncSettings();
 };
 syncSettings();
 // The recommendations pane folds open / closed; the choice is remembered.
