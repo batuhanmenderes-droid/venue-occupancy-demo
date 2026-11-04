@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106u"></script>
+<script src="i18n.js?v=20261106v"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106u">
+<link rel="stylesheet" href="theme.css?v=20261106v">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -163,9 +163,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106u"></script>
-<script src="venue-state.js?v=20261106u"></script>
-<script src="menu.js?v=20261106u"></script>
+<script src="levels.js?v=20261106v"></script>
+<script src="venue-state.js?v=20261106v"></script>
+<script src="menu.js?v=20261106v"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -309,6 +309,7 @@ function initMap() {
   addSeaPanel();
   addWindControl();
   addYouMarker();
+  addTrees();
   drawMap();
 }
 
@@ -842,6 +843,32 @@ function addSeaPanel() {
     return box;
   } });
   new Ctl().addTo(map);
+}
+
+// ---- Eucalyptus rows along the road between the Akyaka junction and Akçapınar ----
+// Two strips (west and east of the road), two rows each, a tree about every 35 m. Small icons that grow
+// with the zoom; hidden when zoomed out and while a route is shown.
+const TREE_STRIPS = [
+  [[37.048345, 28.356398], [37.036937, 28.356065]],  // west of the road
+  [[37.04808, 28.360386], [37.036539, 28.36022]],    // east of the road
+];
+const TREE_SVG = '<svg viewBox="0 0 20 32" aria-hidden="true"><path d="M10 31V17" stroke="#8a7a66" stroke-width="1.6" stroke-linecap="round"/><path d="M10 1.5c3.6 3 5.4 7.2 5 11.6-.3 3.4-2.4 5.9-5 5.9s-4.7-2.5-5-5.9C4.6 8.7 6.4 4.5 10 1.5z" fill="var(--tree, #7fa58e)"/><path d="M10 4.5v12M10 9l2.6-2.2M10 12.5 7.4 10.3" stroke="rgba(255,255,255,.45)" stroke-width="1" stroke-linecap="round" fill="none"/></svg>';
+function addTrees() {
+  const pane = map.createPane('trees');
+  pane.style.zIndex = 390; pane.style.pointerEvents = 'none';
+  const group = L.layerGroup().addTo(map);
+  const ROW_GAP = 0.00042;  // ~37 m between the two rows of a strip
+  for (const [[la1, lo1], [la2, lo2]] of TREE_STRIPS) {
+    const len = map.distance([la1, lo1], [la2, lo2]), n = Math.round(len / 35);
+    for (const off of [-ROW_GAP / 2, ROW_GAP / 2]) for (let i = 0; i <= n; i++) {
+      const f = i / n, jitter = (simRandom(`tree:${la1}:${off}:${i}`) - 0.5) * 0.00012;
+      const at = [la1 + (la2 - la1) * f + jitter, lo1 + (lo2 - lo1) * f + off + jitter / 2];
+      L.marker(at, { pane: 'trees', interactive: false, keyboard: false,
+        icon: L.divIcon({ className: 'tree', html: TREE_SVG, iconSize: [20, 32], iconAnchor: [10, 31] }) }).addTo(group);
+    }
+  }
+  const scale = () => map.getContainer().style.setProperty('--tree-s', Math.max(0, Math.min(1.4, 0.45 * Math.pow(1.5, map.getZoom() - 14))));
+  map.on('zoomend', scale); scale();
 }
 
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----
