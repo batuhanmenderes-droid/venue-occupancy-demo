@@ -90,7 +90,6 @@
       "logo_scale": 1,
       "simulated": true,
       "sim_profile": "beach",
-      "card_chart": true,
       "hours": {
         "open": "08:00",
         "close": "20:00"

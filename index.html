@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261105p"></script>
+<script src="i18n.js?v=20261105r"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261105p">
+<link rel="stylesheet" href="theme.css?v=20261105r">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -149,8 +149,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261105p"></script>
-<script src="venue-state.js?v=20261105p"></script>
+<script src="levels.js?v=20261105r"></script>
+<script src="venue-state.js?v=20261105r"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -172,6 +172,9 @@ async function load() {
       const due = frames.filter(f => new Date(f.timestamp) <= now);
       latest = due[due.length - 1] || null;
       rising = risingFromFrames(due);
+      // Today's frames (business day from 06:00) for the faint chart behind the card.
+      const dayStart = new Date(now); dayStart.setHours(6, 0, 0, 0); if (dayStart > now) dayStart.setDate(dayStart.getDate() - 1);
+      v.today = due.filter(f => new Date(f.timestamp) >= dayStart);
     }
     const status = venueStatus(v, now);
     // At its peak replaces "getting busier" and the expected peak: it is already there.
@@ -334,7 +337,7 @@ function drawMap() {
         { permanent: true, direction: dir, offset, className: 'vlabel' });
     } else {
       // Not the busiest of its cluster: no permanent label; name and count only on hover.
-      m.bindTooltip(`<span class="vcount">${closed ? t('closed') : n === null ? '—' : n}${closed ? '' : PERSON_ICON}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`,
+      m.bindTooltip(`${closed ? '' : cardChart(v, 'h')}<span class="vcount">${closed ? t('closed') : n === null ? '—' : n}${closed ? '' : PERSON_ICON}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`,
         { direction: 'top', offset: [0, -PIN / 2 - 2], className: 'vlabel' });
     }
     m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
@@ -530,7 +533,7 @@ const WindLayer = L.Layer.extend({
     ctx.fillStyle = 'rgba(0, 0, 0, 0.045)';
     ctx.fillRect(0, 0, size.x, size.y);
     ctx.globalCompositeOperation = 'source-over';
-    ctx.lineWidth = 1.6; ctx.lineCap = 'round'; ctx.globalAlpha = 0.85;
+    ctx.lineWidth = 1.6; ctx.lineCap = 'round'; ctx.globalAlpha = 0.5;
     // One path per wind-strength band, so each particle takes its band's colour.
     const paths = WIND_BANDS.map(() => new Path2D());
     for (const p of this._parts) {
@@ -1040,12 +1043,11 @@ function videoThumb({ youtube: id, start = 0 }) {
   return `<div class="vthumb" data-key="${id}" style="background-image:url('https://i.ytimg.com/vi/${id}/hqdefault.jpg')"><iframe src="${src}" title="" tabindex="-1" allow="autoplay; encrypted-media" frameborder="0" loading="lazy"></iframe></div>`;
 }
 
-// Today's people-over-the-day chart drawn faintly (20%) behind a card's text (venues.json `card_chart`).
+// Today's people-over-the-day chart drawn faintly (20%) behind every card's text and open map label.
 // Same look as the venue page chart: an area and line coloured by crowd level. Also behind its map label.
 function cardChart(v, tag = 'c') {
-  if (!v.card_chart || !v.simulated) return '';
   const now = new Date(), day = new Date(now); if (day.getHours() < 6) day.setDate(day.getDate() - 1);
-  const frames = simFrames(v, localIso(day).slice(0, 10), now);
+  const frames = v.simulated ? simFrames(v, localIso(day).slice(0, 10), now) : v.today || [];
   if (frames.length < 2) return '';
   // The line runs edge to edge: from the day's first frame to the latest one.
   const W = 300, H = 100, max = Math.max(10, ...frames.map(f => f.people)) * 1.08;
