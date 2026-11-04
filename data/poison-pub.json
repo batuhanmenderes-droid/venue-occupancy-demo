@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-04T11:41:24",
+  "updated_at": "2026-11-04T12:40:44",
   "frames": [
     {
       "file": "poisonpub-cctv/2026-11-03/CAM01_20261104_100000.jpg",
@@ -215,6 +215,14 @@
       "timestamp": "2026-11-04T11:23:29",
       "camera": "CAM 01",
       "people": 12,
+      "note": "Yalnızca yakın plan; ±2 sapma olabilir.",
+      "note_en": "Close range only; may be off by ±2."
+    },
+    {
+      "file": "poisonpub-cctv/2026-11-04/CAM01_20261104_120513.jpg",
+      "timestamp": "2026-11-04T12:05:13",
+      "camera": "CAM 01",
+      "people": 9,
       "note": "Yalnızca yakın plan; ±2 sapma olabilir.",
       "note_en": "Close range only; may be off by ±2."
     }
