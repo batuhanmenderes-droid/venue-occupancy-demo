@@ -535,8 +535,10 @@ const GEAR_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="curre
 
 // Small person glyph shown next to the head count on map labels.
 const MIC_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="1.5" width="5" height="8.5" rx="2.5" fill="currentColor"/><path d="M3.3 7.6a4.7 4.7 0 0 0 9.4 0M8 12.4v2.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-// Tonight's artist (venues.json `tonight`), shown under the name on the map label; grey while the venue is closed.
-const artistLine = v => v.tonight ? `<span class="vartist${v.status?.state === 'closed' ? ' off' : ''}">${MIC_ICON}${v.tonight}</span>` : '';
+// Tonight's artist / theme night (venues.json `tonight`), shown under the name on the map label.
+// Grey until the show is on (21:00–02:00) and while the venue is closed.
+const showOn = (at = new Date()) => at.getHours() >= 21 || at.getHours() < 2;
+const artistLine = v => v.tonight ? `<span class="vartist${v.status?.state === 'closed' || !showOn() ? ' off' : ''}">${MIC_ICON}${v.tonight}</span>` : '';
 const PERSON_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="4.6" r="2.9" fill="currentColor"/><path d="M2.6 14.4c0-3.1 2.4-5.4 5.4-5.4s5.4 2.3 5.4 5.4z" fill="currentColor"/></svg>';
 
 // ---- Organic heat clouds ----
