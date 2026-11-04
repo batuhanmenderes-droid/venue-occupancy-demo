@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261107w"></script>
+<script src="i18n.js?v=20261107x"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261107w">
+<link rel="stylesheet" href="theme.css?v=20261107x">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -165,9 +165,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261107w"></script>
-<script src="venue-state.js?v=20261107w"></script>
-<script src="menu.js?v=20261107w"></script>
+<script src="levels.js?v=20261107x"></script>
+<script src="venue-state.js?v=20261107x"></script>
+<script src="menu.js?v=20261107x"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -1194,12 +1194,24 @@ async function addCars() {
     return L.latLng(a.lat + (b.lat - a.lat) * f, a.lng + (b.lng - a.lng) * f);
   };
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Unrounded layer position of a lat/lng, with the map tilt applied like everything else.
+  const carPoint = ll => {
+    let lp = map.project(ll, map.getZoom())._subtract(map.getPixelOrigin());
+    if (typeof mapTilt !== 'undefined' && mapTilt) {
+      const pos = map._getMapPanePos(), [x, y] = tiltForward(lp.x + pos.x, lp.y + pos.y);
+      lp = L.point(x - pos.x, y - pos.y);
+    }
+    return lp;
+  };
   const tick = now => {
     const dt = Math.min(0.1, (now - last) / 1000); last = now;
     if (!document.hidden && !document.body.classList.contains('routing')) for (const c of cars) {
       if (!still) { c.s += c.v * dt * c.dir; if (c.s > c.route.len) c.s -= c.route.len; if (c.s < 0) c.s += c.route.len; }
       const p = at(c.route, c.s), q = at(c.route, Math.min(c.route.len, Math.max(0, c.s + 12 * c.dir)));
-      c.m.setLatLng(p);
+      // Placed at sub-pixel precision (Leaflet's own setLatLng rounds to whole pixels, which made the cars stutter).
+      const lp = carPoint(p);
+      c.m._latlng = p;
+      if (c.m._icon) L.DomUtil.setPosition(c.m._icon, lp);
       // Heading on screen (so it also looks right on the tilted map); the car drawing points up.
       const a = map.latLngToContainerPoint(p), b = map.latLngToContainerPoint(q);
       const box = c.m.getElement();
