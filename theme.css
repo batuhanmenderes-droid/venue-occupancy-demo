@@ -498,6 +498,10 @@ button.cal-cell:hover { outline: 2px solid var(--ink); }
 .vbg { position: fixed; inset: -40px; z-index: -2; background: center / cover no-repeat; filter: blur(6px); }
 .vbg::after { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); }
 body.has-bg { background: #000; }
+/* Background video: a 16:9 YouTube frame scaled to cover the window */
+.vbg-video { overflow: hidden; }
+.vbg-video iframe { position: absolute; top: 50%; left: 50%; width: max(calc(100vw + 80px), calc((100vh + 80px) * 16 / 9));
+  height: max(calc(100vh + 80px), calc((100vw + 80px) * 9 / 16)); transform: translate(-50%, -50%); border: 0; pointer-events: none; }
 /* Glass panels over the background */
 body.has-bg .card, body.has-bg .vtabs, body.has-bg .pill, body.has-bg .back, body.has-bg select, body.has-bg .langswitch {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)) !important;
