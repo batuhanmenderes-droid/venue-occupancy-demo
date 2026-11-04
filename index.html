@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261107k"></script>
+<script src="i18n.js?v=20261107l"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261107k">
+<link rel="stylesheet" href="theme.css?v=20261107l">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -165,9 +165,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261107k"></script>
-<script src="venue-state.js?v=20261107k"></script>
-<script src="menu.js?v=20261107k"></script>
+<script src="levels.js?v=20261107l"></script>
+<script src="venue-state.js?v=20261107l"></script>
+<script src="menu.js?v=20261107l"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -317,6 +317,7 @@ function initMap() {
   addHousePanel();
   addKites();
   addKitePanel();
+  addCars();
   setupTilt();
   drawMap();
 }
@@ -1147,6 +1148,59 @@ function setupTilt() {
   });
   map.on('zoom resize viewreset', applyTilt);
   applyTilt();
+}
+
+// ---- Cars driving along the roads ----
+// A few road routes (OSRM car routing on routing.openstreetmap.de) with small top-down cars driving them,
+// both ways, at a sped-up pace. Positions go through the map's projection, so they follow the tilted ground.
+const CAR_ROUTES = [
+  [[37.0610, 28.3265], [37.0230, 28.3570]],  // Akyaka ↔ Akçapınar
+  [[37.0560, 28.3290], [37.0560, 28.3700]],  // Akyaka ↔ east along the main road
+  [[37.0260, 28.3600], [37.0520, 28.3640]],  // Akçapınar ↔ the junction
+];
+const CAR_SVG = '<svg viewBox="0 0 12 22" aria-hidden="true"><rect x="1" y="1" width="10" height="20" rx="3.2" fill="#d4d4d6" stroke="#8e8e93" stroke-width=".6"/><path d="M2.6 6.2h6.8l-.9 3H3.5zM3.4 14.6h5.2l.8 2.6H2.6z" fill="#7d7d82"/><rect x="2.4" y="9.6" width="7.2" height="4.6" rx="1" fill="#e9e9eb"/></svg>';
+let cars = [], carRaf = 0;
+async function addCars() {
+  const pane = map.createPane('cars');
+  pane.style.zIndex = 397; pane.style.pointerEvents = 'none';
+  const routes = (await Promise.all(CAR_ROUTES.map(async ([a, b]) => {
+    try {
+      const r = await (await fetch(`https://routing.openstreetmap.de/routed-car/route/v1/driving/${a[1]},${a[0]};${b[1]},${b[0]}?overview=full&geometries=geojson`)).json();
+      const pts = r.routes?.[0]?.geometry.coordinates.map(([lon, lat]) => L.latLng(lat, lon));
+      if (!pts || pts.length < 2) return null;
+      const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + pts[i - 1].distanceTo(pts[i]));
+      return { pts, cum, len: cum[cum.length - 1] };
+    } catch { return null; }
+  }))).filter(Boolean);
+  // Two cars per route, one each way, spread out.
+  routes.forEach((route, ri) => [1, -1].forEach((dir, k) => {
+    const m = L.marker(route.pts[0], { pane: 'cars', interactive: false, keyboard: false,
+      icon: L.divIcon({ className: 'car', html: CAR_SVG, iconSize: [12, 22], iconAnchor: [6, 11] }) }).addTo(map);
+    cars.push({ m, route, dir, s: route.len * ((ri * 0.37 + k * 0.5) % 1), v: 55 + ri * 12 + k * 8 });  // metres per second (sped up)
+  }));
+  let last = performance.now();
+  const at = (route, s) => {
+    let i = route.cum.findIndex(c => c > s); if (i < 1) i = route.cum.length - 1;
+    const a = route.pts[i - 1], b = route.pts[i], f = (s - route.cum[i - 1]) / ((route.cum[i] - route.cum[i - 1]) || 1);
+    return L.latLng(a.lat + (b.lat - a.lat) * f, a.lng + (b.lng - a.lng) * f);
+  };
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const tick = now => {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (!document.hidden && !document.body.classList.contains('routing')) for (const c of cars) {
+      if (!still) { c.s += c.v * dt * c.dir; if (c.s > c.route.len) c.s -= c.route.len; if (c.s < 0) c.s += c.route.len; }
+      const p = at(c.route, c.s), q = at(c.route, Math.min(c.route.len, Math.max(0, c.s + 12 * c.dir)));
+      c.m.setLatLng(p);
+      // Heading on screen (so it also looks right on the tilted map); the car drawing points up.
+      const a = map.latLngToContainerPoint(p), b = map.latLngToContainerPoint(q);
+      const el = c.m.getElement()?.firstElementChild;
+      if (el && (a.x !== b.x || a.y !== b.y)) el.style.rotate = `${Math.atan2(b.x - a.x, a.y - b.y)}rad`;
+    }
+    carRaf = requestAnimationFrame(tick);
+  };
+  carRaf = requestAnimationFrame(tick);
+  map.on('zoomend', () => map.getContainer().style.setProperty('--car-s', Math.max(0.5, Math.min(1.6, 0.7 * Math.pow(1.4, map.getZoom() - 14)))));
+  map.fire('zoomend');
 }
 
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----

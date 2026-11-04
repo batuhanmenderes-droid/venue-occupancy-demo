@@ -986,3 +986,9 @@ body.houses-remove .house:hover svg { opacity: .55; }
 /* Houses, trees and kitesurfers in soft light greys so they stay subtle on the map */
 .house svg, .tree svg, .kiter img { filter: grayscale(1) brightness(1.35) contrast(.55) !important; opacity: .75; }
 :root[data-theme="dark"] .house svg, :root[data-theme="dark"] .tree svg, :root[data-theme="dark"] .kiter img { filter: grayscale(1) brightness(.85) contrast(.6) !important; opacity: .6; }
+
+/* Cars on the roads (subtle greys like the other details) */
+.car { background: none; border: 0; }
+.car svg { width: 12px; height: 22px; display: block; transform: scale(var(--car-s, .7)); opacity: .85; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25)); }
+:root[data-theme="dark"] .car svg { opacity: .6; }
+body.routing .leaflet-cars-pane { opacity: 0; }
