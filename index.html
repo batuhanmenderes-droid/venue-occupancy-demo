@@ -848,11 +848,14 @@ function card(v) {
     : v.simulated
       ? `<div class="none demo"><span>${t('demoData')}</span></div>`
       : `<div class="none">${live ? t('noFramesToday') : v.coming_soon ? t('soon') : t('noCamera')}</div>`;
-  const stat = v.latest
+  const closed = v.status?.state === 'closed';
+  // Closed venues show no head count.
+  const stat = closed
+    ? `<b style="color:var(--muted)">—</b><span>${t('closed')}</span>`
+    : v.latest
     ? `<b>${v.latest.people}</b><span>${t('people')} · ${hm(v.latest.timestamp)}</span>`
     : `<b style="color:var(--muted)">—</b><span>${t('people')}</span>`;
   const lv = v.latest ? levelOf(v.latest.people) : null;
-  const closed = v.status?.state === 'closed';
   return `<a class="venue${closed ? ' is-closed' : ''}" data-id="${v.id}" href="venue.html?mekan=${v.id}"${lv && !closed ? ` style="--lv:${lv.color}"` : ''}>
     <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}<button class="mapcheck" role="checkbox" aria-checked="${onMap(v)}" data-mapcheck="${v.id}" title="${t('showOnMap')}" aria-label="${t('showOnMap')}: ${v.name}">${CHECK_ICON}</button></div>
     <div class="body">
