@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261107t"></script>
+<script src="i18n.js?v=20261107v"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261107t">
+<link rel="stylesheet" href="theme.css?v=20261107v">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -165,9 +165,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261107t"></script>
-<script src="venue-state.js?v=20261107t"></script>
-<script src="menu.js?v=20261107t"></script>
+<script src="levels.js?v=20261107v"></script>
+<script src="venue-state.js?v=20261107v"></script>
+<script src="menu.js?v=20261107v"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -1162,7 +1162,10 @@ const CAR_ROUTES = [
   [[37.0560, 28.3290], [37.0560, 28.3700]],  // Akyaka ↔ east along the main road
   [[37.0260, 28.3600], [37.0520, 28.3640]],  // Akçapınar ↔ the junction
 ];
-const CAR_SVG = '<svg viewBox="0 0 12 22" aria-hidden="true"><rect x="1" y="1" width="10" height="20" rx="3.2" fill="#d4d4d6" stroke="#8e8e93" stroke-width=".6"/><path d="M2.6 6.2h6.8l-.9 3H3.5zM3.4 14.6h5.2l.8 2.6H2.6z" fill="#7d7d82"/><rect x="2.4" y="9.6" width="7.2" height="4.6" rx="1" fill="#e9e9eb"/></svg>';
+// Isometric cars (hairline outlines, greys like the houses): one drawing heading down-screen, one up-screen;
+// mirrored for left / right, picked from the car's heading on screen.
+const CAR_SE = '<svg viewBox="0 0 32 26" aria-hidden="true"><g stroke="#5d5d62" stroke-width=".5" stroke-linejoin="round"><ellipse cx="16" cy="21" rx="11" ry="3" fill="rgba(0,0,0,.12)" stroke="none"/><path d="M6 15 20 22v-5L6 10z" fill="#b9b9bd"/><path d="M20 22l6-3v-5l-6 3z" fill="#9c9ca1"/><path d="M6 10l14 7 6-3-14-7z" fill="#dcdcdf"/><path d="M11.1 11.65 17.4 14.8v-4l-6.3-3.15z" fill="#8f939b"/><path d="M17.4 14.8l4.2-2.1v-4l-4.2 2.1z" fill="#a9adb5"/><path d="M11.1 7.65l6.3 3.15 4.2-2.1-6.3-3.15z" fill="#e8e8ea"/><ellipse cx="9.5" cy="16.6" rx="1.6" ry="1.1" fill="#4a4a4f"/><ellipse cx="17" cy="20.4" rx="1.6" ry="1.1" fill="#4a4a4f"/></g></svg>';
+const CAR_NE = '<svg viewBox="0 0 32 26" aria-hidden="true"><g stroke="#5d5d62" stroke-width=".5" stroke-linejoin="round"><ellipse cx="14" cy="18" rx="11" ry="3" fill="rgba(0,0,0,.12)" stroke="none"/><path d="M10 21l14-7V9l-14 7z" fill="#b9b9bd"/><path d="M4 18l6 3v-5l-6-3z" fill="#9c9ca1"/><path d="M4 13l14-7 6 3-14 7z" fill="#dcdcdf"/><path d="M12.6 13.8l6.3-3.15v-4l-6.3 3.15z" fill="#8f939b"/><path d="M8.4 11.7l4.2 2.1v-4L8.4 7.7z" fill="#a9adb5"/><path d="M8.4 7.7l6.3-3.15 4.2 2.1-6.3 3.15z" fill="#e8e8ea"/><ellipse cx="13" cy="19.6" rx="1.6" ry="1.1" fill="#4a4a4f"/><ellipse cx="21" cy="15.6" rx="1.6" ry="1.1" fill="#4a4a4f"/></g></svg>';
 let cars = [], carRaf = 0;
 async function addCars() {
   const pane = map.createPane('cars');
@@ -1179,7 +1182,7 @@ async function addCars() {
   // Two cars per route, one each way, spread out.
   routes.forEach((route, ri) => [1, -1].forEach((dir, k) => {
     const m = L.marker(route.pts[0], { pane: 'cars', interactive: false, keyboard: false,
-      icon: L.divIcon({ className: 'car', html: CAR_SVG, iconSize: [12, 22], iconAnchor: [6, 11] }) }).addTo(map);
+      icon: L.divIcon({ className: 'car', html: CAR_SE, iconSize: [32, 26], iconAnchor: [16, 18] }) }).addTo(map);
     cars.push({ m, route, dir, s: route.len * ((ri * 0.37 + k * 0.5) % 1), v: 55 + ri * 12 + k * 8 });  // metres per second (sped up)
   }));
   let last = performance.now();
@@ -1197,8 +1200,15 @@ async function addCars() {
       c.m.setLatLng(p);
       // Heading on screen (so it also looks right on the tilted map); the car drawing points up.
       const a = map.latLngToContainerPoint(p), b = map.latLngToContainerPoint(q);
-      const el = c.m.getElement()?.firstElementChild;
-      if (el && (a.x !== b.x || a.y !== b.y)) el.style.rotate = `${Math.atan2(b.x - a.x, a.y - b.y)}rad`;
+      const box = c.m.getElement();
+      if (box && (a.x !== b.x || a.y !== b.y)) {
+        const down = b.y >= a.y, left = b.x < a.x, q = (down ? 'd' : 'u') + (left ? 'l' : 'r');
+        if (c.q !== q) {
+          if ((c.q || 'dr')[0] !== q[0]) box.innerHTML = down ? CAR_SE : CAR_NE;
+          box.firstElementChild.style.scale = left ? '-1 1' : '1 1';
+          c.q = q;
+        }
+      }
     }
     carRaf = requestAnimationFrame(tick);
   };
