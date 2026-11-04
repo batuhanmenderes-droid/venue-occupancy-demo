@@ -753,7 +753,7 @@ body.menu-open .sidemenu { transform: none; }
 
 /* Faint day chart behind a card's text (Kitebeach): 20% opacity, under everything in the card body */
 .venue .body { position: relative; isolation: isolate; }
-.venue .body > .cardchart { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 78%; z-index: -1; opacity: 0.2; pointer-events: none; }
+.venue .body > .cardchart { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 78%; z-index: -1; opacity: 0.32; pointer-events: none; }
 /* Same faint chart behind the venue's map label */
 .leaflet-tooltip.vlabel:has(> .cardchart) { position: absolute; isolation: isolate; overflow: hidden; }
-.leaflet-tooltip.vlabel > .cardchart { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 80%; z-index: -1; opacity: 0.2; pointer-events: none; }
+.leaflet-tooltip.vlabel > .cardchart { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 80%; z-index: -1; opacity: 0.32; pointer-events: none; }
