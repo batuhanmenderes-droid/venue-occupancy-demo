@@ -495,7 +495,7 @@ button.cal-cell:hover { outline: 2px solid var(--ink); }
 .maplogo > div { transform: scale(var(--s, 1)); transition: transform .3s; }
 
 /* Venue page background image: 6px blur under a 90% black veil */
-.vbg { position: fixed; inset: -40px; z-index: -2; background: center / cover no-repeat; filter: blur(6px); }
+.vbg { position: fixed; inset: -40px; z-index: -2; background: center / cover no-repeat; }  /* photo backgrounds unblurred; the video keeps its own 2px blur */
 .vbg::after { content: ""; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); }
 body.has-bg { background: #000; }
 /* Background video: a 16:9 YouTube frame scaled to cover the window */
