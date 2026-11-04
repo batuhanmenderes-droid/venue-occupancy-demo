@@ -824,3 +824,13 @@ body:has(.tabbar) .langswitch { display: none; }
 .lv-range input[data-lo] { width: 46px; }
 #recSheet .sheet-title { visibility: hidden; }  /* the collapsible Recommendations pane carries the title */
 .heatcanvas { mix-blend-mode: multiply; }  /* heat clouds multiply onto the basemap */
+
+/* Recommendation angle tags */
+.rec-tag { justify-self: start; font: 700 10.5px/1 var(--font-text); letter-spacing: .06em; text-transform: uppercase; padding: 5px 8px; border-radius: 999px; }
+.rec-tag.top { color: #b8860b; background: rgba(255, 200, 0, .18); }
+.rec-tag.busy { color: #e0218a; background: rgba(224, 33, 138, .13); }
+.rec-tag.quiet, .rec-tag.gem { color: #0e6bdd; background: rgba(14, 107, 221, .12); }
+.rec-tag.cheap { color: #12a454; background: rgba(22, 202, 100, .15); }
+.rec-tag.pricey { color: #c11a4c; background: rgba(193, 26, 76, .12); }
+.rec-tag.new { color: #7a3fd1; background: rgba(141, 14, 225, .12); }
+.asks { flex-direction: column; align-items: stretch; }

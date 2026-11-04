@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106j"></script>
+<script src="i18n.js?v=20261106l"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106j">
+<link rel="stylesheet" href="theme.css?v=20261106l">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -96,7 +96,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
     </button>
     <div class="sm-pane-body" id="recBody">
       <div class="chat" id="recChat" aria-live="polite"></div>
-      <div class="asks" id="recAsks"><button class="ask" data-q="where" data-i18n="recQWhere">Where do you think I should be going?</button></div>
+      <div class="asks" id="recAsks"><button class="ask" data-q="where" data-i18n="recQWhere">Where do you think I should be going?</button><button class="ask" data-q="discover" data-i18n="recQDiscover"></button><button class="ask" data-q="breakfast" data-i18n="recQBreakfast"></button><button class="ask" data-q="music" data-i18n="recQMusic"></button><button class="ask" data-q="cocktails" data-i18n="recQCocktails"></button><button class="ask" data-q="food" data-i18n="recQFood"></button><button class="ask" data-q="drinks" data-i18n="recQDrinks"></button></div>
     </div>
   </section>
 </section>
@@ -158,8 +158,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106j"></script>
-<script src="venue-state.js?v=20261106j"></script>
+<script src="levels.js?v=20261106l"></script>
+<script src="venue-state.js?v=20261106l"></script>
+<script src="menu.js?v=20261106l"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -1360,6 +1361,121 @@ function answerWhere() {
     </div>`;
   }).join('') + `<p class="rec-note">${t('recNote')}</p>`;
 }
+// ---- More questions: made-up venue profiles + answers from several angles ----
+// We have no real data for breakfast, music, cocktails or prices beyond the demo menu, so each venue gets a
+// fixed, plausible profile from its type and a per-venue random (same answer every time). Prices come from
+// the demo menu (menu.js). Every answer shows a few angles: most crowded, quietest, cheapest, priciest, best rated.
+const GENRES = {
+  Kulüp: ['house', 'techno', 'pop'], Bar: ['indie', 'jazz', 'rock'], Pub: ['rock', '80s · 90s', 'blues'],
+  Meyhane: ['fasıl'], Otel: ['lounge'], Plaj: ['chill house'], Kafe: ['acoustic'], Restoran: ['jazz'],
+};
+const rnd = (v, k) => simRandom(`${v.id}:${k}`);
+const rate = (lo, hi, r) => Math.round((lo + (hi - lo) * r) * 10) / 10;
+function profile(v) {
+  const r = k => rnd(v, k), ty = v.type;
+  const breakfast = { Kafe: [4.1, 4.9], Restoran: [3.3, 4.4], Otel: [3.8, 4.9], Plaj: [2.8, 3.6] }[ty];
+  const music = { Kulüp: [4.0, 4.9], Bar: [3.6, 4.7], Pub: [3.5, 4.6], Meyhane: [3.6, 4.6], Otel: [3.2, 4.2], Plaj: [3.4, 4.3], Kafe: [2.6, 3.5], Restoran: [2.4, 3.3] }[ty];
+  const cocktails = { Bar: [4.0, 4.9], Kulüp: [3.5, 4.5], Otel: [3.9, 4.8], Plaj: [3.1, 4.0], Pub: [3.0, 3.9], Kafe: [2.6, 3.5] }[ty];
+  const menu = venueMenu(v), sec = k => { const key = MENU_BY_TYPE[ty] || MENU_BY_TYPE.Bar; const i = key.indexOf(k); return i >= 0 ? menu[i].items : null; };
+  const avg = a => a?.length ? Math.round(a.reduce((x, i) => x + i.price, 0) / a.length / 10) * 10 : null;
+  const food = [sec('mains'), sec('meze'), sec('bites'), sec('breakfast')].filter(Boolean).flat();
+  const beer = sec('beer'), cock = sec('cocktails'), bf = sec('breakfast');
+  const g = GENRES[ty] || ['pop'];
+  return {
+    breakfast: breakfast && (ty !== 'Restoran' || r('bfOn') > 0.4) ? rate(...breakfast, r('bf')) : null,
+    menemen: bf ? bf[1].price : null, serpme: bf ? bf[0].price : null,
+    music: music ? rate(...music, r('mu')) : null, genre: g[Math.floor(r('genre') * g.length)],
+    cocktails: cocktails ? rate(...cocktails, r('co')) : null, cocktail: avg(cock),
+    food: avg(food), cheapestFood: food.length ? Math.min(...food.map(i => i.price)) : null,
+    beer: beer ? beer[0].price : null, raki: sec('raki') ? sec('raki')[0].price : null,
+  };
+}
+const tl = n => `₺${n.toLocaleString(LANG === 'tr' ? 'tr-TR' : 'en-GB')}`;
+const isOpen = v => v.status?.state !== 'closed' && !v.coming_soon;
+const crowd = v => v.latest?.people ?? 0;
+// One answer card with a coloured angle tag ("Most crowded", "Cheapest" …) and reasons.
+function angleCard(v, tag, cls, why) {
+  const lv = v.latest && isOpen(v) ? levelOf(v.latest.people) : null;
+  const state = !isOpen(v) ? `${t('closed')}${v.status?.opens ? ` · ${t('opensAt', v.status.opens)}` : ''}` : v.latest ? `<i class="lvdot"></i>${v.latest.people} ${t('people')}` : '';
+  return `<div class="rec" style="--lv:${lv?.color || '#8e8e93'}">
+    <span class="rec-tag ${cls}">${tag}</span>
+    <div class="rec-top">${logoHtml(v)}<div><b>${v.name}</b><span>${typeName(v.type)} · ${state}</span></div></div>
+    <ul>${why.filter(Boolean).map(w => `<li>${w}</li>`).join('')}</ul>
+    <div class="rec-actions"><a href="venue.html?mekan=${v.id}">${t('recOpen')}</a><button data-focus="${v.id}">${t('recOnMap')}</button></div>
+  </div>`;
+}
+// Builds an answer from angles: [tagKey, cls, pickFn(list) → venue, whyFn(v, p)]; a venue appears once.
+function answerAngles(intro, list, angles) {
+  const used = new Set(), cards = [];
+  for (const [tagKey, cls, pick, why, need = () => true] of angles) {
+    const pool = list.filter(x => !used.has(x.v.id) && need(x));
+    const p = pool.length ? pick(pool) : null;
+    if (!p) continue;
+    used.add(p.v.id);
+    cards.push(angleCard(p.v, t(tagKey), cls, why(p.v, p.p)));
+  }
+  return `<p>${intro}</p>${cards.join('') || `<p>${t('recNone')}</p>`}<p class="rec-note">${t('recMadeUp')}</p>`;
+}
+const by = (f, dir = 1) => pool => [...pool].sort((a, b) => dir * (f(a) - f(b)))[0];
+const withP = () => lastCards.filter(v => !v.coming_soon).map(v => ({ v, p: profile(v) }));
+const ANSWERS = {
+  discover() {
+    const open = withP().filter(x => isOpen(x.v) && x.v.latest);
+    const rating = x => (x.p.music ?? 3) * 0.4 + (x.p.cocktails ?? x.p.breakfast ?? 3) * 0.6;
+    return answerAngles(t('aDiscover'), open, [
+      ['tagGem', 'gem', by(x => rating(x) * 10 - crowd(x.v), -1), (v, p) => [t('whyQuietNow', crowd(v)), t('whyRated', rating({ p }).toFixed(1))]],
+      ['tagBuzz', 'busy', by(x => crowd(x.v), -1), v => [t('whyBusiest', crowd(v)), v.rising ? t('rising') : v.peak ? t('atPeak') : '']],
+      ['tagNew', 'new', by(x => (x.v.tonight ? 10 : 0) + (x.v.rising ? 5 : 0) + rnd(x.v, 'new'), -1), (v, p) => [v.tonight ? t(v.tonight_icon === 'yoga' ? 'recToday' : 'recTonight', v.tonight) : t('whyTry', typeName(v.type).toLowerCase()), p.genre ? t('whyGenre', p.genre) : '']],
+    ]);
+  },
+  breakfast() {
+    const list = withP().filter(x => x.p.breakfast && (!x.v.hours || x.v.hours.open <= '10:00'));
+    const late = new Date().getHours() >= 12;
+    return answerAngles(late ? t('aBreakfastLate') : t('aBreakfast'), list, [
+      ['tagLoved', 'top', by(x => x.p.breakfast, -1), (v, p) => [t('whyBreakfast', p.breakfast), v.hours ? t('whyOpensAt', v.hours.open) : '']],
+      ['tagQuiet', 'quiet', by(x => (isOpen(x.v) ? 0 : 1000) + crowd(x.v)), (v, p) => [isOpen(v) ? t('whyQuietNow', crowd(v)) : t('whyQuietUsually'), t('whyBreakfast', p.breakfast)]],
+      ['tagCheap', 'cheap', by(x => x.p.menemen), (v, p) => [t('whyMenemen', tl(p.menemen))], x => x.p.menemen],
+      ['tagPricey', 'pricey', by(x => x.p.serpme, -1), (v, p) => [t('whySerpme', tl(p.serpme))], x => x.p.serpme],
+    ]);
+  },
+  music() {
+    const list = withP().filter(x => x.p.music);
+    const evening = new Date().getHours() >= 17 || new Date().getHours() < 4;
+    return answerAngles(t('aMusic'), list, [
+      ['tagLive', 'top', by(x => (x.v.tonight && x.v.tonight_icon !== 'yoga' ? 10 : 0) + x.p.music, -1), (v, p) => [v.tonight && v.tonight_icon !== 'yoga' ? t('recTonight', v.tonight) : t('whyGenre', p.genre), t('whyMusic', p.music)]],
+      ['tagDance', 'busy', by(x => crowd(x.v) * (isOpen(x.v) ? 1 : 0) + x.p.music, -1), (v, p) => [isOpen(v) ? t('whyBusiest', crowd(v)) : t('whyLater'), t('whyGenre', p.genre)], x => ['Kulüp', 'Bar', 'Pub'].includes(x.v.type)],
+      ['tagChill', 'quiet', by(x => (['lounge', 'chill house', 'acoustic', 'jazz'].includes(x.p.genre) ? 0 : 100) + crowd(x.v)), (v, p) => [t('whyGenre', p.genre), isOpen(v) ? t('whyQuietNow', crowd(v)) : '']],
+    ]) + (evening ? '' : `<p class="rec-note">${t('aMusicDay')}</p>`);
+  },
+  cocktails() {
+    const list = withP().filter(x => x.p.cocktails && x.p.cocktail);
+    return answerAngles(t('aCocktails'), list, [
+      ['tagTopRated', 'top', by(x => x.p.cocktails, -1), (v, p) => [t('whyCocktails', p.cocktails), t('whyCocktailPrice', tl(p.cocktail))]],
+      ['tagCheap', 'cheap', by(x => x.p.cocktail), (v, p) => [t('whyCocktailPrice', tl(p.cocktail)), t('whyCocktails', p.cocktails)]],
+      ['tagPricey', 'pricey', by(x => x.p.cocktail, -1), (v, p) => [t('whyCocktailPrice', tl(p.cocktail)), t('whyPremium')]],
+      ['tagQuiet', 'quiet', by(x => (isOpen(x.v) ? 0 : 1000) + crowd(x.v)), (v, p) => [isOpen(v) ? t('whyQuietNow', crowd(v)) : t('whyQuietUsually'), t('whyCocktails', p.cocktails)]],
+    ]);
+  },
+  food() {
+    const list = withP().filter(x => x.p.food);
+    return answerAngles(t('aFood'), list, [
+      ['tagCheap', 'cheap', by(x => x.p.food), (v, p) => [t('whyFoodAvg', tl(p.food)), t('whyFrom', tl(p.cheapestFood))]],
+      ['tagCheapOpen', 'cheap', by(x => (isOpen(x.v) ? 0 : 1e6) + x.p.food), (v, p) => [t('whyFoodAvg', tl(p.food)), isOpen(v) ? t('whyOpenNow') : '']],
+      ['tagValue', 'busy', by(x => (isOpen(x.v) ? crowd(x.v) : 0) * 10 - x.p.food / 10, -1), (v, p) => [t('whyFoodAvg', tl(p.food)), t('whyBusiest', crowd(v))]],
+      ['tagPricey', 'pricey', by(x => x.p.food, -1), (v, p) => [t('whyFoodAvg', tl(p.food)), t('whySplurge')]],
+    ]);
+  },
+  drinks() {
+    const list = withP().filter(x => x.p.beer || x.p.raki);
+    const price = x => x.p.beer ?? x.p.raki;
+    return answerAngles(t('aDrinks'), list, [
+      ['tagCheap', 'cheap', by(price), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki))]],
+      ['tagCheapOpen', 'cheap', by(x => (isOpen(x.v) ? 0 : 1e6) + price(x)), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki)), isOpen(v) ? t('whyOpenNow') : '']],
+      ['tagCheapCocktail', 'cheap', by(x => x.p.cocktail), (v, p) => [t('whyCocktailPrice', tl(p.cocktail))], x => x.p.cocktail],
+      ['tagPricey', 'pricey', by(price, -1), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki))]],
+    ]);
+  },
+};
 function bubble(cls, html) {
   $('recChat').insertAdjacentHTML('beforeend', `<div class="msg ${cls}">${html}</div>`);
   const m = $('recChat').lastElementChild; m.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -1369,7 +1485,7 @@ $('recAsks').onclick = e => {
   const b = e.target.closest('[data-q]'); if (!b) return;
   bubble('me', b.textContent);
   const typing = bubble('bot typing', '<span></span><span></span><span></span>');
-  setTimeout(() => { typing.classList.remove('typing'); typing.innerHTML = answerWhere(); typing.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 650);
+  setTimeout(() => { typing.classList.remove('typing'); typing.innerHTML = (ANSWERS[b.dataset.q] || answerWhere)(); typing.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 650);
 };
 $('recChat').onclick = e => {
   const b = e.target.closest('[data-focus]'); if (!b) return;
