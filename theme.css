@@ -682,10 +682,9 @@ body.mapmode .vbg-list { display: none; }
 .is-disco .g1 { left: 14%; top: 18%; animation-delay: 0s; }
 .is-disco .g2 { right: 12%; top: 36%; animation-delay: 0.9s; }
 .is-disco .g3 { left: 40%; bottom: 10%; animation-delay: 1.7s; }
-/* The logo covers the whole ball, no ring, screen-blended so the mirror facets show through its dark parts */
-.is-disco .logo { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; background: transparent;
-  box-shadow: none !important; mix-blend-mode: screen; }
-.is-disco .glint { z-index: 3; }
+/* The logo as it is, covering the whole ball; the disco ball lies over it at 30% opacity */
+.is-disco .logo { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; box-shadow: none !important; }
+.is-disco .disco { z-index: 2; opacity: 0.3; pointer-events: none; }
 .is-disco .lockover { z-index: 3; }
 @keyframes discoSpin { to { background-position: -56px 0; } }
 @keyframes discoGlow {
