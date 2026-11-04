@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261104p"></script>
+<script src="i18n.js?v=20261104q"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261104p">
+<link rel="stylesheet" href="theme.css?v=20261104q">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -128,8 +128,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261104p"></script>
-<script src="venue-state.js?v=20261104p"></script>
+<script src="levels.js?v=20261104q"></script>
+<script src="venue-state.js?v=20261104q"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -455,7 +455,7 @@ const MAP_PRESETS = {
   },
   light: {
     land: '#f1f0ed', water: '#c4d3e0', landuse: '#ebe9e5', green: '#dfe6d9', building: '#dad7d2',
-    motorway: '#ffffff', major: '#ffffff', minor: '#fbfaf8', path: '#e2e0dc', rail: '#cfccc7',
+    motorway: '#d1d1d1', major: '#b5b5b5', minor: '#d1d1d1', path: '#e2e0dc', rail: '#cfccc7',
     town: '#3a3a3c', grid: '#000000', shade: '#ffffff',
   },
 };
@@ -548,7 +548,7 @@ function rgba(hex, a) {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 }
-// Some levels drift towards a second colour and back: Normal (green) ↔ blue, Busy (orange) ↔ magenta.
+// Every level drifts towards a second colour and back: Quiet ↔ grey, Normal ↔ cyan, Busy ↔ amber, Crowded ↔ crimson, Very crowded ↔ purple.
 // ---- Heat cloud settings (panel on the map, saved per browser) ----
 // size: baseM + people × perPersonM metres (never below basePx + people × perPersonPx on screen);
 // priority: strength rises from minStrength to full at fullAt people along a power `curve`;
@@ -557,7 +557,7 @@ const HEAT_DEFAULT = {
   baseM: 10, perPersonM: 1, basePx: 90, perPersonPx: 1,
   minStrength: 0.48, fullAt: 30, curve: 1.3, opacity: 1, blur: 8,
   colors: ['#0e6bdd', '#16ca64', '#ffc800', '#dd5e27', '#c11a4c'],
-  shift: [null, '#13cbd8', '#e0962e', null, null],
+  shift: ['#d4d4d4', '#13cbd8', '#e0962e', '#c11a4c', '#8d0ee1'],
 };
 let HEAT = loadHeat();
 function loadHeat() {
