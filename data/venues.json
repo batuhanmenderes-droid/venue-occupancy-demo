@@ -13,6 +13,7 @@
         "approx": false,
         "label": "Karanfil Sokak, Akyaka"
       },
+      "tonight": "80s 90s Night",
       "logo": "logos/poisonpub.png",
       "count_rule_en": "Only people close to the camera are counted."
     },
@@ -30,6 +31,7 @@
       },
       "logo": "logos/no22riders.png?v=2",
       "website": "https://no22ridersinn.com/home/",
+      "tonight": "Fırat Akarsel",
       "background": "backgrounds/no22.webp",
       "record": {
         "people": 137,

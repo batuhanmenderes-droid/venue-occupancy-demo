@@ -657,3 +657,7 @@ body.mapmode .vbg-list { display: none; }
 .expect { margin-top: -2px; }
 /* Map labels: hairline separator after the venue name (pure black at 2%) */
 .leaflet-tooltip.vlabel .vname + span { border-top: 1px solid rgba(0, 0, 0, 0.02); padding-top: 6px; margin-top: 0; }
+/* Tonight's artist on the map label: mic icon + name; grey while the venue is closed */
+.leaflet-tooltip.vlabel .vartist { display: inline-flex; align-items: center; gap: 5px; font: 600 12px/1.2 var(--font-text); color: var(--ink); }
+.leaflet-tooltip.vlabel .vartist .vicon { width: 12px; height: 12px; color: currentColor; }
+.leaflet-tooltip.vlabel .vartist.off { color: var(--muted); }
