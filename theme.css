@@ -1014,3 +1014,6 @@ body.kites-edit .leaflet-container.kites-off .leaflet-kites-pane { display: bloc
 .mapgrid { display: none !important; }
 /* No wind particles while Kitebeach is closed */
 body.kite-closed .windcanvas { display: none; }
+/* Detail containers a little darker / more solid so they read better over the map */
+:root { --glass-bg: rgba(244, 244, 246, 0.8); }
+:root[data-theme="dark"] { --glass-bg: rgba(18, 18, 22, 0.8); --glass-border: rgba(255, 255, 255, 0.14); }
