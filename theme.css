@@ -746,10 +746,9 @@ body.menu-open .sidemenu { transform: none; }
 .windread em { grid-column: 1 / -1; font-style: normal; color: var(--muted); }
 
 /* Sea name: styled like the town names (see .townlabel), but left-aligned at the screen's left edge */
-.townlabel.sealabel .seawrap { display: inline-grid; justify-items: end; gap: 8px; transform: translateY(-22px); }
-.townlabel.sealabel .seawrap > span { transform: none; margin-right: -0.14em; }  /* drop the trailing letter-spacing so the readout lines up with the last letter */
-.windread.windfixed { position: absolute; left: 79px; top: 47.5%; z-index: 700; pointer-events: auto; cursor: default; }  /* pinned to the screen, not the map */
-.windread.windfixed:empty { display: none; }
+.townlabel.sealabel .seawrap { display: inline-grid; justify-items: center; gap: 10px; transform: translate(-50%, calc(-100% + 18px)); }  /* label centred on SEA.at, wind box above it */
+.townlabel.sealabel .seawrap > span { transform: none; margin-right: -0.14em; }
+.sealabel .windread { pointer-events: auto; }  /* drop the trailing letter-spacing so the readout lines up with the last letter */
 
 /* Faint day chart behind a card's text (Kitebeach): 20% opacity, under everything in the card body */
 .venue .body { position: relative; isolation: isolate; }
@@ -834,3 +833,31 @@ body:has(.tabbar) .langswitch { display: none; }
 .rec-tag.pricey { color: #c11a4c; background: rgba(193, 26, 76, .12); }
 .rec-tag.new { color: #7a3fd1; background: rgba(141, 14, 225, .12); }
 .asks { flex-direction: column; align-items: stretch; }
+
+/* ---- You are here ---- */
+.youmark { background: none; border: 0; }
+.youmark img { width: 44px; height: 44px; display: block; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35)); animation: youBob 2.4s ease-in-out infinite; }
+.youmark .you-label { position: absolute; bottom: 100%; left: 50%; transform: translate(-50%, -2px); white-space: nowrap; padding: 5px 9px; border-radius: 999px;
+  font: 700 11.5px/1 var(--font-text); color: #fff; background: var(--series, #0a84ff); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); }
+.youmark .you-label::after { content: ""; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border: 5px solid transparent; border-top-color: var(--series, #0a84ff); }
+@keyframes youBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .youmark img { animation: none; } }
+
+/* ---- Route bar (above the tab bar) ---- */
+.routebar { position: fixed; left: 12px; right: 12px; bottom: calc(80px + env(safe-area-inset-bottom, 0px)); z-index: 1290; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 10px 10px 10px 12px; border-radius: 18px; background: var(--material); -webkit-backdrop-filter: blur(30px) saturate(180%); backdrop-filter: blur(30px) saturate(180%);
+  box-shadow: var(--shadow-float), var(--highlight); }
+.routebar[hidden] { display: none; }
+@media (min-width: 900px) { .routebar { left: 50%; right: auto; width: 460px; transform: translateX(-50%); bottom: 96px; } }
+.rb-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.rb-info .logo { width: 40px; height: 40px; flex: none; }
+.rb-info > div { display: grid; gap: 3px; min-width: 0; }
+.rb-info b { font: 700 16px/1.1 var(--font-display); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rb-info span { font: 500 12.5px/1.2 var(--font-text); color: var(--ink-2); }
+.rb-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+.rb-close { width: 36px; height: 36px; padding: 0; display: grid; place-items: center; border-radius: 50%; }
+.rb-close svg { width: 16px; height: 16px; }
+.rb-go { display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px; border-radius: 999px; background: var(--series, #0a84ff); color: #fff;
+  font: 700 15px/1 var(--font-text); text-decoration: none; box-shadow: 0 6px 16px -4px rgba(10, 132, 255, 0.6); }
+.rb-go svg { width: 16px; height: 16px; transform: rotate(45deg); }
+body.routing.mapmode .subbar { display: none !important; }
