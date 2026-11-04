@@ -176,6 +176,15 @@ function expectedPeak(v, at = new Date()) {
   const step = top >= 500 ? 100 : top >= 50 ? 10 : 5, n = Math.round(top / step) * step;
   return n > (simLatest(v, at)?.people ?? 0) ? n : null;
 }
+// At its peak (demo venues): the current count is within 10% of the busiest moment of its business day
+// (06:00 to 06:00). Small venues are left out so a handful of people never reads as a peak.
+function atPeakSim(v, at = new Date()) {
+  const start = new Date(at); start.setHours(6, 0, 0, 0); if (start > at) start.setDate(start.getDate() - 1);
+  let top = 0;
+  for (let t = start.getTime(); t < start.getTime() + 86400000; t += 20 * 60000) top = Math.max(top, simCount(v, new Date(t)));
+  const now = simLatest(v, at)?.people ?? 0;
+  return top >= 30 && now >= top * 0.9;
+}
 function risingSim(v, at = new Date()) {
   const now = simLatest(v, at), before = simLatest(v, new Date(at.getTime() - 60 * 60000));
   return isRising(now, before);

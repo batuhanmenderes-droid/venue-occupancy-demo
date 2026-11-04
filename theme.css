@@ -723,3 +723,9 @@ body.menu-open .sidemenu { transform: none; }
 .ask:hover { background: color-mix(in srgb, var(--series, #0a84ff) 12%, var(--fill)); }
 @media (max-width: 640px) { .menubtn { top: 8px; left: 8px; width: 38px; height: 38px; } }
 @media (prefers-reduced-motion: reduce) { .sidemenu { transition: none; } .msg.typing span { animation: none; } }
+
+/* "At its peak" tag: magenta, summit icon on the left */
+.peaktag, .leaflet-tooltip.vlabel .vpeak { display: inline-flex; align-items: center; gap: 5px; color: #e0218a; font: 600 12px/1 var(--font-text); }
+.peaktag { padding: 6px 9px; border-radius: 999px; background: rgba(224, 33, 138, 0.14); justify-self: start; align-self: flex-start; }
+.peaktag .rise, .vpeak .rise { width: 13px; height: 13px; }
+.leaflet-tooltip.vlabel .vpeak { font-size: 11px; padding: 4px 7px; border-radius: 999px; background: rgba(224, 33, 138, 0.12); justify-self: start; }
