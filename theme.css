@@ -729,3 +729,24 @@ body.menu-open .sidemenu { transform: none; }
 .peaktag { padding: 6px 9px; border-radius: 999px; background: rgba(224, 33, 138, 0.14); justify-self: start; align-self: flex-start; }
 .peaktag .rise, .vpeak .rise { width: 13px; height: 13px; }
 .leaflet-tooltip.vlabel .vpeak { font-size: 11px; padding: 4px 7px; border-radius: 999px; background: rgba(224, 33, 138, 0.12); justify-self: start; }
+
+/* ---- Wind layer ---- */
+:root { --wind: rgba(40, 52, 72, 0.42); }
+:root[data-theme="dark"] { --wind: rgba(255, 255, 255, 0.5); }
+.windcanvas { position: absolute; pointer-events: none; }
+.windctl { justify-items: end; }
+.windctl .zp-toggle[aria-pressed="true"] { background: var(--series, #0a84ff); color: #fff; }
+.windread { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 5px; row-gap: 1px; padding: 7px 10px; border-radius: 12px;
+  background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: var(--shadow-float), var(--highlight); font: 500 11px/1.2 var(--font-text); color: var(--ink-2); }
+.windread[hidden] { display: none; }
+.windread svg { width: 14px; height: 14px; color: var(--series, #0a84ff); grid-row: span 2; transition: transform .6s; }
+.windread b { font: 700 17px/1 var(--font-display); color: var(--ink); }
+.windread span { grid-column: 2; }
+.windread em { grid-column: 1 / -1; font-style: normal; color: var(--muted); }
+
+/* Sea name: left-aligned at the screen's left edge, italic, in a deeper shade of the water colour */
+.sealabel span { display: inline-block; transform: translateY(-50%); white-space: nowrap; pointer-events: none;
+  font: italic 500 22px/1 var(--font-display); letter-spacing: 0.14em; color: color-mix(in srgb, var(--map-water, #c4d3e0) 45%, #1d3b5c); opacity: 0.75; }
+:root[data-theme="dark"] .sealabel span { color: color-mix(in srgb, var(--map-water, #0a0a0b) 30%, #8fb3d9); }
+@media (max-width: 640px) { .sealabel span { font-size: 16px; } }

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261105f"></script>
+<script src="i18n.js?v=20261105h"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261105f">
+<link rel="stylesheet" href="theme.css?v=20261105h">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -149,8 +149,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261105f"></script>
-<script src="venue-state.js?v=20261105f"></script>
+<script src="levels.js?v=20261105h"></script>
+<script src="venue-state.js?v=20261105h"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -288,6 +288,7 @@ function initMap() {
   addZoomPanel();
   addHeatPanel();
   addMapColorPanel();
+  addWindControl();
   drawMap();
 }
 
@@ -343,7 +344,14 @@ function drawMap() {
 
 // Town names sit above their town's pins (and the labels over them), so they never cover a venue.
 let townMarkers = [];
+// "Gökova Körfezi" sits in the sea at the very left edge of the screen, at the bay's latitude.
+const SEA = { name: 'Gökova Körfezi', at: [37.034, 28.30] };
+let seaMarker = null;
 function placeTowns(pins) {
+  if (seaMarker) {
+    const y = map.latLngToContainerPoint(SEA.at).y;
+    seaMarker.setLatLng(map.containerPointToLatLng([20, y]));
+  }
   for (const { town, marker } of townMarkers) {
     const c = map.latLngToContainerPoint([town.lat, town.lon]);
     const near = [...(pins?.values() || [])].map(p => map.latLngToContainerPoint(p.latlng))
@@ -405,6 +413,139 @@ function addZoomPanel() {
     return box;
   } });
   new Ctl().addTo(map);
+}
+
+// ---- Wind (Open-Meteo, free, no key) ----
+// A 5 × 5 grid of current 10 m wind over the Gökova bay, refreshed every 30 minutes, drawn as drifting
+// particles with short fading trails (Windy-style) between the basemap and the heat clouds.
+const WIND_BOX = { s: 36.97, n: 37.11, w: 28.20, e: 28.48 }, WIND_N = 5;
+let windField = null;
+async function loadWind() {
+  const lats = [], lons = [];
+  for (let i = 0; i < WIND_N; i++) for (let j = 0; j < WIND_N; j++) {
+    lats.push((WIND_BOX.n - (WIND_BOX.n - WIND_BOX.s) * i / (WIND_N - 1)).toFixed(4));
+    lons.push((WIND_BOX.w + (WIND_BOX.e - WIND_BOX.w) * j / (WIND_N - 1)).toFixed(4));
+  }
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=wind_speed_10m,wind_direction_10m,wind_gusts_10m&wind_speed_unit=kn`;
+  const rows = await (await fetch(url)).json();
+  // Direction is where the wind blows FROM; u points east, v points north.
+  const cells = rows.map(r => {
+    const sp = r.current.wind_speed_10m, d = r.current.wind_direction_10m * Math.PI / 180;
+    return { u: -sp * Math.sin(d), v: -sp * Math.cos(d), sp, gust: r.current.wind_gusts_10m, dir: r.current.wind_direction_10m };
+  });
+  const mean = k => cells.reduce((a, c) => a + c[k], 0) / cells.length;
+  const u = mean('u'), v = mean('v');
+  windField = { cells, speed: Math.hypot(u, v), gust: Math.max(...cells.map(c => c.gust)), from: (Math.atan2(-u, -v) * 180 / Math.PI + 360) % 360, at: Date.now() };
+  windCtl?.update();
+}
+// Bilinear wind (knots, u/v) at a lat/lon inside the grid; outside it the nearest edge is used.
+function windAt(lat, lon) {
+  const f = windField; if (!f) return null;
+  const y = Math.min(WIND_N - 1, Math.max(0, (WIND_BOX.n - lat) / (WIND_BOX.n - WIND_BOX.s) * (WIND_N - 1)));
+  const x = Math.min(WIND_N - 1, Math.max(0, (lon - WIND_BOX.w) / (WIND_BOX.e - WIND_BOX.w) * (WIND_N - 1)));
+  const i = Math.min(WIND_N - 2, Math.floor(y)), j = Math.min(WIND_N - 2, Math.floor(x)), fy = y - i, fx = x - j;
+  const c = (a, b) => f.cells[a * WIND_N + b];
+  const mix = k => (c(i, j)[k] * (1 - fx) + c(i, j + 1)[k] * fx) * (1 - fy) + (c(i + 1, j)[k] * (1 - fx) + c(i + 1, j + 1)[k] * fx) * fy;
+  return { u: mix('u'), v: mix('v') };
+}
+const WindLayer = L.Layer.extend({
+  onAdd(m) {
+    const pane = m.getPane('wind') || m.createPane('wind');
+    pane.style.zIndex = 380; pane.style.pointerEvents = 'none';  // above the grid shade, below heat clouds and pins
+    this._canvas = L.DomUtil.create('canvas', 'windcanvas', pane);
+    this._parts = [];
+    m.on('movestart zoomstart', this._clear, this).on('moveend zoomend resize', this._reset, this);
+    this._still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this._reset();
+    const tick = () => { this._step(); this._raf = requestAnimationFrame(tick); };
+    if (!this._still) this._raf = requestAnimationFrame(tick);
+    return this;
+  },
+  onRemove(m) {
+    cancelAnimationFrame(this._raf);
+    L.DomUtil.remove(this._canvas);
+    m.off('movestart zoomstart', this._clear, this).off('moveend zoomend resize', this._reset, this);
+  },
+  _clear() { this._moving = true; this._canvas.getContext('2d').clearRect(0, 0, this._canvas.width, this._canvas.height); },
+  _reset() {
+    const m = this._map, size = m.getSize(), dpr = window.devicePixelRatio || 1, c = this._canvas;
+    this._moving = false;
+    L.DomUtil.setPosition(c, m.containerPointToLayerPoint([0, 0]));
+    c.width = size.x * dpr; c.height = size.y * dpr; c.style.width = `${size.x}px`; c.style.height = `${size.y}px`;
+    c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Particle count follows the screen area (about one per 1800 px²).
+    const n = Math.round(Math.min(900, size.x * size.y / 1800));
+    this._parts = Array.from({ length: n }, () => this._spawn(size, true));
+    if (this._still) this._drawStill();
+  },
+  _spawn(size, anyAge) { return { x: Math.random() * size.x, y: Math.random() * size.y, age: anyAge ? Math.random() * 80 : 0, life: 60 + Math.random() * 60 }; },
+  _step() {
+    const m = this._map; if (!m || this._moving || !windField || document.hidden) return;
+    const size = m.getSize(), ctx = this._canvas.getContext('2d');
+    // Fade the previous frame a little: this leaves the short trails.
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+    ctx.fillRect(0, 0, size.x, size.y);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--wind').trim() || 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 1.2; ctx.lineCap = 'round';
+    ctx.beginPath();
+    for (const p of this._parts) {
+      const ll = m.containerPointToLatLng([p.x, p.y]), w = windAt(ll.lat, ll.lng);
+      // Screen speed: a floor so a light breeze still moves, then proportional to knots.
+      const k = (0.18 + Math.hypot(w.u, w.v) * 0.075) / Math.max(0.1, Math.hypot(w.u, w.v));
+      const nx = p.x + w.u * k, ny = p.y - w.v * k;
+      ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny);
+      p.x = nx; p.y = ny; p.age++;
+      if (p.age > p.life || p.x < 0 || p.y < 0 || p.x > size.x || p.y > size.y) Object.assign(p, this._spawn(size, false));
+    }
+    ctx.stroke();
+  },
+  // Reduced motion: short still strokes along the wind instead of moving particles.
+  _drawStill() {
+    const m = this._map, size = m.getSize(), ctx = this._canvas.getContext('2d');
+    if (!windField) return;
+    ctx.clearRect(0, 0, size.x, size.y);
+    ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--wind').trim(); ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    for (let y = 20; y < size.y; y += 46) for (let x = 20; x < size.x; x += 46) {
+      const ll = m.containerPointToLatLng([x, y]), w = windAt(ll.lat, ll.lng), l = Math.hypot(w.u, w.v) || 1;
+      ctx.moveTo(x, y); ctx.lineTo(x + w.u / l * 14, y - w.v / l * 14);
+    }
+    ctx.stroke();
+  },
+});
+// Wind button under the map settings: toggles the layer and shows the bay's mean wind (knots, from-direction).
+let windLayer = null, windCtl = null;
+const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+function addWindControl() {
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel windctl');
+    L.DomEvent.disableClickPropagation(box);
+    box.innerHTML = `<button class="zp-toggle" aria-pressed="false" aria-label="${t('windToggle')}" title="${t('windToggle')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h11a3 3 0 1 0-3-3M3 13h15a3 3 0 1 1-3 3M3 17h7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button><div class="windread" hidden></div>`;
+    const btn = box.querySelector('button'), read = box.querySelector('.windread');
+    const set = on => {
+      btn.setAttribute('aria-pressed', on); read.hidden = !on;
+      if (on && !windLayer) windLayer = new WindLayer().addTo(map);
+      if (!on && windLayer) { map.removeLayer(windLayer); windLayer = null; }
+      try { localStorage.setItem('windOn', on ? '1' : '0'); } catch {}
+    };
+    btn.onclick = () => set(btn.getAttribute('aria-pressed') !== 'true');
+    windCtl = { update() {
+      if (!windField) return;
+      const f = windField, dir = COMPASS[Math.round(f.from / 45) % 8];
+      read.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><b>${Math.round(f.speed)}</b><span>kn ${t('windFrom', dir)}</span><em>${t('windGust', Math.round(f.gust))}</em>`;
+      read.title = t('windSource');
+      if (windLayer?._still) windLayer._drawStill();
+    } };
+    set(pref('windOn', '1') === '1');
+    windCtl.update();
+    return box;
+  } });
+  new Ctl().addTo(map);
+  map.attributionControl.addAttribution('Wind &copy; <a href="https://open-meteo.com">Open-Meteo</a>');
+  loadWind().catch(() => {});
+  setInterval(() => loadWind().catch(() => {}), 30 * 60000);
 }
 
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----
@@ -516,7 +657,7 @@ document.addEventListener('themechange', () => {
 function applyMapCss() {
   const st = document.documentElement.style;
   st.setProperty('--map-town', MAP_COLORS.town); st.setProperty('--map-grid', MAP_COLORS.grid);
-  st.setProperty('--map-shade', MAP_COLORS.shade); st.setProperty('--map-land', MAP_COLORS.land);
+  st.setProperty('--map-shade', MAP_COLORS.shade); st.setProperty('--map-land', MAP_COLORS.land); st.setProperty('--map-water', MAP_COLORS.water);
 }
 applyMapCss();
 function recolor(l) {
@@ -562,6 +703,7 @@ async function addBasemap() {
   }
   addShade();
   townMarkers = TOWNS.map(town => ({ town, marker: L.marker([town.lat, town.lon], { icon: L.divIcon({ className: 'townlabel', html: `<span>${town.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1000 }).addTo(map) }));
+  seaMarker = L.marker(SEA.at, { icon: L.divIcon({ className: 'sealabel', html: `<span>${SEA.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1100 }).addTo(map);
   drawMap();
 }
 
