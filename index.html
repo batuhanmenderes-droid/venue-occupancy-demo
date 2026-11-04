@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261108a"></script>
+<script src="i18n.js?v=20261107y"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261108a">
+<link rel="stylesheet" href="theme.css?v=20261107y">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -109,11 +109,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
     <div class="set-row"><span data-i18n="setAppearance">Appearance</span>
       <div class="seg" id="setTheme"><button data-theme="auto" data-i18n="setAuto">Auto</button><button data-theme="light" data-i18n="setLight">Light</button><button data-theme="dark" data-i18n="setDark">Dark</button></div></div>
     <div class="set-row"><span data-i18n="setTilt">Map tilt</span>
-      <span class="set-range"><input type="range" id="setTiltRange" min="0" max="60" step="1"><output id="setTiltOut"></output></span></div>
+      <span class="set-range"><input type="range" id="setTiltRange" min="0" max="40" step="1"><output id="setTiltOut"></output></span></div>
   </div>
   <p class="set-note" data-i18n="setAutoNote"></p>
-  <h4 class="set-h" data-i18n="setMapTools">Map</h4>
-  <div class="set-tools" id="setTools"><p class="set-note" data-i18n="setMapHint">Open the Heatmap once to change the map settings here.</p></div>
 </section>
 <div class="routebar" id="routebar" hidden>
   <div class="rb-info"><span class="rb-logo" id="rbLogo"></span><div><b id="rbName"></b><span id="rbMeta"></span></div></div>
@@ -167,9 +165,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261108a"></script>
-<script src="venue-state.js?v=20261108a"></script>
-<script src="menu.js?v=20261108a"></script>
+<script src="levels.js?v=20261107y"></script>
+<script src="venue-state.js?v=20261107y"></script>
+<script src="menu.js?v=20261107y"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -323,7 +321,6 @@ function initMap() {
   addKitePanel();
   add3dPanel();
   addCars();
-  moveControlsToSettings();
   setupTilt();
   drawMap();
 }
@@ -1110,45 +1107,40 @@ function addKitePanel() {
 // Everything on top (pins, labels, clouds, wind, trees, houses, kitesurfers, routes) keeps its normal look:
 // the map's lat/lng ↔ pixel conversion is patched with the same tilt, so each item sits on the right spot
 // of the tilted ground without being distorted itself. 0° turns it off. Saved per browser.
-// Tilt (lean back), perspective depth and spin (rotation around the screen centre) of the ground.
-// The ground is drawn with CSS `perspective(d) rotateX(tilt) rotateZ(spin)` about the map centre; the same
-// maths places pins, labels and everything else on it (tiltForward) and maps clicks back (tiltBack).
-const readNum = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : +v; } catch { return d; } };
-let mapTilt = readNum('mapTilt', 30), tiltPersp = readNum('mapPersp', 2600), mapSpin = readNum('mapSpin', 0);
-const tiltOn = () => mapTilt || mapSpin;
+const TILT_PERSPECTIVE = 2600;
+let mapTilt = (() => { try { const v = localStorage.getItem('mapTilt'); return v === null ? 22 : +v; } catch { return 22; } })();
+// Flat container point → where it appears on the tilted ground, and back.
 function tiltForward(x, y) {
-  if (!tiltOn()) return [x, y];
-  const { x: w, y: h } = map.getSize(), th = mapTilt * Math.PI / 180, ph = mapSpin * Math.PI / 180, d = tiltPersp, cx = w / 2, cy = h / 2;
-  const x0 = x - cx, y0 = y - cy, x1 = x0 * Math.cos(ph) - y0 * Math.sin(ph), y1 = x0 * Math.sin(ph) + y0 * Math.cos(ph);
-  const k = d / (d - y1 * Math.sin(th));
-  return [cx + x1 * k, cy + y1 * Math.cos(th) * k];
+  if (!mapTilt) return [x, y];
+  const { x: w, y: h } = map.getSize(), th = mapTilt * Math.PI / 180, d = TILT_PERSPECTIVE, cx = w / 2, cy = h / 2;
+  const Y = y - cy, k = d / (d - Y * Math.sin(th));
+  return [cx + (x - cx) * k, cy + Y * Math.cos(th) * k];
 }
 function tiltBack(x, y) {
-  if (!tiltOn()) return [x, y];
-  const { x: w, y: h } = map.getSize(), th = mapTilt * Math.PI / 180, ph = mapSpin * Math.PI / 180, d = tiltPersp, cx = w / 2, cy = h / 2;
-  const y1 = d * (y - cy) / (d * Math.cos(th) + (y - cy) * Math.sin(th)), k = d / (d - y1 * Math.sin(th)), x1 = (x - cx) / k;
-  return [cx + x1 * Math.cos(ph) + y1 * Math.sin(ph), cy - x1 * Math.sin(ph) + y1 * Math.cos(ph)];
+  if (!mapTilt) return [x, y];
+  const { x: w, y: h } = map.getSize(), th = mapTilt * Math.PI / 180, d = TILT_PERSPECTIVE, cx = w / 2, cy = h / 2;
+  const Y = d * (y - cy) / (d * Math.cos(th) + (y - cy) * Math.sin(th)), k = d / (d - Y * Math.sin(th));
+  return [cx + (x - cx) / k, cy + Y];
 }
 function applyTilt() {
   if (!map) return;
   const c = map.getContainer(), sz = map.getSize(), pos = map._getMapPanePos();
-  c.classList.toggle('tilted', !!tiltOn());
+  c.classList.toggle('tilted', mapTilt > 0);
   c.style.setProperty('--map-tilt', `${mapTilt}deg`);
-  c.style.setProperty('--map-spin', `${mapSpin}deg`);
   // The ground panes live inside the moving map pane, so the tilt origin follows the pan offset.
   c.style.setProperty('--tilt-o', `${sz.x / 2 - pos.x}px ${sz.y / 2 - pos.y}px`);
-  c.style.setProperty('--tilt-p', `${tiltPersp}px`);
+  c.style.setProperty('--tilt-p', `${TILT_PERSPECTIVE}px`);
 }
 function setupTilt() {
   const P = L.Map.prototype;
   map.latLngToLayerPoint = function (ll) {
     const lp = P.latLngToLayerPoint.call(this, ll);
-    if (!tiltOn()) return lp;
+    if (!mapTilt) return lp;
     const pos = this._getMapPanePos(), [x, y] = tiltForward(lp.x + pos.x, lp.y + pos.y);
     return L.point(x - pos.x, y - pos.y);
   };
   map.layerPointToLatLng = function (pt) {
-    if (!tiltOn()) return P.layerPointToLatLng.call(this, pt);
+    if (!mapTilt) return P.layerPointToLatLng.call(this, pt);
     const pos = this._getMapPanePos(), q = L.point(pt), [x, y] = tiltBack(q.x + pos.x, q.y + pos.y);
     return P.layerPointToLatLng.call(this, L.point(x - pos.x, y - pos.y));
   };
@@ -1156,7 +1148,7 @@ function setupTilt() {
   let raf = 0, busy = false;
   map.on('move', () => {
     applyTilt();
-    if (!tiltOn() || busy) return;
+    if (!mapTilt || busy) return;
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() => { busy = true; map.fire('viewreset'); busy = false; });
   });
@@ -1205,7 +1197,7 @@ async function addCars() {
   // Unrounded layer position of a lat/lng, with the map tilt applied like everything else.
   const carPoint = ll => {
     let lp = map.project(ll, map.getZoom())._subtract(map.getPixelOrigin());
-    if (typeof mapTilt !== 'undefined' && tiltOn()) {
+    if (typeof mapTilt !== 'undefined' && mapTilt) {
       const pos = map._getMapPanePos(), [x, y] = tiltForward(lp.x + pos.x, lp.y + pos.y);
       lp = L.point(x - pos.x, y - pos.y);
     }
@@ -1237,21 +1229,6 @@ async function addCars() {
   carRaf = requestAnimationFrame(tick);
   map.on('zoomend', () => map.getContainer().style.setProperty('--car-s', Math.max(0.5, Math.min(1.6, 0.7 * Math.pow(1.4, map.getZoom() - 14)))));
   map.fire('zoomend');
-}
-
-// ---- Map controls live in Settings ----
-// Zoom buttons and every map panel (zoom limits, heat clouds, levels, colours, bay label, trees, houses,
-// kitesurfers, 3D) are moved out of the map corners into Settings › Map, each as a row that folds open.
-function moveControlsToSettings() {
-  const host = $('setTools');
-  host.innerHTML = '';
-  const zoom = map.zoomControl?.getContainer();
-  if (zoom) { const row = document.createElement('div'); row.className = 'set-row set-zoom'; row.innerHTML = `<span>${t('setZoom')}</span>`; row.append(zoom); host.append(row); }
-  document.querySelectorAll('.leaflet-top.leaflet-right .zoompanel').forEach(box => {
-    const btn = box.querySelector('.zp-toggle');
-    if (btn && !btn.querySelector('.zp-label')) btn.insertAdjacentHTML('beforeend', `<span class="zp-label">${btn.getAttribute('aria-label') || ''}</span><svg class="zp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
-    host.append(box);
-  });
 }
 
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----
@@ -1432,9 +1409,7 @@ function add3dPanel() {
     box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('d3Panel')}" title="${t('d3Panel')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20.5 7.5v9L12 21l-8.5-4.5v-9z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></button>
       <div class="zp-body" hidden>
         <h4>${t('d3Panel')}</h4>
-        ${slider('tilt', t('setTilt'), 0, 60, 1, '°')}
-        ${slider('persp', t('d3Persp'), 600, 6000, 100, 'px')}
-        ${slider('spin', t('d3Spin'), -45, 45, 1, '°')}
+        ${slider('tilt', t('setTilt'), 0, 40, 1, '°')}
         <h4>${t('d3Roads')}</h4>
         ${slider('road', t('d3Length'), 0, 6, 0.5, 'px')}
         ${slider('roadAlpha', t('d3Dark'), 0, 0.6, 0.02, '')}
@@ -1446,21 +1421,20 @@ function add3dPanel() {
         <button class="zp-reset">${t('zoomReset')}</button>
       </div>`;
     const q = sel => box.querySelector(sel), qa = sel => box.querySelectorAll(sel);
-    const VIEW = { tilt: ['mapTilt', () => mapTilt, v => mapTilt = v], persp: ['mapPersp', () => tiltPersp, v => tiltPersp = v], spin: ['mapSpin', () => mapSpin, v => mapSpin = v] };
-    const val = k => VIEW[k] ? VIEW[k][1]() : SHADOW[k];
+    const val = k => k === 'tilt' ? mapTilt : SHADOW[k];
     const sync = () => qa('[data-dk]').forEach(i => { i.value = val(i.dataset.dk); q(`[data-do="${i.dataset.dk}"]`).textContent = val(i.dataset.dk); });
     let pending = 0;
     const repaint = () => { cancelAnimationFrame(pending); pending = requestAnimationFrame(repaintBasemap); };
     q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
     qa('[data-dk]').forEach(i => i.oninput = () => {
       const k = i.dataset.dk, v = +i.value;
-      if (VIEW[k]) { VIEW[k][2](v); try { localStorage.setItem(VIEW[k][0], v); } catch {} applyTilt(); drawMap(); map.fire('viewreset'); syncTiltUi?.(); }
+      if (k === 'tilt') { mapTilt = v; try { localStorage.setItem('mapTilt', v); } catch {} applyTilt(); drawMap(); map.fire('viewreset'); syncTiltUi?.(); }
       else { SHADOW[k] = v; try { localStorage.setItem('mapShadow', JSON.stringify(SHADOW)); } catch {} repaint(); }
       sync();
     });
     q('.zp-reset').onclick = () => {
-      SHADOW = { ...SHADOW_DEFAULT }; try { ['mapShadow', 'mapTilt', 'mapPersp', 'mapSpin'].forEach(k => localStorage.removeItem(k)); } catch {}
-      mapTilt = 30; tiltPersp = 2600; mapSpin = 0; applyTilt(); drawMap(); map.fire('viewreset'); syncTiltUi?.(); repaint(); sync();
+      SHADOW = { ...SHADOW_DEFAULT }; try { localStorage.removeItem('mapShadow'); localStorage.removeItem('mapTilt'); } catch {}
+      mapTilt = 22; applyTilt(); drawMap(); map.fire('viewreset'); syncTiltUi?.(); repaint(); sync();
     };
     sync();
     return box;

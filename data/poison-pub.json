@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-04T20:42:10",
+  "updated_at": "2026-11-04T23:41:50",
   "frames": [
     {
       "file": "poisonpub-cctv/2026-11-03/CAM01_20261104_100000.jpg",
@@ -319,6 +319,38 @@
       "timestamp": "2026-11-04T20:26:05",
       "camera": "CAM 01",
       "people": 14,
+      "note": "Yalnızca yakın plan; ±2 sapma olabilir.",
+      "note_en": "Close range only; may be off by ±2."
+    },
+    {
+      "file": "poisonpub-cctv/2026-11-04/CAM01_20261104_210750.jpg",
+      "timestamp": "2026-11-04T21:07:50",
+      "camera": "CAM 01",
+      "people": 12,
+      "note": "Yalnızca yakın plan; ±2 sapma olabilir.",
+      "note_en": "Close range only; may be off by ±2."
+    },
+    {
+      "file": "poisonpub-cctv/2026-11-04/CAM01_20261104_214934.jpg",
+      "timestamp": "2026-11-04T21:49:34",
+      "camera": "CAM 01",
+      "people": 14,
+      "note": "Yalnızca yakın plan; ±2 sapma olabilir.",
+      "note_en": "Close range only; may be off by ±2."
+    },
+    {
+      "file": "poisonpub-cctv/2026-11-04/CAM01_20261104_223118.jpg",
+      "timestamp": "2026-11-04T22:31:18",
+      "camera": "CAM 01",
+      "people": 15,
+      "note": "Yalnızca yakın plan; ±2 sapma olabilir.",
+      "note_en": "Close range only; may be off by ±2."
+    },
+    {
+      "file": "poisonpub-cctv/2026-11-04/CAM01_20261104_231303.jpg",
+      "timestamp": "2026-11-04T23:13:03",
+      "camera": "CAM 01",
+      "people": 16,
       "note": "Yalnızca yakın plan; ±2 sapma olabilir.",
       "note_en": "Close range only; may be off by ±2."
     }
