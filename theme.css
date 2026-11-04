@@ -605,3 +605,13 @@ main:not(.venuepage) .grid { grid-template-columns: repeat(auto-fill, minmax(min
 .mapcheck svg { width: 16px; height: 16px; }
 .mapcheck[aria-checked="true"] { background: var(--series, #0a84ff); border-color: var(--series, #0a84ff); color: #fff; }
 .mapcheck:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* Map view: category filters pinned to the bottom centre of the screen.
+   The top bar is centred without a transform so the fixed filter bar is placed against the window. */
+body.mapmode .topbar { left: 0; right: 0; transform: none; width: fit-content; margin: 0 auto; }
+body.mapmode .subbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(22px + env(safe-area-inset-bottom, 0px)); z-index: 1000; }
+@media (max-width: 640px) {
+  body.mapmode .topbar { width: calc(100% - 24px); }
+  body.mapmode .subbar { width: calc(100% - 24px); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  body.mapmode .leaflet-top.leaflet-left, body.mapmode .leaflet-top.leaflet-right { top: 104px; }
+}
