@@ -929,6 +929,27 @@ body.routing .sealabel .windread { pointer-events: none; }
 .seapanel .sp-ll input { width: 100%; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); font: 500 12px var(--font-text); }
 .sealabel.leaflet-interactive:not(.sea-dragging) { pointer-events: none !important; }  /* only grabbable while moving it */
 
+/* Eucalyptus rows */
+.tree { background: none; border: 0; }
+.tree svg { width: 20px; height: 32px; display: block; transform-origin: 50% 100%; transform: scale(calc(var(--tree-s, .5) * var(--tree-k, 1))); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25)); }
+.leaflet-container:not([style*="--tree-s"]) .tree svg { transform: scale(.5); }
+body.routing .leaflet-trees-pane { opacity: 0; }
+.treepanel .zp-toggle svg { width: 16px; height: 24px; --tree: #5d8a72; }
+.treepanel .tp-color { display: flex !important; flex-direction: row; align-items: center; justify-content: space-between; }
+.treepanel .tp-color input { width: 32px; height: 26px; padding: 0; border: 0; background: none; }
+.treepanel .tp-total { margin: 0; font-size: 11.5px; color: var(--muted); }
+
+/* Wooden houses */
+.house { background: none; border: 0; pointer-events: none !important; }
+.house svg { width: 40px; height: 40px; display: block; transform-origin: 50% 75%; transform: scale(calc(var(--house-s, .6) * var(--house-k, 1))); filter: none; }
+body.houses-edit .house { pointer-events: auto !important; cursor: grab; }
+body.houses-edit .house svg { outline: 1.5px dashed rgba(10, 132, 255, .8); outline-offset: 2px; border-radius: 4px; }
+body.houses-edit .house.leaflet-drag-target, body.houses-edit .house:active { cursor: grabbing; }
+body.routing .leaflet-houses-pane { opacity: 0; }
+.housepanel .zp-toggle svg { width: 26px; height: 26px; }
+body.houses-edit .leaflet-container { cursor: copy; }
+.housepanel .hp-hint { margin: 0; font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+
 /* Kitesurfers */
 .kiter { background: none; border: 0; pointer-events: none !important; }
 .kiter img { width: 36px; height: 36px; display: block; transform-origin: 50% 85%;
@@ -951,16 +972,26 @@ body.kites-edit .leaflet-container { cursor: copy; }
 body.routing .leaflet-kites-pane { opacity: 0; }
 .kitepanel .zp-toggle img { width: 24px; height: 24px; }
 
+/* House remove mode */
+body.houses-remove .house { pointer-events: auto !important; cursor: not-allowed; }
+body.houses-remove .house svg { outline: 1.5px dashed rgba(255, 59, 48, .9); outline-offset: 2px; border-radius: 4px; }
+body.houses-remove .house:hover svg { opacity: .55; }
+
 /* Map tilt (see applyTilt): the whole map plane leans back a little */
 .leaflet-container.tilted { background: var(--map-land, #f1f0ed); }
-.leaflet-container.tilted .leaflet-tile-pane { transform: perspective(var(--tilt-p, 2600px)) rotateX(var(--map-tilt, 0deg)) rotateZ(var(--map-spin, 0deg)); transform-origin: var(--tilt-o, 50% 50%); }  /* only the ground tilts */
+.leaflet-container.tilted .leaflet-tile-pane { transform: perspective(var(--tilt-p, 2600px)) rotateX(var(--map-tilt, 0deg)); transform-origin: var(--tilt-o, 50% 50%); }  /* only the ground tilts */
 .set-range { display: inline-flex; align-items: center; gap: 8px; }
 .set-range input { width: 130px; accent-color: var(--series, #0a84ff); }
 .set-range output { font: 600 13px var(--font-display); min-width: 30px; text-align: right; color: var(--ink); }
-/* Kitesurfers stay subtle on the map. */
-.kiter img { filter: grayscale(1) brightness(1.35) contrast(.55) !important; opacity: .75; }
-:root[data-theme="dark"] .kiter img { filter: grayscale(1) brightness(.85) contrast(.6) !important; opacity: .6; }
+/* Houses, trees and kitesurfers in soft light greys so they stay subtle on the map */
+.house svg, .tree svg, .kiter img { filter: grayscale(1) brightness(1.35) contrast(.55) !important; opacity: .75; }
+:root[data-theme="dark"] .house svg, :root[data-theme="dark"] .tree svg, :root[data-theme="dark"] .kiter img { filter: grayscale(1) brightness(.85) contrast(.6) !important; opacity: .6; }
 
+/* Cars on the roads (subtle greys like the other details) */
+.car { background: none; border: 0; }
+.car svg { width: 32px; height: 26px; display: block; transform: scale(var(--car-s, .7)); transform-origin: 50% 70%; opacity: .9; }
+:root[data-theme="dark"] .car svg { opacity: .6; }
+body.routing .leaflet-cars-pane { opacity: 0; }
 /* The venue settings dialog is a centred modal (it shares the "sheet" class name with the bottom sheets) */
 dialog.sheet { position: fixed; inset: 0; margin: auto; max-height: calc(100dvh - 32px); overflow: auto; }
 
@@ -986,87 +1017,3 @@ body.kite-closed .windcanvas { display: none; }
 /* Detail containers a little darker / more solid so they read better over the map */
 :root { --glass-bg: rgba(244, 244, 246, 0.8); }
 :root[data-theme="dark"] { --glass-bg: rgba(18, 18, 22, 0.8); --glass-border: rgba(255, 255, 255, 0.14); }
-
-/* ---- Map controls inside Settings › Map ---- */
-.set-h { margin: 6px 4px -4px; font: 700 13px var(--font-text); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-.set-tools { display: grid; gap: 1px; border-radius: 14px; overflow: hidden; background: var(--grid); box-shadow: 0 0 0 0.5px var(--border); }
-.set-tools > .set-note { margin: 0; padding: 12px 14px; background: var(--surface); }
-.set-tools > * { background: var(--surface); }
-.set-tools .set-zoom { padding: 8px 14px; }
-.set-tools .set-zoom .leaflet-control-zoom { display: flex !important; gap: 6px; margin: 0; }
-.set-tools .set-zoom .leaflet-control-zoom a { position: static; display: grid; place-items: center; width: 36px !important; height: 32px !important; border-radius: 9px !important; background: var(--fill) !important; }
-.set-tools .zoompanel { display: block; margin: 0; font: 500 14px var(--font-text); }
-.set-tools .zoompanel .zp-toggle { width: 100%; height: auto; display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 0;
-  background: transparent !important; color: var(--ink) !important; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; text-align: left; }
-.set-tools .zoompanel .zp-toggle > svg:first-child, .set-tools .zoompanel .zp-toggle > img { width: 22px; height: 22px; flex: none; }
-.set-tools .zoompanel .zp-label { flex: 1; font: 500 15px var(--font-text); color: var(--ink); }
-.set-tools .zoompanel .zp-chev { width: 16px; height: 16px; color: var(--muted); transition: transform .2s; }
-.set-tools .zoompanel .zp-toggle[aria-expanded="true"] .zp-chev { transform: rotate(90deg); }
-.set-tools .zoompanel .zp-body { width: auto; margin: 0 10px 12px; border-radius: 12px; box-shadow: none; background: var(--fill); -webkit-backdrop-filter: none; backdrop-filter: none; }
-.leaflet-top.leaflet-right:empty, .leaflet-top.leaflet-left:empty { display: none; }
-
-/* Low-poly coastal miniature: sunlit ivory villas, jade foliage and turquoise sea. */
-body.mapmode #map { background: #73bfc1; }
-body.mapmode .mapshade {
-  background: radial-gradient(ellipse at 18% 4%, rgba(255,246,213,.18), transparent 60%),
-    linear-gradient(150deg, transparent 55%, rgba(31,93,93,.10));
-}
-body.mapmode .townlabel:not(.sealabel) span { color: #3e615a !important; text-shadow: 0 2px 0 rgba(255,255,236,.6); letter-spacing: .10em; }
-body.mapmode .sealabel .seawrap > span { color: #e9f4df; text-shadow: 0 2px 2px rgba(27,104,111,.3); }
-:root[data-theme="dark"] body.mapmode #map { background: #0a1d2b; }
-:root[data-theme="dark"] body.mapmode .mapshade {
-  background: radial-gradient(ellipse at 16% 0%, rgba(140,184,224,.055), transparent 60%),
-    linear-gradient(155deg, transparent 30%, rgba(2,8,20,.28));
-}
-:root[data-theme="dark"] body.mapmode .townlabel:not(.sealabel) span {
-  color: var(--map-town, #a4bdc9) !important; text-shadow: 0 2px 8px rgba(0,0,0,.4);
-}
-:root[data-theme="dark"] body.mapmode .sealabel .seawrap > span { color: #6997ad; text-shadow: none; }
-
-/* One sparse, fixed-size miniature layer, below venue pins and heat clouds. */
-.village-canvas { position: absolute; pointer-events: none; }
-body.routing .village-canvas { opacity: 0; }
-.villagepanel .zp-body { gap: 10px; }
-.villagepanel h4 { margin: 6px 0 0; font: 600 13px var(--font-text); }
-.village-ranges, .village-colors { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 18px; }
-.village-ranges label { min-width: 0; gap: 4px; }
-.village-ranges input[type=range] { min-width: 40px; width: 100%; }
-.village-ranges label span { gap: 6px; }
-.village-ranges output { font-size: 15px; }
-.villagepanel .village-note, .village-road-status, .village-status { margin: 0; font: 400 11px/1.5 var(--font-text); color: var(--muted); }
-.village-colors label { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.village-colors input { width: 30px; height: 26px; padding: 0; border: 0; border-radius: 6px; background: transparent; }
-.village-theme, .village-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.village-theme button, .village-actions button, .village-retry { padding: 8px 10px; border: 0; border-radius: 8px; background: var(--fill); color: var(--ink); font: 500 12px var(--font-text); cursor: pointer; }
-.village-theme [aria-pressed=true], .village-actions [data-village-save] { background: #1678eb; color: white; }
-.village-retry { justify-self: start; }
-.village-retry:disabled { opacity: .5; cursor: wait; }
-@media (max-width: 400px) { .village-ranges { grid-template-columns: 1fr; } }
-
-/* ---- Settings: a centred iOS form sheet instead of a bottom sheet ---- */
-
-#setSheet { top: 50%; left: 50%; right: auto; bottom: auto; width: min(520px, calc(100vw - 32px)); max-height: min(80dvh, 720px);
-  padding: 18px 16px 20px; border-radius: 22px; box-shadow: var(--shadow-float), 0 0 0 0.5px var(--border);
-  transform: translate(-50%, -50%) scale(.94); opacity: 0; pointer-events: none;
-  transition: transform .28s cubic-bezier(.2, .8, .2, 1), opacity .2s ease; }
-#setSheet.open { transform: translate(-50%, -50%); opacity: 1; pointer-events: auto; }
-#setSheet .sheet-grab { display: none; }
-body:has(#setSheet.open) .sheet-scrim { background: rgba(0, 0, 0, 0.35); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
-@media (prefers-reduced-motion: reduce) { #setSheet { transition: opacity .15s; } }
-
-/* ---- iOS-style scrollbars: a thin rounded overlay thumb, no track ---- */
-:root { --scroll-thumb: rgba(0, 0, 0, 0.32); --scroll-thumb-hover: rgba(0, 0, 0, 0.5); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --scroll-thumb: rgba(255, 255, 255, 0.32); --scroll-thumb-hover: rgba(255, 255, 255, 0.5); } }
-:root[data-theme="dark"] { --scroll-thumb: rgba(255, 255, 255, 0.32); --scroll-thumb-hover: rgba(255, 255, 255, 0.5); }
-::-webkit-scrollbar { width: 9px; height: 9px; background: transparent; }
-::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 999px; border: 3px solid transparent; background-clip: padding-box; min-height: 36px; }
-::-webkit-scrollbar-thumb:hover { background-color: var(--scroll-thumb-hover); }
-::-webkit-scrollbar-button { display: none; }
-@supports not selector(::-webkit-scrollbar) { * { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) transparent; } }
-
-/* Map boundaries panel */
-.zoompanel .zp-check { display: flex !important; align-items: center; justify-content: space-between; color: var(--ink); font-size: 13px; }
-.zoompanel .zp-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--series, #0a84ff); }
-.zoompanel .zp-hint { color: var(--muted); font-size: 11.5px; line-height: 1.4; }
-body:not(:has(#setSheet.open)) .bounds-outline { display: none; }  /* outline only while Settings is open */

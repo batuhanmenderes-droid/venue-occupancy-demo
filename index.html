@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=bounds1"></script>
+<script src="i18n.js?v=20261107y"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=night4">
+<link rel="stylesheet" href="theme.css?v=20261107y">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -109,11 +109,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
     <div class="set-row"><span data-i18n="setAppearance">Appearance</span>
       <div class="seg" id="setTheme"><button data-theme="auto" data-i18n="setAuto">Auto</button><button data-theme="light" data-i18n="setLight">Light</button><button data-theme="dark" data-i18n="setDark">Dark</button></div></div>
     <div class="set-row"><span data-i18n="setTilt">Map tilt</span>
-      <span class="set-range"><input type="range" id="setTiltRange" min="0" max="60" step="1"><output id="setTiltOut"></output></span></div>
+      <span class="set-range"><input type="range" id="setTiltRange" min="0" max="40" step="1"><output id="setTiltOut"></output></span></div>
   </div>
   <p class="set-note" data-i18n="setAutoNote"></p>
-  <h4 class="set-h" data-i18n="setMapTools">Map</h4>
-  <div class="set-tools" id="setTools"><p class="set-note" data-i18n="setMapHint">Open the Heatmap once to change the map settings here.</p></div>
 </section>
 <div class="routebar" id="routebar" hidden>
   <div class="rb-info"><span class="rb-logo" id="rbLogo"></span><div><b id="rbName"></b><span id="rbMeta"></span></div></div>
@@ -167,10 +165,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="village.js?v=3"></script>
-<script src="levels.js?v=20261108a"></script>
-<script src="venue-state.js?v=20261108a"></script>
-<script src="menu.js?v=20261108a"></script>
+<script src="levels.js?v=20261107y"></script>
+<script src="venue-state.js?v=20261107y"></script>
+<script src="menu.js?v=20261107y"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -307,22 +304,24 @@ function initMap() {
   map.fitBounds([[37.020, 28.318], [37.062, 28.366]]);
   heat = new HeatBlobs().addTo(map);
   markers = L.layerGroup().addTo(map);
-  map.on('zoomend moveend resize', drawMap);
+  map.on('zoomend moveend', drawMap);
   addBasemap();
   addZoomPanel();
-  addBoundsPanel();
   addHeatPanel();
   addLevelsPanel();
   addMapColorPanel();
   addSeaPanel();
   addWindControl();
   addYouMarker();
+  addTrees();
+  addTreePanel();
+  addHouses();
+  addHousePanel();
   addKites();
   addKitePanel();
   add3dPanel();
+  addCars();
   setupTilt();
-  addVillageScene(map);
-  moveControlsToSettings();
   drawMap();
 }
 
@@ -360,12 +359,18 @@ function drawMap() {
       icon: L.divIcon({ className: `maplogo${closed ? ' is-closed' : ''}${n !== null && n < 10 ? ' is-low' : ''}`, html: `<div style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'};--s:${lv && !closed ? PIN_SCALE[LEVELS.indexOf(lv)] : 0.9};width:100%;height:100%">${logoHtml(v)}${closed ? `<span class="lockover">${LOCK_ICON}</span>` : ''}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
       title: v.name,
     }).addTo(markers);
-    const label = labels.get(v.id);
-    m.bindTooltip(venueLabelHtml(v, !label), {
-      permanent: !!label, direction: label?.direction || 'top',
-      offset: label?.offset || [0, -venuePinRadius(v)-8], className: 'vlabel',
-    });
-    m.on('tooltipopen', () => positionVenueTooltip(m, v));
+    const dir = labels.get(v.id);
+    if (dir) {
+      const offset = { top: [0, -PIN / 2 - 2], bottom: [0, PIN / 2 + 2], left: [-PIN / 2 - 2, 0], right: [PIN / 2 + 2, 0] }[dir];
+      m.bindTooltip(v.coming_soon ? `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>`
+        : closed ? `<span class="vclosed">${t('closed')}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`
+        : `${cardChart(v, 'm')}<span class="vcount">${n === null ? '—' : n}${PERSON_ICON}</span><span class="vname">${v.name}</span>${v.peak ? `<span class="vpeak">${PEAK_ICON}${t('atPeak')}</span>` : ''}${v.rising ? `<span class="vrise">${RISE_ICON}${t('rising')}</span>` : ''}${expectLine(v)}${artistLine(v)}`,
+        { permanent: true, direction: dir, offset, className: 'vlabel' });
+    } else {
+      // Not the busiest of its cluster: no permanent label; name and count only on hover.
+      m.bindTooltip(`${closed ? '' : cardChart(v, 'h')}<span class="vcount">${closed ? t('closed') : n === null ? '—' : n}${closed ? '' : PERSON_ICON}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`,
+        { direction: 'top', offset: [0, -PIN / 2 - 2], className: 'vlabel' });
+    }
     m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
   }
   placeTowns(pins);
@@ -440,72 +445,6 @@ function addZoomPanel() {
     });
     q('.zp-reset').onclick = () => { Object.assign(lim, ZOOM_DEFAULT); apply(); sync(); };
     map.on('zoomend', sync);
-    sync();
-    return box;
-  } });
-  new Ctl().addTo(map);
-}
-
-// ---- Map boundaries panel ----
-// Limits how far the viewer can pan. By default the area is exactly the zoomed-out view (zoom 14 on a
-// desktop: Akyaka, Akçapınar and the bay), so fully zoomed out the map cannot move at all, and once zoomed
-// in it pans only inside that area. "Use current view" takes the visible map as the new area; extra room
-// adds a margin around it. Saved per browser only once changed. While the panel is open the area is outlined.
-const BOUNDS_DEFAULT = { on: true, hard: true, pad: 0, area: [[37.0015, 28.2837], [37.0796, 28.4144]] };
-const BOUNDS_KEY = 'mapBounds2';  // new key: earlier saves (wider default, extra room) are ignored
-function loadMapBounds() {
-  try {
-    const b = { ...BOUNDS_DEFAULT, ...JSON.parse(localStorage.getItem(BOUNDS_KEY) || '{}') };
-    const ok = Array.isArray(b.area) && b.area.flat().length === 4 && b.area.flat().every(Number.isFinite);
-    return ok ? b : { ...BOUNDS_DEFAULT };
-  } catch { return { ...BOUNDS_DEFAULT }; }
-}
-function addBoundsPanel() {
-  const bnd = loadMapBounds();
-  let outline = null;
-  const limits = () => L.latLngBounds(bnd.area).pad(bnd.pad / 100);
-  const apply = () => {
-    map.options.maxBoundsViscosity = bnd.hard ? 1 : 0.6;
-    map.setMaxBounds(bnd.on ? limits() : null);
-    outline?.setBounds(limits()).setStyle({ opacity: bnd.on ? 0.9 : 0.35 });
-  };
-  const save = () => { apply(); try { localStorage.setItem(BOUNDS_KEY, JSON.stringify(bnd)); } catch {} };
-  apply();
-  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
-    const box = L.DomUtil.create('div', 'zoompanel boundspanel');
-    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
-    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('boundsPanel')}" title="${t('boundsPanel')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="8.5" y="8.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button>
-      <div class="zp-body" hidden>
-        <label class="zp-check">${t('boundsOn')} <input type="checkbox" data-c="on"></label>
-        <label class="zp-check">${t('boundsHard')} <input type="checkbox" data-c="hard"></label>
-        <label>${t('boundsPad')} <span><input type="range" data-pad min="0" max="100" step="5"><output data-o="pad"></output></span></label>
-        <small class="zp-hint">${t('boundsHint')}</small>
-        <button data-use>${t('boundsUseView')}</button>
-        <button class="zp-reset">${t('zoomReset')}</button>
-      </div>`;
-    const q = sel => box.querySelector(sel);
-    const sync = () => {
-      for (const k of ['on', 'hard']) q(`[data-c="${k}"]`).checked = bnd[k];
-      q('[data-pad]').value = bnd.pad; q('[data-o="pad"]').textContent = `${bnd.pad}%`;
-    };
-    const showOutline = on => {
-      outline?.remove(); outline = null;
-      if (on) outline = L.rectangle(limits(), { color: '#0a84ff', weight: 2, dashArray: '6 6', fill: false, interactive: false, className: 'bounds-outline' }).addTo(map);
-      apply();
-    };
-    q('.zp-toggle').onclick = () => {
-      const b = q('.zp-body'); b.hidden = !b.hidden;
-      q('.zp-toggle').setAttribute('aria-expanded', !b.hidden);
-      showOutline(!b.hidden);
-    };
-    box.querySelectorAll('[data-c]').forEach(c => c.onchange = () => { bnd[c.dataset.c] = c.checked; save(); });
-    q('[data-pad]').oninput = e => { bnd.pad = +e.target.value; save(); sync(); };
-    q('[data-use]').onclick = () => {
-      const v = map.getBounds();
-      bnd.area = [[v.getSouth(), v.getWest()], [v.getNorth(), v.getEast()]]; bnd.on = true;
-      save(); sync();
-    };
-    q('.zp-reset').onclick = () => { Object.assign(bnd, structuredClone(BOUNDS_DEFAULT)); apply(); try { localStorage.removeItem(BOUNDS_KEY); } catch {} sync(); };
     sync();
     return box;
   } });
@@ -918,6 +857,177 @@ function addSeaPanel() {
   new Ctl().addTo(map);
 }
 
+// ---- Eucalyptus rows along the road between the Akyaka junction and Akçapınar ----
+// Two strips (west and east of the road), two rows each, a tree about every 35 m. Small icons that grow
+// with the zoom; hidden when zoomed out and while a route is shown.
+const TREE_STRIPS = [
+  [[37.048345, 28.356398], [37.036937, 28.356065]],  // west of the road
+  [[37.04808, 28.360386], [37.036539, 28.36022]],    // east of the road
+];
+const TREE_SVG = '<svg viewBox="0 0 20 32" aria-hidden="true"><path d="M10 31V17" stroke="#8a7a66" stroke-width="1.6" stroke-linecap="round"/><path d="M10 1.5c3.6 3 5.4 7.2 5 11.6-.3 3.4-2.4 5.9-5 5.9s-4.7-2.5-5-5.9C4.6 8.7 6.4 4.5 10 1.5z" fill="var(--tree, #7fa58e)"/><path d="M10 4.5v12M10 9l2.6-2.2M10 12.5 7.4 10.3" stroke="rgba(255,255,255,.45)" stroke-width="1" stroke-linecap="round" fill="none"/></svg>';
+// Tree settings (panel on the map, saved per browser): trees per row, rows per strip, gap between rows,
+// size and colour.
+const TREE_DEFAULT = { perRow: 36, rows: 2, gap: 37, size: 1, color: '#7fa58e', dx: 0, dy: 0, len: 100, spread: 0 };
+let TREE = (() => { try { return { ...TREE_DEFAULT, ...JSON.parse(localStorage.getItem('treeSettings') || '{}') }; } catch { return { ...TREE_DEFAULT }; } })();
+let treeGroup = null;
+function addTrees() {
+  const pane = map.createPane('trees');
+  pane.style.zIndex = 390; pane.style.pointerEvents = 'none';
+  const scale = () => map.getContainer().style.setProperty('--tree-s', Math.max(0, Math.min(1.4, 0.45 * Math.pow(1.5, map.getZoom() - 14))));
+  map.on('zoomend', scale); scale();
+  drawTrees();
+}
+function drawTrees() {
+  treeGroup?.remove();
+  treeGroup = L.layerGroup().addTo(map);
+  map.getContainer().style.setProperty('--tree-k', TREE.size);
+  map.getContainer().style.setProperty('--tree', TREE.color);
+  const degPerM = 1 / (111320 * Math.cos(37.04 * Math.PI / 180));  // longitude degrees per metre here
+  const n = Math.max(1, TREE.perRow - 1), degLatPerM = 1 / 111320;
+  // Position: shift east / west and north / south (m), length around each strip's middle (%), and extra
+  // distance from the road (m, the west strip moves west, the east strip east).
+  const strips = TREE_STRIPS.map(([[a1, o1], [a2, o2]], si) => {
+    const ma = (a1 + a2) / 2, mo = (o1 + o2) / 2, k = TREE.len / 100, out = (si ? 1 : -1) * TREE.spread * degPerM;
+    const sh = [TREE.dy * degLatPerM, TREE.dx * degPerM + out];
+    return [[ma + (a1 - ma) * k + sh[0], mo + (o1 - mo) * k + sh[1]], [ma + (a2 - ma) * k + sh[0], mo + (o2 - mo) * k + sh[1]]];
+  });
+  for (const [[la1, lo1], [la2, lo2]] of strips) {
+    for (let r = 0; r < TREE.rows; r++) {
+      const off = (r - (TREE.rows - 1) / 2) * TREE.gap * degPerM;
+      for (let i = 0; i <= n; i++) {
+        const f = TREE.perRow === 1 ? 0.5 : i / n, jitter = (simRandom(`tree:${la1}:${r}:${i}`) - 0.5) * 0.00012;
+        const at = [la1 + (la2 - la1) * f + jitter, lo1 + (lo2 - lo1) * f + off + jitter / 2];
+        L.marker(at, { pane: 'trees', interactive: false, keyboard: false,
+          icon: L.divIcon({ className: 'tree', html: TREE_SVG, iconSize: [20, 32], iconAnchor: [10, 31] }) }).addTo(treeGroup);
+      }
+    }
+  }
+}
+function addTreePanel() {
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel treepanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    const slider = (k, label, min, max, step, unit = '') => `<label>${label} <span><input type="range" data-tk="${k}" min="${min}" max="${max}" step="${step}"><output data-to="${k}"></output>${unit ? `<small>${unit}</small>` : ''}</span></label>`;
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('treePanel')}" title="${t('treePanel')}">${TREE_SVG}</button>
+      <div class="zp-body" hidden>
+        <h4>${t('treePanel')}</h4>
+        ${slider('perRow', t('treePerRow'), 1, 120, 1)}
+        ${slider('rows', t('treeRows'), 1, 4, 1)}
+        ${slider('gap', t('treeGap'), 10, 120, 1, 'm')}
+        ${slider('size', t('treeSize'), 0.3, 3, 0.1, '×')}
+        <h4>${t('treePos')}</h4>
+        ${slider('dx', t('treeDx'), -1500, 1500, 5, 'm')}
+        ${slider('dy', t('treeDy'), -1500, 1500, 5, 'm')}
+        ${slider('len', t('treeLen'), 10, 250, 1, '%')}
+        ${slider('spread', t('treeSpread'), -150, 400, 1, 'm')}
+        <label class="tp-color">${t('treeColor')} <input type="color" data-tc></label>
+        <p class="tp-total"></p>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel), qa = sel => box.querySelectorAll(sel);
+    const sync = () => {
+      qa('[data-tk]').forEach(i => { i.value = TREE[i.dataset.tk]; q(`[data-to="${i.dataset.tk}"]`).textContent = TREE[i.dataset.tk]; });
+      q('[data-tc]').value = TREE.color;
+      q('.tp-total').textContent = t('treeTotal', TREE.perRow * TREE.rows * TREE_STRIPS.length);
+    };
+    let pending = 0;
+    const apply = () => {
+      try { localStorage.setItem('treeSettings', JSON.stringify(TREE)); } catch {}
+      sync(); cancelAnimationFrame(pending); pending = requestAnimationFrame(drawTrees);
+    };
+    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    qa('[data-tk]').forEach(i => i.oninput = () => { TREE[i.dataset.tk] = +i.value; apply(); });
+    q('[data-tc]').oninput = e => { TREE.color = e.target.value; apply(); };
+    q('.zp-reset').onclick = () => { TREE = { ...TREE_DEFAULT }; apply(); };
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
+}
+
+// ---- Wooden houses with orange roofs (draggable in edit mode) ----
+// A starter set around Akyaka and Akçapınar; in the Houses panel you can add, drag, remove (double-click)
+// and resize them. Positions and size are saved per browser.
+const HOUSE_SVG = '<svg viewBox="0 0 40 40" aria-hidden="true"><g stroke="#3a2618" stroke-width=".5" stroke-linejoin="round"><path d="M4 25 20 33l16-8-16-8z" fill="rgba(0,0,0,.12)" stroke="none"/><path d="M4 24 20 32V22L4 14z" fill="#9c6638"/><path d="M20 32 36 24V14L20 22z" fill="#c68a52"/><path d="M20 25.3l16-8M20 28.6l16-8M4 17.3l16 8M4 20.6l16 8" fill="none" stroke-opacity=".45"/><path d="M25 29.5l4.6-2.3v-6.4L25 23.1z" fill="#6e4425"/><path d="M7.5 19.4l4.8 2.4v3.6l-4.8-2.4zM31 21.3l3-1.5v-3.2l-3 1.5z" fill="#f6e3b5"/><path d="M4 14 12 10 20 6l-4-2-14 7z" fill="#b8541f"/><path d="M2.4 14.8 12 10 28 2l9.6 12.8L20 23.6z" fill="#ef7f34"/><path d="M2.4 14.8 12 10l8 13.6z" fill="#b97a46"/><path d="M12 10 28 2" fill="none"/><path d="M28.5 4.6h2.6v4.2l-2.6-1.3z" fill="#7a4b2a"/></g></svg>';  // isometric wooden house, orange gable roof, hairline outlines
+const HOUSES_DEFAULT = [
+  [37.0594, 28.3262], [37.0601, 28.3301], [37.0586, 28.3338], [37.0562, 28.3355], [37.0612, 28.3348],
+  [37.0285, 28.3532], [37.0298, 28.3561], [37.0271, 28.3601], [37.0247, 28.3548], [37.0232, 28.3589],
+];
+let HOUSES = (() => { try { const h = JSON.parse(localStorage.getItem('houses') || 'null'); return Array.isArray(h) ? h : HOUSES_DEFAULT.map(p => [...p]); } catch { return HOUSES_DEFAULT.map(p => [...p]); } })();
+let HOUSE_SIZE = (() => { try { return +localStorage.getItem('houseSize') || 1; } catch { return 1; } })();
+let houseGroup = null, houseEdit = false, houseRemove = false;
+const saveHouses = () => { try { localStorage.setItem('houses', JSON.stringify(HOUSES)); localStorage.setItem('houseSize', HOUSE_SIZE); } catch {} };
+function addHouses() {
+  const pane = map.createPane('houses');
+  pane.style.zIndex = 395;
+  const scale = () => map.getContainer().style.setProperty('--house-s', Math.max(0.35, Math.min(1.6, 0.6 * Math.pow(1.45, map.getZoom() - 14))));
+  map.on('zoomend', scale); scale();
+  drawHouses();
+}
+function drawHouses() {
+  houseGroup?.remove();
+  houseGroup = L.layerGroup().addTo(map);
+  map.getContainer().style.setProperty('--house-k', HOUSE_SIZE);
+  HOUSES.forEach((pos, i) => {
+    const m = L.marker(pos, { pane: 'houses', draggable: true, keyboard: false, title: houseEdit ? t('houseHint') : '',
+      icon: L.divIcon({ className: 'house', html: HOUSE_SVG, iconSize: [40, 40], iconAnchor: [20, 30] }) }).addTo(houseGroup);
+    houseEdit ? m.dragging.enable() : m.dragging.disable();
+    m.on('dragend', () => { const ll = m.getLatLng(); HOUSES[i] = [+ll.lat.toFixed(6), +ll.lng.toFixed(6)]; saveHouses(); });
+    // Remove: in "Remove houses" mode a click deletes the house; in edit mode a double-click or right-click does.
+    const del = e => { L.DomEvent.stop(e); HOUSES.splice(i, 1); saveHouses(); drawHouses(); housePanelSync?.(); };
+    m.on('click', e => { if (houseRemove) del(e); });
+    m.on('dblclick contextmenu', e => { if (houseEdit || houseRemove) del(e); });
+  });
+}
+let housePanelSync = null;
+// In edit mode a click on an empty spot of the map adds a house there.
+function onMapClickAddHouse(e) {
+  if (!houseEdit || houseRemove) return;
+  HOUSES.push([+e.latlng.lat.toFixed(6), +e.latlng.lng.toFixed(6)]); saveHouses(); drawHouses(); housePanelSync?.();
+}
+function addHousePanel() {
+  map.on('click', onMapClickAddHouse);
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel housepanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('housePanel')}" title="${t('housePanel')}">${HOUSE_SVG}</button>
+      <div class="zp-body" hidden>
+        <h4>${t('housePanel')}</h4>
+        <label class="sp-drag"><input type="checkbox" data-edit> ${t('houseEdit')}</label>
+        <label class="sp-drag"><input type="checkbox" data-remove> ${t('houseRemove')}</label>
+        <p class="hp-hint">${t('houseHint')}</p>
+        <div class="zp-actions"><button data-add>${t('houseAdd')}</button><button data-clear>${t('houseClear')}</button></div>
+        <label>${t('treeSize')} <span><input type="range" data-hs min="0.3" max="3" step="0.1"><output data-ho></output><small>×</small></span></label>
+        <p class="tp-total" data-count></p>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel);
+    const sync = () => { q('[data-hs]').value = HOUSE_SIZE; q('[data-ho]').textContent = HOUSE_SIZE; q('[data-count]').textContent = t('houseCount', HOUSES.length); };
+    housePanelSync = sync;
+    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    const setModes = () => {
+      document.body.classList.toggle('houses-edit', houseEdit && !houseRemove);
+      document.body.classList.toggle('houses-remove', houseRemove);
+      q('[data-edit]').checked = houseEdit; q('[data-remove]').checked = houseRemove;
+      drawHouses();
+    };
+    // The two modes exclude each other: editing (add / move) or removing.
+    q('[data-edit]').onchange = e => { houseEdit = e.target.checked; if (houseEdit) houseRemove = false; setModes(); };
+    q('[data-remove]').onchange = e => { houseRemove = e.target.checked; if (houseRemove) houseEdit = false; setModes(); };
+    // A new house lands in the middle of the screen (edit mode switches on so it can be dragged right away).
+    q('[data-add]').onclick = () => {
+      const c = map.getCenter(); HOUSES.push([+c.lat.toFixed(6), +c.lng.toFixed(6)]); saveHouses();
+      houseEdit = true; houseRemove = false; setModes(); sync();
+    };
+    q('[data-clear]').onclick = () => { if (!confirm(t('houseClearAsk'))) return; HOUSES = []; saveHouses(); drawHouses(); sync(); };
+    q('[data-hs]').oninput = e => { HOUSE_SIZE = +e.target.value; saveHouses(); map.getContainer().style.setProperty('--house-k', HOUSE_SIZE); sync(); };
+    q('.zp-reset').onclick = () => { HOUSES = HOUSES_DEFAULT.map(p => [...p]); HOUSE_SIZE = 1; saveHouses(); drawHouses(); sync(); };
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
+}
+
 // ---- Kitesurfers along the Gökova shore (Kitebeach) ----
 // Starter set placed in the water 150–500 m off the beach; the Kitesurfers panel adds (click the map),
 // drags, removes (double-click), resizes and animates them. Saved per browser.
@@ -967,8 +1077,8 @@ function addKitePanel() {
         <label class="sp-drag"><input type="checkbox" data-edit> ${t('kiteEdit')}</label>
         <p class="hp-hint">${t('kiteHint')}</p>
         <label class="sp-drag"><input type="checkbox" data-anim> ${t('kiteAnimate')}</label>
-        <div class="zp-actions"><button data-add>${t('kiteAdd')}</button><button data-clear>${t('removeAll')}</button></div>
-        <label>${t('decorationSize')} <span><input type="range" data-ks min="0.3" max="3" step="0.1"><output data-ko></output><small>×</small></span></label>
+        <div class="zp-actions"><button data-add>${t('kiteAdd')}</button><button data-clear>${t('houseClear')}</button></div>
+        <label>${t('treeSize')} <span><input type="range" data-ks min="0.3" max="3" step="0.1"><output data-ko></output><small>×</small></span></label>
         <p class="tp-total" data-count></p>
         <button class="zp-reset">${t('zoomReset')}</button>
       </div>`;
@@ -994,48 +1104,43 @@ function addKitePanel() {
 
 // ---- Map tilt: only the basemap leans back (a slight isometric look) ----
 // The ground (vector tiles and the grid) is tilted back around the screen's middle with a long perspective.
-// Everything on top (pins, labels, clouds, wind, kitesurfers, routes) keeps its normal look:
+// Everything on top (pins, labels, clouds, wind, trees, houses, kitesurfers, routes) keeps its normal look:
 // the map's lat/lng ↔ pixel conversion is patched with the same tilt, so each item sits on the right spot
 // of the tilted ground without being distorted itself. 0° turns it off. Saved per browser.
-// Tilt (lean back), perspective depth and spin (rotation around the screen centre) of the ground.
-// The ground is drawn with CSS `perspective(d) rotateX(tilt) rotateZ(spin)` about the map centre; the same
-// maths places pins, labels and everything else on it (tiltForward) and maps clicks back (tiltBack).
-const readNum = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : +v; } catch { return d; } };
-let mapTilt = readNum('mapTilt', 30), tiltPersp = readNum('mapPersp', 2600), mapSpin = readNum('mapSpin', 0);
-const tiltOn = () => mapTilt || mapSpin;
+const TILT_PERSPECTIVE = 2600;
+let mapTilt = (() => { try { const v = localStorage.getItem('mapTilt'); return v === null ? 22 : +v; } catch { return 22; } })();
+// Flat container point → where it appears on the tilted ground, and back.
 function tiltForward(x, y) {
-  if (!tiltOn()) return [x, y];
-  const { x: w, y: h } = map.getSize(), th = mapTilt * Math.PI / 180, ph = mapSpin * Math.PI / 180, d = tiltPersp, cx = w / 2, cy = h / 2;
-  const x0 = x - cx, y0 = y - cy, x1 = x0 * Math.cos(ph) - y0 * Math.sin(ph), y1 = x0 * Math.sin(ph) + y0 * Math.cos(ph);
-  const k = d / (d - y1 * Math.sin(th));
-  return [cx + x1 * k, cy + y1 * Math.cos(th) * k];
+  if (!mapTilt) return [x, y];
+  const { x: w, y: h } = map.getSize(), th = mapTilt * Math.PI / 180, d = TILT_PERSPECTIVE, cx = w / 2, cy = h / 2;
+  const Y = y - cy, k = d / (d - Y * Math.sin(th));
+  return [cx + (x - cx) * k, cy + Y * Math.cos(th) * k];
 }
 function tiltBack(x, y) {
-  if (!tiltOn()) return [x, y];
-  const { x: w, y: h } = map.getSize(), th = mapTilt * Math.PI / 180, ph = mapSpin * Math.PI / 180, d = tiltPersp, cx = w / 2, cy = h / 2;
-  const y1 = d * (y - cy) / (d * Math.cos(th) + (y - cy) * Math.sin(th)), k = d / (d - y1 * Math.sin(th)), x1 = (x - cx) / k;
-  return [cx + x1 * Math.cos(ph) + y1 * Math.sin(ph), cy - x1 * Math.sin(ph) + y1 * Math.cos(ph)];
+  if (!mapTilt) return [x, y];
+  const { x: w, y: h } = map.getSize(), th = mapTilt * Math.PI / 180, d = TILT_PERSPECTIVE, cx = w / 2, cy = h / 2;
+  const Y = d * (y - cy) / (d * Math.cos(th) + (y - cy) * Math.sin(th)), k = d / (d - Y * Math.sin(th));
+  return [cx + (x - cx) / k, cy + Y];
 }
 function applyTilt() {
   if (!map) return;
   const c = map.getContainer(), sz = map.getSize(), pos = map._getMapPanePos();
-  c.classList.toggle('tilted', !!tiltOn());
+  c.classList.toggle('tilted', mapTilt > 0);
   c.style.setProperty('--map-tilt', `${mapTilt}deg`);
-  c.style.setProperty('--map-spin', `${mapSpin}deg`);
   // The ground panes live inside the moving map pane, so the tilt origin follows the pan offset.
   c.style.setProperty('--tilt-o', `${sz.x / 2 - pos.x}px ${sz.y / 2 - pos.y}px`);
-  c.style.setProperty('--tilt-p', `${tiltPersp}px`);
+  c.style.setProperty('--tilt-p', `${TILT_PERSPECTIVE}px`);
 }
 function setupTilt() {
   const P = L.Map.prototype;
   map.latLngToLayerPoint = function (ll) {
-    const lp = this.project(L.latLng(ll), this.getZoom()).subtract(this.getPixelOrigin());
-    if (!tiltOn()) return lp;
+    const lp = P.latLngToLayerPoint.call(this, ll);
+    if (!mapTilt) return lp;
     const pos = this._getMapPanePos(), [x, y] = tiltForward(lp.x + pos.x, lp.y + pos.y);
     return L.point(x - pos.x, y - pos.y);
   };
   map.layerPointToLatLng = function (pt) {
-    if (!tiltOn()) return P.layerPointToLatLng.call(this, pt);
+    if (!mapTilt) return P.layerPointToLatLng.call(this, pt);
     const pos = this._getMapPanePos(), q = L.point(pt), [x, y] = tiltBack(q.x + pos.x, q.y + pos.y);
     return P.layerPointToLatLng.call(this, L.point(x - pos.x, y - pos.y));
   };
@@ -1043,7 +1148,7 @@ function setupTilt() {
   let raf = 0, busy = false;
   map.on('move', () => {
     applyTilt();
-    if (!tiltOn() || busy) return;
+    if (!mapTilt || busy) return;
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(() => { busy = true; map.fire('viewreset'); busy = false; });
   });
@@ -1051,19 +1156,79 @@ function setupTilt() {
   applyTilt();
 }
 
-// ---- Map controls live in Settings ----
-// Zoom buttons and every map panel (zoom limits, heat clouds, levels, colours, bay label,
-// kitesurfers, 3D) are moved out of the map corners into Settings › Map, each as a row that folds open.
-function moveControlsToSettings() {
-  const host = $('setTools');
-  host.innerHTML = '';
-  const zoom = map.zoomControl?.getContainer();
-  if (zoom) { const row = document.createElement('div'); row.className = 'set-row set-zoom'; row.innerHTML = `<span>${t('setZoom')}</span>`; row.append(zoom); host.append(row); }
-  document.querySelectorAll('.leaflet-top.leaflet-right .zoompanel').forEach(box => {
-    const btn = box.querySelector('.zp-toggle');
-    if (btn && !btn.querySelector('.zp-label')) btn.insertAdjacentHTML('beforeend', `<span class="zp-label">${btn.getAttribute('aria-label') || ''}</span><svg class="zp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
-    host.append(box);
-  });
+// ---- Cars driving along the roads ----
+// A few road routes (OSRM car routing on routing.openstreetmap.de) with small top-down cars driving them,
+// both ways, at a sped-up pace. Positions go through the map's projection, so they follow the tilted ground.
+const CAR_ROUTES = [
+  [[37.0610, 28.3265], [37.0230, 28.3570]],  // Akyaka ↔ Akçapınar
+  [[37.0560, 28.3290], [37.0560, 28.3700]],  // Akyaka ↔ east along the main road
+  [[37.0260, 28.3600], [37.0520, 28.3640]],  // Akçapınar ↔ the junction
+];
+// Isometric cars (hairline outlines, greys like the houses): one drawing heading down-screen, one up-screen;
+// mirrored for left / right, picked from the car's heading on screen.
+const CAR_SE = '<svg viewBox="0 0 32 26" aria-hidden="true"><g stroke="#5d5d62" stroke-width=".5" stroke-linejoin="round"><ellipse cx="16" cy="21" rx="11" ry="3" fill="rgba(0,0,0,.12)" stroke="none"/><path d="M6 15 20 22v-5L6 10z" fill="#b9b9bd"/><path d="M20 22l6-3v-5l-6 3z" fill="#9c9ca1"/><path d="M6 10l14 7 6-3-14-7z" fill="#dcdcdf"/><path d="M11.1 11.65 17.4 14.8v-4l-6.3-3.15z" fill="#8f939b"/><path d="M17.4 14.8l4.2-2.1v-4l-4.2 2.1z" fill="#a9adb5"/><path d="M11.1 7.65l6.3 3.15 4.2-2.1-6.3-3.15z" fill="#e8e8ea"/><ellipse cx="9.5" cy="16.6" rx="1.6" ry="1.1" fill="#4a4a4f"/><ellipse cx="17" cy="20.4" rx="1.6" ry="1.1" fill="#4a4a4f"/></g></svg>';
+const CAR_NE = '<svg viewBox="0 0 32 26" aria-hidden="true"><g stroke="#5d5d62" stroke-width=".5" stroke-linejoin="round"><ellipse cx="14" cy="18" rx="11" ry="3" fill="rgba(0,0,0,.12)" stroke="none"/><path d="M10 21l14-7V9l-14 7z" fill="#b9b9bd"/><path d="M4 18l6 3v-5l-6-3z" fill="#9c9ca1"/><path d="M4 13l14-7 6 3-14 7z" fill="#dcdcdf"/><path d="M12.6 13.8l6.3-3.15v-4l-6.3 3.15z" fill="#8f939b"/><path d="M8.4 11.7l4.2 2.1v-4L8.4 7.7z" fill="#a9adb5"/><path d="M8.4 7.7l6.3-3.15 4.2 2.1-6.3 3.15z" fill="#e8e8ea"/><ellipse cx="13" cy="19.6" rx="1.6" ry="1.1" fill="#4a4a4f"/><ellipse cx="21" cy="15.6" rx="1.6" ry="1.1" fill="#4a4a4f"/></g></svg>';
+let cars = [], carRaf = 0;
+async function addCars() {
+  const pane = map.createPane('cars');
+  pane.style.zIndex = 397; pane.style.pointerEvents = 'none';
+  const routes = (await Promise.all(CAR_ROUTES.map(async ([a, b]) => {
+    try {
+      const r = await (await fetch(`https://routing.openstreetmap.de/routed-car/route/v1/driving/${a[1]},${a[0]};${b[1]},${b[0]}?overview=full&geometries=geojson`)).json();
+      const pts = r.routes?.[0]?.geometry.coordinates.map(([lon, lat]) => L.latLng(lat, lon));
+      if (!pts || pts.length < 2) return null;
+      const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + pts[i - 1].distanceTo(pts[i]));
+      return { pts, cum, len: cum[cum.length - 1] };
+    } catch { return null; }
+  }))).filter(Boolean);
+  // Two cars per route, one each way, spread out.
+  routes.forEach((route, ri) => [1, -1].forEach((dir, k) => {
+    const m = L.marker(route.pts[0], { pane: 'cars', interactive: false, keyboard: false,
+      icon: L.divIcon({ className: 'car', html: CAR_SE, iconSize: [32, 26], iconAnchor: [16, 18] }) }).addTo(map);
+    cars.push({ m, route, dir, s: route.len * ((ri * 0.37 + k * 0.5) % 1), v: 55 + ri * 12 + k * 8 });  // metres per second (sped up)
+  }));
+  let last = performance.now();
+  const at = (route, s) => {
+    let i = route.cum.findIndex(c => c > s); if (i < 1) i = route.cum.length - 1;
+    const a = route.pts[i - 1], b = route.pts[i], f = (s - route.cum[i - 1]) / ((route.cum[i] - route.cum[i - 1]) || 1);
+    return L.latLng(a.lat + (b.lat - a.lat) * f, a.lng + (b.lng - a.lng) * f);
+  };
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Unrounded layer position of a lat/lng, with the map tilt applied like everything else.
+  const carPoint = ll => {
+    let lp = map.project(ll, map.getZoom())._subtract(map.getPixelOrigin());
+    if (typeof mapTilt !== 'undefined' && mapTilt) {
+      const pos = map._getMapPanePos(), [x, y] = tiltForward(lp.x + pos.x, lp.y + pos.y);
+      lp = L.point(x - pos.x, y - pos.y);
+    }
+    return lp;
+  };
+  const tick = now => {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (!document.hidden && !document.body.classList.contains('routing')) for (const c of cars) {
+      if (!still) { c.s += c.v * dt * c.dir; if (c.s > c.route.len) c.s -= c.route.len; if (c.s < 0) c.s += c.route.len; }
+      const p = at(c.route, c.s), q = at(c.route, Math.min(c.route.len, Math.max(0, c.s + 12 * c.dir)));
+      // Placed at sub-pixel precision (Leaflet's own setLatLng rounds to whole pixels, which made the cars stutter).
+      const lp = carPoint(p);
+      c.m._latlng = p;
+      if (c.m._icon) L.DomUtil.setPosition(c.m._icon, lp);
+      // Heading on screen (so it also looks right on the tilted map); the car drawing points up.
+      const a = map.latLngToContainerPoint(p), b = map.latLngToContainerPoint(q);
+      const box = c.m.getElement();
+      if (box && (a.x !== b.x || a.y !== b.y)) {
+        const down = b.y >= a.y, left = b.x < a.x, q = (down ? 'd' : 'u') + (left ? 'l' : 'r');
+        if (c.q !== q) {
+          if ((c.q || 'dr')[0] !== q[0]) box.innerHTML = down ? CAR_SE : CAR_NE;
+          box.firstElementChild.style.scale = left ? '-1 1' : '1 1';
+          c.q = q;
+        }
+      }
+    }
+    carRaf = requestAnimationFrame(tick);
+  };
+  carRaf = requestAnimationFrame(tick);
+  map.on('zoomend', () => map.getContainer().style.setProperty('--car-s', Math.max(0.5, Math.min(1.6, 0.7 * Math.pow(1.4, map.getZoom() - 14)))));
+  map.fire('zoomend');
 }
 
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----
@@ -1145,24 +1310,23 @@ function addShade() {
 const VECTOR_STYLE = 'https://tiles.openfreemap.org/styles/dark';
 // Repaint the vector layers in the greys of the earlier raster look (dark land, near-black water,
 // light-grey roads), so the contrast stays the same while every line is drawn sharp.
-// Daylight and moonlit coastal palettes follow the dashboard appearance.
 const MAP_PRESETS = {
-  light: {
-    land:'#e1dbc4', water:'#73bfc1', landuse:'#d4d8ba', green:'#a2bb89', building:'#d0c9b3',
-    motorway:'#f7efdb', major:'#f1e9d7', minor:'#ece4ce', path:'#c3bca1', rail:'#b1b4a0',
-    town:'#405e59', grid:'#869f88', shade:'#346d69',
-  },
   dark: {
-    land:'#182936', water:'#0a1d2b', landuse:'#1c3039', green:'#203d3b', building:'#34454f',
-    motorway:'#637981', major:'#526a74', minor:'#405963', path:'#304751', rail:'#37515e',
-    town:'#a4bdc9', grid:'#35505d', shade:'#030c18',
+    land: '#1f1f20', water: '#0a0a0b', landuse: '#232324', green: '#212122', building: '#2a2a2b',
+    motorway: '#5a5a5d', major: '#4a4a4d', minor: '#38383b', path: '#2c2c2f', rail: '#303033',
+    town: '#ffffff', grid: '#ffffff', shade: '#000000',
+  },
+  light: {
+    land: '#f1f0ed', water: '#c4d3e0', landuse: '#ebe9e5', green: '#dfe6d9', building: '#dad7d2',
+    motorway: '#d1d1d1', major: '#b5b5b5', minor: '#d1d1d1', path: '#e2e0dc', rail: '#cfccc7',
+    town: '#3a3a3c', grid: '#000000', shade: '#ffffff',
   },
 };
 // The map always follows the light / dark theme (Settings › Appearance, or sunrise / sunset on Auto).
 // Colours changed in the Map colours panel are kept separately for each theme.
 const themeKey = () => document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
 const mapAuto = () => MAP_PRESETS[themeKey()];
-const customKey = () => themeKey() === 'dark' ? 'nightMapColors:v1:dark' : 'resortMapColors:v1:light';
+const customKey = () => `mapColorsCustom:${themeKey()}`;
 let MAP_COLORS = loadMapColors();
 function loadMapColors() {
   try {
@@ -1197,7 +1361,7 @@ function recolor(l) {
   if (l.type === 'fill') {
     if (/water/.test(id)) return set('fill-color', MAP_COLORS.water);
     if (/building/.test(id)) return set('fill-color', MAP_COLORS.building);
-    if (/wood|park|glacier|ice/.test(id)) { delete paint['fill-pattern']; return set('fill-color', MAP_COLORS.green); }
+    if (/wood|park|glacier|ice/.test(id)) return set('fill-color', MAP_COLORS.green);
     return set('fill-color', MAP_COLORS.landuse);
   }
   if (l.type === 'line') {
@@ -1230,6 +1394,8 @@ function styleLayers(base) {
     const r = recolor(l); if (!r) continue;
     if (r.type === 'line' && /^highway_/.test(r.id) && SHADOW.road > 0 && SHADOW.roadAlpha > 0)
       out.push({ ...r, id: `${r.id}_shadow`, paint: { ...r.paint, 'line-color': `rgba(0, 0, 0, ${SHADOW.roadAlpha})`, 'line-translate': shadowXY(SHADOW.road), 'line-translate-anchor': 'viewport' } });
+    if (r.type === 'fill' && /building/.test(r.id) && SHADOW.bldg > 0 && SHADOW.bldgAlpha > 0)
+      out.push({ ...r, id: `${r.id}_shadow`, paint: { 'fill-color': `rgba(0, 0, 0, ${SHADOW.bldgAlpha})`, 'fill-translate': shadowXY(SHADOW.bldg), 'fill-translate-anchor': 'viewport', 'fill-antialias': true } });
     out.push(r);
   }
   return out;
@@ -1243,9 +1409,7 @@ function add3dPanel() {
     box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('d3Panel')}" title="${t('d3Panel')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 20.5 7.5v9L12 21l-8.5-4.5v-9z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></button>
       <div class="zp-body" hidden>
         <h4>${t('d3Panel')}</h4>
-        ${slider('tilt', t('setTilt'), 0, 60, 1, '°')}
-        ${slider('persp', t('d3Persp'), 600, 6000, 100, 'px')}
-        ${slider('spin', t('d3Spin'), -45, 45, 1, '°')}
+        ${slider('tilt', t('setTilt'), 0, 40, 1, '°')}
         <h4>${t('d3Roads')}</h4>
         ${slider('road', t('d3Length'), 0, 6, 0.5, 'px')}
         ${slider('roadAlpha', t('d3Dark'), 0, 0.6, 0.02, '')}
@@ -1257,21 +1421,20 @@ function add3dPanel() {
         <button class="zp-reset">${t('zoomReset')}</button>
       </div>`;
     const q = sel => box.querySelector(sel), qa = sel => box.querySelectorAll(sel);
-    const VIEW = { tilt: ['mapTilt', () => mapTilt, v => mapTilt = v], persp: ['mapPersp', () => tiltPersp, v => tiltPersp = v], spin: ['mapSpin', () => mapSpin, v => mapSpin = v] };
-    const val = k => VIEW[k] ? VIEW[k][1]() : SHADOW[k];
+    const val = k => k === 'tilt' ? mapTilt : SHADOW[k];
     const sync = () => qa('[data-dk]').forEach(i => { i.value = val(i.dataset.dk); q(`[data-do="${i.dataset.dk}"]`).textContent = val(i.dataset.dk); });
     let pending = 0;
     const repaint = () => { cancelAnimationFrame(pending); pending = requestAnimationFrame(repaintBasemap); };
     q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
     qa('[data-dk]').forEach(i => i.oninput = () => {
       const k = i.dataset.dk, v = +i.value;
-      if (VIEW[k]) { VIEW[k][2](v); try { localStorage.setItem(VIEW[k][0], v); } catch {} applyTilt(); drawMap(); map.fire('viewreset'); syncTiltUi?.(); }
+      if (k === 'tilt') { mapTilt = v; try { localStorage.setItem('mapTilt', v); } catch {} applyTilt(); drawMap(); map.fire('viewreset'); syncTiltUi?.(); }
       else { SHADOW[k] = v; try { localStorage.setItem('mapShadow', JSON.stringify(SHADOW)); } catch {} repaint(); }
       sync();
     });
     q('.zp-reset').onclick = () => {
-      SHADOW = { ...SHADOW_DEFAULT }; try { ['mapShadow', 'mapTilt', 'mapPersp', 'mapSpin'].forEach(k => localStorage.removeItem(k)); } catch {}
-      mapTilt = 30; tiltPersp = 2600; mapSpin = 0; applyTilt(); drawMap(); map.fire('viewreset'); syncTiltUi?.(); repaint(); sync();
+      SHADOW = { ...SHADOW_DEFAULT }; try { localStorage.removeItem('mapShadow'); localStorage.removeItem('mapTilt'); } catch {}
+      mapTilt = 22; applyTilt(); drawMap(); map.fire('viewreset'); syncTiltUi?.(); repaint(); sync();
     };
     sync();
     return box;
@@ -1487,69 +1650,37 @@ const HeatBlobs = L.Layer.extend({
   },
 });
 
-// Measure the actual label content, including artists, expectations and status lines.
-function venueLabelHtml(v, hover = false) {
-  const closed=v.status?.state==='closed', n=v.latest?.people ?? null;
-  if(v.coming_soon) return `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>`;
-  if(closed) return `<span class="vclosed">${t('closed')}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`;
-  return `${cardChart(v, hover ? 'h' : 'm')}<span class="vcount">${n===null?'—':n}${PERSON_ICON}</span><span class="vname">${v.name}</span>${v.peak?`<span class="vpeak">${PEAK_ICON}${t('atPeak')}</span>`:''}${v.rising?`<span class="vrise">${RISE_ICON}${t('rising')}</span>`:''}${expectLine(v)}${artistLine(v)}`;
-}
-function venuePinRadius(v) {
-  const lv=levelOf(v.latest?.people ?? null);
-  return PIN/2*(v.status?.state==='closed' ? .9 : PIN_SCALE[LEVELS.indexOf(lv)] || .9)+6;
-}
-function labelSize(v) {
-  const el=document.createElement('div');
-  el.className='leaflet-tooltip vlabel'; el.innerHTML=venueLabelHtml(v);
-  el.style.cssText='position:fixed;left:-10000px;top:0;visibility:hidden;pointer-events:none;width:max-content;transform:none';
-  map.getContainer().appendChild(el); const r=el.getBoundingClientRect(); el.remove();
-  return {w:Math.ceil(r.width)+2,h:Math.ceil(r.height)+2};
-}
-const CLUSTER_PX=120;
-const labelPlacementMemory=new Map();
-const labelHit=(a,b)=>a.x<b.x+b.w && b.x<a.x+a.w && a.y<b.y+b.h && b.y<a.y+a.h;
-function labelSpot(p,w,h,radius,direction,distance=0,shift=0) {
-  const g=radius+8+distance;
-  const offset={top:[shift,-g],bottom:[shift,g],left:[-g,shift],right:[g,shift]}[direction];
-  const box={top:{x:p.x+shift-w/2,y:p.y-g-h},bottom:{x:p.x+shift-w/2,y:p.y+g},left:{x:p.x-g-w,y:p.y+shift-h/2},right:{x:p.x+g,y:p.y+shift-h/2}}[direction];
-  return {direction,offset,box:{...box,w,h},distance,shift};
-}
-function findVenueLabel(p,w,h,radius,obstacles,preferred) {
-  const size=map.getSize(), candidates=[];
-  if(preferred)candidates.push(labelSpot(p,w,h,radius,preferred.direction,preferred.distance,preferred.shift));
-  for(const distance of [0,20,44,76]) for(const direction of ['top','right','left','bottom']) {
-    for(const shift of [0,-24,24,-48,48]) candidates.push(labelSpot(p,w,h,radius,direction,distance,shift));
-  }
-  return candidates.find(({box})=>box.x>8 && box.y>58 && box.x+box.w<size.x-8 && box.y+box.h<size.y-100 && !obstacles.some(b=>labelHit(b,box)));
-}
-function placeLabels(placed,pins) {
-  const obstacles=placed.map(v=> {
-    const p=map.latLngToContainerPoint(pins.get(v.id).latlng),r=venuePinRadius(v);
-    return {x:p.x-r,y:p.y-r,w:r*2,h:r*2};
+// Greedy label layout: busiest venues first, each label tries top / right / left / bottom of its pin
+// and takes the first spot that overlaps no pin and no label already placed. Venues that find no spot
+// get no permanent label (see the badge fallback above).
+const CLUSTER_PX = 120;  // venues closer than this on screen count as one cluster
+function placeLabels(placed, pins) {
+  const size = map.getSize();
+  const boxes = placed.map(v => {
+    const p = map.latLngToContainerPoint(pins.get(v.id).latlng);
+    return { x: p.x - PIN / 2 - 3, y: p.y - PIN / 2 - 3, w: PIN + 6, h: PIN + 6 };
   });
-  const out=new Map(), labelled=[];
-  for(const v of [...placed].sort((a,b)=>(b.latest?.people??-1)-(a.latest?.people??-1))) {
-    const p=map.latLngToContainerPoint(pins.get(v.id).latlng);
-    if(labelled.some(q=>Math.hypot(q.x-p.x,q.y-p.y)<CLUSTER_PX))continue;
-    const {w,h}=labelSize(v), found=findVenueLabel(p,w,h,venuePinRadius(v),obstacles,labelPlacementMemory.get(v.id));
-    if(found) {out.set(v.id,found);obstacles.push(found.box);labelled.push(p);labelPlacementMemory.set(v.id,found);}
+  const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+  const order = [...placed].sort((a, b) => (b.latest?.people ?? -1) - (a.latest?.people ?? -1));
+  const out = new Map(), labelled = [], labelBoxes = [];
+  for (const v of order) {
+    const p = map.latLngToContainerPoint(pins.get(v.id).latlng);
+    const w = Math.max(v.rising || v.peak ? 120 : 56, v.name.length * 6.6 + 22), h = (v.rising || v.peak ? 70 : 50) + (v.expected ? 16 : 0) + (v.tonight ? 24 : 0), g = PIN / 2 + 4;
+    const spots = {
+      top: { x: p.x - w / 2, y: p.y - g - h, w, h }, right: { x: p.x + g, y: p.y - h / 2, w, h },
+      left: { x: p.x - g - w, y: p.y - h / 2, w, h }, bottom: { x: p.x - w / 2, y: p.y + g, w, h },
+    };
+    // In a cluster only the busiest venue keeps its label: skip any venue near one already labelled.
+    if (labelled.some(q => Math.hypot(q.x - p.x, q.y - p.y) < CLUSTER_PX)) continue;
+    const inside = box => box.x > 4 && box.y > 60 && box.x + box.w < size.x - 4 && box.y + box.h < size.y - 4;
+    let found = Object.entries(spots).find(([, box]) => inside(box) && !boxes.some(b => hit(b, box)));
+    // A cluster's busiest venue always gets a label: if every spot touches a pin, accept one that
+    // only covers pins, as long as it stays clear of other labels.
+    if (!found) found = Object.entries(spots).find(([, box]) => inside(box) && !labelBoxes.some(b => hit(b, box)));
+    if (found) { const [dir, box] = found; out.set(v.id, dir); boxes.push(box); labelBoxes.push(box); labelled.push(p); }
   }
   return out;
 }
-// Also validate the rendered box on hover and after the web fonts finish loading.
-function positionVenueTooltip(marker,v) {
-  const tip=marker.getTooltip(), el=tip?.getElement(); if(!el)return;
-  const origin=map.getContainer().getBoundingClientRect(), rect=el.getBoundingClientRect();
-  const obstacles=Array.from(map.getContainer().querySelectorAll('.maplogo > div,.leaflet-tooltip.vlabel')).filter(e=>e!==el).map(e=> {
-    const r=e.getBoundingClientRect(); return {x:r.left-origin.left-5,y:r.top-origin.top-5,w:r.width+10,h:r.height+10};
-  });
-  const actual={x:rect.left-origin.left,y:rect.top-origin.top,w:rect.width,h:rect.height};
-  if(!obstacles.some(b=>labelHit(b,actual)))return;
-  const p=map.latLngToContainerPoint(marker.getLatLng()),found=findVenueLabel(p,Math.ceil(rect.width)+2,Math.ceil(rect.height)+2,venuePinRadius(v),obstacles);
-  if(!found) {marker.closeTooltip();return;}
-  tip.options.direction=found.direction;tip.options.offset=found.offset;tip.update();
-}
-document.fonts?.ready.then(()=>{if(map)drawMap();});
 
 // Pins closer than MIN_GAP pixels are pushed apart on screen; zooming in shrinks the push until
 // every pin sits on its true location. Labels go to the side the pin was pushed towards.

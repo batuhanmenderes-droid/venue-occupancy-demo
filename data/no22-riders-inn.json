@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-04T20:42:10",
+  "updated_at": "2026-11-05T00:41:24",
   "frames": [
     {
       "file": "no22riders-cctv/2026-11-03/CAM01_20261104_100000.jpg",
@@ -321,6 +321,54 @@
       "people": 58,
       "note": "Kalabalık; ±8 sapma olabilir.",
       "note_en": "Crowded; may be off by ±8."
+    },
+    {
+      "file": "no22riders-cctv/2026-11-04/CAM01_20261104_210750.jpg",
+      "timestamp": "2026-11-04T21:07:50",
+      "camera": "CAM 01",
+      "people": 70,
+      "note": "Kalabalık; ±10 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±10."
+    },
+    {
+      "file": "no22riders-cctv/2026-11-04/CAM01_20261104_214934.jpg",
+      "timestamp": "2026-11-04T21:49:34",
+      "camera": "CAM 01",
+      "people": 85,
+      "note": "Kalabalık; ±10 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±10."
+    },
+    {
+      "file": "no22riders-cctv/2026-11-04/CAM01_20261104_223118.jpg",
+      "timestamp": "2026-11-04T22:31:18",
+      "camera": "CAM 01",
+      "people": 90,
+      "note": "Kalabalık; ±10 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±10."
+    },
+    {
+      "file": "no22riders-cctv/2026-11-04/CAM01_20261104_231303.jpg",
+      "timestamp": "2026-11-04T23:13:03",
+      "camera": "CAM 01",
+      "people": 95,
+      "note": "Kalabalık; ±10 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±10."
+    },
+    {
+      "file": "no22riders-cctv/2026-11-04/CAM01_20261104_235447.jpg",
+      "timestamp": "2026-11-04T23:54:47",
+      "camera": "CAM 01",
+      "people": 88,
+      "note": "Çok kalabalık; ±8 sapma olabilir.",
+      "note_en": "Very crowded; may be off by ±8."
+    },
+    {
+      "file": "no22riders-cctv/2026-11-04/CAM01_20261105_003631.jpg",
+      "timestamp": "2026-11-05T00:36:31",
+      "camera": "CAM 01",
+      "people": 82,
+      "note": "Çok kalabalık; ±8 sapma olabilir.",
+      "note_en": "Very crowded; may be off by ±8."
     }
   ]
 }
