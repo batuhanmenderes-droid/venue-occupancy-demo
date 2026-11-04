@@ -938,3 +938,13 @@ body.routing .leaflet-trees-pane { opacity: 0; }
 .treepanel .tp-color { display: flex !important; flex-direction: row; align-items: center; justify-content: space-between; }
 .treepanel .tp-color input { width: 32px; height: 26px; padding: 0; border: 0; background: none; }
 .treepanel .tp-total { margin: 0; font-size: 11.5px; color: var(--muted); }
+
+/* Wooden houses */
+.house { background: none; border: 0; pointer-events: none !important; }
+.house svg { width: 32px; height: 30px; display: block; transform-origin: 50% 93%; transform: scale(calc(var(--house-s, .6) * var(--house-k, 1))); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .3)); }
+body.houses-edit .house { pointer-events: auto !important; cursor: grab; }
+body.houses-edit .house svg { outline: 1.5px dashed rgba(10, 132, 255, .8); outline-offset: 2px; border-radius: 4px; }
+body.houses-edit .house.leaflet-drag-target, body.houses-edit .house:active { cursor: grabbing; }
+body.routing .leaflet-houses-pane { opacity: 0; }
+.housepanel .zp-toggle svg { width: 22px; height: 20px; }
+.housepanel .hp-hint { margin: 0; font-size: 11.5px; color: var(--muted); line-height: 1.35; }

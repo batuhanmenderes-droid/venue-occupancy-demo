@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106x"></script>
+<script src="i18n.js?v=20261106y"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106x">
+<link rel="stylesheet" href="theme.css?v=20261106y">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -163,9 +163,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106x"></script>
-<script src="venue-state.js?v=20261106x"></script>
-<script src="menu.js?v=20261106x"></script>
+<script src="levels.js?v=20261106y"></script>
+<script src="venue-state.js?v=20261106y"></script>
+<script src="menu.js?v=20261106y"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -311,6 +311,8 @@ function initMap() {
   addYouMarker();
   addTrees();
   addTreePanel();
+  addHouses();
+  addHousePanel();
   drawMap();
 }
 
@@ -928,6 +930,72 @@ function addTreePanel() {
     qa('[data-tk]').forEach(i => i.oninput = () => { TREE[i.dataset.tk] = +i.value; apply(); });
     q('[data-tc]').oninput = e => { TREE.color = e.target.value; apply(); };
     q('.zp-reset').onclick = () => { TREE = { ...TREE_DEFAULT }; apply(); };
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
+}
+
+// ---- Wooden houses with orange roofs (draggable in edit mode) ----
+// A starter set around Akyaka and Akçapınar; in the Houses panel you can add, drag, remove (double-click)
+// and resize them. Positions and size are saved per browser.
+const HOUSE_SVG = '<svg viewBox="0 0 32 30" aria-hidden="true"><path d="M5 14h22v14H5z" fill="#b07a4a"/><path d="M5 17.5h22M5 21h22M5 24.5h22" stroke="#8a5a32" stroke-width=".9"/><path d="M13.5 20h5v8h-5z" fill="#6b4226"/><path d="M7.5 18h4v3.6h-4zM20.5 18h4v3.6h-4z" fill="#f4e1b8" stroke="#6b4226" stroke-width=".8"/><path d="M2 15.2 16 3.5l14 11.7-1.6 1.9L16 6.7 3.6 17.1z" fill="#e8742c"/><path d="M3.6 17.1 16 6.7l12.4 10.4" fill="none" stroke="#c4561a" stroke-width="1"/><path d="M22 7.5h3v4.4l-3-2.5z" fill="#8a5a32"/></svg>';
+const HOUSES_DEFAULT = [
+  [37.0594, 28.3262], [37.0601, 28.3301], [37.0586, 28.3338], [37.0562, 28.3355], [37.0612, 28.3348],
+  [37.0285, 28.3532], [37.0298, 28.3561], [37.0271, 28.3601], [37.0247, 28.3548], [37.0232, 28.3589],
+];
+let HOUSES = (() => { try { const h = JSON.parse(localStorage.getItem('houses') || 'null'); return Array.isArray(h) ? h : HOUSES_DEFAULT.map(p => [...p]); } catch { return HOUSES_DEFAULT.map(p => [...p]); } })();
+let HOUSE_SIZE = (() => { try { return +localStorage.getItem('houseSize') || 1; } catch { return 1; } })();
+let houseGroup = null, houseEdit = false;
+const saveHouses = () => { try { localStorage.setItem('houses', JSON.stringify(HOUSES)); localStorage.setItem('houseSize', HOUSE_SIZE); } catch {} };
+function addHouses() {
+  const pane = map.createPane('houses');
+  pane.style.zIndex = 395;
+  const scale = () => map.getContainer().style.setProperty('--house-s', Math.max(0.35, Math.min(1.6, 0.6 * Math.pow(1.45, map.getZoom() - 14))));
+  map.on('zoomend', scale); scale();
+  drawHouses();
+}
+function drawHouses() {
+  houseGroup?.remove();
+  houseGroup = L.layerGroup().addTo(map);
+  map.getContainer().style.setProperty('--house-k', HOUSE_SIZE);
+  HOUSES.forEach((pos, i) => {
+    const m = L.marker(pos, { pane: 'houses', draggable: true, keyboard: false, title: houseEdit ? t('houseHint') : '',
+      icon: L.divIcon({ className: 'house', html: HOUSE_SVG, iconSize: [32, 30], iconAnchor: [16, 28] }) }).addTo(houseGroup);
+    houseEdit ? m.dragging.enable() : m.dragging.disable();
+    m.on('dragend', () => { const ll = m.getLatLng(); HOUSES[i] = [+ll.lat.toFixed(6), +ll.lng.toFixed(6)]; saveHouses(); });
+    m.on('dblclick', e => { if (!houseEdit) return; L.DomEvent.stop(e); HOUSES.splice(i, 1); saveHouses(); drawHouses(); housePanelSync?.(); });
+  });
+}
+let housePanelSync = null;
+function addHousePanel() {
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel housepanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('housePanel')}" title="${t('housePanel')}">${HOUSE_SVG}</button>
+      <div class="zp-body" hidden>
+        <h4>${t('housePanel')}</h4>
+        <label class="sp-drag"><input type="checkbox" data-edit> ${t('houseEdit')}</label>
+        <p class="hp-hint">${t('houseHint')}</p>
+        <div class="zp-actions"><button data-add>${t('houseAdd')}</button><button data-clear>${t('houseClear')}</button></div>
+        <label>${t('treeSize')} <span><input type="range" data-hs min="0.3" max="3" step="0.1"><output data-ho></output><small>×</small></span></label>
+        <p class="tp-total" data-count></p>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel);
+    const sync = () => { q('[data-hs]').value = HOUSE_SIZE; q('[data-ho]').textContent = HOUSE_SIZE; q('[data-count]').textContent = t('houseCount', HOUSES.length); };
+    housePanelSync = sync;
+    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    q('[data-edit]').onchange = e => { houseEdit = e.target.checked; document.body.classList.toggle('houses-edit', houseEdit); drawHouses(); };
+    // A new house lands in the middle of the screen (edit mode switches on so it can be dragged right away).
+    q('[data-add]').onclick = () => {
+      const c = map.getCenter(); HOUSES.push([+c.lat.toFixed(6), +c.lng.toFixed(6)]); saveHouses();
+      if (!houseEdit) { q('[data-edit]').checked = true; houseEdit = true; document.body.classList.add('houses-edit'); }
+      drawHouses(); sync();
+    };
+    q('[data-clear]').onclick = () => { if (!confirm(t('houseClearAsk'))) return; HOUSES = []; saveHouses(); drawHouses(); sync(); };
+    q('[data-hs]').oninput = e => { HOUSE_SIZE = +e.target.value; saveHouses(); map.getContainer().style.setProperty('--house-k', HOUSE_SIZE); sync(); };
+    q('.zp-reset').onclick = () => { HOUSES = HOUSES_DEFAULT.map(p => [...p]); HOUSE_SIZE = 1; saveHouses(); drawHouses(); sync(); };
     sync();
     return box;
   } });
