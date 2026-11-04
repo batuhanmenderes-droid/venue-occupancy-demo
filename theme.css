@@ -931,7 +931,10 @@ body.routing .sealabel .windread { pointer-events: none; }
 
 /* Eucalyptus rows */
 .tree { background: none; border: 0; }
-.tree svg { width: 20px; height: 32px; display: block; transform-origin: 50% 100%; transform: scale(var(--tree-s, .5)); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25)); }
-:root[data-theme="dark"] .tree { --tree: #5d8a72; }
+.tree svg { width: 20px; height: 32px; display: block; transform-origin: 50% 100%; transform: scale(calc(var(--tree-s, .5) * var(--tree-k, 1))); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25)); }
 .leaflet-container:not([style*="--tree-s"]) .tree svg { transform: scale(.5); }
 body.routing .leaflet-trees-pane { opacity: 0; }
+.treepanel .zp-toggle svg { width: 16px; height: 24px; --tree: #5d8a72; }
+.treepanel .tp-color { display: flex !important; flex-direction: row; align-items: center; justify-content: space-between; }
+.treepanel .tp-color input { width: 32px; height: 26px; padding: 0; border: 0; background: none; }
+.treepanel .tp-total { margin: 0; font-size: 11.5px; color: var(--muted); }

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106v"></script>
+<script src="i18n.js?v=20261106w"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106v">
+<link rel="stylesheet" href="theme.css?v=20261106w">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -163,9 +163,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106v"></script>
-<script src="venue-state.js?v=20261106v"></script>
-<script src="menu.js?v=20261106v"></script>
+<script src="levels.js?v=20261106w"></script>
+<script src="venue-state.js?v=20261106w"></script>
+<script src="menu.js?v=20261106w"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -310,6 +310,7 @@ function initMap() {
   addWindControl();
   addYouMarker();
   addTrees();
+  addTreePanel();
   drawMap();
 }
 
@@ -853,22 +854,72 @@ const TREE_STRIPS = [
   [[37.04808, 28.360386], [37.036539, 28.36022]],    // east of the road
 ];
 const TREE_SVG = '<svg viewBox="0 0 20 32" aria-hidden="true"><path d="M10 31V17" stroke="#8a7a66" stroke-width="1.6" stroke-linecap="round"/><path d="M10 1.5c3.6 3 5.4 7.2 5 11.6-.3 3.4-2.4 5.9-5 5.9s-4.7-2.5-5-5.9C4.6 8.7 6.4 4.5 10 1.5z" fill="var(--tree, #7fa58e)"/><path d="M10 4.5v12M10 9l2.6-2.2M10 12.5 7.4 10.3" stroke="rgba(255,255,255,.45)" stroke-width="1" stroke-linecap="round" fill="none"/></svg>';
+// Tree settings (panel on the map, saved per browser): trees per row, rows per strip, gap between rows,
+// size and colour.
+const TREE_DEFAULT = { perRow: 36, rows: 2, gap: 37, size: 1, color: '#7fa58e' };
+let TREE = (() => { try { return { ...TREE_DEFAULT, ...JSON.parse(localStorage.getItem('treeSettings') || '{}') }; } catch { return { ...TREE_DEFAULT }; } })();
+let treeGroup = null;
 function addTrees() {
   const pane = map.createPane('trees');
   pane.style.zIndex = 390; pane.style.pointerEvents = 'none';
-  const group = L.layerGroup().addTo(map);
-  const ROW_GAP = 0.00042;  // ~37 m between the two rows of a strip
-  for (const [[la1, lo1], [la2, lo2]] of TREE_STRIPS) {
-    const len = map.distance([la1, lo1], [la2, lo2]), n = Math.round(len / 35);
-    for (const off of [-ROW_GAP / 2, ROW_GAP / 2]) for (let i = 0; i <= n; i++) {
-      const f = i / n, jitter = (simRandom(`tree:${la1}:${off}:${i}`) - 0.5) * 0.00012;
-      const at = [la1 + (la2 - la1) * f + jitter, lo1 + (lo2 - lo1) * f + off + jitter / 2];
-      L.marker(at, { pane: 'trees', interactive: false, keyboard: false,
-        icon: L.divIcon({ className: 'tree', html: TREE_SVG, iconSize: [20, 32], iconAnchor: [10, 31] }) }).addTo(group);
-    }
-  }
   const scale = () => map.getContainer().style.setProperty('--tree-s', Math.max(0, Math.min(1.4, 0.45 * Math.pow(1.5, map.getZoom() - 14))));
   map.on('zoomend', scale); scale();
+  drawTrees();
+}
+function drawTrees() {
+  treeGroup?.remove();
+  treeGroup = L.layerGroup().addTo(map);
+  map.getContainer().style.setProperty('--tree-k', TREE.size);
+  map.getContainer().style.setProperty('--tree', TREE.color);
+  const degPerM = 1 / (111320 * Math.cos(37.04 * Math.PI / 180));  // longitude degrees per metre here
+  const n = Math.max(1, TREE.perRow - 1);
+  for (const [[la1, lo1], [la2, lo2]] of TREE_STRIPS) {
+    for (let r = 0; r < TREE.rows; r++) {
+      const off = (r - (TREE.rows - 1) / 2) * TREE.gap * degPerM;
+      for (let i = 0; i <= n; i++) {
+        const f = TREE.perRow === 1 ? 0.5 : i / n, jitter = (simRandom(`tree:${la1}:${r}:${i}`) - 0.5) * 0.00012;
+        const at = [la1 + (la2 - la1) * f + jitter, lo1 + (lo2 - lo1) * f + off + jitter / 2];
+        L.marker(at, { pane: 'trees', interactive: false, keyboard: false,
+          icon: L.divIcon({ className: 'tree', html: TREE_SVG, iconSize: [20, 32], iconAnchor: [10, 31] }) }).addTo(treeGroup);
+      }
+    }
+  }
+}
+function addTreePanel() {
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel treepanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    const slider = (k, label, min, max, step, unit = '') => `<label>${label} <span><input type="range" data-tk="${k}" min="${min}" max="${max}" step="${step}"><output data-to="${k}"></output>${unit ? `<small>${unit}</small>` : ''}</span></label>`;
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('treePanel')}" title="${t('treePanel')}">${TREE_SVG}</button>
+      <div class="zp-body" hidden>
+        <h4>${t('treePanel')}</h4>
+        ${slider('perRow', t('treePerRow'), 1, 120, 1)}
+        ${slider('rows', t('treeRows'), 1, 4, 1)}
+        ${slider('gap', t('treeGap'), 10, 120, 1, 'm')}
+        ${slider('size', t('treeSize'), 0.3, 3, 0.1, '×')}
+        <label class="tp-color">${t('treeColor')} <input type="color" data-tc></label>
+        <p class="tp-total"></p>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel), qa = sel => box.querySelectorAll(sel);
+    const sync = () => {
+      qa('[data-tk]').forEach(i => { i.value = TREE[i.dataset.tk]; q(`[data-to="${i.dataset.tk}"]`).textContent = TREE[i.dataset.tk]; });
+      q('[data-tc]').value = TREE.color;
+      q('.tp-total').textContent = t('treeTotal', TREE.perRow * TREE.rows * TREE_STRIPS.length);
+    };
+    let pending = 0;
+    const apply = () => {
+      try { localStorage.setItem('treeSettings', JSON.stringify(TREE)); } catch {}
+      sync(); cancelAnimationFrame(pending); pending = requestAnimationFrame(drawTrees);
+    };
+    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    qa('[data-tk]').forEach(i => i.oninput = () => { TREE[i.dataset.tk] = +i.value; apply(); });
+    q('[data-tc]').oninput = e => { TREE.color = e.target.value; apply(); };
+    q('.zp-reset').onclick = () => { TREE = { ...TREE_DEFAULT }; apply(); };
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
 }
 
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----
