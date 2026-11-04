@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-04T13:41:18",
+  "updated_at": "2026-11-04T14:40:52",
   "frames": [
     {
       "file": "kulup-cctv/2026-11-03/2026-11-03_10-00-00.jpg",
@@ -229,6 +229,22 @@
     {
       "file": "kulup-cctv/2026-11-04/2026-11-04_13-00-00.jpg",
       "timestamp": "2026-11-04T13:00:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-04/2026-11-04_13-45-00.jpg",
+      "timestamp": "2026-11-04T13:45:00",
+      "camera": "CAM 01",
+      "people": 0,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "kulup-cctv/2026-11-04/2026-11-04_14-30-00.jpg",
+      "timestamp": "2026-11-04T14:30:00",
       "camera": "CAM 01",
       "people": 0,
       "note": "",
