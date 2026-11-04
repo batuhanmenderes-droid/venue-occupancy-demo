@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261104t"></script>
+<script src="i18n.js?v=20261104u"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261104t">
+<link rel="stylesheet" href="theme.css?v=20261104u">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -128,8 +128,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261104t"></script>
-<script src="venue-state.js?v=20261104t"></script>
+<script src="levels.js?v=20261104u"></script>
+<script src="venue-state.js?v=20261104u"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -154,7 +154,8 @@ async function load() {
     }
     const status = venueStatus(v, now);
     rising = rising && status.state !== 'closed';
-    const expected = rising && v.simulated ? expectedPeak(v, now) : null;
+    // A venue's own `expected_peak` (venues.json, e.g. a booked night) wins over the demo forecast.
+    const expected = v.expected_peak ?? (rising && v.simulated ? expectedPeak(v, now) : null);
     return { ...v, latest, updatedAt, status, rising, expected };
   }));
   document.title = `${t('venues')} · ${t('occupancy')}`;
@@ -304,12 +305,12 @@ function drawMap() {
     if (dir) {
       const offset = { top: [0, -PIN / 2 - 2], bottom: [0, PIN / 2 + 2], left: [-PIN / 2 - 2, 0], right: [PIN / 2 + 2, 0] }[dir];
       m.bindTooltip(v.coming_soon ? `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>`
-        : closed ? `<span class="vclosed">${t('closed')}</span><span class="vname">${v.name}</span>${artistLine(v)}`
-        : `<span class="vcount">${n === null ? '—' : n}${PERSON_ICON}</span><span class="vname">${v.name}</span>${v.rising ? `<span class="vrise">${RISE_ICON}${t('rising')}</span>` : ''}${v.expected ? `<span class="vexpect">${t('expectedAround', v.expected)}</span>` : ''}${artistLine(v)}`,
+        : closed ? `<span class="vclosed">${t('closed')}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`
+        : `<span class="vcount">${n === null ? '—' : n}${PERSON_ICON}</span><span class="vname">${v.name}</span>${v.rising ? `<span class="vrise">${RISE_ICON}${t('rising')}</span>` : ''}${expectLine(v)}${artistLine(v)}`,
         { permanent: true, direction: dir, offset, className: 'vlabel' });
     } else {
       // Not the busiest of its cluster: no permanent label; name and count only on hover.
-      m.bindTooltip(`<span class="vcount">${closed ? t('closed') : n === null ? '—' : n}${closed ? '' : PERSON_ICON}</span><span class="vname">${v.name}</span>${artistLine(v)}`,
+      m.bindTooltip(`<span class="vcount">${closed ? t('closed') : n === null ? '—' : n}${closed ? '' : PERSON_ICON}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`,
         { direction: 'top', offset: [0, -PIN / 2 - 2], className: 'vlabel' });
     }
     m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
@@ -537,6 +538,7 @@ const GEAR_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="curre
 const MIC_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="1.5" width="5" height="8.5" rx="2.5" fill="currentColor"/><path d="M3.3 7.6a4.7 4.7 0 0 0 9.4 0M8 12.4v2.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
 // Tonight's artist / theme night (venues.json `tonight`), shown under the name on the map label.
 // Grey until the show is on (21:00–02:00) and while the venue is closed.
+const expectLine = v => v.expected ? `<span class="vexpect${v.status?.state === 'closed' ? ' off' : ''}">${t('expectedAround', v.expected)}</span>` : '';
 const showOn = (at = new Date()) => at.getHours() >= 21 || at.getHours() < 2;
 const artistLine = v => v.tonight ? `<span class="vartist${v.status?.state === 'closed' || !showOn() ? ' off' : ''}">${MIC_ICON}${v.tonight}</span>` : '';
 const PERSON_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="4.6" r="2.9" fill="currentColor"/><path d="M2.6 14.4c0-3.1 2.4-5.4 5.4-5.4s5.4 2.3 5.4 5.4z" fill="currentColor"/></svg>';
