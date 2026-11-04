@@ -189,3 +189,36 @@ function risingSim(v, at = new Date()) {
   const now = simLatest(v, at), before = simLatest(v, new Date(at.getTime() - 60 * 60000));
   return isRising(now, before);
 }
+
+// Chart line through points [[x, y], …] with its corners rounded (radius r, never more than half a
+// segment), so the line charts across the app have no sharp joints.
+function roundedLine(pts, r = 12) {
+  if (pts.length < 3) return pts.map(([x, y], i) => `${i ? 'L' : 'M'}${(+x).toFixed(1)},${(+y).toFixed(1)}`).join('');
+  const f = n => (+n).toFixed(1);
+  let d = `M${f(pts[0][0])},${f(pts[0][1])}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [px, py] = pts[i - 1], [cx, cy] = pts[i], [nx, ny] = pts[i + 1];
+    const l1 = Math.hypot(cx - px, cy - py) || 1, l2 = Math.hypot(nx - cx, ny - cy) || 1;
+    const r1 = Math.min(r, l1 / 2), r2 = Math.min(r, l2 / 2);
+    d += `L${f(cx - (cx - px) / l1 * r1)},${f(cy - (cy - py) / l1 * r1)}Q${f(cx)},${f(cy)} ${f(cx + (nx - cx) / l2 * r2)},${f(cy + (ny - cy) / l2 * r2)}`;
+  }
+  const [lx, ly] = pts[pts.length - 1];
+  return d + `L${f(lx)},${f(ly)}`;
+}
+
+// YouTube background clips: the player stays invisible (the thumbnail shows) until the video is actually
+// playing, so YouTube's own buttons, title and play icon are never seen. Uses the IFrame API messages.
+const ytFrames = new Set();
+function ytReveal(iframe) {
+  if (!iframe || iframe.dataset.yt) return;
+  iframe.dataset.yt = '1'; ytFrames.add(iframe);
+  const hello = () => { try { iframe.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*'); } catch {} };
+  iframe.addEventListener('load', () => { hello(); setTimeout(hello, 800); setTimeout(hello, 2500); });
+}
+addEventListener('message', e => {
+  if (!/youtube(-nocookie)?\.com$/.test(new URL(e.origin).hostname)) return;
+  let msg; try { msg = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch { return; }
+  const state = msg?.info?.playerState;
+  if (state === undefined) return;
+  for (const f of ytFrames) if (f.contentWindow === e.source) f.classList.toggle('yt-playing', state === 1 || state === 3 && f.classList.contains('yt-playing'));
+});

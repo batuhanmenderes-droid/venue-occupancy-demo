@@ -757,3 +757,7 @@ body.menu-open .sidemenu { transform: none; }
 /* Same faint chart behind the venue's map label */
 .leaflet-tooltip.vlabel:has(> .cardchart) { position: absolute; isolation: isolate; overflow: hidden; }
 .leaflet-tooltip.vlabel > .cardchart { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 80%; z-index: -1; opacity: 0.32; pointer-events: none; }
+
+/* YouTube clips stay hidden (thumbnail shows) until they are actually playing: no YouTube buttons or titles */
+.vthumb iframe, .vbg-video iframe { opacity: 0; transition: opacity .6s; }
+.vthumb iframe.yt-playing, .vbg-video iframe.yt-playing { opacity: 1; }
