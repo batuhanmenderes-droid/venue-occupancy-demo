@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106r"></script>
+<script src="i18n.js?v=20261106s"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106r">
+<link rel="stylesheet" href="theme.css?v=20261106s">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -162,9 +162,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106r"></script>
-<script src="venue-state.js?v=20261106r"></script>
-<script src="menu.js?v=20261106r"></script>
+<script src="levels.js?v=20261106s"></script>
+<script src="venue-state.js?v=20261106s"></script>
+<script src="menu.js?v=20261106s"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -365,7 +365,7 @@ let townMarkers = [];
 // "Gökova Körfezi" and the wind box above it are locked to one point in the bay (they move with the map like a pin).
 // Fixed point in the bay; label and wind box stay locked here. Phones get a point further east so both are
 // on screen at the opening view (the desktop point falls off a narrow screen's left edge).
-const SEA = { name: 'Gökova Körfezi', at: innerWidth < 640 ? [37.019139, 28.32653] : [37.037388, 28.318977] };
+const SEA = { name: 'Gökova Körfezi', at: innerWidth < 640 ? [37.019139, 28.32653] : [37.03409, 28.318977] };
 let seaMarker = null;
 function placeTowns(pins) {
 
