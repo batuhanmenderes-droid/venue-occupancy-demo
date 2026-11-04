@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261104y"></script>
+<script src="i18n.js?v=20261104z"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261104y">
+<link rel="stylesheet" href="theme.css?v=20261104z">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -128,8 +128,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261104y"></script>
-<script src="venue-state.js?v=20261104y"></script>
+<script src="levels.js?v=20261104z"></script>
+<script src="venue-state.js?v=20261104z"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -292,13 +292,14 @@ function drawMap() {
     const lv = levelOf(n);
     const pin = pins.get(v.id);
     const closed = v.status?.state === 'closed';
+    const disco = v.type === 'Kulüp';  // night clubs get the spinning disco-ball pin
     // A pin pushed off its spot keeps a thin line and a dot at the true location.
     if (pin.moved) {
       L.polyline([[v.location.lat, v.location.lon], pin.latlng], { color: '#ffffff', weight: 1.5, opacity: 0.8, interactive: false }).addTo(markers);
       L.circleMarker([v.location.lat, v.location.lon], { radius: 3, weight: 1, color: '#ffffff', fillColor: lv ? lv.color : '#898781', fillOpacity: 1, interactive: false }).addTo(markers);
     }
     const m = L.marker(pin.latlng, {
-      icon: L.divIcon({ className: `maplogo${closed ? ' is-closed' : ''}${n !== null && n < 10 ? ' is-low' : ''}`, html: `<div style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'};--s:${lv && !closed ? PIN_SCALE[LEVELS.indexOf(lv)] : 0.9};width:100%;height:100%">${logoHtml(v)}${closed ? `<span class="lockover">${LOCK_ICON}</span>` : ''}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
+      icon: L.divIcon({ className: `maplogo${closed ? ' is-closed' : ''}${n !== null && n < 10 ? ' is-low' : ''}${disco ? ' is-disco' : ''}`, html: `<div style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'};--s:${lv && !closed ? PIN_SCALE[LEVELS.indexOf(lv)] : 0.9};width:100%;height:100%">${disco ? DISCO_HTML : ''}${logoHtml(v)}${closed ? `<span class="lockover">${LOCK_ICON}</span>` : ''}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
       title: v.name,
     }).addTo(markers);
     const dir = labels.get(v.id);
@@ -548,6 +549,9 @@ const CHECK_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.
 const GEAR_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M11.1 1.5l.4 2.1c.5.2 1 .5 1.4.8l2-.8 1.6 2.7-1.6 1.4a6 6 0 0 1 0 1.6l1.6 1.4-1.6 2.7-2-.8c-.4.3-.9.6-1.4.8l-.4 2.1H8l-.4-2.1c-.5-.2-1-.5-1.4-.8l-2 .8-1.6-2.7 1.6-1.4a6 6 0 0 1 0-1.6L2.6 6.3l1.6-2.7 2 .8c.4-.3.9-.6 1.4-.8L8 1.5h3.1zM9.6 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>';
 
 // Small person glyph shown next to the head count on map labels.
+// Disco-ball pin for night clubs: a mirror-facet texture scrolling sideways inside a shaded sphere
+// (reads as a ball turning), a few twinkling glints and a soft pulsing glow. The logo sits inside.
+const DISCO_HTML = '<span class="disco" aria-hidden="true"><span class="facets"></span><span class="glint g1"></span><span class="glint g2"></span><span class="glint g3"></span></span>';
 const MIC_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="1.5" width="5" height="8.5" rx="2.5" fill="currentColor"/><path d="M3.3 7.6a4.7 4.7 0 0 0 9.4 0M8 12.4v2.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
 // A person stretching (Material "sports_gymnastics" pictogram), for yoga / movement events.
 const YOGA_ICON = '<svg class="vicon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12,22L11.5,12L8,11H1V9H7l7-5l1.3,1.52L11.15,8.5H14L21.8,4L23,5.4L14.5,12L14,22H12ZM6,8Q5.18,8 4.59,7.41T4,6T4.59,4.59T6,4Q6.83,4 7.41,4.59Q8,5.18 8,6T7.41,7.41T6,8Z"/></svg>';
