@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106z"></script>
+<script src="i18n.js?v=20261107a"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106z">
+<link rel="stylesheet" href="theme.css?v=20261107a">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -163,9 +163,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106z"></script>
-<script src="venue-state.js?v=20261106z"></script>
-<script src="menu.js?v=20261106z"></script>
+<script src="levels.js?v=20261107a"></script>
+<script src="venue-state.js?v=20261107a"></script>
+<script src="menu.js?v=20261107a"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -313,6 +313,8 @@ function initMap() {
   addTreePanel();
   addHouses();
   addHousePanel();
+  addKites();
+  addKitePanel();
   drawMap();
 }
 
@@ -1002,6 +1004,75 @@ function addHousePanel() {
     q('[data-clear]').onclick = () => { if (!confirm(t('houseClearAsk'))) return; HOUSES = []; saveHouses(); drawHouses(); sync(); };
     q('[data-hs]').oninput = e => { HOUSE_SIZE = +e.target.value; saveHouses(); map.getContainer().style.setProperty('--house-k', HOUSE_SIZE); sync(); };
     q('.zp-reset').onclick = () => { HOUSES = HOUSES_DEFAULT.map(p => [...p]); HOUSE_SIZE = 1; saveHouses(); drawHouses(); sync(); };
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
+}
+
+// ---- Kitesurfers along the Gökova shore (Kitebeach) ----
+// Starter set placed in the water 150–500 m off the beach; the Kitesurfers panel adds (click the map),
+// drags, removes (double-click), resizes and animates them. Saved per browser.
+const KITES_DEFAULT = [[37.0445, 28.3261], [37.0424, 28.3247], [37.0395, 28.3262], [37.0374, 28.3243], [37.0345, 28.3285],
+  [37.044, 28.324], [37.0411, 28.3252], [37.039, 28.3233], [37.0361, 28.3267], [37.034, 28.3264]];
+const loadJSON = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return v ?? d; } catch { return d; } };
+let KITES = loadJSON('kites', KITES_DEFAULT.map(p => [...p]));
+let KITE_SET = { size: 1, animate: true, ...loadJSON('kiteSettings', {}) };
+let kiteGroup = null, kiteEdit = false, kitePanelSync = null;
+const saveKites = () => { try { localStorage.setItem('kites', JSON.stringify(KITES)); localStorage.setItem('kiteSettings', JSON.stringify(KITE_SET)); } catch {} };
+function addKites() {
+  const pane = map.createPane('kites');
+  pane.style.zIndex = 396;
+  const scale = () => map.getContainer().style.setProperty('--kite-s', Math.max(0.35, Math.min(1.5, 0.55 * Math.pow(1.45, map.getZoom() - 14))));
+  map.on('zoomend', scale); scale();
+  map.on('click', e => { if (!kiteEdit) return; KITES.push([+e.latlng.lat.toFixed(6), +e.latlng.lng.toFixed(6)]); saveKites(); drawKites(); kitePanelSync?.(); });
+  drawKites();
+}
+function drawKites() {
+  kiteGroup?.remove();
+  kiteGroup = L.layerGroup().addTo(map);
+  const c = map.getContainer();
+  c.style.setProperty('--kite-k', KITE_SET.size);
+  c.classList.toggle('kites-still', !KITE_SET.animate);
+  KITES.forEach((pos, i) => {
+    // Each rider faces a fixed random way and rides with its own timing.
+    const flip = simRandom(`kite:${i}`) < 0.5 ? -1 : 1, delay = (simRandom(`kited:${i}`) * -6).toFixed(2);
+    const m = L.marker(pos, { pane: 'kites', draggable: true, keyboard: false,
+      icon: L.divIcon({ className: 'kiter', html: `<img src="logos/kitesurfer.png" alt="" style="--flip:${flip};animation-delay:${delay}s">`, iconSize: [36, 36], iconAnchor: [18, 30] }) }).addTo(kiteGroup);
+    kiteEdit ? m.dragging.enable() : m.dragging.disable();
+    m.on('dragend', () => { const ll = m.getLatLng(); KITES[i] = [+ll.lat.toFixed(6), +ll.lng.toFixed(6)]; saveKites(); });
+    m.on('dblclick', e => { if (!kiteEdit) return; L.DomEvent.stop(e); KITES.splice(i, 1); saveKites(); drawKites(); kitePanelSync?.(); });
+  });
+}
+function addKitePanel() {
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel kitepanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('kitePanel')}" title="${t('kitePanel')}"><img src="logos/kitesurfer.png" alt=""></button>
+      <div class="zp-body" hidden>
+        <h4>${t('kitePanel')}</h4>
+        <label class="sp-drag"><input type="checkbox" data-edit> ${t('kiteEdit')}</label>
+        <p class="hp-hint">${t('kiteHint')}</p>
+        <label class="sp-drag"><input type="checkbox" data-anim> ${t('kiteAnimate')}</label>
+        <div class="zp-actions"><button data-add>${t('kiteAdd')}</button><button data-clear>${t('houseClear')}</button></div>
+        <label>${t('treeSize')} <span><input type="range" data-ks min="0.3" max="3" step="0.1"><output data-ko></output><small>×</small></span></label>
+        <p class="tp-total" data-count></p>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel);
+    const sync = () => { q('[data-ks]').value = KITE_SET.size; q('[data-ko]').textContent = KITE_SET.size; q('[data-anim]').checked = KITE_SET.animate; q('[data-count]').textContent = t('kiteCount', KITES.length); };
+    kitePanelSync = sync;
+    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
+    q('[data-edit]').onchange = e => { kiteEdit = e.target.checked; document.body.classList.toggle('kites-edit', kiteEdit); drawKites(); };
+    q('[data-anim]').onchange = e => { KITE_SET.animate = e.target.checked; saveKites(); drawKites(); };
+    q('[data-add]').onclick = () => {
+      const c = map.getCenter(); KITES.push([+c.lat.toFixed(6), +c.lng.toFixed(6)]); saveKites();
+      if (!kiteEdit) { q('[data-edit]').checked = true; kiteEdit = true; document.body.classList.add('kites-edit'); }
+      drawKites(); sync();
+    };
+    q('[data-clear]').onclick = () => { if (!confirm(t('kiteClearAsk'))) return; KITES = []; saveKites(); drawKites(); sync(); };
+    q('[data-ks]').oninput = e => { KITE_SET.size = +e.target.value; saveKites(); map.getContainer().style.setProperty('--kite-k', KITE_SET.size); sync(); };
+    q('.zp-reset').onclick = () => { KITES = KITES_DEFAULT.map(p => [...p]); KITE_SET = { size: 1, animate: true }; saveKites(); drawKites(); sync(); };
     sync();
     return box;
   } });
