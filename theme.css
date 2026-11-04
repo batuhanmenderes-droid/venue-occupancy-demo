@@ -648,3 +648,10 @@ body.mapmode .vbg-list { display: none; }
 .slegend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
 .slegend b { font: 600 14px var(--font-display); color: var(--ink); }
 .slegend em { font-style: normal; color: var(--muted); }
+
+/* Map labels: a little more air between the head count and the venue name */
+.leaflet-tooltip.vlabel { gap: 7px; }
+/* Expected peak, under "Getting busier" */
+.expect, .leaflet-tooltip.vlabel .vexpect { font: 500 12px/1.2 var(--font-text); color: var(--ink-2); }
+.leaflet-tooltip.vlabel .vexpect { font-size: 11px; margin-top: -3px; }
+.expect { margin-top: -2px; }

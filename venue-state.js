@@ -167,6 +167,15 @@ function risingFromFrames(frames) {
   const back = frames.filter(f => { const m = (t - new Date(f.timestamp).getTime()) / 60000; return m >= 30 && m <= 90; });
   return isRising(last, back[0]);  // frames are in time order, so back[0] is the oldest in the window
 }
+// Expected peak for the rest of the business day (demo venues): the highest count still to come,
+// rounded the way people say it ("around 1200", "around 40"). Null when nothing busier is ahead.
+function expectedPeak(v, at = new Date()) {
+  const end = new Date(at); end.setHours(6, 0, 0, 0); if (end <= at) end.setDate(end.getDate() + 1);
+  let top = 0;
+  for (let t = at.getTime() + 20 * 60000; t < end.getTime(); t += 20 * 60000) top = Math.max(top, simCount(v, new Date(t)));
+  const step = top >= 500 ? 100 : top >= 50 ? 10 : 5, n = Math.round(top / step) * step;
+  return n > (simLatest(v, at)?.people ?? 0) ? n : null;
+}
 function risingSim(v, at = new Date()) {
   const now = simLatest(v, at), before = simLatest(v, new Date(at.getTime() - 60 * 60000));
   return isRising(now, before);
