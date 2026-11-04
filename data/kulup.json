@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-04T23:41:50",
+  "updated_at": "2026-11-04T20:42:10",
   "frames": [
     {
       "file": "kulup-cctv/2026-11-03/2026-11-03_10-00-00.jpg",
@@ -317,46 +317,6 @@
     {
       "file": "kulup-cctv/2026-11-04/2026-11-04_20-15-00.jpg",
       "timestamp": "2026-11-04T20:15:00",
-      "camera": "CAM 01",
-      "people": 7,
-      "note": "",
-      "note_en": ""
-    },
-    {
-      "file": "kulup-cctv/2026-11-04/2026-11-04_21-00-00.jpg",
-      "timestamp": "2026-11-04T21:00:00",
-      "camera": "CAM 01",
-      "people": 7,
-      "note": "",
-      "note_en": ""
-    },
-    {
-      "file": "kulup-cctv/2026-11-04/2026-11-04_21-30-00.jpg",
-      "timestamp": "2026-11-04T21:30:00",
-      "camera": "CAM 01",
-      "people": 8,
-      "note": "",
-      "note_en": ""
-    },
-    {
-      "file": "kulup-cctv/2026-11-04/2026-11-04_22-00-00.jpg",
-      "timestamp": "2026-11-04T22:00:00",
-      "camera": "CAM 01",
-      "people": 10,
-      "note": "",
-      "note_en": ""
-    },
-    {
-      "file": "kulup-cctv/2026-11-04/2026-11-04_22-45-00.jpg",
-      "timestamp": "2026-11-04T22:45:00",
-      "camera": "CAM 01",
-      "people": 9,
-      "note": "",
-      "note_en": ""
-    },
-    {
-      "file": "kulup-cctv/2026-11-04/2026-11-04_23-30-00.jpg",
-      "timestamp": "2026-11-04T23:30:00",
       "camera": "CAM 01",
       "people": 7,
       "note": "",
