@@ -953,13 +953,17 @@ body.houses-edit .leaflet-container { cursor: copy; }
 /* Kitesurfers */
 .kiter { background: none; border: 0; pointer-events: none !important; }
 .kiter img { width: 36px; height: 36px; display: block; transform-origin: 50% 85%;
-  transform: scale(calc(var(--kite-s, .55) * var(--kite-k, 1))) scaleX(var(--flip, 1)); animation: kiteRide 6s ease-in-out infinite; }
+  transform: scale(calc(var(--kite-s, .55) * var(--kite-k, 1))); scale: var(--flip, 1) 1; animation: kiteRide 14s linear infinite; }
+/* Riding up and down the coast (north–south), turning round at each end, with a little lean */
 @keyframes kiteRide {
-  0%, 100% { translate: 0 0; rotate: 0deg; }
-  25% { translate: calc(var(--flip, 1) * 4px) -1.5px; rotate: calc(var(--flip, 1) * 3deg); }
-  50% { translate: calc(var(--flip, 1) * 7px) 0; rotate: 0deg; }
-  75% { translate: calc(var(--flip, 1) * 3px) 1px; rotate: calc(var(--flip, 1) * -2deg); }
+  0%   { translate: 0 0; scale: var(--flip) 1; rotate: 0deg; }
+  24%  { translate: 2px calc(var(--dir, 1) * -34px * var(--kite-k, 1) * var(--kite-s, .55) * 1.8); scale: var(--flip) 1; rotate: calc(var(--flip) * 3deg); }
+  25%  { translate: 2px calc(var(--dir, 1) * -35px * var(--kite-k, 1) * var(--kite-s, .55) * 1.8); scale: calc(var(--flip) * -1) 1; }
+  74%  { translate: -2px calc(var(--dir, 1) * 34px * var(--kite-k, 1) * var(--kite-s, .55) * 1.8); scale: calc(var(--flip) * -1) 1; rotate: calc(var(--flip) * -3deg); }
+  75%  { translate: -2px calc(var(--dir, 1) * 35px * var(--kite-k, 1) * var(--kite-s, .55) * 1.8); scale: var(--flip) 1; }
+  100% { translate: 0 0; scale: var(--flip) 1; rotate: 0deg; }
 }
+
 .kites-still .kiter img { animation: none; }
 @media (prefers-reduced-motion: reduce) { .kiter img { animation: none; } }
 body.kites-edit .kiter { pointer-events: auto !important; cursor: grab; }
@@ -975,7 +979,7 @@ body.houses-remove .house:hover svg { opacity: .55; }
 
 /* Map tilt (see applyTilt): the whole map plane leans back a little */
 .leaflet-container.tilted { background: var(--map-land, #f1f0ed); }
-.leaflet-container.tilted .leaflet-map-pane { rotate: x var(--map-tilt, 0deg); transform-origin: var(--tilt-o, 50% 50%); }
+.leaflet-container.tilted .leaflet-tile-pane, .leaflet-container.tilted .leaflet-shade-pane { transform: perspective(var(--tilt-p, 2600px)) rotateX(var(--map-tilt, 0deg)); transform-origin: var(--tilt-o, 50% 50%); }  /* only the ground tilts */
 .set-range { display: inline-flex; align-items: center; gap: 8px; }
 .set-range input { width: 130px; accent-color: var(--series, #0a84ff); }
 .set-range output { font: 600 13px var(--font-display); min-width: 30px; text-align: right; color: var(--ink); }
