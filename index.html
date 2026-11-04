@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261107r"></script>
+<script src="i18n.js?v=20261107t"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261107r">
+<link rel="stylesheet" href="theme.css?v=20261107t">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -165,9 +165,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261107r"></script>
-<script src="venue-state.js?v=20261107r"></script>
-<script src="menu.js?v=20261107r"></script>
+<script src="levels.js?v=20261107t"></script>
+<script src="venue-state.js?v=20261107t"></script>
+<script src="menu.js?v=20261107t"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -1225,7 +1225,7 @@ function addMapColorPanel() {
     const sync = () => qa('[data-m]').forEach(i => { i.value = MAP_COLORS[i.dataset.m]; });
     let pending = 0;
     const apply = () => {
-      try { localStorage.setItem('mapColorsCustom', JSON.stringify(MAP_COLORS)); } catch {}
+      try { localStorage.setItem(customKey(), JSON.stringify(MAP_COLORS)); } catch {}
       applyMapCss();
       cancelAnimationFrame(pending); pending = requestAnimationFrame(repaintBasemap);
     };
@@ -1236,7 +1236,7 @@ function addMapColorPanel() {
     qa('[data-m]').forEach(i => i.oninput = () => { MAP_COLORS[i.dataset.m] = i.value; apply(); });
     qa('[data-preset]').forEach(b => b.onclick = () => { MAP_COLORS = { ...MAP_PRESETS[b.dataset.preset] }; sync(); apply(); });
     // Reset drops the custom palette, so the map follows day / night again.
-    q('.zp-reset').onclick = () => { try { localStorage.removeItem('mapColorsCustom'); } catch {} MAP_COLORS = { ...mapAuto() }; sync(); applyMapCss(); repaintBasemap(); };
+    q('.zp-reset').onclick = () => { try { localStorage.removeItem(customKey()); } catch {} MAP_COLORS = { ...mapAuto() }; sync(); applyMapCss(); repaintBasemap(); };
     box.addEventListener('sync', sync);
     sync();
     return box;
@@ -1298,17 +1298,27 @@ const MAP_PRESETS = {
     town: '#3a3a3c', grid: '#000000', shade: '#ffffff',
   },
 };
-// Without a custom palette the map follows the day/night theme: light by day, dark at night.
-const mapAuto = () => MAP_PRESETS[document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'];
+// The map always follows the light / dark theme (Settings › Appearance, or sunrise / sunset on Auto).
+// Colours changed in the Map colours panel are kept separately for each theme.
+const themeKey = () => document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+const mapAuto = () => MAP_PRESETS[themeKey()];
+const customKey = () => `mapColorsCustom:${themeKey()}`;
 let MAP_COLORS = loadMapColors();
 function loadMapColors() {
-  try { const c = localStorage.getItem('mapColorsCustom'); if (c) return { ...mapAuto(), ...JSON.parse(c) }; } catch {}
+  try {
+    // An older single custom palette goes to the theme its land colour belongs to (dark land → dark map),
+    // and a dark palette that ended up under the light theme is moved over too.
+    const isDark = json => { try { const n = parseInt(JSON.parse(json).land.slice(1), 16); return ((n >> 16) + ((n >> 8) & 255) + (n & 255)) / 765 < 0.4; } catch { return false; } };
+    const old = localStorage.getItem('mapColorsCustom');
+    if (old) { localStorage.setItem(`mapColorsCustom:${isDark(old) ? 'dark' : 'light'}`, old); localStorage.removeItem('mapColorsCustom'); }
+    const lightOne = localStorage.getItem('mapColorsCustom:light');
+    if (lightOne && isDark(lightOne)) { if (!localStorage.getItem('mapColorsCustom:dark')) localStorage.setItem('mapColorsCustom:dark', lightOne); localStorage.removeItem('mapColorsCustom:light'); }
+    const c = localStorage.getItem(customKey()); if (c) return { ...mapAuto(), ...JSON.parse(c) };
+  } catch {}
   return { ...mapAuto() };
 }
 document.addEventListener('themechange', () => {
-  let custom = null; try { custom = localStorage.getItem('mapColorsCustom'); } catch {}
-  if (custom) return;
-  MAP_COLORS = { ...mapAuto() };
+  MAP_COLORS = loadMapColors();
   document.querySelector('.mappanel')?.dispatchEvent(new Event('sync'));
   repaintBasemap();
 });
