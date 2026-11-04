@@ -994,3 +994,16 @@ body.houses-remove .house:hover svg { opacity: .55; }
 body.routing .leaflet-cars-pane { opacity: 0; }
 /* The venue settings dialog is a centred modal (it shares the "sheet" class name with the bottom sheets) */
 dialog.sheet { position: fixed; inset: 0; margin: auto; max-height: calc(100dvh - 32px); overflow: auto; }
+
+/* ---- iOS-style glass on the detail containers: map labels and list card bodies ---- */
+:root { --glass-bg: rgba(255, 255, 255, 0.58); --glass-border: rgba(255, 255, 255, 0.7); --glass-hi: rgba(255, 255, 255, 0.85); }
+:root[data-theme="dark"] { --glass-bg: rgba(36, 36, 40, 0.52); --glass-border: rgba(255, 255, 255, 0.12); --glass-hi: rgba(255, 255, 255, 0.14); }
+.leaflet-tooltip.vlabel {
+  background: var(--glass-bg) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
+  border: 0.5px solid var(--glass-border) !important;
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.28), inset 0 1px 0 var(--glass-hi) !important;
+}
+.venue { background: var(--glass-bg) !important; -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
+  border-color: var(--glass-border) !important; box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.22), inset 0 1px 0 var(--glass-hi); }
+.venue .body { background: transparent; }
