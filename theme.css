@@ -742,11 +742,14 @@ body.menu-open .sidemenu { transform: none; }
 .windread[hidden] { display: none; }
 .windread svg { width: 14px; height: 14px; color: var(--wc, var(--series, #0a84ff)); grid-row: span 2; transition: transform .6s; }
 .windread b { font: 700 17px/1 var(--font-display); color: var(--ink); }
-.windread span { grid-column: 2; }
+.windread i { grid-column: 2; font-style: normal; }
 .windread em { grid-column: 1 / -1; font-style: normal; color: var(--muted); }
 
 /* Sea name: styled like the town names (see .townlabel), but left-aligned at the screen's left edge */
-.townlabel.sealabel span { transform: translateY(-50%); }
+.townlabel.sealabel .seawrap { display: inline-grid; justify-items: end; gap: 8px; transform: translateY(-22px); }
+.townlabel.sealabel .seawrap > span { transform: none; }
+.sealabel .windread { pointer-events: auto; }
+body.wind-off .sealabel .windread { display: none; }
 
 /* Faint day chart behind a card's text (Kitebeach): 20% opacity, under everything in the card body */
 .venue .body { position: relative; isolation: isolate; }

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261105m"></script>
+<script src="i18n.js?v=20261105n"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261105m">
+<link rel="stylesheet" href="theme.css?v=20261105n">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -149,8 +149,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261105m"></script>
-<script src="venue-state.js?v=20261105m"></script>
+<script src="levels.js?v=20261105n"></script>
+<script src="venue-state.js?v=20261105n"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -527,7 +527,7 @@ const WindLayer = L.Layer.extend({
     const size = m.getSize(), ctx = this._canvas.getContext('2d');
     // Fade the previous frame a little: this leaves the short trails.
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.045)';
     ctx.fillRect(0, 0, size.x, size.y);
     ctx.globalCompositeOperation = 'source-over';
     ctx.lineWidth = 1.6; ctx.lineCap = 'round'; ctx.globalAlpha = 0.85;
@@ -535,8 +535,8 @@ const WindLayer = L.Layer.extend({
     const paths = WIND_BANDS.map(() => new Path2D());
     for (const p of this._parts) {
       const ll = m.containerPointToLatLng([p.x, p.y]), w = windAt(ll.lat, ll.lng), sp = Math.hypot(w.u, w.v);
-      // Screen speed: a floor so a light breeze still drifts visibly, then proportional to knots.
-      const k = (0.45 + sp * 0.09) / Math.max(0.1, sp);
+      // Screen speed follows the wind: ~10 px/s in a 3 kn breeze, ~45 px/s at 20 kn.
+      const k = (0.06 + sp * 0.035) / Math.max(0.1, sp);
       const nx = p.x + w.u * k, ny = p.y - w.v * k;
       const path = paths[windBand(sp)];
       path.moveTo(p.x, p.y); path.lineTo(nx, ny);
@@ -567,10 +567,11 @@ function addWindControl() {
   const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
     const box = L.DomUtil.create('div', 'zoompanel windctl');
     L.DomEvent.disableClickPropagation(box);
-    box.innerHTML = `<button class="zp-toggle" aria-pressed="false" aria-label="${t('windToggle')}" title="${t('windToggle')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h11a3 3 0 1 0-3-3M3 13h15a3 3 0 1 1-3 3M3 17h7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button><div class="windread" hidden></div>`;
-    const btn = box.querySelector('button'), read = box.querySelector('.windread');
+    box.innerHTML = `<button class="zp-toggle" aria-pressed="false" aria-label="${t('windToggle')}" title="${t('windToggle')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h11a3 3 0 1 0-3-3M3 13h15a3 3 0 1 1-3 3M3 17h7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button>`;
+    // The readout sits under the "Gökova Körfezi" label (see SEA), right-aligned.
+    const btn = box.querySelector('button'), read = () => document.querySelector('.sealabel .windread');
     const set = on => {
-      btn.setAttribute('aria-pressed', on); read.hidden = !on;
+      btn.setAttribute('aria-pressed', on); document.body.classList.toggle('wind-off', !on);
       if (on && !windLayer) windLayer = new WindLayer().addTo(map);
       if (!on && windLayer) { map.removeLayer(windLayer); windLayer = null; }
       try { localStorage.setItem('windOn', on ? '1' : '0'); } catch {}
@@ -579,9 +580,10 @@ function addWindControl() {
     windCtl = { update() {
       if (!windField) return;
       const f = windField, dir = COMPASS[Math.round(f.from / 45) % 8];
-      read.style.setProperty('--wc', WIND_BANDS[windBand(f.speed)].color);
-      read.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><b>${Math.round(f.speed)}</b><span>kn ${t('windFrom', dir)}</span><em>${t('windGust', Math.round(f.gust))}</em>`;
-      read.title = t('windSource');
+      const el = read(); if (!el) return;
+      el.style.setProperty('--wc', WIND_BANDS[windBand(f.speed)].color);
+      el.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><b>${Math.round(f.speed)}</b><i>kn ${t('windFrom', dir)}</i><em>${t('windGust', Math.round(f.gust))}</em>`;
+      el.title = t('windSource');
       if (windLayer?._still) windLayer._drawStill();
     } };
     set(pref('windOn', '1') === '1');
@@ -750,7 +752,8 @@ async function addBasemap() {
   }
   addShade();
   townMarkers = TOWNS.map(town => ({ town, marker: L.marker([town.lat, town.lon], { icon: L.divIcon({ className: 'townlabel', html: `<span lang="tr">${town.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1000 }).addTo(map) }));
-  seaMarker = L.marker(SEA.at, { icon: L.divIcon({ className: 'townlabel sealabel', html: `<span lang="tr">${SEA.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1100 }).addTo(map);
+  seaMarker = L.marker(SEA.at, { icon: L.divIcon({ className: 'townlabel sealabel', html: `<div class="seawrap"><span lang="tr">${SEA.name}</span><div class="windread"></div></div>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1100 }).addTo(map);
+  windCtl?.update();
   drawMap();
 }
 
