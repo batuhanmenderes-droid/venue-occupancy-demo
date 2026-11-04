@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261105x"></script>
+<script src="i18n.js?v=20261105z"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261105x">
+<link rel="stylesheet" href="theme.css?v=20261105z">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -149,8 +149,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261105x"></script>
-<script src="venue-state.js?v=20261105x"></script>
+<script src="levels.js?v=20261105z"></script>
+<script src="venue-state.js?v=20261105z"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -438,7 +438,13 @@ async function loadWind() {
   });
   const mean = k => cells.reduce((a, c) => a + c[k], 0) / cells.length;
   const u = mean('u'), v = mean('v');
-  windField = { cells, speed: Math.hypot(u, v), gust: Math.max(...cells.map(c => c.gust)), from: (Math.atan2(-u, -v) * 180 / Math.PI + 360) % 360, at: Date.now() };
+  // Today's hourly wind over the bay (Turkish time) for the small chart in the readout.
+  let hours = windField?.hours || [];
+  try {
+    const h = await (await fetch('https://api.open-meteo.com/v1/forecast?latitude=37.04&longitude=28.28&hourly=wind_speed_10m,wind_gusts_10m&wind_speed_unit=kn&timezone=Europe%2FIstanbul&forecast_days=1')).json();
+    hours = h.hourly.time.map((t, i) => ({ h: +t.slice(11, 13), sp: h.hourly.wind_speed_10m[i], gust: h.hourly.wind_gusts_10m[i] }));
+  } catch {}
+  windField = { cells, hours, speed: Math.hypot(u, v), gust: Math.max(...cells.map(c => c.gust)), from: (Math.atan2(-u, -v) * 180 / Math.PI + 360) % 360, at: Date.now() };
   windCtl?.update();
 }
 // Bilinear wind (knots, u/v) at a lat/lon inside the grid; outside it the nearest edge is used.
@@ -569,14 +575,37 @@ let windLayer = null, windCtl = null;
 const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 // The wind readout can be dragged anywhere (mouse or touch); its offset from the label is remembered.
 // Double-click puts it back to the default spot.
-const WIND_READ_DEFAULT = { x: -110, y: -119 };  // default spot, relative to its place under the label
+// Today's wind (00–24) under the readout: wind speed as an area + line coloured by strength band, gusts
+// as a faint dashed line, a dot at the current hour and a few hour ticks.
+function windChart(hours) {
+  if (!hours?.length) return '';
+  const W = 220, H = 64, top = 10, bot = 14;
+  // Scaled to the day's own gusts, so even a light day shows its ups and downs.
+  const max = Math.max(6, ...hours.map(h => h.gust)) * 1.08;
+  const x = h => 2 + h / 23 * (W - 4), y = v => top + (1 - v / max) * (H - top - bot);
+  const sp = hours.map(h => [x(h.h), y(h.sp)]), gu = hours.map(h => [x(h.h), y(h.gust)]);
+  const line = roundedLine(sp, 8);
+  const stops = WIND_BANDS.map((b, i) => { const lo = i ? WIND_BANDS[i - 1].max : 0, hi = b.max === Infinity ? max : b.max; return [Math.min(1, (lo + hi) / 2 / max), b.color]; })
+    .filter(([o], i, a) => i === 0 || a[i - 1][0] < 1);
+  const grad = (id, op) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="${y(0)}" x2="0" y2="${y(max)}">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${op}"/>`).join('')}</linearGradient>`;
+  const now = new Date(), nh = now.getHours() + now.getMinutes() / 60, ni = Math.min(hours.length - 1, Math.floor(nh));
+  const nv = hours[ni].sp + ((hours[Math.min(hours.length - 1, ni + 1)].sp - hours[ni].sp) * (nh - ni));
+  const ticks = [0, 6, 12, 18].map(h => `<text x="${x(h)}" y="${H - 2}" text-anchor="${h ? 'middle' : 'start'}">${String(h).padStart(2, '0')}</text>`).join('');
+  return `<svg class="wr-chart" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs>${grad('wcL', 1)}${grad('wcA', 0.35)}</defs>
+    <path d="${roundedLine(gu, 8)}" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" opacity=".35"/>
+    <path d="${line}L${sp[sp.length - 1][0]},${y(0)}L${sp[0][0]},${y(0)}Z" fill="url(#wcA)"/>
+    <path d="${line}" fill="none" stroke="url(#wcL)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <line x1="${x(nh)}" x2="${x(nh)}" y1="${top - 4}" y2="${y(0)}" stroke="currentColor" stroke-width="1" opacity=".25"/>
+    <circle cx="${x(nh)}" cy="${y(nv)}" r="3.5" fill="${WIND_BANDS[windBand(nv)].color}" stroke="#fff" stroke-width="1.5"/>${ticks}</svg>`;
+}
+const WIND_READ_DEFAULT = { x: -18, y: -150 };  // default spot, relative to its place under the label
 function makeMovable(el) {
   if (el.dataset.movable) return;
   el.dataset.movable = '1';
   let off = { ...WIND_READ_DEFAULT };
-  try { off = { ...off, ...JSON.parse(localStorage.getItem('windReadOffset') || '{}') }; } catch {}
+  try { off = { ...off, ...JSON.parse(localStorage.getItem('windReadOffset2') || '{}') }; } catch {}
   const apply = () => { el.style.translate = `${off.x}px ${off.y}px`; };
-  const save = () => { try { localStorage.setItem('windReadOffset', JSON.stringify(off)); } catch {} };
+  const save = () => { try { localStorage.setItem('windReadOffset2', JSON.stringify(off)); } catch {} };
   apply();
   el.addEventListener('pointerdown', e => {
     e.stopPropagation(); e.preventDefault();
@@ -599,7 +628,7 @@ function addWindControl() {
     if (!windField || !el) return;
     const f = windField, dir = COMPASS[Math.round(f.from / 45) % 8];
     el.style.setProperty('--wc', WIND_BANDS[windBand(f.speed)].color);
-    el.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><div class="wr-top"><b>${Math.round(f.speed)}</b> / ${Math.round(f.gust)} ${t('knots')}</div><i>${t('windFrom', dir)}</i>`;
+    el.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><div class="wr-top"><b>${Math.round(f.speed)}</b> / ${Math.round(f.gust)} ${t('knots')}</div><i>${t('windFrom', dir)}</i>${windChart(f.hours)}`;
     el.title = `${t('windSource')} · ${t('windDrag')}`;
     makeMovable(el);
     if (windLayer?._still) windLayer._drawStill();

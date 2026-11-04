@@ -734,7 +734,7 @@ body.menu-open .sidemenu { transform: none; }
 :root { --wind: rgba(28, 60, 110, 0.6); }
 :root[data-theme="dark"] { --wind: rgba(255, 255, 255, 0.65); }
 .windcanvas { position: absolute; pointer-events: none; }
-.windread { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 5px; row-gap: 1px; padding: 7px 10px; border-radius: 12px;
+.windread { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 5px; row-gap: 1px; padding: 7px 10px; border-radius: 12px;
   background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
   box-shadow: var(--shadow-float), var(--highlight); font: 500 11px/1.2 var(--font-text); color: var(--ink-2); }
 .windread[hidden] { display: none; }
@@ -761,3 +761,7 @@ body.menu-open .sidemenu { transform: none; }
 /* YouTube clips stay hidden (thumbnail shows) until they are actually playing: no YouTube buttons or titles */
 .vthumb iframe, .vbg-video iframe { opacity: 0; transition: opacity .6s; }
 .vthumb iframe.yt-playing, .vbg-video iframe.yt-playing { opacity: 1; }
+
+/* Today's wind chart under the readout: the box grows downward */
+.windread .wr-chart { grid-column: 1 / -1; grid-row: auto; align-self: stretch; margin-right: 0; width: 100%; min-width: 200px; height: auto; margin-top: 6px; color: var(--ink-2); overflow: visible; }
+.windread .wr-chart text { font: 500 9px var(--font-text); fill: var(--muted); }
