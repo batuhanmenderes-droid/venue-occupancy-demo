@@ -731,8 +731,8 @@ body.menu-open .sidemenu { transform: none; }
 .leaflet-tooltip.vlabel .vpeak { font-size: 11px; padding: 4px 7px; border-radius: 999px; background: rgba(224, 33, 138, 0.12); justify-self: start; }
 
 /* ---- Wind layer ---- */
-:root { --wind: rgba(40, 52, 72, 0.42); }
-:root[data-theme="dark"] { --wind: rgba(255, 255, 255, 0.5); }
+:root { --wind: rgba(28, 60, 110, 0.6); }
+:root[data-theme="dark"] { --wind: rgba(255, 255, 255, 0.65); }
 .windcanvas { position: absolute; pointer-events: none; }
 .windctl { justify-items: end; }
 .windctl .zp-toggle[aria-pressed="true"] { background: var(--series, #0a84ff); color: #fff; }
@@ -750,3 +750,7 @@ body.menu-open .sidemenu { transform: none; }
   font: italic 500 22px/1 var(--font-display); letter-spacing: 0.14em; color: color-mix(in srgb, var(--map-water, #c4d3e0) 45%, #1d3b5c); opacity: 0.75; }
 :root[data-theme="dark"] .sealabel span { color: color-mix(in srgb, var(--map-water, #0a0a0b) 30%, #8fb3d9); }
 @media (max-width: 640px) { .sealabel span { font-size: 16px; } }
+
+/* Faint day chart behind a card's text (Kitebeach): 20% opacity, under everything in the card body */
+.venue .body { position: relative; isolation: isolate; }
+.venue .body > .cardchart { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 78%; z-index: -1; opacity: 0.2; pointer-events: none; }
