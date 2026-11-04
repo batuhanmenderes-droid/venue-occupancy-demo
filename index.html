@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261107g"></script>
+<script src="i18n.js?v=20261107h"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261107g">
+<link rel="stylesheet" href="theme.css?v=20261107h">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -165,9 +165,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261107g"></script>
-<script src="venue-state.js?v=20261107g"></script>
-<script src="menu.js?v=20261107g"></script>
+<script src="levels.js?v=20261107h"></script>
+<script src="venue-state.js?v=20261107h"></script>
+<script src="menu.js?v=20261107h"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -308,7 +308,6 @@ function initMap() {
   addHeatPanel();
   addLevelsPanel();
   addMapColorPanel();
-  addRoadPanel();
   addSeaPanel();
   addWindControl();
   addYouMarker();
@@ -1094,87 +1093,8 @@ function addKitePanel() {
   new Ctl().addTo(map);
 }
 
-// ---- Roads panel: asphalt, centre line, stone streets (colours shared with Map colours, widths here) ----
-function addRoadPanel() {
-  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
-    const box = L.DomUtil.create('div', 'zoompanel roadpanel');
-    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
-    const color = (k, label) => `<div class="hp-row"><span>${label}</span><input type="color" data-rc="${k}" aria-label="${label}"></div>`;
-    const slider = (k, label, min, max, step, unit) => `<label>${label} <span><input type="range" data-rw="${k}" min="${min}" max="${max}" step="${step}"><output data-ro="${k}"></output><small>${unit}</small></span></label>`;
-    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('roadPanel')}" title="${t('roadPanel')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3 4 21M16 3l4 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M12 4v3M12 10.5v3M12 17v3" stroke="#ffc800" stroke-width="2" stroke-linecap="round"/></svg></button>
-      <div class="zp-body" hidden>
-        <h4>${t('roadAsphalt')}</h4>
-        <div class="hp-colors">${color('major', t('mapKeys').major)}${color('motorway', t('mapKeys').motorway)}${color('lane', t('mapKeys').lane)}</div>
-        ${slider('road', t('roadWidth'), 0.3, 3, 0.1, '×')}
-        ${slider('lane', t('roadLaneWidth'), 0, 3, 0.1, '×')}
-        ${slider('dash', t('roadDash'), 0.5, 10, 0.5, '')}
-        <h4>${t('roadStone')}</h4>
-        <div class="hp-colors">${color('minor', t('mapKeys').minor)}${color('joint', t('mapKeys').joint)}</div>
-        ${slider('street', t('roadStreetWidth'), 0.3, 3, 0.1, '×')}
-        ${slider('joint', t('roadJointWidth'), 0, 1.5, 0.05, '×')}
-        <button class="zp-reset">${t('zoomReset')}</button>
-      </div>`;
-    const q = sel => box.querySelector(sel), qa = sel => box.querySelectorAll(sel);
-    const sync = () => {
-      qa('[data-rc]').forEach(i => { i.value = MAP_COLORS[i.dataset.rc]; });
-      qa('[data-rw]').forEach(i => { i.value = ROAD[i.dataset.rw]; q(`[data-ro="${i.dataset.rw}"]`).textContent = ROAD[i.dataset.rw]; });
-    };
-    let pending = 0;
-    const repaint = () => { cancelAnimationFrame(pending); pending = requestAnimationFrame(repaintBasemap); };
-    q('.zp-toggle').onclick = () => { const b = q('.zp-body'); b.hidden = !b.hidden; q('.zp-toggle').setAttribute('aria-expanded', !b.hidden); };
-    qa('[data-rc]').forEach(i => i.oninput = () => {
-      MAP_COLORS[i.dataset.rc] = i.value;
-      try { localStorage.setItem('mapColorsCustom2', JSON.stringify(MAP_COLORS)); } catch {}
-      document.querySelector('.mappanel')?.dispatchEvent(new Event('sync')); repaint();
-    });
-    qa('[data-rw]').forEach(i => i.oninput = () => {
-      ROAD[i.dataset.rw] = +i.value; try { localStorage.setItem('roadSettings', JSON.stringify(ROAD)); } catch {}
-      sync(); repaint();
-    });
-    q('.zp-reset').onclick = () => {
-      ROAD = { ...ROAD_DEFAULT }; try { localStorage.removeItem('roadSettings'); } catch {}
-      const auto = mapAuto(); for (const k of ['major', 'motorway', 'lane', 'minor', 'joint']) MAP_COLORS[k] = auto[k];
-      try { localStorage.setItem('mapColorsCustom2', JSON.stringify(MAP_COLORS)); } catch {}
-      sync(); repaint();
-    };
-    sync();
-    return box;
-  } });
-  new Ctl().addTo(map);
-}
-
-// ---- Map tilt: a slight isometric look ----
-// The map plane (tiles, clouds, pins, labels) is tilted back around the screen's middle with a long
-// perspective, so it reads almost isometric. Clicks are mapped back onto the tilted plane, so adding a house
-// or kitesurfer still lands where you click. 0° turns it off. Saved per browser.
-const TILT_PERSPECTIVE = 2600;
-let mapTilt = (() => { try { const v = localStorage.getItem('mapTilt'); return v === null ? 22 : +v; } catch { return 22; } })();
-function applyTilt() {
-  if (!map) return;
-  const c = map.getContainer(), sz = map.getSize();
-  c.style.setProperty('--map-tilt', `${mapTilt}deg`);
-  c.style.setProperty('--tilt-o', `${sz.x / 2}px ${sz.y / 2}px`);
-  c.style.perspective = mapTilt ? `${TILT_PERSPECTIVE}px` : '';
-  c.classList.toggle('tilted', mapTilt > 0);
-}
-function setupTilt() {
-  const base = L.Map.prototype.mouseEventToContainerPoint;
-  // Undo the tilt for a screen point: intersect the view ray with the tilted plane (rotation about the
-  // horizontal centre line, perspective origin in the middle of the map).
-  map.mouseEventToContainerPoint = function (e) {
-    const p = base.call(this, e);
-    if (!mapTilt) return p;
-    const { x: w, y: h } = this.getSize(), th = mapTilt * Math.PI / 180, d = TILT_PERSPECTIVE;
-    const cx = w / 2, cy = h / 2, Y = d * (p.y - cy) / (d * Math.cos(th) + (p.y - cy) * Math.sin(th));
-    const k = d / (d - Y * Math.sin(th));
-    return L.point(cx + (p.x - cx) / k, cy + Y);
-  };
-  map.on('resize', applyTilt);
-  applyTilt();
-}
-
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----
-const MAP_KEYS = ['land', 'water', 'landuse', 'green', 'building', 'motorway', 'major', 'lane', 'minor', 'joint', 'path', 'rail', 'town', 'grid', 'shade'];
+const MAP_KEYS = ['land', 'water', 'landuse', 'green', 'building', 'motorway', 'major', 'minor', 'path', 'rail', 'town', 'grid', 'shade'];
 function addMapColorPanel() {
   const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
     const box = L.DomUtil.create('div', 'zoompanel mappanel');
@@ -1191,7 +1111,7 @@ function addMapColorPanel() {
     const sync = () => qa('[data-m]').forEach(i => { i.value = MAP_COLORS[i.dataset.m]; });
     let pending = 0;
     const apply = () => {
-      try { localStorage.setItem('mapColorsCustom2', JSON.stringify(MAP_COLORS)); } catch {}
+      try { localStorage.setItem('mapColorsCustom', JSON.stringify(MAP_COLORS)); } catch {}
       applyMapCss();
       cancelAnimationFrame(pending); pending = requestAnimationFrame(repaintBasemap);
     };
@@ -1202,7 +1122,7 @@ function addMapColorPanel() {
     qa('[data-m]').forEach(i => i.oninput = () => { MAP_COLORS[i.dataset.m] = i.value; apply(); });
     qa('[data-preset]').forEach(b => b.onclick = () => { MAP_COLORS = { ...MAP_PRESETS[b.dataset.preset] }; sync(); apply(); });
     // Reset drops the custom palette, so the map follows day / night again.
-    q('.zp-reset').onclick = () => { try { localStorage.removeItem('mapColorsCustom2'); } catch {} MAP_COLORS = { ...mapAuto() }; sync(); applyMapCss(); repaintBasemap(); };
+    q('.zp-reset').onclick = () => { try { localStorage.removeItem('mapColorsCustom'); } catch {} MAP_COLORS = { ...mapAuto() }; sync(); applyMapCss(); repaintBasemap(); };
     box.addEventListener('sync', sync);
     sync();
     return box;
@@ -1255,12 +1175,12 @@ const VECTOR_STYLE = 'https://tiles.openfreemap.org/styles/dark';
 const MAP_PRESETS = {
   dark: {
     land: '#1f1f20', water: '#0a0a0b', landuse: '#232324', green: '#212122', building: '#2a2a2b',
-    motorway: '#3a3a3d', major: '#3a3a3d', minor: '#5e5444', path: '#2c2c2f', rail: '#303033', lane: '#ffc800', joint: '#463e32',
+    motorway: '#5a5a5d', major: '#4a4a4d', minor: '#38383b', path: '#2c2c2f', rail: '#303033',
     town: '#ffffff', grid: '#ffffff', shade: '#000000',
   },
   light: {
     land: '#f1f0ed', water: '#c4d3e0', landuse: '#ebe9e5', green: '#dfe6d9', building: '#dad7d2',
-    motorway: '#47474a', major: '#47474a', minor: '#d6c9ac', path: '#e2e0dc', rail: '#cfccc7', lane: '#ffc800', joint: '#a8977a',
+    motorway: '#d1d1d1', major: '#b5b5b5', minor: '#d1d1d1', path: '#e2e0dc', rail: '#cfccc7',
     town: '#3a3a3c', grid: '#000000', shade: '#ffffff',
   },
 };
@@ -1268,11 +1188,11 @@ const MAP_PRESETS = {
 const mapAuto = () => MAP_PRESETS[document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'];
 let MAP_COLORS = loadMapColors();
 function loadMapColors() {
-  try { const c = localStorage.getItem('mapColorsCustom2'); if (c) return { ...mapAuto(), ...JSON.parse(c) }; } catch {}
+  try { const c = localStorage.getItem('mapColorsCustom'); if (c) return { ...mapAuto(), ...JSON.parse(c) }; } catch {}
   return { ...mapAuto() };
 }
 document.addEventListener('themechange', () => {
-  let custom = null; try { custom = localStorage.getItem('mapColorsCustom2'); } catch {}
+  let custom = null; try { custom = localStorage.getItem('mapColorsCustom'); } catch {}
   if (custom) return;
   MAP_COLORS = { ...mapAuto() };
   document.querySelector('.mappanel')?.dispatchEvent(new Event('sync'));
@@ -1314,32 +1234,8 @@ function repaintBasemap() {
   const gl = glLayer?.getMaplibreMap?.();
   if (gl && baseStyle) gl.setStyle({ ...baseStyle, layers: styleLayers(baseStyle.layers) });
 }
-// Road look: main roads and motorways are asphalt with a dashed #ffc800 centre line; streets are pale stone
-// with darker joints, like a Roman paved road. Extra line layers are added right above each road layer.
-// (MapLibre runs one zoom level below Leaflet here, so these stops read as Leaflet zoom + 1.)
-const ROAD_DEFAULT = { road: 1, lane: 1, dash: 3, street: 1, joint: 1 };
-let ROAD = (() => { try { return { ...ROAD_DEFAULT, ...JSON.parse(localStorage.getItem('roadSettings') || '{}') }; } catch { return { ...ROAD_DEFAULT }; } })();
-const zwk = (stops, k) => zw(stops.map((v, i) => i % 2 ? Math.max(0.01, v * k) : v));  // zoom must stay the top-level input, so scale the stop values
-const zw = stops => ['interpolate', ['exponential', 1.5], ['zoom'], ...stops];
-function styleLayers(base) {
-  const out = [];
-  for (const l of base) {
-    const r = recolor(l); if (!r) continue;
-    if (/^highway_(major|motorway)_inner$/.test(r.id)) {
-      out.push({ ...r, paint: { ...r.paint, 'line-width': zwk([11, 1.6, 13, 4.5, 15, 11, 17, 26], ROAD.road) } });
-      // Divided roads come as two one-way carriageways; giving each a centre line made two dash rows,
-      // so one-way pieces get none and every road shows a single dashed line.
-      out.push({ ...r, id: `${r.id}_lane`, minzoom: 12, layout: { ...(r.layout || {}), 'line-cap': 'butt' },
-        filter: ['all', r.filter || true, ['!=', ['coalesce', ['get', 'oneway'], 0], 1], ['!=', ['coalesce', ['get', 'oneway'], 0], -1]],
-        paint: { 'line-color': MAP_COLORS.lane, 'line-width': zwk([12, 0.25, 14, 0.5, 16, 0.9, 17, 1.3], ROAD.lane), 'line-dasharray': [ROAD.dash, ROAD.dash * 1.6] } });
-    } else if (r.id === 'highway_minor') {
-      out.push({ ...r, paint: { ...r.paint, 'line-width': zwk([12, 1, 14, 3.2, 16, 8.5, 17, 15], ROAD.street) } });
-      out.push({ ...r, id: 'highway_minor_joints', minzoom: 13.5, layout: { ...(r.layout || {}), 'line-cap': 'butt' },
-        paint: { 'line-color': MAP_COLORS.joint, 'line-width': zwk([13.5, 2, 15, 5, 16, 7.6, 17, 13.5], ROAD.street * ROAD.joint), 'line-dasharray': [0.18, 0.62], 'line-opacity': 0.8 } });
-    } else out.push(r);
-  }
-  return out;
-}
+// Basemap layers repainted with the current palette.
+const styleLayers = base => base.map(recolor).filter(Boolean);
 async function addBasemap() {
   map.getPane('tilePane').style.filter = BASEMAP_FILTER;
   try {
