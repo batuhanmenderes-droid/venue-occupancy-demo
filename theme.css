@@ -1007,3 +1007,6 @@ dialog.sheet { position: fixed; inset: 0; margin: auto; max-height: calc(100dvh 
 .venue { background: var(--glass-bg) !important; -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%);
   border-color: var(--glass-border) !important; box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.22), inset 0 1px 0 var(--glass-hi); }
 .venue .body { background: transparent; }
+/* Kitesurfers only between 11:00 and 18:00 (still shown while editing them) */
+.leaflet-container.kites-off .leaflet-kites-pane { display: none; }
+body.kites-edit .leaflet-container.kites-off .leaflet-kites-pane { display: block; }
