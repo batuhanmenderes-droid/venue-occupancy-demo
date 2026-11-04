@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261108a"></script>
+<script src="i18n.js?v=bounds1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=night2">
+<link rel="stylesheet" href="theme.css?v=night4">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -310,6 +310,7 @@ function initMap() {
   map.on('zoomend moveend resize', drawMap);
   addBasemap();
   addZoomPanel();
+  addBoundsPanel();
   addHeatPanel();
   addLevelsPanel();
   addMapColorPanel();
@@ -439,6 +440,70 @@ function addZoomPanel() {
     });
     q('.zp-reset').onclick = () => { Object.assign(lim, ZOOM_DEFAULT); apply(); sync(); };
     map.on('zoomend', sync);
+    sync();
+    return box;
+  } });
+  new Ctl().addTo(map);
+}
+
+// ---- Map boundaries panel ----
+// Limits how far the viewer can pan. The area is saved per browser; by default it covers both towns
+// and the bay. "Use current view" takes the visible map as the new area; extra room adds a margin
+// around it. While the panel is open the area is outlined on the map.
+const BOUNDS_DEFAULT = { on: true, hard: true, pad: 10, area: [[37.012, 28.305], [37.08, 28.395]] };
+function loadMapBounds() {
+  try {
+    const b = { ...BOUNDS_DEFAULT, ...JSON.parse(localStorage.getItem('mapBounds') || '{}') };
+    const ok = Array.isArray(b.area) && b.area.flat().length === 4 && b.area.flat().every(Number.isFinite);
+    return ok ? b : { ...BOUNDS_DEFAULT };
+  } catch { return { ...BOUNDS_DEFAULT }; }
+}
+function addBoundsPanel() {
+  const bnd = loadMapBounds();
+  let outline = null;
+  const limits = () => L.latLngBounds(bnd.area).pad(bnd.pad / 100);
+  const apply = () => {
+    map.options.maxBoundsViscosity = bnd.hard ? 1 : 0.6;
+    map.setMaxBounds(bnd.on ? limits() : null);
+    outline?.setBounds(limits()).setStyle({ opacity: bnd.on ? 0.9 : 0.35 });
+    try { localStorage.setItem('mapBounds', JSON.stringify(bnd)); } catch {}
+  };
+  apply();
+  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const box = L.DomUtil.create('div', 'zoompanel boundspanel');
+    L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('boundsPanel')}" title="${t('boundsPanel')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V4h4M16 4h4v4M20 16v4h-4M8 20H4v-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><rect x="8.5" y="8.5" width="7" height="7" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.7"/></svg></button>
+      <div class="zp-body" hidden>
+        <label class="zp-check">${t('boundsOn')} <input type="checkbox" data-c="on"></label>
+        <label class="zp-check">${t('boundsHard')} <input type="checkbox" data-c="hard"></label>
+        <label>${t('boundsPad')} <span><input type="range" data-pad min="0" max="100" step="5"><output data-o="pad"></output></span></label>
+        <small class="zp-hint">${t('boundsHint')}</small>
+        <button data-use>${t('boundsUseView')}</button>
+        <button class="zp-reset">${t('zoomReset')}</button>
+      </div>`;
+    const q = sel => box.querySelector(sel);
+    const sync = () => {
+      for (const k of ['on', 'hard']) q(`[data-c="${k}"]`).checked = bnd[k];
+      q('[data-pad]').value = bnd.pad; q('[data-o="pad"]').textContent = `${bnd.pad}%`;
+    };
+    const showOutline = on => {
+      outline?.remove(); outline = null;
+      if (on) outline = L.rectangle(limits(), { color: '#0a84ff', weight: 2, dashArray: '6 6', fill: false, interactive: false, className: 'bounds-outline' }).addTo(map);
+      apply();
+    };
+    q('.zp-toggle').onclick = () => {
+      const b = q('.zp-body'); b.hidden = !b.hidden;
+      q('.zp-toggle').setAttribute('aria-expanded', !b.hidden);
+      showOutline(!b.hidden);
+    };
+    box.querySelectorAll('[data-c]').forEach(c => c.onchange = () => { bnd[c.dataset.c] = c.checked; apply(); });
+    q('[data-pad]').oninput = e => { bnd.pad = +e.target.value; apply(); sync(); };
+    q('[data-use]').onclick = () => {
+      const v = map.getBounds();
+      bnd.area = [[v.getSouth(), v.getWest()], [v.getNorth(), v.getEast()]]; bnd.on = true;
+      apply(); sync();
+    };
+    q('.zp-reset').onclick = () => { Object.assign(bnd, structuredClone(BOUNDS_DEFAULT)); apply(); sync(); };
     sync();
     return box;
   } });
