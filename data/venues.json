@@ -441,7 +441,8 @@
         "approx": false,
         "label": "Karanfil Sk. 2/1, Akyaka"
       },
-      "logo": null,
+      "logo": "logos/motto-brew-coffee.png?v=2",
+    "logo_scale": 1,
       "hours": {
         "open": "08:00",
         "close": "20:00"
