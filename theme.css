@@ -967,3 +967,8 @@ body.kites-edit .kiter img { outline: 1.5px dashed rgba(10, 132, 255, .8); outli
 body.kites-edit .leaflet-container { cursor: copy; }
 body.routing .leaflet-kites-pane { opacity: 0; }
 .kitepanel .zp-toggle img { width: 24px; height: 24px; }
+
+/* House remove mode */
+body.houses-remove .house { pointer-events: auto !important; cursor: not-allowed; }
+body.houses-remove .house svg { outline: 1.5px dashed rgba(255, 59, 48, .9); outline-offset: 2px; border-radius: 4px; }
+body.houses-remove .house:hover svg { opacity: .55; }
