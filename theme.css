@@ -746,7 +746,8 @@ body.menu-open .sidemenu { transform: none; }
 /* Sea name: styled like the town names (see .townlabel), but left-aligned at the screen's left edge */
 .townlabel.sealabel .seawrap { display: inline-grid; justify-items: end; gap: 8px; transform: translateY(-22px); }
 .townlabel.sealabel .seawrap > span { transform: none; margin-right: -0.14em; }  /* drop the trailing letter-spacing so the readout lines up with the last letter */
-.sealabel .windread { pointer-events: auto; }
+.sealabel .windread { pointer-events: auto; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.sealabel .windread.dragging { cursor: grabbing; box-shadow: 0 14px 34px -8px rgba(0, 0, 0, 0.35), var(--highlight); }
 
 /* Faint day chart behind a card's text (Kitebeach): 20% opacity, under everything in the card body */
 .venue .body { position: relative; isolation: isolate; }
