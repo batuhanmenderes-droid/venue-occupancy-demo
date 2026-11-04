@@ -1042,3 +1042,25 @@ body.routing .village-canvas { opacity: 0; }
 .village-retry { justify-self: start; }
 .village-retry:disabled { opacity: .5; cursor: wait; }
 @media (max-width: 400px) { .village-ranges { grid-template-columns: 1fr; } }
+
+/* ---- Settings: a centred iOS form sheet instead of a bottom sheet ---- */
+
+#setSheet { top: 50%; left: 50%; right: auto; bottom: auto; width: min(520px, calc(100vw - 32px)); max-height: min(80dvh, 720px);
+  padding: 18px 16px 20px; border-radius: 22px; box-shadow: var(--shadow-float), 0 0 0 0.5px var(--border);
+  transform: translate(-50%, -50%) scale(.94); opacity: 0; pointer-events: none;
+  transition: transform .28s cubic-bezier(.2, .8, .2, 1), opacity .2s ease; }
+#setSheet.open { transform: translate(-50%, -50%); opacity: 1; pointer-events: auto; }
+#setSheet .sheet-grab { display: none; }
+body:has(#setSheet.open) .sheet-scrim { background: rgba(0, 0, 0, 0.35); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+@media (prefers-reduced-motion: reduce) { #setSheet { transition: opacity .15s; } }
+
+/* ---- iOS-style scrollbars: a thin rounded overlay thumb, no track ---- */
+:root { --scroll-thumb: rgba(0, 0, 0, 0.32); --scroll-thumb-hover: rgba(0, 0, 0, 0.5); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --scroll-thumb: rgba(255, 255, 255, 0.32); --scroll-thumb-hover: rgba(255, 255, 255, 0.5); } }
+:root[data-theme="dark"] { --scroll-thumb: rgba(255, 255, 255, 0.32); --scroll-thumb-hover: rgba(255, 255, 255, 0.5); }
+::-webkit-scrollbar { width: 9px; height: 9px; background: transparent; }
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 999px; border: 3px solid transparent; background-clip: padding-box; min-height: 36px; }
+::-webkit-scrollbar-thumb:hover { background-color: var(--scroll-thumb-hover); }
+::-webkit-scrollbar-button { display: none; }
+@supports not selector(::-webkit-scrollbar) { * { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) transparent; } }
