@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-04T16:41:41",
+  "updated_at": "2026-11-04T18:42:31",
   "frames": [
     {
       "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_090000.jpg",
@@ -329,6 +329,38 @@
       "people": 22,
       "note": "Kalabalık; ±3 sapma olabilir.",
       "note_en": "Crowded; may be off by ±3."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-04/CAM01_20261104_170750.jpg",
+      "timestamp": "2026-11-04T17:07:50",
+      "camera": "CAM 01",
+      "people": 8,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-04/CAM01_20261104_173631.jpg",
+      "timestamp": "2026-11-04T17:36:31",
+      "camera": "CAM 01",
+      "people": 6,
+      "note": "Sağ kenarda yarım görünen 1 kişi dahil.",
+      "note_en": "Includes 1 person half-visible at the right edge."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-04/CAM01_20261104_180513.jpg",
+      "timestamp": "2026-11-04T18:05:13",
+      "camera": "CAM 01",
+      "people": 8,
+      "note": "Loş ışık.",
+      "note_en": "Dim light."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-04/CAM01_20261104_183355.jpg",
+      "timestamp": "2026-11-04T18:33:55",
+      "camera": "CAM 01",
+      "people": 6,
+      "note": "Karanlık kare; sağ kenarda yarım görünen 1 kişi dahil.",
+      "note_en": "Dark frame; includes 1 person half-visible at the right edge."
     }
   ]
 }
