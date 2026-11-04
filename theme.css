@@ -633,9 +633,18 @@ body.mapmode .subbar { position: fixed; left: 50%; transform: translateX(-50%); 
 .zoompanel .zp-toggle[aria-expanded="true"] { background: var(--series, #0a84ff); color: #fff; }
 body.mapmode .langswitch { display: none; }
 
-/* List view background */
-.vbg-list { background-image: url("backgrounds/akyaka.jpg"); filter: blur(2px); }
-/* 80% veil in the page colour: black at night, light grey by day */
-.vbg-list::after { background: color-mix(in srgb, var(--page) 80%, transparent); }
-body:has(.vbg-list) { background: var(--page); }
+/* List view background: the grid-glow artwork across the top of the page */
+.vbg-list { position: absolute; inset: 0 0 auto 0; height: 595px; z-index: -1; filter: none;
+  background: url("backgrounds/grid-glow.svg") top center / max(100%, 1480px) auto no-repeat; }
+.vbg-list::after { content: none; }
+:root[data-theme="light"] .vbg-list { filter: invert(1); opacity: 0.6; }  /* grey lines on a light page */
 body.mapmode .vbg-list { display: none; }
+
+/* Seasonal all-time-high chart */
+.seasoncard .chart text.stop { font: 600 10px var(--font-display); }
+.seasoncard .chart text.athlabel { font: 600 11px var(--font-text); fill: #ff375f; }
+.slegend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; font: 500 12px var(--font-text); color: var(--ink-2); }
+.slegend span { display: inline-flex; align-items: center; gap: 6px; }
+.slegend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+.slegend b { font: 600 14px var(--font-display); color: var(--ink); }
+.slegend em { font-style: normal; color: var(--muted); }
