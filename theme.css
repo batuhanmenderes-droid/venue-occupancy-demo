@@ -972,3 +972,4 @@ body.routing .leaflet-kites-pane { opacity: 0; }
 body.houses-remove .house { pointer-events: auto !important; cursor: not-allowed; }
 body.houses-remove .house svg { outline: 1.5px dashed rgba(255, 59, 48, .9); outline-offset: 2px; border-radius: 4px; }
 body.houses-remove .house:hover svg { opacity: .55; }
+.roadpanel .hp-row { grid-template-columns: 1fr auto; }
