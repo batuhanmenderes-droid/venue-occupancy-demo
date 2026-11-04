@@ -104,12 +104,6 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 
   <section id="tab-density" role="tabpanel">
     <section class="tiles" id="tiles"></section>
-    <div class="card chartcard seasoncard">
-      <div class="chead"><h2 data-i18n="seasonTitle"></h2><span class="daylabel" id="seasonSummary"></span></div>
-      <p class="hint" data-i18n="seasonHint"></p>
-      <div class="chart" id="seasonChart"><div class="tip" id="seasonTip"></div></div>
-      <div class="slegend" id="seasonLegend"></div>
-    </div>
     <div class="card chartcard">
       <div class="chead"><h2 data-i18n="chartTitle"></h2><span class="daylabel" id="dayLabel"></span></div>
       <p class="hint" data-i18n="chartHint"></p>
@@ -118,6 +112,12 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
         <input type="range" id="daySlider" min="0" max="0" step="1" data-i18n-aria="day">
         <div class="dayticks" id="dayTicks"></div>
       </div>
+    </div>
+    <div class="card chartcard seasoncard">
+      <div class="chead"><h2 data-i18n="seasonTitle"></h2><span class="daylabel" id="seasonSummary"></span></div>
+      <p class="hint" data-i18n="seasonHint"></p>
+      <div class="chart" id="seasonChart"><div class="tip" id="seasonTip"></div></div>
+      <div class="slegend" id="seasonLegend"></div>
     </div>
     <section class="grid2 lower">
       <div class="card">
