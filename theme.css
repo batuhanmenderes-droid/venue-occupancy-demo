@@ -983,3 +983,6 @@ body.houses-remove .house:hover svg { opacity: .55; }
 .set-range { display: inline-flex; align-items: center; gap: 8px; }
 .set-range input { width: 130px; accent-color: var(--series, #0a84ff); }
 .set-range output { font: 600 13px var(--font-display); min-width: 30px; text-align: right; color: var(--ink); }
+/* Houses, trees and kitesurfers in soft light greys so they stay subtle on the map */
+.house svg, .tree svg, .kiter img { filter: grayscale(1) brightness(1.35) contrast(.55) !important; opacity: .75; }
+:root[data-theme="dark"] .house svg, :root[data-theme="dark"] .tree svg, :root[data-theme="dark"] .kiter img { filter: grayscale(1) brightness(.85) contrast(.6) !important; opacity: .6; }
