@@ -740,7 +740,7 @@ body.menu-open .sidemenu { transform: none; }
   background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
   box-shadow: var(--shadow-float), var(--highlight); font: 500 11px/1.2 var(--font-text); color: var(--ink-2); }
 .windread[hidden] { display: none; }
-.windread svg { width: 14px; height: 14px; color: var(--series, #0a84ff); grid-row: span 2; transition: transform .6s; }
+.windread svg { width: 14px; height: 14px; color: var(--wc, var(--series, #0a84ff)); grid-row: span 2; transition: transform .6s; }
 .windread b { font: 700 17px/1 var(--font-display); color: var(--ink); }
 .windread span { grid-column: 2; }
 .windread em { grid-column: 1 / -1; font-style: normal; color: var(--muted); }
