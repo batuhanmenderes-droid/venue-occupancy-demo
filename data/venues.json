@@ -410,9 +410,8 @@
       "id": "soul-fit",
       "name": "Soul Fit",
       "type": "Spor",
-      "folder": null,
-      "data": null,
-      "simulated": true,
+      "folder": "soulfit-cctv",
+      "data": "data/soul-fit.json",
       "location": {
         "lat": 37.0560692,
         "lon": 28.3369522,

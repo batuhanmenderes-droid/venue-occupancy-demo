@@ -1,0 +1,94 @@
+{
+  "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
+  "updated_at": "2026-11-04T14:26:00",
+  "frames": [
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_09-00-00.png",
+      "timestamp": "2026-11-04T09:00:00",
+      "camera": "CAM 01",
+      "people": 1,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_09-30-00.png",
+      "timestamp": "2026-11-04T09:30:00",
+      "camera": "CAM 01",
+      "people": 14,
+      "note": "Kalabalık; ±1 sapma olabilir.",
+      "note_en": "Busy; may be off by ±1."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_10-00-00.png",
+      "timestamp": "2026-11-04T10:00:00",
+      "camera": "CAM 01",
+      "people": 20,
+      "note": "Kalabalık; arka plandaki kişiler küçük, ±3 sapma olabilir.",
+      "note_en": "Crowded; people at the back are small, may be off by ±3."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_10-30-00.png",
+      "timestamp": "2026-11-04T10:30:00",
+      "camera": "CAM 01",
+      "people": 16,
+      "note": "Kalabalık; arkadaki grup nedeniyle ±2 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±2 because of the group at the back."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_11-00-00.png",
+      "timestamp": "2026-11-04T11:00:00",
+      "camera": "CAM 01",
+      "people": 21,
+      "note": "Kalabalık; arka plandaki kişiler küçük, ±3 sapma olabilir.",
+      "note_en": "Crowded; people at the back are small, may be off by ±3."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_11-30-00.png",
+      "timestamp": "2026-11-04T11:30:00",
+      "camera": "CAM 01",
+      "people": 8,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_12-00-00.png",
+      "timestamp": "2026-11-04T12:00:00",
+      "camera": "CAM 01",
+      "people": 4,
+      "note": "Arkada uzakta 1 kişi belirsiz.",
+      "note_en": "1 person far at the back is unclear."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_12-30-00.png",
+      "timestamp": "2026-11-04T12:30:00",
+      "camera": "CAM 01",
+      "people": 3,
+      "note": "Sağ arkada kısmen görünen 1 kişi dahil.",
+      "note_en": "Includes 1 partly hidden person at the back right."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_13-00-00.png",
+      "timestamp": "2026-11-04T13:00:00",
+      "camera": "CAM 01",
+      "people": 3,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_13-30-00.png",
+      "timestamp": "2026-11-04T13:30:00",
+      "camera": "CAM 01",
+      "people": 3,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "soulfit-cctv/2026-11-04/2026-11-04_14-00-00.png",
+      "timestamp": "2026-11-04T14:00:00",
+      "camera": "CAM 01",
+      "people": 3,
+      "note": "",
+      "note_en": ""
+    }
+  ]
+}
