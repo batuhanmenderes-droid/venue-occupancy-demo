@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261104w"></script>
+<script src="i18n.js?v=20261104x"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -75,10 +75,10 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .leaflet-tooltip.vlabel::before { display: none; }
 .leaflet-container { font: inherit; }
 .heatcanvas { position: absolute; pointer-events: none; filter: blur(8px) saturate(1.15); transition: opacity .2s; }
-.townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
+.townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261104w">
+<link rel="stylesheet" href="theme.css?v=20261104x">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -128,8 +128,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261104w"></script>
-<script src="venue-state.js?v=20261104w"></script>
+<script src="levels.js?v=20261104x"></script>
+<script src="venue-state.js?v=20261104x"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -315,6 +315,19 @@ function drawMap() {
     }
     m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
   }
+  placeTowns(pins);
+}
+
+// Town names sit above their town's pins (and the labels over them), so they never cover a venue.
+let townMarkers = [];
+function placeTowns(pins) {
+  for (const { town, marker } of townMarkers) {
+    const c = map.latLngToContainerPoint([town.lat, town.lon]);
+    const near = [...(pins?.values() || [])].map(p => map.latLngToContainerPoint(p.latlng))
+      .filter(p => map.distance(map.containerPointToLatLng(p), [town.lat, town.lon]) < 1600);
+    const y = near.length ? Math.min(c.y, ...near.map(p => p.y)) - PIN / 2 - 70 - 32 : c.y;
+    marker.setLatLng(map.containerPointToLatLng([c.x, y]));
+  }
 }
 
 // ---- Zoom limits panel ----
@@ -416,7 +429,7 @@ const BASEMAP = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/Wor
 const BASEMAP_FILTER = 'brightness(72%) contrast(140%) saturate(0%)';
 const TOWNS = [
   { name: 'Akyaka', lat: 37.0580, lon: 28.3271, dy: 0 },
-  { name: 'Akçapınar', lat: 37.0258, lon: 28.3579, dy: 38 },  // below the Lemongrass pin
+  { name: 'Akçapınar', lat: 37.0258, lon: 28.3579, dy: 0 },
 ];
 
 // Subtle gradient over the basemap, under the heat clouds and pins: a soft light from the top-left
@@ -525,8 +538,8 @@ async function addBasemap() {
     L.tileLayer(BASEMAP, { attribution: 'Tiles &copy; Esri', maxZoom: 19, maxNativeZoom: 14 }).addTo(map);
   }
   addShade();
-  for (const town of TOWNS)
-    L.marker([town.lat, town.lon], { icon: L.divIcon({ className: 'townlabel', html: `<span style="margin-top:${town.dy}px">${town.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1000 }).addTo(map);
+  townMarkers = TOWNS.map(town => ({ town, marker: L.marker([town.lat, town.lon], { icon: L.divIcon({ className: 'townlabel', html: `<span>${town.name}</span>`, iconSize: [0, 0] }), interactive: false, keyboard: false, zIndexOffset: -1000 }).addTo(map) }));
+  drawMap();
 }
 
 const RISE_ICON = '<svg class="rise" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11.5l4-4 3 3 5-5.5M10 5h4v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
