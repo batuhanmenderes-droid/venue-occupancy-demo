@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Fetch station data
         run: |
-          curl -sfL -m 30 -A "venue-occupancy-dashboard (github.com/batuhanmenderes-droid/venue-occupancy-demo)" \
+          curl -4 -sfL --connect-timeout 20 -m 60 --retry 3 --retry-delay 10 --retry-all-errors -A "venue-occupancy-dashboard (github.com/batuhanmenderes-droid/venue-occupancy-demo)" \
             "https://meteo.prokite.club/load.php?device=10&period=now&measure=kn&autoupdate=false&current_only=0&tech_data=0" -o /tmp/raw.json
           mkdir -p station
           python3 - <<'PY'
