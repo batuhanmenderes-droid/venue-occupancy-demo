@@ -740,7 +740,9 @@ body.menu-open .sidemenu { transform: none; }
 .windread[hidden] { display: none; }
 .windread svg { width: 30px; height: 30px; align-self: center; margin-right: 2px; color: var(--wc, var(--series, #0a84ff)); grid-row: span 2; transition: transform .6s; }
 .windread b { font: 700 17px/1 var(--font-display); color: var(--ink); }
-.windread i { grid-column: 2; font-style: normal; }
+.windread .wr-top b { font-size: 17px; }
+.windread i { grid-column: 2; font: 500 12px/1.2 var(--font-text); font-style: normal; }
+.windread .wr-top { grid-column: 2; font: 500 13px/1 var(--font-text); color: var(--ink-2); white-space: nowrap; }
 .windread em { grid-column: 1 / -1; font-style: normal; color: var(--muted); }
 
 /* Sea name: styled like the town names (see .townlabel), but left-aligned at the screen's left edge */
