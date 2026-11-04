@@ -86,7 +86,10 @@
         "label": "Kite Plajı, Akyaka"
       },
       "logo": "logos/kitebeach.png?v=2",
-      "background_video": { "youtube": "V9AhK54xsxY", "start": 0 },
+      "background_video": {
+        "youtube": "V9AhK54xsxY",
+        "start": 0
+      },
       "logo_scale": 1,
       "simulated": true,
       "sim_profile": "beach",
@@ -422,6 +425,26 @@
       "hours": {
         "open": "07:00",
         "close": "22:00"
+      },
+      "description": ""
+    },
+    {
+      "id": "motto-brew-coffee",
+      "name": "Motto Brew Coffee",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0517789,
+        "lon": 28.3261948,
+        "approx": false,
+        "label": "Karanfil Sk. 2/1, Akyaka"
+      },
+      "logo": null,
+      "hours": {
+        "open": "08:00",
+        "close": "20:00"
       },
       "description": ""
     }
