@@ -655,3 +655,5 @@ body.mapmode .vbg-list { display: none; }
 .expect, .leaflet-tooltip.vlabel .vexpect { font: 500 12px/1.2 var(--font-text); color: var(--ink-2); }
 .leaflet-tooltip.vlabel .vexpect { font-size: 11px; margin-top: -3px; }
 .expect { margin-top: -2px; }
+/* Map labels: hairline separator after the venue name (pure black at 2%) */
+.leaflet-tooltip.vlabel .vname + span { border-top: 1px solid rgba(0, 0, 0, 0.02); padding-top: 6px; margin-top: 0; }
