@@ -861,3 +861,45 @@ body:has(.tabbar) .langswitch { display: none; }
   font: 700 15px/1 var(--font-text); text-decoration: none; box-shadow: 0 6px 16px -4px rgba(10, 132, 255, 0.6); }
 .rb-go svg { width: 16px; height: 16px; transform: rotate(45deg); }
 body.routing.mapmode .subbar { display: none !important; }
+
+/* ---- Phones: smaller detail panes so the map is not crowded ---- */
+@media (max-width: 640px) {
+  /* venue labels */
+  .leaflet-tooltip.vlabel { padding: 3px 6px 4px !important; gap: 2px; border-radius: 7px !important; }
+  .leaflet-tooltip.vlabel .vcount { font-size: 13px; gap: 3px; }
+  .leaflet-tooltip.vlabel .vicon { width: 9px; height: 9px; }
+  .leaflet-tooltip.vlabel .vname { font-size: 9.5px; }
+  .leaflet-tooltip.vlabel .vclosed { font-size: 10px; }
+  .leaflet-tooltip.vlabel .vrise, .leaflet-tooltip.vlabel .vpeak, .leaflet-tooltip.vlabel .vexpect, .leaflet-tooltip.vlabel .vartist { font-size: 9px; }
+  .leaflet-tooltip.vlabel .vpeak { padding: 2px 5px; }
+  .leaflet-tooltip.vlabel .vrise .rise, .leaflet-tooltip.vlabel .vpeak .rise, .leaflet-tooltip.vlabel .vartist .vicon { width: 9px; height: 9px; }
+  .leaflet-tooltip.vlabel .vname + span { padding-top: 3px; }
+  .leaflet-tooltip.vlabel .vexpect { display: none; }  /* the expected peak stays on the list card */
+  /* pins */
+  .maplogo > div { transform: scale(calc(var(--s, 1) * 0.78)); }
+  .youmark img { width: 32px; height: 32px; }
+  .youmark .you-label { font-size: 9.5px; padding: 3px 6px; }
+  /* place names */
+  .townlabel span { font-size: 20px !important; letter-spacing: 0.1em !important; }
+  /* wind box */
+  .windread { padding: 5px 7px; column-gap: 4px; border-radius: 10px; }
+  .windread svg { width: 18px; height: 18px; }
+  .windread b, .windread .wr-top b { font-size: 13px; }
+  .windread .wr-top { font-size: 10px; }
+  .windread i { font-size: 9.5px; }
+  .windread .wr-chart { width: 120px; height: 26px; margin-top: 2px; }
+  .townlabel.sealabel .seawrap { gap: 6px; transform: translate(-50%, calc(-100% + 10px)); }
+  /* map controls */
+  .zoompanel .zp-toggle { width: 34px; height: 34px; }
+  .zoompanel .zp-toggle svg { width: 17px; height: 17px; }
+  .leaflet-control-zoom a { width: 28px !important; height: 28px !important; line-height: 26px !important; }
+  body.mapmode .subbar .filters button { height: 30px; }
+  /* route bar */
+  .routebar { padding: 7px 7px 7px 9px; gap: 8px; border-radius: 14px; bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
+  .rb-info .logo { width: 32px; height: 32px; }
+  .rb-info b { font-size: 14px; }
+  .rb-info span { font-size: 11px; }
+  .rb-go { padding: 9px 14px; font-size: 13.5px; }
+  .rb-close { width: 30px; height: 30px; }
+}
+@media (max-width: 640px) { .leaflet-control-attribution { font-size: 8px !important; line-height: 1.2 !important; max-width: 70vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } }
