@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106i"></script>
+<script src="i18n.js?v=20261106j"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106i">
+<link rel="stylesheet" href="theme.css?v=20261106j">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -158,8 +158,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106i"></script>
-<script src="venue-state.js?v=20261106i"></script>
+<script src="levels.js?v=20261106j"></script>
+<script src="venue-state.js?v=20261106j"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -453,8 +453,36 @@ async function loadWind() {
     const h = await (await fetch('https://api.open-meteo.com/v1/forecast?latitude=37.04&longitude=28.28&hourly=wind_speed_10m,wind_gusts_10m&wind_speed_unit=kn&timezone=Europe%2FIstanbul&forecast_days=1')).json();
     hours = h.hourly.time.map((t, i) => ({ h: +t.slice(11, 13), sp: h.hourly.wind_speed_10m[i], gust: h.hourly.wind_gusts_10m[i] }));
   } catch {}
-  windField = { cells, hours, speed: Math.hypot(u, v), gust: Math.max(...cells.map(c => c.gust)), from: (Math.atan2(-u, -v) * 180 / Math.PI + 360) % 360, at: Date.now() };
+  hours = hours.map(h => ({ ...h, obs: false }));
+  let speed = Math.hypot(u, v), gust = Math.max(...cells.map(c => c.gust)), from = (Math.atan2(-u, -v) * 180 / Math.PI + 360) % 360, station = false;
+  // Real readings from the Akyaka station win over the model: the readout shows them, today's chart uses
+  // them up to now (the forecast fills in the rest of the day) and the bay's particle field is scaled and
+  // turned to match the station.
+  const st = await loadStation();
+  if (st) {
+    const c = st.current, d = c.dir * Math.PI / 180, su = -c.avg * Math.sin(d), sv = -c.avg * Math.cos(d);
+    if (speed < 0.5) cells.forEach(cell => Object.assign(cell, { u: su, v: sv }));
+    else {
+      const k = c.avg / speed, rot = Math.atan2(su, sv) - Math.atan2(u, v), cs = Math.cos(rot), sn = Math.sin(rot);
+      cells.forEach(cell => { const cu = cell.u * k, cv = cell.v * k; cell.u = cu * cs + cv * sn; cell.v = -cu * sn + cv * cs; });
+    }
+    const today = localIso(new Date()).slice(0, 10);
+    const obs = st.history.filter(r => r[0].startsWith(today)).map(([at, avg, , max]) => ({ h: +at.slice(11, 13) + +at.slice(14, 16) / 60, sp: avg, gust: max, obs: true }));
+    if (st.current.at.startsWith(today)) obs.push({ h: +c.at.slice(11, 13) + +c.at.slice(14, 16) / 60, sp: c.avg, gust: c.max, obs: true });
+    if (obs.length) { const last = obs[obs.length - 1].h; hours = [...obs, ...hours.filter(h => h.h > last)]; }
+    speed = c.avg; gust = c.max; from = c.dir; station = true;
+  }
+  windField = { cells, hours, speed, gust, from, station, at: Date.now() };
   windCtl?.update();
+}
+// Akyaka wind station (meteo.prokite.club), refreshed every 15 minutes by a GitHub Action in the demo
+// repository; read from raw.githubusercontent.com, which allows cross-origin reads. Older than 75 minutes → ignored.
+const STATION_URL = 'https://raw.githubusercontent.com/batuhanmenderes-droid/venue-occupancy-demo/main/station/akyaka.json';
+async function loadStation() {
+  try {
+    const r = await (await fetch(`${STATION_URL}?t=${Math.floor(Date.now() / 60000)}`)).json();
+    return Date.now() - new Date(`${r.current.at}+03:00`).getTime() < 75 * 60000 ? r : null;
+  } catch { return null; }
 }
 // Bilinear wind (knots, u/v) at a lat/lon inside the grid; outside it the nearest edge is used.
 function windAt(lat, lon) {
@@ -589,19 +617,25 @@ function windChart(hours) {
   const W = 180, H = 38, top = 5, bot = 11;
   // Scaled to the day's own gusts, so even a light day shows its ups and downs.
   const max = Math.max(6, ...hours.map(h => h.gust)) * 1.08;
-  const x = h => 2 + h / 23 * (W - 4), y = v => top + (1 - v / max) * (H - top - bot);
-  const sp = hours.map(h => [x(h.h), y(h.sp)]), gu = hours.map(h => [x(h.h), y(h.gust)]);
-  const line = roundedLine(sp, 8);
+  const x = h => 2 + Math.min(h, 24) / 24 * (W - 4), y = v => top + (1 - v / max) * (H - top - bot);
+  // Station readings (solid, up to now) and the forecast for the rest of the day (dashed).
+  const ob = hours.filter(h => h.obs), fc = hours.filter(h => !h.obs);
+  const solid = ob.length ? ob : hours, ahead = ob.length && fc.length ? [ob[ob.length - 1], ...fc] : [];
+  const sp = solid.map(h => [x(h.h), y(h.sp)]), gu = hours.map(h => [x(h.h), y(h.gust)]);
+  const line = roundedLine(sp, ob.length ? 3 : 8);
   const stops = WIND_BANDS.map((b, i) => { const lo = i ? WIND_BANDS[i - 1].max : 0, hi = b.max === Infinity ? max : b.max; return [Math.min(1, (lo + hi) / 2 / max), b.color]; })
     .filter(([o], i, a) => i === 0 || a[i - 1][0] < 1);
   const grad = (id, op) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="${y(0)}" x2="0" y2="${y(max)}">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}" stop-opacity="${op}"/>`).join('')}</linearGradient>`;
-  const now = new Date(), nh = now.getHours() + now.getMinutes() / 60, ni = Math.min(hours.length - 1, Math.floor(nh));
-  const nv = hours[ni].sp + ((hours[Math.min(hours.length - 1, ni + 1)].sp - hours[ni].sp) * (nh - ni));
+  const now = new Date();
+  let nh = now.getHours() + now.getMinutes() / 60, nv;
+  if (ob.length) { nh = ob[ob.length - 1].h; nv = ob[ob.length - 1].sp; }
+  else { const ni = Math.min(hours.length - 1, Math.floor(nh)); nv = hours[ni].sp + ((hours[Math.min(hours.length - 1, ni + 1)].sp - hours[ni].sp) * (nh - ni)); }
   const ticks = [0, 6, 12, 18].map(h => `<text x="${x(h)}" y="${H - 2}" text-anchor="${h ? 'middle' : 'start'}">${String(h).padStart(2, '0')}</text>`).join('');
   return `<svg class="wr-chart" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs>${grad('wcL', 1)}${grad('wcA', 0.35)}</defs>
     <path d="${roundedLine(gu, 8)}" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" opacity=".35"/>
     <path d="${line}L${sp[sp.length - 1][0]},${y(0)}L${sp[0][0]},${y(0)}Z" fill="url(#wcA)"/>
     <path d="${line}" fill="none" stroke="url(#wcL)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${ahead.length ? `<path d="${roundedLine(ahead.map(h => [x(h.h), y(h.sp)]), 8)}" fill="none" stroke="url(#wcL)" stroke-width="1.5" stroke-dasharray="3 3" opacity=".6"/>` : ''}
     <line x1="${x(nh)}" x2="${x(nh)}" y1="${top - 4}" y2="${y(0)}" stroke="currentColor" stroke-width="1" opacity=".25"/>
     <circle cx="${x(nh)}" cy="${y(nv)}" r="3.5" fill="${WIND_BANDS[windBand(nv)].color}" stroke="#fff" stroke-width="1.5"/>${ticks}</svg>`;
 }
@@ -618,12 +652,12 @@ function addWindControl() {
     const f = windField, dir = COMPASS[Math.round(f.from / 45) % 8];
     el.style.setProperty('--wc', WIND_BANDS[windBand(f.speed)].color);
     el.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><div class="wr-top"><b>${Math.round(f.speed)}</b> / ${Math.round(f.gust)} ${t('knots')}</div><i>${t('windFrom', dir)}</i>${windChart(f.hours)}`;
-    el.title = t('windSource');
+    el.title = t(f.station ? 'windStation' : 'windSource');
     if (windLayer?._still) windLayer._drawStill();
   } };
-  map.attributionControl.addAttribution('Wind &copy; <a href="https://open-meteo.com">Open-Meteo</a>');
+  map.attributionControl.addAttribution('Wind: <a href="https://meteo.prokite.club/">PROKITE.CLUB station</a>, &copy; <a href="https://open-meteo.com">Open-Meteo</a>');
   loadWind().catch(() => {});
-  setInterval(() => loadWind().catch(() => {}), 30 * 60000);
+  setInterval(() => loadWind().catch(() => {}), 5 * 60000);  // station updates every 15 min; check every 5
 }
 
 // ---- Occupancy levels panel: thresholds and colours for the five crowd levels ----

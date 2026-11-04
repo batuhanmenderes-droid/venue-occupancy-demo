@@ -1,0 +1,49 @@
+# Runs in the public demo repository (copied there by publish_demo.sh as .github/workflows/wind-station.yml).
+# Every 15 minutes it reads the Akyaka wind station on meteo.prokite.club (one request) and saves a compact
+# copy to station/akyaka.json. The dashboard reads that file (raw.githubusercontent.com allows cross-origin
+# reads, the station site itself does not).
+name: Wind station (Akyaka)
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: wind-station
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch station data
+        run: |
+          curl -sfL -m 30 -A "venue-occupancy-dashboard (github.com/batuhanmenderes-droid/venue-occupancy-demo)" \
+            "https://meteo.prokite.club/load.php?device=10&period=now&measure=kn&autoupdate=false&current_only=0&tech_data=0" -o /tmp/raw.json
+          mkdir -p station
+          python3 - <<'PY'
+          import json, datetime
+          r = json.load(open('/tmp/raw.json'))
+          def row(x):  # "2026/11/04 16:16:26 +0300" -> "2026-11-04T16:16:26" (Istanbul time)
+              s = x['stamp'][:19].replace('/', '-').replace(' ', 'T')
+              return [s, x['wind_avg'], x['wind_min'], x['wind_max'], x['wind_dir']]
+          if not r.get('current'):
+              raise SystemExit('no current reading')
+          c = r['current'][0]
+          out = {
+            'source': 'meteo.prokite.club · PROKITE.CLUB wind station, Akyaka (knots)',
+            'fetched_at': datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=3))).strftime('%Y-%m-%dT%H:%M:%S'),
+            'current': {'at': row(c)[0], 'avg': c['wind_avg'], 'min': c['wind_min'], 'max': c['wind_max'], 'dir': c['wind_dir'], 'temp': c.get('temperature')},
+            'fields': ['at', 'avg', 'min', 'max', 'dir'],
+            'history': [row(x) for x in r.get('data', [])],
+          }
+          json.dump(out, open('station/akyaka.json', 'w'), separators=(',', ':'))
+          PY
+      - name: Commit
+        run: |
+          git config user.name "wind-station-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add station/akyaka.json
+          git diff --cached --quiet && exit 0
+          git commit -q -m "Wind station update"
+          git push -q || (git pull -q --rebase && git push -q)
