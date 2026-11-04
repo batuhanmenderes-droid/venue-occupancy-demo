@@ -86,6 +86,31 @@ function sunsetHour(at, lat = 37.05, lon = 28.33) {
   const utcMin = 720 - 4 * (lon - ha) - eqt;               // minutes after UTC midnight
   return (utcMin - at.getTimezoneOffset()) / 60;
 }
+// Local sunrise: the same hour angle before solar noon instead of after it.
+function sunriseHour(at, lat = 37.05, lon = 28.33) {
+  return sunsetHour(at, lat, lon) - 8 * sunHourAngle(at, lat) / 60;
+}
+function sunHourAngle(at, lat) {
+  const rad = Math.PI / 180, day = Math.floor((at - new Date(at.getFullYear(), 0, 0)) / 86400000), g = 2 * Math.PI / 365 * (day - 1);
+  const decl = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+  return Math.acos(Math.cos(90.833 * rad) / (Math.cos(lat * rad) * Math.cos(decl)) - Math.tan(lat * rad) * Math.tan(decl)) / rad;
+}
+
+// Day / night theme: light between sunrise and sunset in Akyaka, dark otherwise; re-checked every minute.
+// A page can pin a theme (venue pages with a photo or video background stay dark).
+let THEME_PIN = null;
+function dayNightTheme(at = new Date()) {
+  const h = at.getHours() + at.getMinutes() / 60;
+  return h >= sunriseHour(at) && h < sunsetHour(at) ? 'light' : 'dark';
+}
+function applyTheme() {
+  const theme = THEME_PIN || dayNightTheme();
+  if (document.documentElement.dataset.theme === theme) return;
+  document.documentElement.dataset.theme = theme;
+  document.dispatchEvent(new CustomEvent('themechange', { detail: theme }));
+}
+applyTheme();
+setInterval(applyTheme, 60000);
 
 // Beach profile (Kitebeach): 30–50 early kiters 09:00–10:00, fills up from 10:00, swings between
 // 1000 and 1200 from 12:00 to 16:00, eases off after 16:00 and empties abruptly once the sun has set.

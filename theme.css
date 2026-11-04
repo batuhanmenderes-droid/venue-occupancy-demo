@@ -620,3 +620,22 @@ body.mapmode .subbar { position: fixed; left: 50%; transform: translateX(-50%); 
   body.mapmode .subbar { width: calc(100% - 24px); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
   body.mapmode .leaflet-top.leaflet-left, body.mapmode .leaflet-top.leaflet-right { top: 104px; }
 }
+
+/* Video card photo (16:10 slot, 16:9 video: slightly wider than the card, centred) */
+.vthumb { position: absolute; inset: 0; overflow: hidden; background: #000 center / cover; }
+.vthumb iframe { position: absolute; top: 50%; left: 50%; width: 1280px; height: 720px; border: 0; pointer-events: none; transform: translate(-50%, -50%) scale(var(--k, 0.3)); transform-origin: center; }
+.media:has(> .vthumb)::after { content: ""; position: absolute; inset: auto 0 0 0; height: 40%; background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.35)); pointer-events: none; }
+.venue.is-closed .media .vthumb { filter: grayscale(1) brightness(0.45); }
+
+/* Map panels open from round icon buttons; the language switch is hidden on the map */
+.zoompanel .zp-toggle { width: 40px; height: 40px; padding: 0; display: grid; place-items: center; border-radius: 50%; }
+.zoompanel .zp-toggle svg { width: 20px; height: 20px; }
+.zoompanel .zp-toggle[aria-expanded="true"] { background: var(--series, #0a84ff); color: #fff; }
+body.mapmode .langswitch { display: none; }
+
+/* List view background */
+.vbg-list { background-image: url("backgrounds/akyaka.jpg"); filter: blur(2px); }
+/* 80% veil in the page colour: black at night, light grey by day */
+.vbg-list::after { background: color-mix(in srgb, var(--page) 80%, transparent); }
+body:has(.vbg-list) { background: var(--page); }
+body.mapmode .vbg-list { display: none; }
