@@ -903,3 +903,4 @@ body.routing.mapmode .subbar { display: none !important; }
   .rb-close { width: 30px; height: 30px; }
 }
 @media (max-width: 640px) { .leaflet-control-attribution { font-size: 8px !important; line-height: 1.2 !important; max-width: 70vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } }
+@media (max-width: 640px) { .townlabel.sealabel .seawrap { transform: translate(-50%, -10px); } .sealabel .seawrap .windread { order: 2; } }  /* phones: wind box under the bay name, clear of the Kitebeach label */
