@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261104u"></script>
+<script src="i18n.js?v=20261104v"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 1px 3px rgba(0,0,0,.8); transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261104u">
+<link rel="stylesheet" href="theme.css?v=20261104v">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -128,8 +128,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261104u"></script>
-<script src="venue-state.js?v=20261104u"></script>
+<script src="levels.js?v=20261104v"></script>
+<script src="venue-state.js?v=20261104v"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -536,11 +536,17 @@ const GEAR_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="curre
 
 // Small person glyph shown next to the head count on map labels.
 const MIC_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="1.5" width="5" height="8.5" rx="2.5" fill="currentColor"/><path d="M3.3 7.6a4.7 4.7 0 0 0 9.4 0M8 12.4v2.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-// Tonight's artist / theme night (venues.json `tonight`), shown under the name on the map label.
-// Grey until the show is on (21:00–02:00) and while the venue is closed.
+// A person in a yoga pose, arms raised and one knee bent (for yoga / movement events).
+const YOGA_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="2.6" r="1.7" fill="currentColor"/><path d="M3.2 1.8 8 6l4.8-4.2M8 6v4.6m0 0-2.6 4M8 10.6l3.4-1.2-1.6 3.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// Tonight's line-up (venues.json `tonight`, with `tonight_icon`: mic by default, or yoga), shown under the
+// name on the map label. Grey while the venue is closed; music nights are also grey outside 21:00–02:00.
 const expectLine = v => v.expected ? `<span class="vexpect${v.status?.state === 'closed' ? ' off' : ''}">${t('expectedAround', v.expected)}</span>` : '';
 const showOn = (at = new Date()) => at.getHours() >= 21 || at.getHours() < 2;
-const artistLine = v => v.tonight ? `<span class="vartist${v.status?.state === 'closed' || !showOn() ? ' off' : ''}">${MIC_ICON}${v.tonight}</span>` : '';
+const artistLine = v => {
+  if (!v.tonight) return '';
+  const yoga = v.tonight_icon === 'yoga', off = v.status?.state === 'closed' || (!yoga && !showOn());
+  return `<span class="vartist${off ? ' off' : ''}">${yoga ? YOGA_ICON : MIC_ICON}${v.tonight}</span>`;
+};
 const PERSON_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="4.6" r="2.9" fill="currentColor"/><path d="M2.6 14.4c0-3.1 2.4-5.4 5.4-5.4s5.4 2.3 5.4 5.4z" fill="currentColor"/></svg>';
 
 // ---- Organic heat clouds ----
