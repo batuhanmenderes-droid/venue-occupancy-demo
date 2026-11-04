@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261106d"></script>
+<script src="i18n.js?v=20261106h"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,20 +78,16 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261106d">
+<link rel="stylesheet" href="theme.css?v=20261106h">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
 <div class="vbg vbg-list" aria-hidden="true"></div>
-<!-- Side menu: navigation + a recommendations pane that answers a question from the live data -->
-<button class="menubtn" id="menuBtn" aria-controls="sidemenu" aria-expanded="false" data-i18n-aria="menu" data-i18n-title="menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-<div class="sm-scrim" id="menuScrim" hidden></div>
-<aside class="sidemenu" id="sidemenu" aria-hidden="true" inert>
-  <div class="sm-head"><span class="sm-title" data-i18n="menu">Menu</span><button class="sm-close" id="menuClose" data-i18n-aria="closeMenu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
-  <nav class="sm-nav">
-    <button data-go="liste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="3.5" y="13" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="13" width="7" height="7" rx="2" fill="currentColor"/></svg><span data-i18n="tabList">List view</span></button>
-    <button data-go="harita"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 3.5 6.6v13l5.5-2.1 6 2.1 5.5-2.1v-13L15 6.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 4.5v13M15 6.6v13" stroke="currentColor" stroke-width="1.8"/></svg><span data-i18n="tabMap">Heatmap</span></button>
-  </nav>
+<!-- iOS-style tab bar at the bottom: List, Heatmap, Recommendations (sheet), Settings (sheet) -->
+<div class="sheet-scrim" id="sheetScrim" hidden></div>
+<section class="sheet" id="recSheet" aria-hidden="true" inert role="dialog" aria-labelledby="recSheetTitle">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <div class="sheet-head"><span class="sheet-title" id="recSheetTitle" data-i18n="recTitle">Recommendations</span><button class="sheet-close" data-close data-i18n-aria="closeMenu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
   <section class="sm-pane" id="recPane">
     <button class="sm-pane-head" id="recToggle" aria-expanded="true" aria-controls="recBody">
       <svg class="sm-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4zM18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9z" fill="currentColor"/></svg>
@@ -103,14 +99,27 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
       <div class="asks" id="recAsks"><button class="ask" data-q="where" data-i18n="recQWhere">Where do you think I should be going?</button></div>
     </div>
   </section>
-</aside>
+</section>
+<section class="sheet" id="setSheet" aria-hidden="true" inert role="dialog" aria-labelledby="setSheetTitle">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <div class="sheet-head"><span class="sheet-title" id="setSheetTitle" data-i18n="settingsTitle">Settings</span><button class="sheet-close" data-close data-i18n-aria="closeMenu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+  <div class="set-group">
+    <div class="set-row"><span data-i18n="setLanguage">Language</span>
+      <div class="seg" id="setLang"><button data-lang="tr">Türkçe</button><button data-lang="en">English</button></div></div>
+    <div class="set-row"><span data-i18n="setAppearance">Appearance</span>
+      <div class="seg" id="setTheme"><button data-theme="auto" data-i18n="setAuto">Auto</button><button data-theme="light" data-i18n="setLight">Light</button><button data-theme="dark" data-i18n="setDark">Dark</button></div></div>
+  </div>
+  <p class="set-note" data-i18n="setAutoNote"></p>
+</section>
+<nav class="tabbar" id="tabbar" aria-label="Sections">
+  <button data-nav="liste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="3.5" y="13" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="13" width="7" height="7" rx="2" fill="currentColor"/></svg><span data-i18n="tabList">List view</span></button>
+  <button data-nav="harita"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 3.5 6.6v13l5.5-2.1 6 2.1 5.5-2.1v-13L15 6.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 4.5v13M15 6.6v13" stroke="currentColor" stroke-width="1.8"/></svg><span data-i18n="tabMap">Heatmap</span></button>
+  <button data-nav="rec" aria-controls="recSheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4zM18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9z" fill="currentColor"/></svg><span data-i18n="recTitle">Recommendations</span></button>
+  <button data-nav="settings" aria-controls="setSheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.3 2.5l.5 2.5c.6.2 1.2.6 1.7 1l2.4-.9 1.9 3.2-1.9 1.7a7 7 0 0 1 0 2l1.9 1.7-1.9 3.2-2.4-.9c-.5.4-1.1.8-1.7 1l-.5 2.5H9.6l-.5-2.5c-.6-.2-1.2-.6-1.7-1l-2.4.9-1.9-3.2L5 13a7 7 0 0 1 0-2L3.1 9.3 5 6.1l2.4.9c.5-.4 1.1-.8 1.7-1l.5-2.5h3.7zM11.5 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2z"/></svg><span data-i18n="settingsTitle">Settings</span></button>
+</nav>
 <main>
   <p class="sub" id="subtitle" hidden></p>
   <div class="topbar">
-    <div class="tabs" role="tablist">
-      <button class="tab" role="tab" id="tab-liste" aria-controls="view-liste"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="3.5" y="13" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="13" width="7" height="7" rx="2" fill="currentColor"/></svg><span data-i18n="tabList">List view</span></button>
-      <button class="tab" role="tab" id="tab-harita" aria-controls="view-harita"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4.5 3.5 6.6v13l5.5-2.1 6 2.1 5.5-2.1v-13L15 6.6z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 4.5v13M15 6.6v13" stroke="currentColor" stroke-width="1.8"/></svg><span data-i18n="tabMap">Heatmap</span></button>
-    </div>
     <div class="subbar">
     <div class="filters" role="group" data-i18n-aria="filterAria">
       <button data-cat="all" data-i18n-aria="filterAll" data-i18n-title="filterAll"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="7" r="2.6" fill="currentColor"/><circle cx="17" cy="7" r="2.6" fill="currentColor"/><circle cx="7" cy="17" r="2.6" fill="currentColor"/><circle cx="17" cy="17" r="2.6" fill="currentColor"/></svg></button>
@@ -149,8 +158,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261106d"></script>
-<script src="venue-state.js?v=20261106d"></script>
+<script src="levels.js?v=20261106h"></script>
+<script src="venue-state.js?v=20261106h"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -266,16 +275,15 @@ queueMicrotask(renderLegend);  // after the HEAT settings further down are initi
 
 function showTab(name) {
   const harita = name === 'harita';
-  $('tab-liste').setAttribute('aria-selected', !harita);
-  $('tab-harita').setAttribute('aria-selected', harita);
+  currentView = harita ? 'harita' : 'liste';
+  syncTabbar();
   $('view-liste').hidden = harita;
   $('view-harita').hidden = !harita;
   document.body.classList.toggle('mapmode', harita);
   history.replaceState(null, '', `#${harita ? 'harita' : 'liste'}`);
   if (harita) { initMap(); map.invalidateSize(); drawMap(); }
 }
-$('tab-liste').onclick = () => showTab('liste');
-$('tab-harita').onclick = () => showTab('harita');
+let currentView = 'liste', openSheet = null;  // the open sheet (Recommendations / Settings), if any
 
 // ---- Heatmap (Akyaka + Akçapınar) ----
 function initMap() {
@@ -630,7 +638,7 @@ function addLevelsPanel() {
         <div class="lv-rows">${LEVELS.map((l, i) => `
           <div class="lv-row"><input type="color" data-lc="${i}" aria-label="${l.name}">
             <span class="lv-name">${l.name}</span>
-            <span class="lv-range"><b data-lo="${i}"></b>–${i < 4 ? `<input type="number" min="1" max="999" data-lm="${i}" aria-label="${l.name} max">` : '<b>∞</b>'}</span></div>`).join('')}
+            <span class="lv-range">${i ? `<input type="number" min="1" max="999" data-lo="${i}" aria-label="${l.name} min">` : '<b>0</b>'}–${i < 4 ? `<input type="number" min="1" max="999" data-lm="${i}" aria-label="${l.name} max">` : '<b>∞</b>'}</span></div>`).join('')}
         </div>
         <button class="zp-reset">${t('zoomReset')}</button>
       </div>`;
@@ -638,7 +646,7 @@ function addLevelsPanel() {
     const sync = () => {
       qa('[data-lc]').forEach(i => { i.value = LEVELS[i.dataset.lc].color; });
       qa('[data-lm]').forEach(i => { i.value = LEVELS[i.dataset.lm].max; });
-      qa('[data-lo]').forEach(b => { const k = +b.dataset.lo; b.textContent = k ? LEVELS[k - 1].max + 1 : 0; });
+      qa('[data-lo]').forEach(i => { i.value = LEVELS[i.dataset.lo - 1].max + 1; });
     };
     const apply = () => {
       syncRanges(); saveLevels();
@@ -654,6 +662,12 @@ function addLevelsPanel() {
     qa('[data-lm]').forEach(i => i.onchange = () => {
       const k = +i.dataset.lm, lo = k ? LEVELS[k - 1].max + 1 : 1, hi = k < 3 ? LEVELS[k + 1].max - 1 : 999;
       LEVELS[k].max = Math.max(lo, Math.min(hi, Math.round(+i.value || lo)));
+      apply();
+    });
+    // A level's start is the previous level's end + 1, so editing a start moves that boundary.
+    qa('[data-lo]').forEach(i => i.onchange = () => {
+      const k = +i.dataset.lo - 1, lo = k ? LEVELS[k - 1].max + 1 : 0, hi = k < 3 ? LEVELS[k + 1].max - 1 : 998;
+      LEVELS[k].max = Math.max(lo, Math.min(hi, Math.round((+i.value || 1) - 1)));
       apply();
     });
     q('.zp-reset').onclick = () => { LEVELS_DEFAULT.forEach((d, i) => Object.assign(LEVELS[i], { max: d.max, color: d.color })); apply(); };
@@ -1211,22 +1225,48 @@ $('settingsForm').onsubmit = e => {
   load();
 };
 
-// ---- Side menu ----
-function setMenu(open) {
-  const m = $('sidemenu');
-  document.body.classList.toggle('menu-open', open);
-  m.setAttribute('aria-hidden', !open); m.inert = !open;
-  $('menuBtn').setAttribute('aria-expanded', open);
-  $('menuScrim').hidden = !open;
-  if (open) $('menuClose').focus(); else $('menuBtn').focus({ preventScroll: true });
+// ---- Tab bar + sheets ----
+// List and Heatmap switch the view; Recommendations and Settings slide up as sheets above the bar.
+function syncTabbar() {
+  document.querySelectorAll('#tabbar [data-nav]').forEach(b => {
+    const k = b.dataset.nav, on = openSheet ? (k === 'rec' && openSheet === 'recSheet') || (k === 'settings' && openSheet === 'setSheet') : k === currentView;
+    b.classList.toggle('on', on);
+    if (k === 'liste' || k === 'harita') b.setAttribute('aria-current', on ? 'page' : 'false'); else b.setAttribute('aria-expanded', on);
+  });
 }
-$('menuBtn').onclick = () => setMenu(true);
-$('menuClose').onclick = $('menuScrim').onclick = () => setMenu(false);
-addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('menu-open')) setMenu(false); });
-document.querySelector('.sm-nav').onclick = e => {
-  const b = e.target.closest('[data-go]'); if (!b) return;
-  showTab(b.dataset.go); setMenu(false);
+function setSheet(id) {
+  openSheet = id;
+  for (const sh of document.querySelectorAll('.sheet')) { const on = sh.id === id; sh.classList.toggle('open', on); sh.setAttribute('aria-hidden', !on); sh.inert = !on; }
+  $('sheetScrim').hidden = !id;
+  document.body.classList.toggle('sheet-open', !!id);
+  syncTabbar();
+}
+$('tabbar').onclick = e => {
+  const b = e.target.closest('[data-nav]'); if (!b) return;
+  const k = b.dataset.nav;
+  if (k === 'rec' || k === 'settings') { const id = k === 'rec' ? 'recSheet' : 'setSheet'; setSheet(openSheet === id ? null : id); return; }
+  setSheet(null); showTab(k);
 };
+$('sheetScrim').onclick = () => setSheet(null);
+document.querySelectorAll('.sheet [data-close]').forEach(b => b.onclick = () => setSheet(null));
+addEventListener('keydown', e => { if (e.key === 'Escape' && openSheet) setSheet(null); });
+// Settings: language (reloads the page) and appearance (Auto follows sunrise / sunset).
+function syncSettings() {
+  document.querySelectorAll('#setLang [data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === LANG));
+  const tp = pref('themePref', 'auto');
+  document.querySelectorAll('#setTheme [data-theme]').forEach(b => b.setAttribute('aria-pressed', b.dataset.theme === tp));
+}
+$('setLang').onclick = e => {
+  const l = e.target.closest('[data-lang]')?.dataset.lang; if (!l || l === LANG) return;
+  try { localStorage.setItem('lang', l); } catch {}
+  const u = new URL(location.href); u.searchParams.delete('lang'); location.href = u.toString();
+};
+$('setTheme').onclick = e => {
+  const tp = e.target.closest('[data-theme]')?.dataset.theme; if (!tp) return;
+  try { localStorage.setItem('themePref', tp); } catch {}
+  applyTheme(); syncSettings();
+};
+syncSettings();
 // The recommendations pane folds open / closed; the choice is remembered.
 function setRecOpen(open) {
   $('recToggle').setAttribute('aria-expanded', open);
@@ -1300,7 +1340,7 @@ $('recAsks').onclick = e => {
 $('recChat').onclick = e => {
   const b = e.target.closest('[data-focus]'); if (!b) return;
   const v = lastCards.find(c => c.id === b.dataset.focus);
-  setMenu(false); showTab('harita');
+  setSheet(null); showTab('harita');
   if (v?.location) map.setView([v.location.lat, v.location.lon], 17);
 };
 

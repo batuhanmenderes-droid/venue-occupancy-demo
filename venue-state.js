@@ -104,7 +104,9 @@ function dayNightTheme(at = new Date()) {
   return h >= sunriseHour(at) && h < sunsetHour(at) ? 'light' : 'dark';
 }
 function applyTheme() {
-  const theme = THEME_PIN || dayNightTheme();
+  // Pinned by the page > chosen in Settings (light / dark) > automatic by sunrise / sunset.
+  let chosen = null; try { chosen = localStorage.getItem('themePref'); } catch {}
+  const theme = THEME_PIN || (chosen === 'light' || chosen === 'dark' ? chosen : dayNightTheme());
   if (document.documentElement.dataset.theme === theme) return;
   document.documentElement.dataset.theme = theme;
   document.dispatchEvent(new CustomEvent('themechange', { detail: theme }));
