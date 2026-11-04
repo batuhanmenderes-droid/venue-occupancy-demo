@@ -633,11 +633,11 @@ body.mapmode .subbar { position: fixed; left: 50%; transform: translateX(-50%); 
 .zoompanel .zp-toggle[aria-expanded="true"] { background: var(--series, #0a84ff); color: #fff; }
 body.mapmode .langswitch { display: none; }
 
-/* List view background: the grid-glow artwork across the top of the page */
-.vbg-list { position: absolute; inset: 0 0 auto 0; height: 595px; z-index: -1; filter: none;
-  background: url("backgrounds/grid-glow.svg") top center / max(100%, 1480px) auto no-repeat; }
+/* List view background: a soft glow from the top centre (no grid) */
+.vbg-list { position: absolute; inset: 0 0 auto 0; height: 600px; z-index: -1; filter: none;
+  background: radial-gradient(ellipse 75% 100% at 50% 0%, rgba(217, 217, 217, 0.22), rgba(115, 115, 115, 0.06) 55%, transparent 80%); }
 .vbg-list::after { content: none; }
-:root[data-theme="light"] .vbg-list { filter: invert(1); opacity: 0.6; }  /* grey lines on a light page */
+:root[data-theme="light"] .vbg-list { background: radial-gradient(ellipse 75% 100% at 50% 0%, rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.02) 55%, transparent 80%); }
 body.mapmode .vbg-list { display: none; }
 
 /* Seasonal all-time-high chart */
