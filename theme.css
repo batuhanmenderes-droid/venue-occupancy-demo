@@ -904,3 +904,27 @@ body.routing.mapmode .subbar { display: none !important; }
 }
 @media (max-width: 640px) { .leaflet-control-attribution { font-size: 8px !important; line-height: 1.2 !important; max-width: 70vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } }
 @media (max-width: 640px) { .townlabel.sealabel .seawrap { transform: translate(-50%, -10px); } .sealabel .seawrap .windread { order: 2; } }  /* phones: wind box under the bay name, clear of the Kitebeach label */
+
+/* ---- Route mode: only you, the route and the destination stay on the map ---- */
+body.routing .windcanvas, body.routing .sealabel, body.routing .townlabel, body.routing .leaflet-top.leaflet-right,
+body.routing .mapshade .mapgrid { opacity: 0; pointer-events: none !important; transition: opacity .3s; }
+body.routing .sealabel .windread { pointer-events: none; }
+.windcanvas, .sealabel, .townlabel, .leaflet-top.leaflet-right { transition: opacity .3s; }
+/* travel estimates */
+.routebar { flex-wrap: wrap; }
+.rb-modes { display: flex; gap: 6px; order: 3; flex-basis: 100%; }
+.rb-modes button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 8px; border-radius: 11px; border: 0;
+  background: var(--fill); color: var(--ink-2); font: 600 12.5px/1 var(--font-text); cursor: pointer; }
+.rb-modes button svg { width: 17px; height: 17px; }
+.rb-modes button[aria-pressed="true"] { background: var(--series, #0a84ff); color: #fff; }
+.rb-info { flex: 1; }
+
+/* Bay label controller: size and wind-box offset come from the panel */
+.townlabel.sealabel .seawrap > span { font-size: var(--sea-size, 36px) !important; }
+.sealabel .windread { translate: var(--wind-x, 0) var(--wind-y, 0); }
+.sealabel.sea-dragging { cursor: move; pointer-events: auto !important; }
+.sealabel.sea-dragging .seawrap > span { pointer-events: auto; outline: 2px dashed var(--series, #0a84ff); outline-offset: 6px; border-radius: 6px; }
+.seapanel .sp-drag { display: flex !important; flex-direction: row; align-items: center; gap: 8px; color: var(--ink); }
+.seapanel .sp-ll { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seapanel .sp-ll input { width: 100%; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); font: 500 12px var(--font-text); }
+.sealabel.leaflet-interactive:not(.sea-dragging) { pointer-events: none !important; }  /* only grabbable while moving it */
