@@ -763,5 +763,5 @@ body.menu-open .sidemenu { transform: none; }
 .vthumb iframe.yt-playing, .vbg-video iframe.yt-playing { opacity: 1; }
 
 /* Today's wind chart under the readout: the box grows downward */
-.windread .wr-chart { grid-column: 1 / -1; grid-row: auto; align-self: stretch; margin-right: 0; width: 100%; min-width: 200px; height: auto; margin-top: 6px; color: var(--ink-2); overflow: visible; }
-.windread .wr-chart text { font: 500 9px var(--font-text); fill: var(--muted); }
+.windread .wr-chart { grid-column: 1 / -1; grid-row: auto; align-self: stretch; margin-right: 0; width: 180px; height: 38px; margin-top: 4px; color: var(--ink-2); overflow: visible; }
+.windread .wr-chart text { font: 500 8px var(--font-text); fill: var(--muted); }
