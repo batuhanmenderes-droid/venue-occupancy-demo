@@ -79,7 +79,8 @@
         "approx": false,
         "label": "Kite Plajı, Akyaka"
       },
-      "logo": "logos/kitebeach.png",
+      "logo": "logos/kitebeach.png?v=2",
+      "logo_scale": 1,
       "simulated": true,
       "sim_profile": "beach",
       "hours": {
