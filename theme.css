@@ -734,8 +734,6 @@ body.menu-open .sidemenu { transform: none; }
 :root { --wind: rgba(28, 60, 110, 0.6); }
 :root[data-theme="dark"] { --wind: rgba(255, 255, 255, 0.65); }
 .windcanvas { position: absolute; pointer-events: none; }
-.windctl { justify-items: end; }
-.windctl .zp-toggle[aria-pressed="true"] { background: var(--series, #0a84ff); color: #fff; }
 .windread { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 5px; row-gap: 1px; padding: 7px 10px; border-radius: 12px;
   background: var(--material); -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%);
   box-shadow: var(--shadow-float), var(--highlight); font: 500 11px/1.2 var(--font-text); color: var(--ink-2); }
@@ -747,9 +745,8 @@ body.menu-open .sidemenu { transform: none; }
 
 /* Sea name: styled like the town names (see .townlabel), but left-aligned at the screen's left edge */
 .townlabel.sealabel .seawrap { display: inline-grid; justify-items: end; gap: 8px; transform: translateY(-22px); }
-.townlabel.sealabel .seawrap > span { transform: none; }
+.townlabel.sealabel .seawrap > span { transform: none; margin-right: -0.14em; }  /* drop the trailing letter-spacing so the readout lines up with the last letter */
 .sealabel .windread { pointer-events: auto; }
-body.wind-off .sealabel .windread { display: none; }
 
 /* Faint day chart behind a card's text (Kitebeach): 20% opacity, under everything in the card body */
 .venue .body { position: relative; isolation: isolate; }

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=20261105n"></script>
+<script src="i18n.js?v=20261105p"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261105n">
+<link rel="stylesheet" href="theme.css?v=20261105p">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -149,8 +149,8 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
-<script src="levels.js?v=20261105n"></script>
-<script src="venue-state.js?v=20261105n"></script>
+<script src="levels.js?v=20261105p"></script>
+<script src="venue-state.js?v=20261105p"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -560,37 +560,21 @@ const WindLayer = L.Layer.extend({
     }
   },
 });
-// Wind button under the map settings: toggles the layer and shows the bay's mean wind (knots, from-direction).
+// Wind is always on; its readout (mean wind over the bay, knots and from-direction) sits under the
+// "Gökova Körfezi" label.
 let windLayer = null, windCtl = null;
 const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 function addWindControl() {
-  const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
-    const box = L.DomUtil.create('div', 'zoompanel windctl');
-    L.DomEvent.disableClickPropagation(box);
-    box.innerHTML = `<button class="zp-toggle" aria-pressed="false" aria-label="${t('windToggle')}" title="${t('windToggle')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h11a3 3 0 1 0-3-3M3 13h15a3 3 0 1 1-3 3M3 17h7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button>`;
-    // The readout sits under the "Gökova Körfezi" label (see SEA), right-aligned.
-    const btn = box.querySelector('button'), read = () => document.querySelector('.sealabel .windread');
-    const set = on => {
-      btn.setAttribute('aria-pressed', on); document.body.classList.toggle('wind-off', !on);
-      if (on && !windLayer) windLayer = new WindLayer().addTo(map);
-      if (!on && windLayer) { map.removeLayer(windLayer); windLayer = null; }
-      try { localStorage.setItem('windOn', on ? '1' : '0'); } catch {}
-    };
-    btn.onclick = () => set(btn.getAttribute('aria-pressed') !== 'true');
-    windCtl = { update() {
-      if (!windField) return;
-      const f = windField, dir = COMPASS[Math.round(f.from / 45) % 8];
-      const el = read(); if (!el) return;
-      el.style.setProperty('--wc', WIND_BANDS[windBand(f.speed)].color);
-      el.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><b>${Math.round(f.speed)}</b><i>kn ${t('windFrom', dir)}</i><em>${t('windGust', Math.round(f.gust))}</em>`;
-      el.title = t('windSource');
-      if (windLayer?._still) windLayer._drawStill();
-    } };
-    set(pref('windOn', '1') === '1');
-    windCtl.update();
-    return box;
-  } });
-  new Ctl().addTo(map);
+  windLayer = new WindLayer().addTo(map);
+  windCtl = { update() {
+    const el = document.querySelector('.sealabel .windread');
+    if (!windField || !el) return;
+    const f = windField, dir = COMPASS[Math.round(f.from / 45) % 8];
+    el.style.setProperty('--wc', WIND_BANDS[windBand(f.speed)].color);
+    el.innerHTML = `<svg viewBox="0 0 16 16" aria-hidden="true" style="transform:rotate(${f.from + 180}deg)"><path d="M8 1.5 12.5 13 8 10.5 3.5 13z" fill="currentColor"/></svg><b>${Math.round(f.speed)}</b><i>kn ${t('windFrom', dir)}</i><em>${t('windGust', Math.round(f.gust))}</em>`;
+    el.title = t('windSource');
+    if (windLayer?._still) windLayer._drawStill();
+  } };
   map.attributionControl.addAttribution('Wind &copy; <a href="https://open-meteo.com">Open-Meteo</a>');
   loadWind().catch(() => {});
   setInterval(() => loadWind().catch(() => {}), 30 * 60000);
