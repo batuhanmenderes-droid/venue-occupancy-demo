@@ -748,7 +748,8 @@ body.menu-open .sidemenu { transform: none; }
 /* Sea name: styled like the town names (see .townlabel), but left-aligned at the screen's left edge */
 .townlabel.sealabel .seawrap { display: inline-grid; justify-items: end; gap: 8px; transform: translateY(-22px); }
 .townlabel.sealabel .seawrap > span { transform: none; margin-right: -0.14em; }  /* drop the trailing letter-spacing so the readout lines up with the last letter */
-.sealabel .windread { pointer-events: auto; }
+.windread.windfixed { position: absolute; left: 79px; top: 47.5%; z-index: 700; pointer-events: auto; cursor: default; }  /* pinned to the screen, not the map */
+.windread.windfixed:empty { display: none; }
 
 /* Faint day chart behind a card's text (Kitebeach): 20% opacity, under everything in the card body */
 .venue .body { position: relative; isolation: isolate; }
@@ -764,3 +765,12 @@ body.menu-open .sidemenu { transform: none; }
 /* Today's wind chart under the readout: the box grows downward */
 .windread .wr-chart { grid-column: 1 / -1; grid-row: auto; align-self: stretch; margin-right: 0; width: 180px; height: 38px; margin-top: 4px; color: var(--ink-2); overflow: visible; }
 .windread .wr-chart text { font: 500 8px var(--font-text); fill: var(--muted); }
+
+/* Occupancy levels panel */
+.levelpanel .zp-body h4 { margin: 0; }
+.lv-rows { display: grid; gap: 8px; }
+.lv-row { display: grid; grid-template-columns: 28px 1fr auto; align-items: center; gap: 10px; font-size: 12.5px; color: var(--ink); }
+.lv-row input[type=color] { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 8px; background: none; cursor: pointer; }
+.lv-range { display: inline-flex; align-items: center; gap: 4px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.lv-range b { font: 600 13px var(--font-display); color: var(--ink); min-width: 18px; text-align: right; }
+.lv-range input { width: 52px; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); font: 600 13px var(--font-display); text-align: center; }

@@ -1,12 +1,28 @@
 // Crowd levels shared by the venue list, heatmap and venue page.
 // Bands are inclusive: 0–10 blue, 11–20 green, 21–30 yellow, 31–40 orange, 41+ crimson (same as the map's heat colours).
-const LEVELS = [
-  { max: 10, range: '0–10', color: '#0e6bdd' },
-  { max: 20, range: '11–20', color: '#16ca64' },
-  { max: 30, range: '21–30', color: '#ffc800' },
-  { max: 40, range: '31–40', color: '#dd5e27' },
-  { max: Infinity, range: '41–100', color: '#c11a4c' },
+const LEVELS_DEFAULT = [
+  { max: 10, color: '#0e6bdd' },
+  { max: 20, color: '#16ca64' },
+  { max: 30, color: '#ffc800' },
+  { max: 40, color: '#dd5e27' },
+  { max: Infinity, color: '#c11a4c' },
 ];
+// Thresholds and colours can be changed in the map's "Occupancy levels" panel (saved per browser).
+const LEVELS = LEVELS_DEFAULT.map(l => ({ ...l }));
+function loadLevels() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('levelSettings') || 'null');
+    if (Array.isArray(saved)) saved.forEach((l, i) => { if (LEVELS[i]) { if (l.max != null && i < 4) LEVELS[i].max = l.max; if (l.color) LEVELS[i].color = l.color; } });
+  } catch {}
+  syncRanges();
+}
+function syncRanges() {
+  LEVELS.forEach((l, i) => { const lo = i ? LEVELS[i - 1].max + 1 : 0; l.range = l.max === Infinity ? `${lo}+` : `${lo}–${l.max}`; });
+}
+function saveLevels() {
+  try { localStorage.setItem('levelSettings', JSON.stringify(LEVELS.map(l => ({ max: l.max === Infinity ? null : l.max, color: l.color })))); } catch {}
+}
+loadLevels();
 // Level names come from i18n.js (t('levels')) in the current language.
 LEVELS.forEach((l, i) => Object.defineProperty(l, 'name', { get: () => t('levels')[i] }));
 
