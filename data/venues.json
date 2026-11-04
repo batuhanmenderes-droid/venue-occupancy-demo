@@ -86,7 +86,7 @@
         "label": "Kite Plajı, Akyaka"
       },
       "logo": "logos/kitebeach.png?v=2",
-      "background_video": { "youtube": "V9AhK54xsxY", "start": 140 },
+      "background_video": { "youtube": "V9AhK54xsxY", "start": 0 },
       "logo_scale": 1,
       "simulated": true,
       "sim_profile": "beach",

@@ -222,5 +222,12 @@ addEventListener('message', e => {
   let msg; try { msg = typeof e.data === 'string' ? JSON.parse(e.data) : e.data; } catch { return; }
   const state = msg?.info?.playerState;
   if (state === undefined) return;
-  for (const f of ytFrames) if (f.contentWindow === e.source) f.classList.toggle('yt-playing', state === 1 || state === 3 && f.classList.contains('yt-playing'));
+  for (const f of ytFrames) {
+    if (f.contentWindow !== e.source) continue;
+    // YouTube flashes its buttons for a moment whenever playback (re)starts, so the clip is shown only
+    // after it has been playing for a little while; anything else (ended, paused, loading) hides it again.
+    clearTimeout(f._ytShow);
+    if (state === 1) { if (!f.classList.contains('yt-playing')) f._ytShow = setTimeout(() => f.classList.add('yt-playing'), 2500); }
+    else if (state !== 3 || !f.classList.contains('yt-playing')) f.classList.remove('yt-playing');
+  }
 });
