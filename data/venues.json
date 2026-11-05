@@ -307,7 +307,8 @@
       "description": "",
       "categories": [
         "food"
-      ]
+      ],
+      "background": "backgrounds/back-loop.jpg"
     },
     {
       "id": "kukla",
@@ -494,7 +495,8 @@
         "open": "07:00",
         "close": "22:00"
       },
-      "description": ""
+      "description": "",
+      "background": "backgrounds/soul-fit.jpg"
     },
     {
       "id": "motto-brew-coffee",
