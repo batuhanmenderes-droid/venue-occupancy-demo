@@ -100,3 +100,7 @@ body.mapmode .viewmode { display: none; }
 #grid.aslist .venue .updated > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 #grid.aslist .venue .updated .status { flex: none; }
 @media (max-width: 600px) { #grid.aslist .venue .updated, #grid.aslist .venue .updated .status { font-size: 10.5px; gap: 5px; } #grid.aslist .venue .updated { padding-right: 76px; } }
+/* Bottom row: more room above, buttons and text centred on the same line */
+#grid.aslist .venue .updated { box-sizing: border-box; padding-top: 14px; min-height: 42px; align-items: center; margin-top: 4px; }
+#grid.aslist .venue .cardgear, #grid.aslist .venue .mapcheck { bottom: 16px; }
+@media (max-width: 600px) { #grid.aslist .venue .cardgear, #grid.aslist .venue .mapcheck { bottom: 14px; } }
