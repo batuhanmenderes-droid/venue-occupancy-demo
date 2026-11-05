@@ -20,8 +20,9 @@ h1, h2, .name, .stat b, .tile .value, .frame .count, .leaflet-tooltip.vlabel .vc
 .type { letter-spacing: 0.06em; }
 
 /* Signals in the fixed order calm → active → full */
-.status.live .dot { background: var(--brand-full); box-shadow: 0 0 0 3px rgba(255, 45, 111, 0.22); animation: brandPing 2s ease-out infinite; }
-@keyframes brandPing { 0% { box-shadow: 0 0 0 0 rgba(255, 45, 111, 0.45); } 100% { box-shadow: 0 0 0 7px rgba(255, 45, 111, 0); } }
+.status.live .dot { background: #16CA64; box-shadow: 0 0 0 3px rgba(22, 202, 100, 0.22); animation: brandPing 2s ease-out infinite; }
+.status.demo .dot { background: var(--brand-full); box-shadow: 0 0 0 3px rgba(255, 45, 111, 0.22); }
+@keyframes brandPing { 0% { box-shadow: 0 0 0 0 rgba(22, 202, 100, 0.45); } 100% { box-shadow: 0 0 0 7px rgba(22, 202, 100, 0); } }
 .rising { color: #B37E00; background: rgba(255, 180, 0, 0.16); }
 .peaktag, .leaflet-tooltip.vlabel .vpeak { color: var(--brand-full); }
 .peaktag { background: rgba(255, 45, 111, 0.13); }
