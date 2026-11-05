@@ -1685,10 +1685,13 @@ function cardChart(v, tag = 'c') {
 
 function card(v) {
   const live = !!v.data || v.simulated;
-  const media = v.latest && v.latest.file
-    ? `<img src="${v.latest.file}" alt="${t('latestFrameAlt', v.name)}" loading="lazy">`
-    : v.background_video?.youtube
+  // The venue's own video, then its background photo, stand in for the camera view on the card.
+  const media = v.background_video?.youtube
       ? videoThumb(v.background_video)
+    : v.background
+      ? `<img src="${v.background}" alt="${v.name}" loading="lazy">`
+    : v.latest && v.latest.file
+      ? `<img src="${v.latest.file}" alt="${t('latestFrameAlt', v.name)}" loading="lazy">`
     : v.simulated
       ? `<div class="none demo"><span>${t('demoData')}</span></div>`
       : `<div class="none">${live ? t('noFramesToday') : v.coming_soon ? t('soon') : t('noCamera')}</div>`;
