@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-06T00:41:12",
+  "updated_at": "2026-11-06T01:41:05",
   "frames": [
     {
       "file": "no22riders-cctv/2026-11-03/CAM01_20261104_100000.jpg",
@@ -559,6 +559,14 @@
       "timestamp": "2026-11-06T00:36:31",
       "camera": "CAM 01",
       "people": 38,
+      "note": "Kalabalık ve loş; ±5 sapma olabilir.",
+      "note_en": "Crowded and dim; may be off by ±5."
+    },
+    {
+      "file": "no22riders-cctv/2026-11-05/CAM01_20261105_011816.jpg",
+      "timestamp": "2026-11-06T01:18:16",
+      "camera": "CAM 01",
+      "people": 28,
       "note": "Kalabalık ve loş; ±5 sapma olabilir.",
       "note_en": "Crowded and dim; may be off by ±5."
     }
