@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=card4">
+<link rel="stylesheet" href="theme.css?v=blurb1">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -1707,6 +1707,7 @@ function card(v) {
     <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}<button class="gear cardgear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button><button class="mapcheck" role="checkbox" aria-checked="${onMap(v)}" data-mapcheck="${v.id}" title="${t('showOnMap')}" aria-label="${t('showOnMap')}: ${v.name}">${CHECK_ICON}</button></div>
     <div class="body">${cardChart(v)}
       <div class="top"><span class="type">${typeName(v.type)}</span><span class="name">${v.name}</span></div>
+      ${v.blurb ? `<div class="blurb">${v.blurb[LANG] || v.blurb.en}</div>` : ''}
       <div class="stat">${stat}<span class="arrow">›</span></div>
       ${v.event ? `<div class="evtag ev-${v.event.state}">${eventIcon(v.event)}<span class="ev-name">${v.event.name}</span><span class="ev-time">${v.event.from}–${v.event.to}</span><span class="ev-state">${eventStateText(v.event)}</span></div>` : ''}
       ${v.peak ? `<div class="peaktag">${PEAK_ICON}${t('atPeak')}</div>` : ''}

@@ -16,7 +16,11 @@
       },
       "logo": "logos/poisonpub.png",
       "count_rule_en": "Only people close to the camera are counted.",
-      "events": []
+      "events": [],
+      "blurb": {
+        "en": "Rock-leaning pub on Karanfil Street with themed nights.",
+        "tr": "Karanfil Sokak'ta tema geceleri yapan rock ağırlıklı pub."
+      }
     },
     {
       "id": "no22-riders-inn",
@@ -39,7 +43,11 @@
       },
       "area_m2": 250,
       "logo_scale": 1,
-      "events": []
+      "events": [],
+      "blurb": {
+        "en": "Riders' bar with DJs and live music late into the night.",
+        "tr": "Gece geç saatlere kadar DJ ve canlı müzikli rider barı."
+      }
     },
     {
       "id": "kulup",
@@ -76,7 +84,11 @@
           "source": "instagram"
         }
       ],
-      "instagram": "kulupakyaka"
+      "instagram": "kulupakyaka",
+      "blurb": {
+        "en": "Akyaka's night club for DJ sets and weekend parties.",
+        "tr": "DJ setleri ve hafta sonu partileriyle Akyaka'nın gece kulübü."
+      }
     },
     {
       "id": "lemongrass-cafe",
@@ -126,7 +138,11 @@
           "to": "11:00"
         }
       ],
-      "instagram": "lemongrasscommunity"
+      "instagram": "lemongrasscommunity",
+      "blurb": {
+        "en": "Garden café in Akçapınar with morning yoga and coffee.",
+        "tr": "Sabah yogası ve kahvesiyle Akçapınar'da bahçe kafe."
+      }
     },
     {
       "id": "kitebeach-akyaka",
@@ -152,7 +168,11 @@
         "open": "08:00",
         "close": "20:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Kitesurf beach on Gökova Bay with lessons and a beach bar.",
+        "tr": "Gökova Körfezi'nde ders ve plaj barı olan kitesurf plajı."
+      }
     },
     {
       "id": "rahat-meyhane",
@@ -176,7 +196,11 @@
       "description": "",
       "categories": [
         "food"
-      ]
+      ],
+      "blurb": {
+        "en": "Laid-back meyhane for meze, rakı and long dinners.",
+        "tr": "Meze, rakı ve uzun sofralar için rahat bir meyhane."
+      }
     },
     {
       "id": "kucuk-akyaka",
@@ -200,7 +224,11 @@
       "categories": [
         "activity"
       ],
-      "background": "backgrounds/kucuk-akyaka.jpg"
+      "background": "backgrounds/kucuk-akyaka.jpg",
+      "blurb": {
+        "en": "Small cocktail bar in the heart of Akyaka.",
+        "tr": "Akyaka'nın merkezinde küçük bir kokteyl barı."
+      }
     },
     {
       "id": "rahat-social",
@@ -222,7 +250,11 @@
         "close": "00:00"
       },
       "description": "",
-      "instagram": "rahatsocial"
+      "instagram": "rahatsocial",
+      "blurb": {
+        "en": "All-day café with wood-fired pizza, focaccia and coffee.",
+        "tr": "Odun fırını pizza, focaccia ve kahveyle gün boyu açık kafe."
+      }
     },
     {
       "id": "dane-gokova",
@@ -243,7 +275,11 @@
         "close": "04:00"
       },
       "description": "",
-      "background": "backgrounds/dane-gokova.jpg"
+      "background": "backgrounds/dane-gokova.jpg",
+      "blurb": {
+        "en": "Night club in Akçapınar with DJ nights.",
+        "tr": "Akçapınar'da DJ geceleri yapan gece kulübü."
+      }
     },
     {
       "id": "muhtar",
@@ -264,7 +300,11 @@
         "open": "11:00",
         "close": "23:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Restaurant in Akçapınar serving grills and home-style dishes.",
+        "tr": "Akçapınar'da ızgara ve ev yemekleri sunan restoran."
+      }
     },
     {
       "id": "chicken-loop",
@@ -285,7 +325,11 @@
         "open": "11:00",
         "close": "23:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Kiters' restaurant in Akçapınar for burgers and casual meals.",
+        "tr": "Akçapınar'da burger ve günlük yemekler için kiter restoranı."
+      }
     },
     {
       "id": "back-loop",
@@ -309,7 +353,11 @@
       "categories": [
         "food"
       ],
-      "background": "backgrounds/back-loop.jpg"
+      "background": "backgrounds/back-loop.jpg",
+      "blurb": {
+        "en": "Meyhane in Akçapınar with meze and evening drinks.",
+        "tr": "Akçapınar'da meze ve akşam içkileri sunan meyhane."
+      }
     },
     {
       "id": "kukla",
@@ -330,7 +378,11 @@
         "open": "19:00",
         "close": "03:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Cosy pub in Akyaka for beer and music.",
+        "tr": "Bira ve müzik için Akyaka'da samimi bir pub."
+      }
     },
     {
       "id": "suma",
@@ -351,7 +403,11 @@
         "open": "12:00",
         "close": "00:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Restaurant in Akyaka for dinner and drinks.",
+        "tr": "Akyaka'da akşam yemeği ve içki için restoran."
+      }
     },
     {
       "id": "west-cafe-bistro",
@@ -372,7 +428,11 @@
         "open": "08:30",
         "close": "23:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Bistro café in Akyaka for breakfast, lunch and coffee.",
+        "tr": "Kahvaltı, öğle yemeği ve kahve için Akyaka'da bistro kafe."
+      }
     },
     {
       "id": "yelken",
@@ -394,7 +454,11 @@
       },
       "description": "",
       "logo_scale": 1,
-      "background": "backgrounds/yelken.jpg"
+      "background": "backgrounds/yelken.jpg",
+      "blurb": {
+        "en": "Pub in Akyaka for drinks and evening music.",
+        "tr": "Akyaka'da içki ve akşam müziği için pub."
+      }
     },
     {
       "id": "akcapinar-tostcusu",
@@ -415,7 +479,11 @@
         "open": "07:30",
         "close": "22:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Quick toasties, breakfast and tea in Akçapınar.",
+        "tr": "Akçapınar'da tost, kahvaltı ve çay için hızlı durak."
+      }
     },
     {
       "id": "sepia",
@@ -436,7 +504,11 @@
         "open": "10:00",
         "close": "00:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Restaurant in Akçapınar for relaxed dinners.",
+        "tr": "Akçapınar'da sakin akşam yemekleri için restoran."
+      }
     },
     {
       "id": "edit",
@@ -457,7 +529,11 @@
         "close": "04:00"
       },
       "description": "",
-      "background": "backgrounds/edit.jpg"
+      "background": "backgrounds/edit.jpg",
+      "blurb": {
+        "en": "Night spot in Akçapınar with DJ nights.",
+        "tr": "Akçapınar'da DJ geceleri yapan gece mekânı."
+      }
     },
     {
       "id": "okapi-suites",
@@ -478,7 +554,11 @@
         "close": "04:00"
       },
       "description": "",
-      "background": "backgrounds/okapi-suites.jpg"
+      "background": "backgrounds/okapi-suites.jpg",
+      "blurb": {
+        "en": "Hotel and night venue in Akçapınar.",
+        "tr": "Akçapınar'da otel ve gece mekânı."
+      }
     },
     {
       "id": "soul-fit",
@@ -498,7 +578,11 @@
         "close": "22:00"
       },
       "description": "",
-      "background": "backgrounds/soul-fit.jpg"
+      "background": "backgrounds/soul-fit.jpg",
+      "blurb": {
+        "en": "Gym in Akyaka for training and fitness classes.",
+        "tr": "Antrenman ve fitness dersleri için Akyaka'da spor salonu."
+      }
     },
     {
       "id": "motto-brew-coffee",
@@ -520,7 +604,11 @@
         "open": "08:00",
         "close": "20:00"
       },
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Specialty coffee bar on Karanfil Street.",
+        "tr": "Karanfil Sokak'ta nitelikli kahve barı."
+      }
     },
     {
       "id": "moy-beach",
@@ -540,7 +628,11 @@
       "folder": null,
       "data": null,
       "simulated": true,
-      "description": ""
+      "description": "",
+      "blurb": {
+        "en": "Beach club in Akyaka for sun, swimming and drinks.",
+        "tr": "Güneş, deniz ve içki için Akyaka'da plaj kulübü."
+      }
     }
   ]
 }
