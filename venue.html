@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=cal2"></script>
+<script src="i18n.js?v=menu1"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   .grid2 { grid-template-columns: 1fr; }
 }
 </style>
-<link rel="stylesheet" href="theme.css?v=cal1">
+<link rel="stylesheet" href="theme.css?v=menu1">
 </head>
 <body>
 <main class="venuepage">
@@ -152,7 +152,6 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   <section id="tab-menu" role="tabpanel" hidden>
     <div class="card">
       <h2 data-i18n="menuTitle"></h2>
-      <p class="hint" data-i18n="menuHint"></p>
       <div class="menu" id="menu"></div>
     </div>
   </section>
@@ -588,10 +587,17 @@ const tl = n => `₺${n.toLocaleString(LANG === 'tr' ? 'tr-TR' : 'en-GB')}`;
 function renderMenu() {
   if (!venue) return;
   const real = VENUE_MENUS[venue.id];
-  $('menu').innerHTML = (real ? `<p class="hint msource">${LANG === 'tr' ? real.source.tr : real.source.en}</p>` : '') + venueMenu(venue).map(sec => `<section class="msec">
+  // Each section is a grid: name · dotted leader · price, plus an "Iced" price column when the section has
+  // iced versions (header row on top), so every price lines up in its column.
+  $('menu').innerHTML = venueMenu(venue).map(sec => {
+    const iced = sec.items.some(it => it.iced);
+    const price = it => `${it.name === (LANG === 'tr' ? 'Vegan süt' : 'Plant milk') ? '+' : ''}${tl(it.price)}`;
+    return `<section class="msec${iced ? ' has-iced' : ''}">
     <h3>${sec.title}</h3>
-    ${sec.items.map(it => `<div class="mitem"><div><span class="mname">${it.name}</span>${it.desc ? `<span class="mdesc">${it.desc}</span>` : ''}</div><span class="mdots"></span><span class="mprice">${it.name === (LANG === 'tr' ? 'Vegan süt' : 'Plant milk') ? '+' : ''}${tl(it.price)}${it.iced ? `<small class="miced">${t('menuIced')} ${tl(it.iced)}</small>` : ''}</span></div>`).join('')}
-  </section>`).join('');
+    ${iced ? `<div class="mitem mhead"><span></span><span></span><span class="mprice">${t('menuHot')}</span><span class="mprice">${t('menuIcedCol')}</span></div>` : ''}
+    ${sec.items.map(it => `<div class="mitem"><div class="mtext"><span class="mname">${it.name}</span>${it.desc ? `<span class="mdesc">${it.desc}</span>` : ''}</div><span class="mdots"></span><span class="mprice">${price(it)}</span>${iced ? `<span class="mprice mice">${it.iced ? tl(it.iced) : '–'}</span>` : ''}</div>`).join('')}
+  </section>`;
+  }).join('');
 }
 
 // ---- Website ----
