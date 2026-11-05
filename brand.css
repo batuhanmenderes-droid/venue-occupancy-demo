@@ -116,3 +116,4 @@ body.mapmode .viewmode { display: none; }
 #grid.aslist .venue .stat b { font-weight: 600; font-stretch: 100%; font-variation-settings: "opsz" 96; letter-spacing: -0.04em; }
 #grid.aslist .venue .stat b { font-size: 68px; }
 @media (max-width: 600px) { #grid.aslist .venue .stat b { font-size: 44px; } }
+#grid.aslist .venue .stat .pp { order: -1; margin: 0 2px 0 0; }
