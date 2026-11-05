@@ -112,5 +112,5 @@ body.mapmode .viewmode { display: none; }
 #grid.aslist .venue .media, #grid.aslist .venue .body > .stat { grid-row: 1; }
 #grid.aslist .venue .body > :not(.head):not(.cardchart):not(.stat) { grid-column: 1 / -1; }
 @media (max-width: 600px) { #grid.aslist .venue .head .blurb { display: none; } }
-/* List count: condensed width of Bricolage Grotesque */
-#grid.aslist .venue .stat b { font-stretch: 75%; font-variation-settings: "opsz" 96, "wdth" 75; letter-spacing: -0.03em; }
+/* List count: SemiBold (600) */
+#grid.aslist .venue .stat b { font-weight: 600; font-stretch: 100%; font-variation-settings: "opsz" 96; letter-spacing: -0.04em; }
