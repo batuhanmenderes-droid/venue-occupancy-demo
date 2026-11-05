@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=bounds1"></script>
+<script src="i18n.js?v=prices1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -1837,7 +1837,22 @@ function profile(v) {
   const food = [sec('mains'), sec('meze'), sec('bites'), sec('breakfast')].filter(Boolean).flat();
   const beer = sec('beer'), cock = sec('cocktails'), bf = sec('breakfast');
   const g = GENRES[ty] || ['pop'];
+  const softs = sec('softs'), demoCoffee = softs ? Math.min(...softs.filter((_, i) => i >= 2).map(i => i.price)) : null;
+  // Venues with a real menu (VENUE_MENUS, e.g. Lemongrass) use its actual prices; what it does not
+  // sell (no food, beer, rakı or cocktails on the board) stays empty, so it is not ranked on those.
+  const real = VENUE_MENUS[v.id];
+  if (real) {
+    const items = real.sections.flatMap(sc => sc.items.map(([, , price]) => ({ sec: sc.en, price })));
+    const coffee = items.filter(i => i.sec === 'Coffee').map(i => i.price);
+    return {
+      breakfast: null, menemen: null, serpme: null,
+      music: music ? rate(...music, r('mu')) : null, genre: g[Math.floor(r('genre') * g.length)],
+      cocktails: null, cocktail: null, food: null, cheapestFood: null, beer: null, raki: null,
+      coffee: coffee.length ? Math.min(...coffee) : null, real: true,
+    };
+  }
   return {
+    coffee: demoCoffee,
     breakfast: breakfast && (ty !== 'Restoran' || r('bfOn') > 0.4) ? rate(...breakfast, r('bf')) : null,
     menemen: bf ? bf[1].price : null, serpme: bf ? bf[0].price : null,
     music: music ? rate(...music, r('mu')) : null, genre: g[Math.floor(r('genre') * g.length)],
@@ -1922,13 +1937,15 @@ const ANSWERS = {
     ]);
   },
   drinks() {
-    const list = withP().filter(x => x.p.beer || x.p.raki);
-    const price = x => x.p.beer ?? x.p.raki;
+    const list = withP().filter(x => x.p.beer || x.p.raki || x.p.coffee);
+    const price = x => x.p.beer ?? x.p.raki ?? Infinity;
+    const alc = x => x.p.beer || x.p.raki;
     return answerAngles(t('aDrinks'), list, [
-      ['tagCheap', 'cheap', by(price), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki))]],
-      ['tagCheapOpen', 'cheap', by(x => (isOpen(x.v) ? 0 : 1e6) + price(x)), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki)), isOpen(v) ? t('whyOpenNow') : '']],
+      ['tagCheap', 'cheap', by(price), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki))], alc],
+      ['tagCheapOpen', 'cheap', by(x => (isOpen(x.v) ? 0 : 1e6) + price(x)), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki)), isOpen(v) ? t('whyOpenNow') : ''], alc],
+      ['tagCheapCoffee', 'cheap', by(x => x.p.coffee), (v, p) => [t('whyCoffee', tl(p.coffee)), p.real ? t('whyRealPrice') : ''], x => x.p.coffee],
       ['tagCheapCocktail', 'cheap', by(x => x.p.cocktail), (v, p) => [t('whyCocktailPrice', tl(p.cocktail))], x => x.p.cocktail],
-      ['tagPricey', 'pricey', by(price, -1), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki))]],
+      ['tagPricey', 'pricey', by(price, -1), (v, p) => [p.beer ? t('whyBeer', tl(p.beer)) : t('whyRaki', tl(p.raki))], alc],
     ]);
   },
 };
