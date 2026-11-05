@@ -456,7 +456,8 @@
         "open": "21:00",
         "close": "04:00"
       },
-      "description": ""
+      "description": "",
+      "background": "backgrounds/edit.jpg"
     },
     {
       "id": "okapi-suites",
