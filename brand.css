@@ -83,3 +83,20 @@ body.mapmode .viewmode { display: none; }
   #grid.aslist .venue .updated { font-size: 11px; }
   #grid.aslist .venue .evtag { font-size: 11.5px; }
 }
+/* List rows: settings + map checkbox sit in the bottom row on the right; last update follows the counter status */
+#grid.aslist .venue .cardgear, #grid.aslist .venue .mapcheck { top: auto; bottom: 17px; }
+#grid.aslist .venue .cardgear { right: 48px; }
+#grid.aslist .venue .mapcheck { right: 14px; }
+#grid.aslist .venue .updated { justify-content: flex-start; gap: 6px; padding-right: 80px; min-height: 30px; }
+#grid.aslist .venue .updated > span:last-child { text-align: left; }
+#grid.aslist .venue .updated > span:last-child::before { content: "·"; margin-right: 6px; opacity: .6; }
+#grid.aslist .venue .body > .stat { margin-top: 0; align-self: center; }
+@media (max-width: 600px) {
+  #grid.aslist .venue .cardgear, #grid.aslist .venue .mapcheck { bottom: 15px; }
+  #grid.aslist .venue .mapcheck { right: 12px; }
+  #grid.aslist .venue .cardgear { right: 46px; }
+}
+#grid.aslist .venue .updated > * { white-space: nowrap; }
+#grid.aslist .venue .updated > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+#grid.aslist .venue .updated .status { flex: none; }
+@media (max-width: 600px) { #grid.aslist .venue .updated, #grid.aslist .venue .updated .status { font-size: 10.5px; gap: 5px; } #grid.aslist .venue .updated { padding-right: 76px; } }
