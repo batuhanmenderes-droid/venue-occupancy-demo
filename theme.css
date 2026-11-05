@@ -1167,5 +1167,3 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 /* Event tag spans the card */
 #grid .venue .evtag { align-self: stretch; width: 100%; box-sizing: border-box; }
 #grid .venue .evtag .ev-state { margin-left: auto; }
-/* "At its peak" on the photo, bottom right (left of the logo) */
-.media .peaktag.onphoto { position: absolute; left: 10px; bottom: 10px; z-index: 2; background: rgba(255, 255, 255, 0.92); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18); }
