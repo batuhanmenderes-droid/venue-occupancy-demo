@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=night8">
+<link rel="stylesheet" href="theme.css?v=night9">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -882,6 +882,24 @@ const KITES_DEFAULT = [[37.0445, 28.3261], [37.0424, 28.3247], [37.0395, 28.3262
 const loadJSON = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return v ?? d; } catch { return d; } };
 let KITES = loadJSON('kites', KITES_DEFAULT.map(p => [...p]));
 let KITE_SET = { size: 1, animate: true, ...loadJSON('kiteSettings', {}) };
+// Low-poly kitesurfer in the village scene's style: faceted kite, rider, board and wake, with a soft
+// shadow. Three kite colours; shaded facets give the 3D look.
+const KITE_COLORS = [['#ef6a4c', '#c94a31'], ['#2fa7a0', '#1f7d78'], ['#f2b632', '#c98d17']];
+function kiteSvg(v = 0) {
+  const [c, d] = KITE_COLORS[v % 3];
+  return `<svg class="kite-model" viewBox="0 0 64 64" aria-hidden="true">
+    <ellipse cx="34" cy="56" rx="20" ry="4.5" fill="#1d4a5c" opacity=".18"/>
+    <path d="M14 55c8 1 18 1 28-1" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".7"/>
+    <path d="M6 9 18 3l14 3 12 6-6 3-12-5-12 2z" fill="${c}"/>
+    <path d="M6 9 18 3l2 6-8 3z" fill="#000" opacity=".14"/><path d="M32 6l12 6-6 3-8-5z" fill="#fff" opacity=".2"/>
+    <path d="M38 15 30 41M12 12l18 29" stroke="#3b3b3b" stroke-width=".6" opacity=".7"/>
+    <path d="m26 50 16-3 8 2-16 4z" fill="#f4f1ea"/><path d="m26 50 16-3-1 2-14 3z" fill="#000" opacity=".12"/>
+    <path d="m31 36 4-1 3 6-2 7-3-1 1-5z" fill="#2c3e50"/><path d="m35 35 4 1 2 11-3 1-2-6z" fill="#22313f"/>
+    <path d="m29 26 7-2 3 5-2 7-6 1-3-6z" fill="${d}"/><path d="m29 26 7-2 1 5-6 7-3-5z" fill="#fff" opacity=".18"/>
+    <path d="m31 31-2 4 1 1 3-3M37 29l-5 6 1 1 5-5" fill="#e8b996"/>
+    <path d="m31 18 4-1 2 3-1 4-4 1-2-3z" fill="#e8b996"/><path d="m31 18 4-1 2 3-6 0z" fill="#3a2a1e"/>
+  </svg>`;
+}
 let kiteGroup = null, kiteEdit = false, kitePanelSync = null;
 const saveKites = () => { try { localStorage.setItem('kites', JSON.stringify(KITES)); localStorage.setItem('kiteSettings', JSON.stringify(KITE_SET)); } catch {} };
 function addKites() {
@@ -907,7 +925,7 @@ function drawKites() {
     // Riders go up and down the shore (north–south): each starts heading one way, with its own pace.
     const dir = simRandom(`kitedir:${i}`) < 0.5 ? -1 : 1, dur = (12 + simRandom(`kitedur:${i}`) * 8).toFixed(1);
     const m = L.marker(pos, { pane: 'kites', draggable: true, keyboard: false,
-      icon: L.divIcon({ className: 'kiter', html: `<img src="logos/kitesurfer.png" alt="" style="--flip:${flip};--dir:${dir};animation-delay:${delay}s;animation-duration:${dur}s">`, iconSize: [36, 36], iconAnchor: [18, 30] }) }).addTo(kiteGroup);
+      icon: L.divIcon({ className: 'kiter', html: kiteSvg(i).replace('class="kite-model"', `class="kite-model" style="--flip:${flip};--dir:${dir};animation-delay:${delay}s;animation-duration:${dur}s"`), iconSize: [36, 36], iconAnchor: [18, 30] }) }).addTo(kiteGroup);
     kiteEdit ? m.dragging.enable() : m.dragging.disable();
     m.on('dragend', () => { const ll = m.getLatLng(); KITES[i] = [+ll.lat.toFixed(6), +ll.lng.toFixed(6)]; saveKites(); });
     m.on('dblclick', e => { if (!kiteEdit) return; L.DomEvent.stop(e); KITES.splice(i, 1); saveKites(); drawKites(); kitePanelSync?.(); });
@@ -917,7 +935,7 @@ function addKitePanel() {
   const Ctl = L.Control.extend({ options: { position: 'topright' }, onAdd() {
     const box = L.DomUtil.create('div', 'zoompanel kitepanel');
     L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
-    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('kitePanel')}" title="${t('kitePanel')}"><img src="logos/kitesurfer.png" alt=""></button>
+    box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('kitePanel')}" title="${t('kitePanel')}">${kiteSvg(1)}</button>
       <div class="zp-body" hidden>
         <h4>${t('kitePanel')}</h4>
         <label class="sp-drag"><input type="checkbox" data-edit> ${t('kiteEdit')}</label>
@@ -1020,6 +1038,16 @@ function moveControlsToSettings() {
     if (btn && !btn.querySelector('.zp-label')) btn.insertAdjacentHTML('beforeend', `<span class="zp-label">${btn.getAttribute('aria-label') || ''}</span><svg class="zp-chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`);
     host.append(box);
   });
+  // Kitesurfer settings live inside the Village scenery panel, as its own section.
+  const village = host.querySelector('.villagepanel .zp-body'), kite = host.querySelector('.kitepanel');
+  if (village && kite) {
+    const body = kite.querySelector('.zp-body');
+    const sec = document.createElement('div'); sec.className = 'village-kites';
+    sec.append(...body.childNodes);
+    sec.querySelector('h4')?.replaceWith(Object.assign(document.createElement('h4'), { textContent: t('kitePanel') }));
+    village.insertBefore(sec, village.querySelector('.village-actions') || null);
+    kite.remove();
+  }
 }
 
 // ---- Map colour panel (saved per browser; Dark / Light presets) ----

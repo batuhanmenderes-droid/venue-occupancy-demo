@@ -931,7 +931,7 @@ body.routing .sealabel .windread { pointer-events: none; }
 
 /* Kitesurfers */
 .kiter { background: none; border: 0; pointer-events: none !important; }
-.kiter img { width: 36px; height: 36px; display: block; transform-origin: 50% 85%;
+.kiter .kite-model { width: 40px; height: 40px; display: block; transform-origin: 50% 85%;
   transform: scale(calc(var(--kite-s, .55) * var(--kite-k, 1))); scale: var(--flip, 1) 1; animation: kiteRide 14s linear infinite; }
 /* Riding up and down the coast (north–south), turning round at each end, with a little lean */
 @keyframes kiteRide {
@@ -943,10 +943,10 @@ body.routing .sealabel .windread { pointer-events: none; }
   100% { translate: 0 0; scale: var(--flip) 1; rotate: 0deg; }
 }
 
-.kites-still .kiter img { animation: none; }
-@media (prefers-reduced-motion: reduce) { .kiter img { animation: none; } }
+.kites-still .kiter .kite-model { animation: none; }
+@media (prefers-reduced-motion: reduce) { .kiter .kite-model { animation: none; } }
 body.kites-edit .kiter { pointer-events: auto !important; cursor: grab; }
-body.kites-edit .kiter img { outline: 1.5px dashed rgba(10, 132, 255, .8); outline-offset: 2px; border-radius: 6px; }
+body.kites-edit .kiter .kite-model { outline: 1.5px dashed rgba(10, 132, 255, .8); outline-offset: 2px; border-radius: 6px; }
 body.kites-edit .leaflet-container { cursor: copy; }
 body.routing .leaflet-kites-pane { opacity: 0; }
 .kitepanel .zp-toggle img { width: 24px; height: 24px; }
@@ -958,8 +958,6 @@ body.routing .leaflet-kites-pane { opacity: 0; }
 .set-range input { width: 130px; accent-color: var(--series, #0a84ff); }
 .set-range output { font: 600 13px var(--font-display); min-width: 30px; text-align: right; color: var(--ink); }
 /* Kitesurfers stay subtle on the map. */
-.kiter img { filter: grayscale(1) brightness(1.35) contrast(.55) !important; opacity: .75; }
-:root[data-theme="dark"] .kiter img { filter: grayscale(1) brightness(.85) contrast(.6) !important; opacity: .6; }
 
 /* The venue settings dialog is a centred modal (it shares the "sheet" class name with the bottom sheets) */
 dialog.sheet { position: fixed; inset: 0; margin: auto; max-height: calc(100dvh - 32px); overflow: auto; }
@@ -1073,3 +1071,6 @@ body:not(:has(#setSheet.open)) .bounds-outline { display: none; }  /* outline on
 /* Map view: category filters at the top centre (desktop and phones) */
 body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !important; bottom: auto !important; }
 @media (max-width: 640px) { body.mapmode .subbar { top: calc(10px + env(safe-area-inset-top, 0px)) !important; } }
+.kitepanel .zp-toggle svg, .set-tools .kitepanel .zp-toggle > svg:first-child { width: 24px; height: 24px; }
+.village-kites { display: grid; gap: 8px; margin-top: 6px; }
+:root[data-theme="dark"] .kiter .kite-model { filter: brightness(.75); }
