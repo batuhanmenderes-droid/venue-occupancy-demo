@@ -1150,3 +1150,6 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 #grid .venue .blurb { margin-top: -2px; font: 400 11px/14px var(--font-text); letter-spacing: -0.25px; color: var(--ink-2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 .vblurb { margin: 4px 0 2px; font: 400 14.5px/1.4 var(--font-text); color: var(--ink-2); max-width: 60ch; }
 .vblurb[hidden] { display: none; }
+
+/* List card counter: big number + "people are here right now." */
+#grid .venue .stat b { font-size: 36px; line-height: 1; letter-spacing: -0.02em; }

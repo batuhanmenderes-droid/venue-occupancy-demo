@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=counter1"></script>
+<script src="i18n.js?v=stat1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=blurb3">
+<link rel="stylesheet" href="theme.css?v=stat1">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -1700,7 +1700,7 @@ function card(v) {
   const stat = closed
     ? `<b style="color:var(--muted)">—</b><span>${t('closed')}</span>`
     : v.latest
-    ? `<b>${v.latest.people}</b><span>${t('people')} · ${hm(v.latest.timestamp)}</span>`
+    ? `<b>${v.latest.people}</b><span>${t('hereNow', v.latest.people)}</span>`
     : `<b style="color:var(--muted)">—</b><span>${t('people')}</span>`;
   const lv = v.latest ? levelOf(v.latest.people) : null;
   return `<a class="venue${closed ? ' is-closed' : ''}" data-id="${v.id}" href="venue.html?mekan=${v.id}"${lv && !closed ? ` style="--lv:${lv.color}"` : ''}>
