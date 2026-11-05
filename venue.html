@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=events1"></script>
+<script src="i18n.js?v=cal2"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   .grid2 { grid-template-columns: 1fr; }
 }
 </style>
-<link rel="stylesheet" href="theme.css?v=insta2">
+<link rel="stylesheet" href="theme.css?v=cal1">
 </head>
 <body>
 <main class="venuepage">
@@ -503,14 +503,30 @@ function renderCalendar() {
   }
   if (venue?.events?.length || venue?.event_default) {
     document.querySelector('.progchart').hidden = true;
-    const base = venue.event_default || {};
-    const days = Array.from({ length: 7 }, (_, k) => { const d = new Date(`${today()}T12:00:00`); d.setDate(d.getDate() + k); return localDay(d); });
-    const list = days.flatMap(day => { const es = (venue.events || []).filter(x => x.date === day); return es.length ? es.map(e => ({ ...base, ...e, date: day })) : base.name ? [{ ...base, date: day }] : []; });
-    if (!list.length) { prog.innerHTML = `<p class="empty">${t('noProgram')}</p>`; return; }
-    prog.innerHTML = `<p class="hint">${base.title || list[0]?.title || ''}</p>` + list.map(e => `<div class="pday${e.date === today() ? ' today' : ''}">
-      <span class="pdate">${e.date === today() ? t('today') : fmtDay(e.date)}</span>
-      <span class="partist"><i style="background:#8d6be0"></i>${e.name}</span><span class="pset">${e.from || ''}${e.to ? `–${e.to}` : ''} · ${t(e.kind === 'yoga' ? 'eventYoga' : 'eventShow')}</span>
-    </div>`).join('');
+    document.querySelector('#tab-calendar .card > .hint').textContent = t('eventsHint');
+    const base = venue.event_default || {}, now = new Date();
+    // Each event's state: upcoming (green), in progress (yellow), ended (red). Times before 06:00 are after midnight.
+    const stateOf = e => {
+      const early = x => +x.slice(0, 2) < 6, a = new Date(`${e.date}T${e.from}:00`), b = new Date(`${e.date}T${e.to}:00`);
+      if (early(e.from)) a.setDate(a.getDate() + 1);
+      if (early(e.to) || b <= a) b.setDate(b.getDate() + 1);
+      return now < a ? 'upcoming' : now < b ? 'live' : 'past';
+    };
+    const all = (venue.events || []).map(e => ({ ...base, ...e })).filter(e => e.from && e.to).map(e => ({ ...e, state: stateOf(e) }));
+    const order = (x, y) => x.date.localeCompare(y.date) || (+x.from.slice(0, 2) < 6 ? 24 : 0) + +x.from.slice(0, 2) - ((+y.from.slice(0, 2) < 6 ? 24 : 0) + +y.from.slice(0, 2));
+    const coming = all.filter(e => e.state !== 'past').sort(order);
+    const past = all.filter(e => e.state === 'past').sort(order).reverse().slice(0, 14);  // most recent first
+    if (!coming.length && !past.length) { prog.innerHTML = `<p class="empty">${t('noProgram')}</p>`; return; }
+    const longDate = d => new Date(`${d}T12:00:00`).toLocaleDateString(LANG === 'tr' ? 'tr-TR' : 'en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+    const row = e => `<div class="pday ev-${e.state}${e.date === today() ? ' today' : ''}">
+      <span class="pdate">${e.date === today() ? `${t('today')} · ` : ''}${longDate(e.date)}</span>
+      <span class="partist"><i style="background:#8d6be0"></i>${e.name}</span>
+      <span class="pset">${e.from}–${e.to} · ${t(e.kind === 'yoga' ? 'eventYoga' : 'eventShow')}</span>
+      <span class="pstate">${t(`ev_${e.state}`)}</span>
+    </div>`;
+    prog.innerHTML = `<p class="hint">${base.title || all[0]?.title || ''}</p>`
+      + (coming.length ? coming.map(row).join('') : `<p class="empty">${t('noUpcoming')}</p>`)
+      + (past.length ? `<h3 class="ppast-h">${t('pastEvents')}</h3>${past.map(row).join('')}` : '');
     return;
   }
   if (!PROGRAM_TYPES.includes(venue?.type)) {

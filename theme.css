@@ -1104,3 +1104,15 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 .vinsta span { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); }
 .vinsta:hover span { color: var(--ink); }
 .vinsta[hidden] { display: none; }
+
+/* Activity calendar: state per event, past events grouped at the bottom */
+.pday { position: relative; }
+.pday .pstate { justify-self: start; font: 700 10.5px/1 var(--font-text); letter-spacing: .05em; text-transform: uppercase; padding: 4px 7px; border-radius: 999px; }
+.pday.ev-upcoming .pstate { color: var(--ev-up); background: var(--ev-up-bg); }
+.pday.ev-live .pstate { color: var(--ev-live); background: var(--ev-live-bg); }
+.pday.ev-live { box-shadow: inset 0 0 0 1.5px var(--ev-live); }
+.pday.ev-past .pstate { color: var(--ev-past); background: var(--ev-past-bg); }
+.pday.ev-past { opacity: .6; }
+.pday.ev-past.today { box-shadow: inset 0 0 0 1.5px var(--ev-past); opacity: .85; }
+.ppast-h { grid-column: 1 / -1; margin: 14px 0 2px; font: 700 13px var(--font-text); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.program > .hint, .program > .empty { grid-column: 1 / -1; }
