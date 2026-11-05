@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=grid3">
+<link rel="stylesheet" href="theme.css?v=card4">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -1290,7 +1290,7 @@ async function addBasemap() {
 const RISE_ICON = '<svg class="rise" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 11.5l4-4 3 3 5-5.5M10 5h4v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const LOCK_ICON = '<svg class="lock" viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M5.2 7V5.3a2.8 2.8 0 0 1 5.6 0V7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>';
 const CHECK_ICON = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.4l3 3 6-6.6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-const GEAR_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" d="M11.1 1.5l.4 2.1c.5.2 1 .5 1.4.8l2-.8 1.6 2.7-1.6 1.4a6 6 0 0 1 0 1.6l1.6 1.4-1.6 2.7-2-.8c-.4.3-.9.6-1.4.8l-.4 2.1H8l-.4-2.1c-.5-.2-1-.5-1.4-.8l-2 .8-1.6-2.7 1.6-1.4a6 6 0 0 1 0-1.6L2.6 6.3l1.6-2.7 2 .8c.4-.3.9-.6 1.4-.8L8 1.5h3.1zM9.6 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>';
+const GEAR_ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M18.43,8.29L18.43,11.71L16.24,12.14L15.93,12.90L17.17,14.75L14.75,17.17L12.90,15.93L12.14,16.24L11.71,18.43L8.29,18.43L7.86,16.24L7.10,15.93L5.25,17.17L2.83,14.75L4.07,12.90L3.76,12.14L1.57,11.71L1.57,8.29L3.76,7.86L4.07,7.10L2.83,5.25L5.25,2.83L7.10,4.07L7.86,3.76L8.29,1.57L11.71,1.57L12.14,3.76L12.90,4.07L14.75,2.83L17.17,5.25L15.93,7.10L16.24,7.86ZM10,7a3,3 0 1,0 0,6a3,3 0 1,0 0,-6Z"/></svg>';
 
 // Small person glyph shown next to the head count on map labels.
 // Mountain summit with a flag: "at its peak" tag.
@@ -1701,16 +1701,15 @@ function card(v) {
     : `<b style="color:var(--muted)">—</b><span>${t('people')}</span>`;
   const lv = v.latest ? levelOf(v.latest.people) : null;
   return `<a class="venue${closed ? ' is-closed' : ''}" data-id="${v.id}" href="venue.html?mekan=${v.id}"${lv && !closed ? ` style="--lv:${lv.color}"` : ''}>
-    <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}<button class="mapcheck" role="checkbox" aria-checked="${onMap(v)}" data-mapcheck="${v.id}" title="${t('showOnMap')}" aria-label="${t('showOnMap')}: ${v.name}">${CHECK_ICON}</button></div>
+    <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}<button class="gear cardgear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button><button class="mapcheck" role="checkbox" aria-checked="${onMap(v)}" data-mapcheck="${v.id}" title="${t('showOnMap')}" aria-label="${t('showOnMap')}: ${v.name}">${CHECK_ICON}</button></div>
     <div class="body">${cardChart(v)}
-      <div class="top"><span class="name">${v.name}</span><span class="type">${typeName(v.type)}</span></div>
-      ${statusLine(v, live)}
+      <div class="top"><span class="type">${typeName(v.type)}</span><span class="name">${v.name}</span></div>
       <div class="stat">${stat}<span class="arrow">›</span></div>
       ${v.event ? `<div class="evtag ev-${v.event.state}">${eventIcon(v.event)}<span class="ev-name">${v.event.name}</span><span class="ev-time">${v.event.from}–${v.event.to}</span><span class="ev-state">${eventStateText(v.event)}</span></div>` : ''}
       ${v.peak ? `<div class="peaktag">${PEAK_ICON}${t('atPeak')}</div>` : ''}
       ${v.rising ? `<div class="rising">${RISE_ICON}${t('rising')}</div>` : ''}
       ${v.expected ? `<div class="expect">${t('expectedAround', v.expected)}</div>` : ''}
-      <div class="updated"><span title="${v.updatedAt ? v.updatedAt.replace('T', ' ') : ''}">${live ? t('lastUpdate', ago(v.updatedAt)) : v.coming_soon ? t('soonCamera') : t('noUpdates')}</span><button class="gear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button></div>
+      <div class="updated">${statusLine(v, live)}<span title="${v.updatedAt ? v.updatedAt.replace('T', ' ') : ''}">${live ? t('lastUpdate', ago(v.updatedAt)) : v.coming_soon ? t('soonCamera') : t('noUpdates')}</span></div>
     </div>
   </a>`;
 }
