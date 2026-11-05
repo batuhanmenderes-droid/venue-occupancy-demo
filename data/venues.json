@@ -199,7 +199,8 @@
       "description": "",
       "categories": [
         "activity"
-      ]
+      ],
+      "background": "backgrounds/kucuk-akyaka.jpg"
     },
     {
       "id": "rahat-social",
@@ -240,7 +241,8 @@
         "open": "22:00",
         "close": "04:00"
       },
-      "description": ""
+      "description": "",
+      "background": "backgrounds/dane-gokova.jpg"
     },
     {
       "id": "muhtar",
@@ -389,7 +391,8 @@
         "close": "02:00"
       },
       "description": "",
-      "logo_scale": 1
+      "logo_scale": 1,
+      "background": "backgrounds/yelken.jpg"
     },
     {
       "id": "akcapinar-tostcusu",
@@ -471,7 +474,8 @@
         "open": "22:00",
         "close": "04:00"
       },
-      "description": ""
+      "description": "",
+      "background": "backgrounds/okapi-suites.jpg"
     },
     {
       "id": "soul-fit",
