@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=night12">
+<link rel="stylesheet" href="theme.css?v=night13">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -1321,20 +1321,31 @@ function eventWindow(e) {
   if (end <= start) end.setDate(end.getDate() + 1);
   return [start, end];
 }
+// Which event a venue shows (rules):
+//  1. An event on now, or still to come today, is shown.
+//  2. An event that has ended stays visible (red) until 16:00 on the day it ended.
+//  3. Otherwise the next event is shown, even if it is days away, until it happens and ends.
 function eventFor(v, now = new Date()) {
   const today = localIso(new Date(now.getTime() - 6 * 3600000)).slice(0, 10);  // business day from 06:00
-  const stateOf = ev => { const [a, b] = eventWindow(ev); return now < a ? 'upcoming' : now < b ? 'live' : 'past'; };
-  // Several sets on one night: show the one on now, else the next one, else the last one.
-  const pick = list => { const st = list.map(e => ({ ...e, state: stateOf(e) })); return st.find(e => e.state === 'live') || st.find(e => e.state === 'upcoming') || st[st.length - 1] || null; };
-  const e = pick(eventsOn(v, today));
-  if ((!e || e.state === 'past') && now.getHours() >= 16) {
-    const next = eventsOn(v, addDays(today, 1))[0];
-    if (next) return { ...next, state: 'upcoming', when: 'tomorrow' };
+  const withState = list => list.map(e => { const [a, b] = eventWindow(e); return { ...e, end: b, state: now < a ? 'upcoming' : now < b ? 'live' : 'past' }; });
+  const todays = withState(eventsOn(v, today));
+  const cur = todays.find(e => e.state === 'live') || withState(eventsOn(v, addDays(today, -1))).find(e => e.state === 'live') || todays.find(e => e.state === 'upcoming');
+  if (cur) return { ...cur, when: 'today' };
+  // Ended today (including last night's sets that finished after midnight): keep showing until 16:00.
+  const sameDay = d => d.toDateString() === now.toDateString();
+  const ended = [...withState(eventsOn(v, addDays(today, -1))), ...todays].filter(e => e.state === 'past' && sameDay(e.end)).sort((x, y) => x.end - y.end).pop();
+  if (ended && now.getHours() < 16) return { ...ended, when: 'today' };
+  // The next one, however many days ahead (looks two months forward).
+  for (let k = 1; k <= 60; k++) {
+    const day = addDays(today, k), next = eventsOn(v, day)[0];
+    if (next) return { ...next, state: 'upcoming', when: k === 1 ? 'tomorrow' : 'later' };
   }
-  return e ? { ...e, when: 'today' } : null;
+  return null;  // nothing ahead and past 16:00: the ended event is no longer shown
 }
 const eventIcon = e => e.kind === 'yoga' ? YOGA_ICON : MIC_ICON;
-const eventStateText = e => e.when === 'tomorrow' ? t('evTomorrow') : t(`ev_${e.state}`);
+const eventStateText = e => e.when === 'tomorrow' ? t('evTomorrow')
+  : e.when === 'later' ? new Date(`${e.day}T12:00:00`).toLocaleDateString(LANG === 'tr' ? 'tr-TR' : 'en-GB', { weekday: 'short', day: 'numeric', month: 'short' })
+  : t(`ev_${e.state}`);
 const expectLine = v => v.expected ? `<span class="vexpect${v.status?.state === 'closed' ? ' off' : ''}">${t('expectedAround', v.expected)}</span>` : '';
 const artistLine = v => {
   const e = v.event; if (!e) return '';
