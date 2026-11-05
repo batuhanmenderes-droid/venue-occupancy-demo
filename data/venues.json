@@ -264,6 +264,7 @@
     },
     {
       "id": "chicken-loop",
+      "background": "backgrounds/chicken-loop.jpg",
       "name": "Chicken Loop",
       "type": "Restoran",
       "folder": null,
@@ -347,6 +348,7 @@
     },
     {
       "id": "west-cafe-bistro",
+      "background": "backgrounds/west-cafe-bistro.jpg",
       "name": "West Cafe Bistro",
       "type": "Kafe",
       "folder": null,
@@ -488,6 +490,7 @@
     },
     {
       "id": "motto-brew-coffee",
+      "background": "backgrounds/motto-brew-coffee.jpg",
       "name": "Motto Brew Coffee",
       "type": "Kafe",
       "folder": null,
