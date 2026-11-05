@@ -495,6 +495,12 @@ function renderCalendar() {
   const prog = $('program');
   // Venues with their own events show them instead of the demo line-up: the coming 7 days, each with its
   // dated event (venues.json `events`) or the daily default (`event_default`, e.g. yoga 10:00–11:00).
+  // An explicit empty `events` list means "no activities": no demo line-up either.
+  if (Array.isArray(venue?.events) && !venue.events.length && !venue.event_default) {
+    prog.innerHTML = `<p class="empty">${t('noProgram')}</p>`;
+    document.querySelector('.progchart').hidden = true;
+    return;
+  }
   if (venue?.events?.length || venue?.event_default) {
     document.querySelector('.progchart').hidden = true;
     const base = venue.event_default || {};
