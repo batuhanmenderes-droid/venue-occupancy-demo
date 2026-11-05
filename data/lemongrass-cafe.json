@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-05T14:40:57",
+  "updated_at": "2026-11-05T15:42:27",
   "frames": [
     {
       "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_090000.jpg",
@@ -455,6 +455,22 @@
       "timestamp": "2026-11-05T14:13:03",
       "camera": "CAM 01",
       "people": 8,
+      "note": "Sağ kenarda yarım görünen 1 kişi dahil.",
+      "note_en": "Includes 1 person half-visible at the right edge."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-05/CAM01_20261105_145210.jpg",
+      "timestamp": "2026-11-05T14:52:10",
+      "camera": "CAM 01",
+      "people": 8,
+      "note": "Sağ kenarda yarım görünen 1 kişi dahil.",
+      "note_en": "Includes 1 person half-visible at the right edge."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-05/CAM01_20261105_153118.jpg",
+      "timestamp": "2026-11-05T15:31:18",
+      "camera": "CAM 01",
+      "people": 7,
       "note": "Sağ kenarda yarım görünen 1 kişi dahil.",
       "note_en": "Includes 1 person half-visible at the right edge."
     }
