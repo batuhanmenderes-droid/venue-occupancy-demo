@@ -979,7 +979,7 @@ body.houses-remove .house:hover svg { opacity: .55; }
 
 /* Map tilt (see applyTilt): the whole map plane leans back a little */
 .leaflet-container.tilted { background: var(--map-land, #f1f0ed); }
-.leaflet-container.tilted .leaflet-tile-pane { transform: perspective(var(--tilt-p, 2600px)) rotateX(var(--map-tilt, 0deg)); transform-origin: var(--tilt-o, 50% 50%); }  /* only the ground tilts */
+.leaflet-container.tilted .leaflet-tile-pane { transform: perspective(var(--tilt-p, 2600px)) rotateX(var(--map-tilt, 0deg)) rotateZ(var(--map-spin, 0deg)); transform-origin: var(--tilt-o, 50% 50%); }  /* only the ground tilts */
 .set-range { display: inline-flex; align-items: center; gap: 8px; }
 .set-range input { width: 130px; accent-color: var(--series, #0a84ff); }
 .set-range output { font: 600 13px var(--font-display); min-width: 30px; text-align: right; color: var(--ink); }
@@ -1017,3 +1017,21 @@ body.kite-closed .windcanvas { display: none; }
 /* Detail containers a little darker / more solid so they read better over the map */
 :root { --glass-bg: rgba(244, 244, 246, 0.8); }
 :root[data-theme="dark"] { --glass-bg: rgba(18, 18, 22, 0.8); --glass-border: rgba(255, 255, 255, 0.14); }
+
+/* ---- Map controls inside Settings › Map ---- */
+.set-h { margin: 6px 4px -4px; font: 700 13px var(--font-text); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+.set-tools { display: grid; gap: 1px; border-radius: 14px; overflow: hidden; background: var(--grid); box-shadow: 0 0 0 0.5px var(--border); }
+.set-tools > .set-note { margin: 0; padding: 12px 14px; background: var(--surface); }
+.set-tools > * { background: var(--surface); }
+.set-tools .set-zoom { padding: 8px 14px; }
+.set-tools .set-zoom .leaflet-control-zoom { display: flex !important; gap: 6px; margin: 0; }
+.set-tools .set-zoom .leaflet-control-zoom a { position: static; display: grid; place-items: center; width: 36px !important; height: 32px !important; border-radius: 9px !important; background: var(--fill) !important; }
+.set-tools .zoompanel { display: block; margin: 0; font: 500 14px var(--font-text); }
+.set-tools .zoompanel .zp-toggle { width: 100%; height: auto; display: flex; align-items: center; gap: 12px; padding: 11px 14px; border-radius: 0;
+  background: transparent !important; color: var(--ink) !important; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; text-align: left; }
+.set-tools .zoompanel .zp-toggle > svg:first-child, .set-tools .zoompanel .zp-toggle > img { width: 22px; height: 22px; flex: none; }
+.set-tools .zoompanel .zp-label { flex: 1; font: 500 15px var(--font-text); color: var(--ink); }
+.set-tools .zoompanel .zp-chev { width: 16px; height: 16px; color: var(--muted); transition: transform .2s; }
+.set-tools .zoompanel .zp-toggle[aria-expanded="true"] .zp-chev { transform: rotate(90deg); }
+.set-tools .zoompanel .zp-body { width: auto; margin: 0 10px 12px; border-radius: 12px; box-shadow: none; background: var(--fill); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.leaflet-top.leaflet-right:empty, .leaflet-top.leaflet-left:empty { display: none; }
