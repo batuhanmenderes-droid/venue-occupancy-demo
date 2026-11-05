@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=grid2">
+<link rel="stylesheet" href="theme.css?v=grid3">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -1648,6 +1648,15 @@ function statusChip(v) {
   return '';
 }
 
+// Status dot: closed grey, demo data yellow, active camera green.
+function statusLine(v, live) {
+  const [cls, text] = v.status?.state === 'closed' ? ['closed', t('closed')]
+    : v.simulated ? ['demo', t('demoData')]
+    : live ? ['live', t('cameraActive')]
+    : v.coming_soon ? ['soon', t('soon')] : ['', t('noData')];
+  return `<span class="status ${cls}"><span class="dot"></span>${text}</span>`;
+}
+
 // Muted, looping YouTube clip as the card photo (the venue's own video; thumbnail until it plays).
 function videoThumb({ youtube: id, start = 0 }) {
   const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1&fs=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}&start=${start}`;
@@ -1681,7 +1690,7 @@ function card(v) {
     : v.background_video?.youtube
       ? videoThumb(v.background_video)
     : v.simulated
-      ? `<div class="none demo"></div>`
+      ? `<div class="none demo"><span>${t('demoData')}</span></div>`
       : `<div class="none">${live ? t('noFramesToday') : v.coming_soon ? t('soon') : t('noCamera')}</div>`;
   const closed = v.status?.state === 'closed';
   // Closed venues show no head count.
@@ -1694,12 +1703,14 @@ function card(v) {
   return `<a class="venue${closed ? ' is-closed' : ''}" data-id="${v.id}" href="venue.html?mekan=${v.id}"${lv && !closed ? ` style="--lv:${lv.color}"` : ''}>
     <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}<button class="mapcheck" role="checkbox" aria-checked="${onMap(v)}" data-mapcheck="${v.id}" title="${t('showOnMap')}" aria-label="${t('showOnMap')}: ${v.name}">${CHECK_ICON}</button></div>
     <div class="body">${cardChart(v)}
-      <div class="top"><span class="type">${typeName(v.type)}</span><span class="name">${v.name}</span></div>
-      <div class="stat">${stat}<button class="gear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button><span class="arrow">›</span></div>
+      <div class="top"><span class="name">${v.name}</span><span class="type">${typeName(v.type)}</span></div>
+      ${statusLine(v, live)}
+      <div class="stat">${stat}<span class="arrow">›</span></div>
       ${v.event ? `<div class="evtag ev-${v.event.state}">${eventIcon(v.event)}<span class="ev-name">${v.event.name}</span><span class="ev-time">${v.event.from}–${v.event.to}</span><span class="ev-state">${eventStateText(v.event)}</span></div>` : ''}
       ${v.peak ? `<div class="peaktag">${PEAK_ICON}${t('atPeak')}</div>` : ''}
       ${v.rising ? `<div class="rising">${RISE_ICON}${t('rising')}</div>` : ''}
       ${v.expected ? `<div class="expect">${t('expectedAround', v.expected)}</div>` : ''}
+      <div class="updated"><span title="${v.updatedAt ? v.updatedAt.replace('T', ' ') : ''}">${live ? t('lastUpdate', ago(v.updatedAt)) : v.coming_soon ? t('soonCamera') : t('noUpdates')}</span><button class="gear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button></div>
     </div>
   </a>`;
 }
