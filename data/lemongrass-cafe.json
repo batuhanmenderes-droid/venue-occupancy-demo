@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-05T09:41:10",
+  "updated_at": "2026-11-05T10:41:33",
   "frames": [
     {
       "file": "Lemongrass-cctv/2026-11-03/CAM01_20261103_090000.jpg",
@@ -401,6 +401,14 @@
       "people": 9,
       "note": "Bitki arkasında zor seçilen 1 kişi dahil; ±1 sapma olabilir.",
       "note_en": "Includes 1 person barely visible behind the plant; may be off by ±1."
+    },
+    {
+      "file": "Lemongrass-cctv/2026-11-05/CAM01_20261105_101816.jpg",
+      "timestamp": "2026-11-05T10:18:16",
+      "camera": "CAM 01",
+      "people": 20,
+      "note": "Kalabalık; ±2 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±2."
     }
   ]
 }
