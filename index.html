@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=stat1"></script>
+<script src="i18n.js?v=stat2"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=stat1">
+<link rel="stylesheet" href="theme.css?v=stat2">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -1683,6 +1683,17 @@ function cardChart(v, tag = 'c') {
     <path d="${line}" fill="none" stroke="url(#cc-l-${tag}-${v.id})" stroke-width="2.5" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>`;
 }
 
+// Usual busiest time of the venue's day (from its typical-day curve), rounded to the half hour: "Busy around 21:30".
+function busyAround(v) {
+  if (v._busyAt !== undefined) return v._busyAt;
+  const now = new Date(), day = new Date(now); if (day.getHours() < 6) day.setDate(day.getDate() - 1);
+  const frames = simFrames(v, localIso(day).slice(0, 10), new Date(8.64e15));
+  let best = null; for (const f of frames) if (f.people > 0 && (!best || f.people > best.people)) best = f;
+  if (!best) return (v._busyAt = '');
+  const d = new Date(best.timestamp), m = Math.round((d.getHours() * 60 + d.getMinutes()) / 30) * 30 % 1440;
+  return (v._busyAt = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`);
+}
+
 function card(v) {
   const live = !!v.data || v.simulated;
   // The venue's own video, then its background photo, stand in for the camera view on the card.
@@ -1700,7 +1711,7 @@ function card(v) {
   const stat = closed
     ? `<b style="color:var(--muted)">—</b><span>${t('closed')}</span>`
     : v.latest
-    ? `<b>${v.latest.people}</b><span>${t('hereNow', v.latest.people)}</span>`
+    ? `<b>${v.latest.people}</b><span class="pp">${PERSON_ICON}</span>${busyAround(v) ? `<span class="busyat">${t('busyAround', busyAround(v))}</span>` : ''}`
     : `<b style="color:var(--muted)">—</b><span>${t('people')}</span>`;
   const lv = v.latest ? levelOf(v.latest.people) : null;
   return `<a class="venue${closed ? ' is-closed' : ''}" data-id="${v.id}" href="venue.html?mekan=${v.id}"${lv && !closed ? ` style="--lv:${lv.color}"` : ''}>
