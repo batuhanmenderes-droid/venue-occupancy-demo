@@ -1155,5 +1155,5 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 #grid .venue .stat b { font-size: 36px; line-height: 1; letter-spacing: -0.02em; }
 #grid .venue .stat { align-items: center; }
 #grid .venue .stat .pp { display: inline-flex; color: var(--ink); margin-left: -2px; }
-#grid .venue .stat .pp .vicon { width: 26px; height: 26px; }
+#grid .venue .stat .pp .vicon { width: 16px; height: 16px; }
 #grid .venue .stat .busyat { margin-left: auto; font: 500 13px var(--font-text); color: var(--ink-2); }
