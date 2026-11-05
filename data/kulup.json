@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-05T21:41:13",
+  "updated_at": "2026-11-05T22:41:43",
   "frames": [
     {
       "file": "kulup-cctv/2026-11-03/2026-11-03_10-00-00.jpg",
@@ -529,6 +529,14 @@
       "people": 33,
       "note": "Sahnedeki müzisyen dahil; kalabalık, ±4 sapma olabilir.",
       "note_en": "Includes the performer on stage; crowded, may be off by ±4."
+    },
+    {
+      "file": "kulup-cctv/2026-11-05/2026-11-03_22-00-00.jpg",
+      "timestamp": "2026-11-05T22:00:00",
+      "camera": "CAM 01",
+      "people": 36,
+      "note": "Kalabalık; ±4 sapma olabilir.",
+      "note_en": "Crowded; may be off by ±4."
     }
   ]
 }
