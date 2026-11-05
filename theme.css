@@ -1070,3 +1070,6 @@ body:has(#setSheet.open) .sheet-scrim { background: rgba(0, 0, 0, 0.35); -webkit
 .zoompanel .zp-check input { width: 18px; height: 18px; margin: 0; accent-color: var(--series, #0a84ff); }
 .zoompanel .zp-hint { color: var(--muted); font-size: 11.5px; line-height: 1.4; }
 body:not(:has(#setSheet.open)) .bounds-outline { display: none; }  /* outline only while Settings is open */
+/* Map view: category filters at the top centre (desktop and phones) */
+body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !important; bottom: auto !important; }
+@media (max-width: 640px) { body.mapmode .subbar { top: calc(10px + env(safe-area-inset-top, 0px)) !important; } }
