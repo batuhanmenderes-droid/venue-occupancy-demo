@@ -1129,3 +1129,18 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 .mitem:has(.mdesc) .mdots, .mitem:has(.mdesc) .mprice { align-self: start; margin-top: 2px; }
 .mitem:has(.mdesc) .mdots { transform: translateY(12px); }
 .msec h3 { margin-top: 0; }
+
+/* Chat input in the Recommendations pane */
+.recchat { display: flex; gap: 8px; align-items: center; padding: 6px 6px 6px 14px; border-radius: 999px; background: var(--fill); box-shadow: inset 0 0 0 1px var(--border); }
+.recchat input { flex: 1; min-width: 0; border: 0; background: transparent; font: 400 14.5px var(--font-text); color: var(--ink); outline: none; padding: 6px 0; }
+.recchat button { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 0; background: var(--series, #0a84ff); color: #fff; cursor: pointer; flex: none; }
+.recchat button svg { width: 16px; height: 16px; }
+
+/* List as a seamless grid: no gaps, square corners, type above the name */
+main:not(.venuepage) #grid { gap: 0 !important; }
+main:not(.venuepage) #grid .venue { border-radius: 0 !important; box-shadow: none !important; transform: none !important; }
+main:not(.venuepage) #grid .venue .media, main:not(.venuepage) #grid .venue .vthumb, main:not(.venuepage) #grid .venue .media > img { border-radius: 0 !important; }
+#grid .venue .top { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 2px; }
+#grid .venue .stat { align-items: center; }
+#grid .venue .stat .gear { margin-left: auto; }
+#grid .venue .stat .arrow { margin-left: 4px; }

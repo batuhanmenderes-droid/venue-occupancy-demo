@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=events1"></script>
+<script src="i18n.js?v=chat1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=night13">
+<link rel="stylesheet" href="theme.css?v=grid1">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -97,6 +97,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
     <div class="sm-pane-body" id="recBody">
       <div class="chat" id="recChat" aria-live="polite"></div>
       <div class="asks" id="recAsks"><button class="ask" data-q="where" data-i18n="recQWhere">Where do you think I should be going?</button><button class="ask" data-q="discover" data-i18n="recQDiscover"></button><button class="ask" data-q="breakfast" data-i18n="recQBreakfast"></button><button class="ask" data-q="music" data-i18n="recQMusic"></button><button class="ask" data-q="cocktails" data-i18n="recQCocktails"></button><button class="ask" data-q="food" data-i18n="recQFood"></button><button class="ask" data-q="drinks" data-i18n="recQDrinks"></button></div>
+      <form class="recchat" id="recChatForm" autocomplete="off"><input id="recInput" type="text" enterkeyhint="send" data-i18n-placeholder="chatPlaceholder" placeholder="Ask anything about the venues…"><button type="submit" data-i18n-aria="chatSend" aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 20 4l-4 16-4-6z" fill="currentColor"/></svg></button></form>
     </div>
   </section>
 </section>
@@ -1647,15 +1648,6 @@ function statusChip(v) {
   return '';
 }
 
-// Status dot: closed grey, demo data yellow, active camera green.
-function statusLine(v, live) {
-  const [cls, text] = v.status?.state === 'closed' ? ['closed', t('closed')]
-    : v.simulated ? ['demo', t('demoData')]
-    : live ? ['live', t('cameraActive')]
-    : v.coming_soon ? ['soon', t('soon')] : ['', t('noData')];
-  return `<span class="status ${cls}"><span class="dot"></span>${text}</span>`;
-}
-
 // Muted, looping YouTube clip as the card photo (the venue's own video; thumbnail until it plays).
 function videoThumb({ youtube: id, start = 0 }) {
   const src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&mute=1&loop=1&playlist=${id}&controls=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&disablekb=1&fs=0&enablejsapi=1&origin=${encodeURIComponent(location.origin)}&start=${start}`;
@@ -1689,7 +1681,7 @@ function card(v) {
     : v.background_video?.youtube
       ? videoThumb(v.background_video)
     : v.simulated
-      ? `<div class="none demo"><span>${t('demoData')}</span></div>`
+      ? `<div class="none demo"></div>`
       : `<div class="none">${live ? t('noFramesToday') : v.coming_soon ? t('soon') : t('noCamera')}</div>`;
   const closed = v.status?.state === 'closed';
   // Closed venues show no head count.
@@ -1702,14 +1694,12 @@ function card(v) {
   return `<a class="venue${closed ? ' is-closed' : ''}" data-id="${v.id}" href="venue.html?mekan=${v.id}"${lv && !closed ? ` style="--lv:${lv.color}"` : ''}>
     <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}<button class="mapcheck" role="checkbox" aria-checked="${onMap(v)}" data-mapcheck="${v.id}" title="${t('showOnMap')}" aria-label="${t('showOnMap')}: ${v.name}">${CHECK_ICON}</button></div>
     <div class="body">${cardChart(v)}
-      <div class="top"><span class="name">${v.name}</span><span class="type">${typeName(v.type)}</span></div>
-      ${statusLine(v, live)}
-      <div class="stat">${stat}<span class="arrow">›</span></div>
+      <div class="top"><span class="type">${typeName(v.type)}</span><span class="name">${v.name}</span></div>
+      <div class="stat">${stat}<button class="gear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button><span class="arrow">›</span></div>
       ${v.event ? `<div class="evtag ev-${v.event.state}">${eventIcon(v.event)}<span class="ev-name">${v.event.name}</span><span class="ev-time">${v.event.from}–${v.event.to}</span><span class="ev-state">${eventStateText(v.event)}</span></div>` : ''}
       ${v.peak ? `<div class="peaktag">${PEAK_ICON}${t('atPeak')}</div>` : ''}
       ${v.rising ? `<div class="rising">${RISE_ICON}${t('rising')}</div>` : ''}
       ${v.expected ? `<div class="expect">${t('expectedAround', v.expected)}</div>` : ''}
-      <div class="updated"><span title="${v.updatedAt ? v.updatedAt.replace('T', ' ') : ''}">${live ? t('lastUpdate', ago(v.updatedAt)) : v.coming_soon ? t('soonCamera') : t('noUpdates')}</span><button class="gear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button></div>
     </div>
   </a>`;
 }
@@ -1995,6 +1985,57 @@ function bubble(cls, html) {
   const m = $('recChat').lastElementChild; m.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   return m;
 }
+// ---- Free-text chat in the Recommendations pane ----
+// No AI service behind the static site: the question is matched by keywords (Turkish and English) to the
+// answers above, plus venue names, events, quiet / busy places. Anything else gets the general pick and a
+// short list of things to try.
+const norm = x => x.toLocaleLowerCase('tr').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i');
+function venueCard(v) {
+  const e = v.event, lv = v.latest && isOpen(v) ? levelOf(v.latest.people) : null;
+  const why = [isOpen(v) ? (v.latest ? t('whyBusiest', v.latest.people) : '') : `${t('closed')}${v.status?.opens ? ` · ${t('opensAt', v.status.opens)}` : ''}`,
+    v.rising ? t('rising') : v.peak ? t('atPeak') : '', e ? `${e.name} · ${e.from}–${e.to} · ${eventStateText(e)}` : '', lv ? `${lv.name}` : ''];
+  return angleCard(v, typeName(v.type), 'top', why);
+}
+function answerEvents() {
+  const list = lastCards.filter(v => v.event && v.event.state !== 'past').sort((a, b) => (a.event.day + a.event.from).localeCompare(b.event.day + b.event.from));
+  if (!list.length) return `<p>${t('chatNoEvents')}</p>`;
+  return `<p>${t('chatEvents')}</p>` + list.slice(0, 5).map(venueCard).join('');
+}
+function answerByCrowd(quiet) {
+  const open = lastCards.filter(v => isOpen(v) && v.latest).sort((a, b) => (quiet ? 1 : -1) * (a.latest.people - b.latest.people));
+  if (!open.length) return `<p>${t('recAllClosed')}</p>`;
+  return `<p>${t(quiet ? 'chatQuiet' : 'chatBusy')}</p>` + open.slice(0, 3).map(venueCard).join('');
+}
+const INTENTS = [
+  [/kahvalt|breakfast|brunch/, () => ANSWERS.breakfast()],
+  [/kokteyl|cocktail/, () => ANSWERS.cocktails()],
+  [/(ucuz|uygun|cheap|budget).*(yemek|yiyecek|food|eat|ye)|(yemek|food|eat).*(ucuz|uygun|cheap)/, () => ANSWERS.food()],
+  [/(ucuz|uygun|cheap).*(ick|bira|drink|beer|kahve|coffee)|(ick|bira|drink|beer|kahve|coffee).*(ucuz|uygun|cheap)/, () => ANSWERS.drinks()],
+  [/etkinlik|event|yoga|konser|concert|dj|bu aksam|tonight|program|ders|class/, answerEvents],
+  [/muzik|music|canli|live|parti|party|dans|dance/, () => ANSWERS.music()],
+  [/kesfet|discover|yeni|new|farkli|different/, () => ANSWERS.discover()],
+  [/sakin|quiet|bos|empty|calm|sessiz/, () => answerByCrowd(true)],
+  [/kalabalik|busy|crowded|hareketli|lively|en dolu/, () => answerByCrowd(false)],
+  [/yemek|food|eat|restoran|restaurant|aksam yemegi|dinner|lunch|ogle/, () => ANSWERS.food()],
+  [/ick|bira|drink|beer|kahve|coffee|bar/, () => ANSWERS.drinks()],
+  [/nereye|where|ne yap|what should|oner|recommend|gidelim|go/, answerWhere],
+];
+function chatAnswer(q) {
+  const n = norm(q);
+  // A venue named in the question: show that venue.
+  const named = lastCards.filter(v => n.includes(norm(v.name)) || norm(v.name).split(' ').some(w => w.length > 3 && n.split(/\W+/).includes(w)));
+  if (named.length) return named.slice(0, 3).map(venueCard).join('');
+  for (const [re, fn] of INTENTS) if (re.test(n)) return fn();
+  return `<p>${t('chatFallback')}</p>` + answerWhere();
+}
+$('recChatForm').onsubmit = e => {
+  e.preventDefault();
+  const q = $('recInput').value.trim(); if (!q) return;
+  $('recInput').value = '';
+  bubble('me', q.replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]));
+  const typing = bubble('bot typing', '<span></span><span></span><span></span>');
+  setTimeout(() => { typing.classList.remove('typing'); typing.innerHTML = chatAnswer(q); typing.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 600);
+};
 $('recAsks').onclick = e => {
   const b = e.target.closest('[data-q]'); if (!b) return;
   bubble('me', b.textContent);
