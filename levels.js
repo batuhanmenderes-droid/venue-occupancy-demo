@@ -16,8 +16,21 @@ function loadLevels() {
   } catch {}
   syncRanges();
 }
+// The thresholds above are for a busy town (about 1500 people out across all venues). With fewer people out
+// they stretch up, so a venue is only purple when it is a real outlier: scale = √(1500 / total), between 1×
+// and 3× (e.g. 100 people in town → 3×: Quiet 0–30 … Very crowded 121+). The list page sets it from the
+// live total; the venue page reuses the last value.
+const LEVEL_REF_TOTAL = 1500;
+let LEVEL_SCALE = (() => { try { return Math.min(3, Math.max(1, +localStorage.getItem('levelScale') || 1)); } catch { return 1; } })();
+const scaledMax = l => l.max === Infinity ? Infinity : Math.round(l.max * LEVEL_SCALE);
+function setLevelScale(total) {
+  const k = total > 0 ? Math.min(3, Math.max(1, Math.sqrt(LEVEL_REF_TOTAL / total))) : 1;
+  LEVEL_SCALE = Math.round(k * 100) / 100;
+  try { localStorage.setItem('levelScale', LEVEL_SCALE); } catch {}
+  syncRanges();
+}
 function syncRanges() {
-  LEVELS.forEach((l, i) => { const lo = i ? LEVELS[i - 1].max + 1 : 0; l.range = l.max === Infinity ? `${lo}+` : `${lo}–${l.max}`; });
+  LEVELS.forEach((l, i) => { const lo = i ? scaledMax(LEVELS[i - 1]) + 1 : 0, hi = scaledMax(l); l.range = hi === Infinity ? `${lo}+` : `${lo}–${hi}`; });
 }
 function saveLevels() {
   try { localStorage.setItem('levelSettings', JSON.stringify(LEVELS.map(l => ({ max: l.max === Infinity ? null : l.max, color: l.color })))); } catch {}
@@ -28,7 +41,7 @@ LEVELS.forEach((l, i) => Object.defineProperty(l, 'name', { get: () => t('levels
 
 function levelOf(people) {
   if (people === null || people === undefined) return null;
-  return LEVELS.find(l => people <= l.max);
+  return LEVELS.find(l => people <= scaledMax(l));
 }
 
 function levelBadge(people) {

@@ -168,9 +168,9 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.22/leaflet-maplibre-gl.js"></script>
 <script src="village.js?v=3"></script>
-<script src="levels.js?v=20261108a"></script>
-<script src="venue-state.js?v=20261108a"></script>
-<script src="menu.js?v=20261108a"></script>
+<script src="levels.js?v=20261108b"></script>
+<script src="venue-state.js?v=20261108b"></script>
+<script src="menu.js?v=20261108b"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -207,6 +207,8 @@ async function load() {
   document.title = `${t('venues')} · ${t('occupancy')}`;
   $('subtitle').textContent = t('listSub', venues.length, now.toTimeString().slice(0, 5));
   lastCards = cards;
+  // Colour bands follow how many people are out in total (see setLevelScale in levels.js).
+  setLevelScale(cards.reduce((sum, c) => sum + (c.latest && c.status?.state !== 'closed' ? c.latest.people : 0), 0));
   // Wind particles only while Kitebeach is open (they are about kiting conditions).
   document.body.classList.toggle('kite-closed', cards.find(c => c.id === 'kitebeach-akyaka')?.status?.state === 'closed');
   renderGrid();
@@ -749,6 +751,7 @@ function addLevelsPanel() {
     box.innerHTML = `<button class="zp-toggle" aria-expanded="false" aria-label="${t('levelsPanel')}" title="${t('levelsPanel')}"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="14" width="3.6" height="6" rx="1" fill="currentColor"/><rect x="10.2" y="9.5" width="3.6" height="10.5" rx="1" fill="currentColor"/><rect x="16.9" y="4" width="3.6" height="16" rx="1" fill="currentColor"/></svg></button>
       <div class="zp-body" hidden>
         <h4>${t('levelsPanel')}</h4>
+        <p class="hp-hint">${t('levelsNote')}</p>
         <div class="lv-rows">${LEVELS.map((l, i) => `
           <div class="lv-row"><input type="color" data-lc="${i}" aria-label="${l.name}">
             <span class="lv-name">${l.name}</span>
