@@ -156,6 +156,7 @@
     },
     {
       "id": "rahat-meyhane",
+      "background": "backgrounds/rahat-meyhane.jpg",
       "name": "Rahat Meyhane",
       "type": "Meyhane",
       "folder": null,
@@ -308,6 +309,7 @@
     },
     {
       "id": "kukla",
+      "background": "backgrounds/kukla.jpg",
       "name": "Kukla Pub",
       "type": "Pub",
       "folder": null,
@@ -328,6 +330,7 @@
     },
     {
       "id": "suma",
+      "background": "backgrounds/suma.jpg",
       "name": "Suma",
       "type": "Restoran",
       "folder": null,
@@ -390,6 +393,7 @@
     },
     {
       "id": "akcapinar-tostcusu",
+      "background": "backgrounds/akcapinar-tostcusu.jpg",
       "name": "Akçapınar Tostçusu",
       "type": "Kafe",
       "folder": null,
@@ -508,6 +512,26 @@
         "open": "08:00",
         "close": "20:00"
       },
+      "description": ""
+    },
+    {
+      "id": "moy-beach",
+      "background": "backgrounds/moy-beach.jpg",
+      "name": "MOY Beach",
+      "type": "Plaj",
+      "location": {
+        "lat": 37.0494268,
+        "lon": 28.2996192,
+        "label": "MOY Beach, Akyaka",
+        "approx": false
+      },
+      "hours": {
+        "open": "09:00",
+        "close": "20:00"
+      },
+      "folder": null,
+      "data": null,
+      "simulated": true,
       "description": ""
     }
   ]
