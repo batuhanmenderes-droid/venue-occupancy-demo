@@ -202,6 +202,7 @@
     },
     {
       "id": "rahat-social",
+      "background": "backgrounds/rahat-social.jpg",
       "name": "Rahat Social",
       "type": "Kafe",
       "folder": null,
@@ -242,6 +243,7 @@
     },
     {
       "id": "muhtar",
+      "background": "backgrounds/muhtar.jpg",
       "name": "Muhtar",
       "type": "Restoran",
       "folder": null,
@@ -406,6 +408,7 @@
     },
     {
       "id": "sepia",
+      "background": "backgrounds/sepia.jpg",
       "name": "Sepia",
       "type": "Restoran",
       "folder": null,
