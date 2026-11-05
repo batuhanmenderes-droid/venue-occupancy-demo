@@ -2,6 +2,7 @@
   "venues": [
     {
       "id": "poison-pub",
+      "background": "backgrounds/poison-pub.jpg",
       "name": "Poison Pub",
       "type": "Pub",
       "folder": "poisonpub-cctv",
@@ -31,7 +32,7 @@
       },
       "logo": "logos/no22riders.png?v=2",
       "website": "https://no22ridersinn.com/home/",
-      "background": "backgrounds/no22.webp",
+      "background": "backgrounds/no22-riders-inn.jpg",
       "record": {
         "people": 137,
         "at": "2023-08-12T23:42:00"
@@ -42,6 +43,7 @@
     },
     {
       "id": "kulup",
+      "background": "backgrounds/kulup.jpg",
       "name": "Kulüp",
       "type": "Kulüp",
       "folder": "kulup-cctv",
@@ -78,6 +80,7 @@
     },
     {
       "id": "lemongrass-cafe",
+      "background": "backgrounds/lemongrass-cafe.jpg",
       "name": "Lemongrass Cafe",
       "type": "Kafe",
       "folder": "Lemongrass-cctv",
