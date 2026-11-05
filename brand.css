@@ -35,3 +35,16 @@ h1, h2, .name, .stat b, .tile .value, .frame .count, .leaflet-tooltip.vlabel .vc
 .brandhead .city { font: 600 13px/1 var(--font-text); color: var(--ink-2); letter-spacing: 0.02em; }
 body.mapmode .brandhead { display: none; }
 @media (max-width: 600px) { .brandhead .wm { font-size: 34px; } }
+
+/* List view option: rows with the venue logo instead of the photo */
+body.mapmode .viewmode { display: none; }
+#grid.aslist { grid-template-columns: 1fr; max-width: 820px; margin: 0 auto; gap: 10px; }
+#grid.aslist .venue { flex-direction: row; align-items: stretch; position: relative; }
+#grid.aslist .venue .media { position: static !important; aspect-ratio: auto; width: 84px; flex: none; display: grid; place-items: start center; padding-top: 18px; background: none; }
+#grid.aslist .venue .media > img, #grid.aslist .venue .media .vthumb, #grid.aslist .venue .media .none, #grid.aslist .venue .media .chip { display: none; }
+#grid.aslist .venue .media .logo { position: relative; right: auto; bottom: auto; width: 52px; height: 52px; }
+#grid.aslist .venue .body { flex: 1; min-width: 0; padding-left: 0; }
+#grid.aslist .venue .cardgear { top: 12px; left: auto; right: 48px; color: var(--ink-2); background: var(--fill); }
+#grid.aslist .venue .mapcheck { top: 12px; right: 12px; border-color: var(--border); }
+#grid.aslist .venue .top { padding-right: 80px; }
+#grid.aslist .venue:hover { transform: none; }

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=stat2"></script>
+<script src="i18n.js?v=view1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -79,7 +79,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=1">
+<link rel="stylesheet" href="brand.css?v=4">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -145,6 +145,10 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
       <option value="quiet" data-i18n="sortQuiet">Quietest first</option>
       <option value="name" data-i18n="sortName">Name A–Z</option>
     </select>
+    <div class="filters viewmode" role="group" data-i18n-aria="viewAria">
+      <button data-view="gallery" data-i18n-aria="viewGallery" data-i18n-title="viewGallery"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="4" width="7" height="7" rx="2" fill="currentColor"/><rect x="3.5" y="14" width="7" height="7" rx="2" fill="currentColor"/><rect x="13.5" y="14" width="7" height="7" rx="2" fill="currentColor"/></svg></button>
+      <button data-view="list" data-i18n-aria="viewList" data-i18n-title="viewList"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5.5" cy="6" r="2" fill="currentColor"/><circle cx="5.5" cy="12" r="2" fill="currentColor"/><circle cx="5.5" cy="18" r="2" fill="currentColor"/><path d="M10 6h10M10 12h10M10 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
     </div>
   </div>
   <section id="view-liste" role="tabpanel"><div class="grid" id="grid"></div></section>
@@ -286,6 +290,18 @@ document.querySelector('.filters').onclick = e => {
   try { localStorage.setItem('venueFilter', category); } catch {}
   syncFilters(); renderGrid(); if (map) drawMap();
 };
+// Gallery (photo cards) or List (rows with the venue logo); remembered per browser.
+let listView = (() => { try { return localStorage.getItem('listView') === 'list' ? 'list' : 'gallery'; } catch { return 'gallery'; } })();
+function applyListView() {
+  $('grid').classList.toggle('aslist', listView === 'list');
+  document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === listView));
+}
+document.querySelector('.viewmode').onclick = e => {
+  const b = e.target.closest('[data-view]'); if (!b) return;
+  listView = b.dataset.view; try { localStorage.setItem('listView', listView); } catch {}
+  applyListView();
+};
+applyListView();
 $('sort').onchange = e => { sortBy = e.target.value; try { localStorage.setItem('venueSort', sortBy); } catch {} renderGrid(); };
 syncFilters();
 
