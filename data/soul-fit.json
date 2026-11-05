@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-05T19:41:44",
+  "updated_at": "2026-11-05T20:41:00",
   "frames": [
     {
       "file": "soulfit-cctv/2026-11-04/2026-11-04_09-00-00.png",
@@ -361,6 +361,22 @@
       "people": 16,
       "note": "Ayna yansımaları sayılmadı.",
       "note_en": "Mirror reflections not counted."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-05/2026-11-04_20-00-00.png",
+      "timestamp": "2026-11-05T20:00:00",
+      "camera": "CAM 01",
+      "people": 16,
+      "note": "",
+      "note_en": ""
+    },
+    {
+      "file": "soulfit-cctv/2026-11-05/2026-11-04_20-30-00.png",
+      "timestamp": "2026-11-05T20:30:00",
+      "camera": "CAM 01",
+      "people": 7,
+      "note": "",
+      "note_en": ""
     }
   ]
 }
