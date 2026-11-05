@@ -82,7 +82,36 @@ const MENU_BY_TYPE = {
   Spor: ['softs'],
 };
 
+// Real menus, read from the venue's own price board, replace the demo menu for that venue.
+// Items: [[tr, en], [desc tr, desc en], price, icedPrice?]
+const VENUE_MENUS = {
+  'lemongrass-cafe': { source: { tr: 'Lemongrass\'ın fiyat panosundan', en: 'From Lemongrass\'s price board' }, sections: [
+    { tr: 'Kahveler', en: 'Coffee', items: [
+      [['Filtre kahve', 'Filter coffee'], ['', ''], 220, 230], [['Espresso', 'Espresso'], ['', ''], 220], [['Americano', 'Americano'], ['', ''], 230, 250],
+      [['Cortado', 'Cortado'], ['', ''], 250], [['Flat white', 'Flat white'], ['', ''], 260, 280], [['Latte', 'Latte'], ['', ''], 270, 290],
+      [['Cappuccino', 'Cappuccino'], ['', ''], 270], [['Cold drip', 'Cold drip'], ['', ''], 290], [['Karamel latte', 'Caramel latte'], ['', ''], 330, 350],
+      [['Vanilya latte', 'Vanilla latte'], ['', ''], 330, 350], [['Matcha latte', 'Matcha latte'], ['', ''], 350, 370], [['Golden milk', 'Golden milk'], ['Zerdeçallı süt', 'Turmeric milk'], 290],
+    ] },
+    { tr: 'Çaylar & soğuk içecekler', en: 'Teas & cold drinks', items: [
+      [['Bitki çayları', 'Herbal teas'], ['', ''], 250], [['Lemongrass limonata', 'Lemongrass lemonade'], ['', ''], 290], [['Hibiscus ice tea', 'Hibiscus iced tea'], ['', ''], 260],
+      [['Ice tea', 'Iced tea'], ['', ''], 260], [['Kombucha', 'Kombucha'], ['', ''], 350], [['Soda', 'Sparkling water'], ['', ''], 120], [['Su', 'Water'], ['', ''], 70],
+    ] },
+    { tr: 'Ekstralar', en: 'Extras', items: [ [['Vegan süt', 'Plant milk'], ['Her içeceğe eklenebilir', 'Add to any drink'], 60] ] },
+  ] },
+};
+
 function venueMenu(v) {
+  const real = VENUE_MENUS[v.id];
+  if (!real) return demoMenu(v);
+  return real.sections.map(sec => ({
+    title: LANG === 'tr' ? sec.tr : sec.en, real: true,
+    items: sec.items.map(([names, desc, price, iced]) => ({
+      name: LANG === 'tr' ? names[0] : names[1], desc: LANG === 'tr' ? desc[0] : desc[1], price, iced: iced || null,
+    })),
+  }));
+}
+// Demo menu by venue type (made-up items and prices).
+function demoMenu(v) {
   // A per-venue factor (±12%) and price endings in 10 TL steps keep menus distinct but plausible.
   const seed = [...v.id].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
   const factor = 0.88 + (seed % 25) / 100;

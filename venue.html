@@ -165,7 +165,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 
 <script src="levels.js?v=20261108b"></script>
 <script src="venue-state.js?v=20261108b"></script>
-<script src="menu.js?v=20261108b"></script>
+<script src="menu.js?v=20261108c"></script>
 <script>
 const $ = id => document.getElementById(id);
 const hm = ts => ts.slice(11, 16);
@@ -490,6 +490,17 @@ function expected(a, m) {
 
 function renderCalendar() {
   const prog = $('program');
+  // Venues with their own announced events (venues.json `events`) show those instead of the demo line-up.
+  if (venue?.events?.length) {
+    document.querySelector('.progchart').hidden = true;
+    const upcoming = venue.events.filter(e => e.date >= today()).sort((a, b) => a.date.localeCompare(b.date));
+    const list = upcoming.length ? upcoming : venue.events;
+    prog.innerHTML = `<p class="hint">${list[0].title}</p>` + list.map(e => `<div class="pday${e.date === today() ? ' today' : ''}">
+      <span class="pdate">${e.date === today() ? t('today') : fmtDay(e.date)}</span>
+      <span class="partist"><i style="background:#8d6be0"></i>${e.name}</span><span class="pset">${t(e.kind === 'yoga' ? 'eventYoga' : 'eventShow')}</span>
+    </div>`).join('');
+    return;
+  }
   if (!PROGRAM_TYPES.includes(venue?.type)) {
     prog.innerHTML = `<p class="empty">${t('noProgram')}</p>`;
     document.querySelector('.progchart').hidden = true;
@@ -548,9 +559,10 @@ function renderProgramChart() {
 const tl = n => `₺${n.toLocaleString(LANG === 'tr' ? 'tr-TR' : 'en-GB')}`;
 function renderMenu() {
   if (!venue) return;
-  $('menu').innerHTML = venueMenu(venue).map(sec => `<section class="msec">
+  const real = VENUE_MENUS[venue.id];
+  $('menu').innerHTML = (real ? `<p class="hint msource">${LANG === 'tr' ? real.source.tr : real.source.en}</p>` : '') + venueMenu(venue).map(sec => `<section class="msec">
     <h3>${sec.title}</h3>
-    ${sec.items.map(it => `<div class="mitem"><div><span class="mname">${it.name}</span>${it.desc ? `<span class="mdesc">${it.desc}</span>` : ''}</div><span class="mdots"></span><span class="mprice">${tl(it.price)}</span></div>`).join('')}
+    ${sec.items.map(it => `<div class="mitem"><div><span class="mname">${it.name}</span>${it.desc ? `<span class="mdesc">${it.desc}</span>` : ''}</div><span class="mdots"></span><span class="mprice">${it.name === (LANG === 'tr' ? 'Vegan süt' : 'Plant milk') ? '+' : ''}${tl(it.price)}${it.iced ? `<small class="miced">${t('menuIced')} ${tl(it.iced)}</small>` : ''}</span></div>`).join('')}
   </section>`).join('');
 }
 

@@ -71,7 +71,33 @@
       },
       "tonight": "İrem Güneş",
       "tonight_icon": "yoga",
-      "logo": "logos/lemongrass.png"
+      "logo": "logos/lemongrass.png",
+      "events": [
+        {
+          "date": "2026-11-05",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga"
+        },
+        {
+          "date": "2026-11-07",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga"
+        },
+        {
+          "date": "2026-11-08",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga"
+        }
+      ]
     },
     {
       "id": "kitebeach-akyaka",
@@ -442,7 +468,7 @@
         "label": "Karanfil Sk. 2/1, Akyaka"
       },
       "logo": "logos/motto-brew-coffee.png?v=2",
-    "logo_scale": 1,
+      "logo_scale": 1,
       "hours": {
         "open": "08:00",
         "close": "20:00"

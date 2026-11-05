@@ -1074,3 +1074,5 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 .kitepanel .zp-toggle svg, .set-tools .kitepanel .zp-toggle > svg:first-child { width: 24px; height: 24px; }
 .village-kites { display: grid; gap: 8px; margin-top: 6px; }
 :root[data-theme="dark"] .kiter .kite-model { filter: brightness(.75); }
+.mprice .miced { display: block; font: 500 11px var(--font-text); color: var(--muted); text-align: right; }
+.msource { margin: 0 0 6px; }

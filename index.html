@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=night9">
+<link rel="stylesheet" href="theme.css?v=night10">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -170,7 +170,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 <script src="village.js?v=3"></script>
 <script src="levels.js?v=20261108b"></script>
 <script src="venue-state.js?v=20261108b"></script>
-<script src="menu.js?v=20261108b"></script>
+<script src="menu.js?v=20261108c"></script>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -195,6 +195,12 @@ async function load() {
       // Today's frames (business day from 06:00) for the faint chart behind the card.
       const dayStart = new Date(now); dayStart.setHours(6, 0, 0, 0); if (dayStart > now) dayStart.setDate(dayStart.getDate() - 1);
       v.today = due.filter(f => new Date(f.timestamp) >= dayStart);
+    }
+    // A venue's announced events (venues.json `events`) decide what its map label shows today.
+    if (v.events?.length) {
+      const day = localIso(new Date(now.getTime() - 6 * 3600000)).slice(0, 10);  // business day (from 06:00)
+      const ev = v.events.find(e => e.date === day);
+      v.tonight = ev ? ev.name : null; if (ev) v.tonight_icon = ev.kind === 'yoga' ? 'yoga' : v.tonight_icon;
     }
     const status = venueStatus(v, now);
     // At its peak replaces "getting busier" and the expected peak: it is already there.
@@ -1826,7 +1832,7 @@ function profile(v) {
   const breakfast = { Kafe: [4.1, 4.9], Restoran: [3.3, 4.4], Otel: [3.8, 4.9], Plaj: [2.8, 3.6] }[ty];
   const music = { Kulüp: [4.0, 4.9], Bar: [3.6, 4.7], Pub: [3.5, 4.6], Meyhane: [3.6, 4.6], Otel: [3.2, 4.2], Plaj: [3.4, 4.3], Kafe: [2.6, 3.5], Restoran: [2.4, 3.3] }[ty];
   const cocktails = { Bar: [4.0, 4.9], Kulüp: [3.5, 4.5], Otel: [3.9, 4.8], Plaj: [3.1, 4.0], Pub: [3.0, 3.9], Kafe: [2.6, 3.5] }[ty];
-  const menu = venueMenu(v), sec = k => { const key = MENU_BY_TYPE[ty] || MENU_BY_TYPE.Bar; const i = key.indexOf(k); return i >= 0 ? menu[i].items : null; };
+  const menu = demoMenu(v), sec = k => { const key = MENU_BY_TYPE[ty] || MENU_BY_TYPE.Bar; const i = key.indexOf(k); return i >= 0 ? menu[i].items : null; };
   const avg = a => a?.length ? Math.round(a.reduce((x, i) => x + i.price, 0) / a.length / 10) * 10 : null;
   const food = [sec('mains'), sec('meze'), sec('bites'), sec('breakfast')].filter(Boolean).flat();
   const beer = sec('beer'), cock = sec('cocktails'), bf = sec('breakfast');
