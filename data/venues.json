@@ -94,34 +94,35 @@
           "date": "2026-11-05",
           "name": "Gizem Civan",
           "kind": "yoga",
-          "title": "Lemongrass Yoga"
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
         },
         {
           "date": "2026-11-06",
           "name": "Zeyneb Uras",
           "kind": "yoga",
-          "title": "Lemongrass Yoga"
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
         },
         {
           "date": "2026-11-07",
           "name": "Şeyma Yazıcıoğlu",
           "kind": "yoga",
-          "title": "Lemongrass Yoga"
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
         },
         {
           "date": "2026-11-08",
           "name": "Semra Gümüşalan",
           "kind": "yoga",
-          "title": "Lemongrass Yoga"
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
         }
       ],
-      "event_default": {
-        "kind": "yoga",
-        "name": "Yoga",
-        "title": "Lemongrass Yoga",
-        "from": "10:00",
-        "to": "11:00"
-      },
       "instagram": "lemongrasscommunity"
     },
     {
