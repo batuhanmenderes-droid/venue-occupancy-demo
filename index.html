@@ -1708,7 +1708,7 @@ function card(v) {
     <div class="body">${cardChart(v)}
       <div class="top"><span class="type">${typeName(v.type)}</span><span class="name">${v.name}</span></div>
       ${v.blurb ? `<div class="blurb">${v.blurb[LANG] || v.blurb.en}</div>` : ''}
-      <div class="stat">${stat}<span class="arrow">›</span></div>
+      <div class="stat">${stat}</div>
       ${v.event ? `<div class="evtag ev-${v.event.state}">${eventIcon(v.event)}<span class="ev-name">${v.event.name}</span><span class="ev-time">${v.event.from}–${v.event.to}</span><span class="ev-state">${eventStateText(v.event)}</span></div>` : ''}
       ${v.peak ? `<div class="peaktag">${PEAK_ICON}${t('atPeak')}</div>` : ''}
       ${v.rising ? `<div class="rising">${RISE_ICON}${t('rising')}</div>` : ''}
