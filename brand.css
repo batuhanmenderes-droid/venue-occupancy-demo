@@ -111,3 +111,4 @@ body.mapmode .viewmode { display: none; }
 #grid.aslist .venue .head .blurb { margin-top: 0; }
 #grid.aslist .venue .media, #grid.aslist .venue .body > .stat { grid-row: 1; }
 #grid.aslist .venue .body > :not(.head):not(.cardchart):not(.stat) { grid-column: 1 / -1; }
+@media (max-width: 600px) { #grid.aslist .venue .head .blurb { display: none; } }
