@@ -1,6 +1,6 @@
 {
   "source": "Kişi sayıları her kare görsel olarak incelenerek sayılır; zaman damgası karenin altındaki yazıdan okunur. Kareler saati geldikçe saatte bir analiz edilip eklenir.",
-  "updated_at": "2026-11-05T10:41:33",
+  "updated_at": "2026-11-05T11:42:25",
   "frames": [
     {
       "file": "soulfit-cctv/2026-11-04/2026-11-04_09-00-00.png",
@@ -225,6 +225,22 @@
       "people": 17,
       "note": "Arka planda uzak kişiler var; ±3 sapma olabilir.",
       "note_en": "Distant people in the background; may be off by ±3."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-05/2026-11-04_11-00-00.png",
+      "timestamp": "2026-11-05T11:00:00",
+      "camera": "CAM 01",
+      "people": 16,
+      "note": "Uzaktaki kişiler nedeniyle ±2 sapma olabilir.",
+      "note_en": "May be off by ±2 due to distant people."
+    },
+    {
+      "file": "soulfit-cctv/2026-11-05/2026-11-04_11-30-00.png",
+      "timestamp": "2026-11-05T11:30:00",
+      "camera": "CAM 01",
+      "people": 10,
+      "note": "",
+      "note_en": ""
     }
   ]
 }
