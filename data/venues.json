@@ -73,7 +73,8 @@
           "to": "04:00",
           "source": "instagram"
         }
-      ]
+      ],
+      "instagram": "kulupakyaka"
     },
     {
       "id": "lemongrass-cafe",
@@ -120,7 +121,8 @@
         "title": "Lemongrass Yoga",
         "from": "10:00",
         "to": "11:00"
-      }
+      },
+      "instagram": "lemongrasscommunity"
     },
     {
       "id": "kitebeach-akyaka",

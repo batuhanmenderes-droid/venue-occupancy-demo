@@ -1096,3 +1096,10 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 .leaflet-tooltip.vlabel .vartist.ev-upcoming { color: var(--ev-up); background: var(--ev-up-bg); }
 .leaflet-tooltip.vlabel .vartist.ev-live { color: var(--ev-live); background: var(--ev-live-bg); }
 .leaflet-tooltip.vlabel .vartist.ev-past { color: var(--ev-past); background: var(--ev-past-bg); }
+
+/* Instagram link under the venue name */
+.vinsta { display: inline-flex; align-items: center; gap: 6px; margin: 4px 0 2px; font: 600 14px/1 var(--font-text); color: var(--ink-2); text-decoration: none; }
+.vinsta svg { width: 18px; height: 18px; color: #d62976; }
+.vinsta span { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); }
+.vinsta:hover span { color: var(--ink); }
+.vinsta[hidden] { display: none; }
