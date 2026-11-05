@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=prices1"></script>
+<script src="i18n.js?v=events1"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -77,7 +77,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
   .grid2 { grid-template-columns: 1fr; }
 }
 </style>
-<link rel="stylesheet" href="theme.css?v=20261108c">
+<link rel="stylesheet" href="theme.css?v=events1">
 </head>
 <body>
 <main class="venuepage">
@@ -490,14 +490,16 @@ function expected(a, m) {
 
 function renderCalendar() {
   const prog = $('program');
-  // Venues with their own announced events (venues.json `events`) show those instead of the demo line-up.
-  if (venue?.events?.length) {
+  // Venues with their own events show them instead of the demo line-up: the coming 7 days, each with its
+  // dated event (venues.json `events`) or the daily default (`event_default`, e.g. yoga 10:00–11:00).
+  if (venue?.events?.length || venue?.event_default) {
     document.querySelector('.progchart').hidden = true;
-    const upcoming = venue.events.filter(e => e.date >= today()).sort((a, b) => a.date.localeCompare(b.date));
-    const list = upcoming.length ? upcoming : venue.events;
-    prog.innerHTML = `<p class="hint">${list[0].title}</p>` + list.map(e => `<div class="pday${e.date === today() ? ' today' : ''}">
+    const base = venue.event_default || {};
+    const days = Array.from({ length: 7 }, (_, k) => { const d = new Date(`${today()}T12:00:00`); d.setDate(d.getDate() + k); return localDay(d); });
+    const list = days.map(day => { const e = venue.events?.find(x => x.date === day); return e || base.name ? { ...base, ...(e || {}), date: day } : null; }).filter(Boolean);
+    prog.innerHTML = `<p class="hint">${base.title || list[0]?.title || ''}</p>` + list.map(e => `<div class="pday${e.date === today() ? ' today' : ''}">
       <span class="pdate">${e.date === today() ? t('today') : fmtDay(e.date)}</span>
-      <span class="partist"><i style="background:#8d6be0"></i>${e.name}</span><span class="pset">${t(e.kind === 'yoga' ? 'eventYoga' : 'eventShow')}</span>
+      <span class="partist"><i style="background:#8d6be0"></i>${e.name}</span><span class="pset">${e.from || ''}${e.to ? `–${e.to}` : ''} · ${t(e.kind === 'yoga' ? 'eventYoga' : 'eventShow')}</span>
     </div>`).join('');
     return;
   }

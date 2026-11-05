@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=prices1"></script>
+<script src="i18n.js?v=events1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -78,7 +78,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .townlabel span { display: inline-block; color: rgba(255,255,255,.78); font-size: 15px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; transform: translate(-50%, -50%); pointer-events: none; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
-<link rel="stylesheet" href="theme.css?v=night10">
+<link rel="stylesheet" href="theme.css?v=night11">
 </head>
 <body>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
@@ -196,12 +196,7 @@ async function load() {
       const dayStart = new Date(now); dayStart.setHours(6, 0, 0, 0); if (dayStart > now) dayStart.setDate(dayStart.getDate() - 1);
       v.today = due.filter(f => new Date(f.timestamp) >= dayStart);
     }
-    // A venue's announced events (venues.json `events`) decide what its map label shows today.
-    if (v.events?.length) {
-      const day = localIso(new Date(now.getTime() - 6 * 3600000)).slice(0, 10);  // business day (from 06:00)
-      const ev = v.events.find(e => e.date === day);
-      v.tonight = ev ? ev.name : null; if (ev) v.tonight_icon = ev.kind === 'yoga' ? 'yoga' : v.tonight_icon;
-    }
+    v.event = eventFor(v, now);
     const status = venueStatus(v, now);
     // At its peak replaces "getting busier" and the expected peak: it is already there.
     const peak = v.simulated && status.state !== 'closed' && atPeakSim(v, now);
@@ -1304,12 +1299,42 @@ const MIC_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><rec
 const YOGA_ICON = '<svg class="vicon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12,22L11.5,12L8,11H1V9H7l7-5l1.3,1.52L11.15,8.5H14L21.8,4L23,5.4L14.5,12L14,22H12ZM6,8Q5.18,8 4.59,7.41T4,6T4.59,4.59T6,4Q6.83,4 7.41,4.59Q8,5.18 8,6T7.41,7.41T6,8Z"/></svg>';
 // Tonight's line-up (venues.json `tonight`, with `tonight_icon`: mic by default, or yoga), shown under the
 // name on the map label. Grey while the venue is closed; music nights are also grey outside 21:00–02:00.
+// ---- Events: today's (or tomorrow's) event per venue, with its state ----
+// Sources: dated events (venues.json `events`), a daily default (`event_default`, e.g. Lemongrass yoga
+// 10:00–11:00 every day) and the old nightly `tonight` line-up (21:00–02:00). Each day from 16:00, once
+// today's event is over, the next day's event is shown instead.
+// State: upcoming (green) before it starts, live (yellow) while on, past (red) after it ends.
+const addDays = (iso, n) => { const d = new Date(`${iso}T12:00:00`); d.setDate(d.getDate() + n); return localIso(d).slice(0, 10); };
+function eventOn(v, day) {
+  const dated = v.events?.find(e => e.date === day), base = v.event_default;
+  if (dated || base) {
+    const e = { ...(base || {}), ...(dated || {}) };
+    return { name: e.name, kind: e.kind || 'show', from: e.from || base?.from || '21:00', to: e.to || base?.to || '02:00', day };
+  }
+  if (v.tonight) return { name: v.tonight, kind: v.tonight_icon === 'yoga' ? 'yoga' : 'show', from: '21:00', to: '02:00', day };
+  return null;
+}
+function eventWindow(e) {
+  const start = new Date(`${e.day}T${e.from}:00`), end = new Date(`${e.day}T${e.to}:00`);
+  if (end <= start) end.setDate(end.getDate() + 1);  // runs past midnight
+  return [start, end];
+}
+function eventFor(v, now = new Date()) {
+  const today = localIso(new Date(now.getTime() - 6 * 3600000)).slice(0, 10);  // business day from 06:00
+  let e = eventOn(v, today);
+  const stateOf = ev => { const [a, b] = eventWindow(ev); return now < a ? 'upcoming' : now < b ? 'live' : 'past'; };
+  if ((!e || stateOf(e) === 'past') && now.getHours() >= 16) {
+    const next = eventOn(v, addDays(today, 1));
+    if (next) return { ...next, state: 'upcoming', when: 'tomorrow' };
+  }
+  return e ? { ...e, state: stateOf(e), when: 'today' } : null;
+}
+const eventIcon = e => e.kind === 'yoga' ? YOGA_ICON : MIC_ICON;
+const eventStateText = e => e.when === 'tomorrow' ? t('evTomorrow') : t(`ev_${e.state}`);
 const expectLine = v => v.expected ? `<span class="vexpect${v.status?.state === 'closed' ? ' off' : ''}">${t('expectedAround', v.expected)}</span>` : '';
-const showOn = (at = new Date()) => at.getHours() >= 21 || at.getHours() < 2;
 const artistLine = v => {
-  if (!v.tonight) return '';
-  const yoga = v.tonight_icon === 'yoga', off = v.status?.state === 'closed' || (!yoga && !showOn());
-  return `<span class="vartist${off ? ' off' : ''}">${yoga ? YOGA_ICON : MIC_ICON}${v.tonight}</span>`;
+  const e = v.event; if (!e) return '';
+  return `<span class="vartist ev-${e.state}">${eventIcon(e)}<span>${e.name} · ${e.from}–${e.to}</span><em>${eventStateText(e)}</em></span>`;
 };
 const PERSON_ICON = '<svg class="vicon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="4.6" r="2.9" fill="currentColor"/><path d="M2.6 14.4c0-3.1 2.4-5.4 5.4-5.4s5.4 2.3 5.4 5.4z" fill="currentColor"/></svg>';
 
@@ -1665,6 +1690,7 @@ function card(v) {
       <div class="top"><span class="name">${v.name}</span><span class="type">${typeName(v.type)}</span></div>
       ${statusLine(v, live)}
       <div class="stat">${stat}<span class="arrow">›</span></div>
+      ${v.event ? `<div class="evtag ev-${v.event.state}">${eventIcon(v.event)}<span class="ev-name">${v.event.name}</span><span class="ev-time">${v.event.from}–${v.event.to}</span><span class="ev-state">${eventStateText(v.event)}</span></div>` : ''}
       ${v.peak ? `<div class="peaktag">${PEAK_ICON}${t('atPeak')}</div>` : ''}
       ${v.rising ? `<div class="rising">${RISE_ICON}${t('rising')}</div>` : ''}
       ${v.expected ? `<div class="expect">${t('expectedAround', v.expected)}</div>` : ''}
@@ -1783,11 +1809,11 @@ function recommend(cards, now = new Date()) {
     if (v.peak) { score += 0.5; why.push(t('atPeak')); }
     if (v.rising) { score += 0.6; why.push(t('rising')); }
     if (v.expected) { score += 0.3; why.push(t('expectedAround', v.expected)); }
-    if (v.tonight) {
+    if (v.event && v.event.state !== 'past') {
       // Music nights count in the evening; a daytime class (yoga) counts by day.
-      const daytime = v.tonight_icon === 'yoga';
+      const daytime = v.event.kind === 'yoga';
       score += (daytime ? !night : evening) ? 0.8 : 0.25;
-      why.push(t(daytime ? 'recToday' : 'recTonight', v.tonight));
+      why.push(`${v.event.name} · ${v.event.from}–${v.event.to}`);
     }
     if (night && FUN.includes(v.type)) score += 0.6;
     if (day && (ACTIVE.includes(v.type) || v.type === 'Kafe')) score += 0.6;
@@ -1896,7 +1922,7 @@ const ANSWERS = {
     return answerAngles(t('aDiscover'), open, [
       ['tagGem', 'gem', by(x => rating(x) * 10 - crowd(x.v), -1), (v, p) => [t('whyQuietNow', crowd(v)), t('whyRated', rating({ p }).toFixed(1))]],
       ['tagBuzz', 'busy', by(x => crowd(x.v), -1), v => [t('whyBusiest', crowd(v)), v.rising ? t('rising') : v.peak ? t('atPeak') : '']],
-      ['tagNew', 'new', by(x => (x.v.tonight ? 10 : 0) + (x.v.rising ? 5 : 0) + rnd(x.v, 'new'), -1), (v, p) => [v.tonight ? t(v.tonight_icon === 'yoga' ? 'recToday' : 'recTonight', v.tonight) : t('whyTry', typeName(v.type).toLowerCase()), p.genre ? t('whyGenre', p.genre) : '']],
+      ['tagNew', 'new', by(x => (x.v.event && x.v.event.state !== 'past' ? 10 : 0) + (x.v.rising ? 5 : 0) + rnd(x.v, 'new'), -1), (v, p) => [v.event && v.event.state !== 'past' ? `${v.event.name} · ${v.event.from}–${v.event.to}` : t('whyTry', typeName(v.type).toLowerCase()), p.genre ? t('whyGenre', p.genre) : '']],
     ]);
   },
   breakfast() {
@@ -1913,7 +1939,7 @@ const ANSWERS = {
     const list = withP().filter(x => x.p.music);
     const evening = new Date().getHours() >= 17 || new Date().getHours() < 4;
     return answerAngles(t('aMusic'), list, [
-      ['tagLive', 'top', by(x => (x.v.tonight && x.v.tonight_icon !== 'yoga' ? 10 : 0) + x.p.music, -1), (v, p) => [v.tonight && v.tonight_icon !== 'yoga' ? t('recTonight', v.tonight) : t('whyGenre', p.genre), t('whyMusic', p.music)]],
+      ['tagLive', 'top', by(x => (x.v.event && x.v.event.kind !== 'yoga' && x.v.event.state !== 'past' ? 10 : 0) + x.p.music, -1), (v, p) => [v.event && v.event.kind !== 'yoga' ? t('recTonight', v.event.name) : t('whyGenre', p.genre), t('whyMusic', p.music)]],
       ['tagDance', 'busy', by(x => crowd(x.v) * (isOpen(x.v) ? 1 : 0) + x.p.music, -1), (v, p) => [isOpen(v) ? t('whyBusiest', crowd(v)) : t('whyLater'), t('whyGenre', p.genre)], x => ['Kulüp', 'Bar', 'Pub'].includes(x.v.type)],
       ['tagChill', 'quiet', by(x => (['lounge', 'chill house', 'acoustic', 'jazz'].includes(x.p.genre) ? 0 : 100) + crowd(x.v)), (v, p) => [t('whyGenre', p.genre), isOpen(v) ? t('whyQuietNow', crowd(v)) : '']],
     ]) + (evening ? '' : `<p class="rec-note">${t('aMusicDay')}</p>`);

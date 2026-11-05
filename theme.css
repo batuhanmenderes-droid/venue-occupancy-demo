@@ -1076,3 +1076,23 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 :root[data-theme="dark"] .kiter .kite-model { filter: brightness(.75); }
 .mprice .miced { display: block; font: 500 11px var(--font-text); color: var(--muted); text-align: right; }
 .msource { margin: 0 0 6px; }
+
+/* ---- Event highlight: green upcoming, yellow in progress, red past ---- */
+:root { --ev-up: #16a34a; --ev-up-bg: rgba(22, 202, 100, 0.16); --ev-live: #a07800; --ev-live-bg: rgba(255, 200, 0, 0.24); --ev-past: #c42b2b; --ev-past-bg: rgba(255, 59, 48, 0.13); }
+:root[data-theme="dark"] { --ev-up: #4ade80; --ev-live: #ffd60a; --ev-past: #ff6b6b; }
+.evtag { display: inline-flex; align-items: center; gap: 7px; flex-wrap: wrap; align-self: flex-start; padding: 6px 10px; border-radius: 12px; font: 600 12.5px/1.2 var(--font-text); margin-top: 2px; }
+.evtag .vicon { width: 14px; height: 14px; flex: none; }
+.evtag .ev-time { font-weight: 500; opacity: .85; }
+.evtag .ev-state { font: 700 10.5px/1 var(--font-text); letter-spacing: .05em; text-transform: uppercase; padding: 3px 6px; border-radius: 999px; background: currentColor; }
+.evtag .ev-state { color: inherit; }
+.ev-upcoming { color: var(--ev-up); background: var(--ev-up-bg); }
+.ev-live { color: var(--ev-live); background: var(--ev-live-bg); }
+.ev-past { color: var(--ev-past); background: var(--ev-past-bg); }
+.evtag .ev-state { background: rgba(255, 255, 255, .55); }
+:root[data-theme="dark"] .evtag .ev-state { background: rgba(0, 0, 0, .35); }
+.leaflet-tooltip.vlabel .vartist { display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; padding: 3px 7px; border-radius: 8px; font-size: 11px; }
+.leaflet-tooltip.vlabel .vartist em { font: 700 9px/1 var(--font-text); letter-spacing: .05em; text-transform: uppercase; font-style: normal; opacity: .9; }
+.leaflet-tooltip.vlabel .vartist.ev-upcoming, .leaflet-tooltip.vlabel .vartist.ev-live, .leaflet-tooltip.vlabel .vartist.ev-past { color: inherit; }
+.leaflet-tooltip.vlabel .vartist.ev-upcoming { color: var(--ev-up); background: var(--ev-up-bg); }
+.leaflet-tooltip.vlabel .vartist.ev-live { color: var(--ev-live); background: var(--ev-live-bg); }
+.leaflet-tooltip.vlabel .vartist.ev-past { color: var(--ev-past); background: var(--ev-past-bg); }

@@ -69,8 +69,6 @@
         "approx": false,
         "label": "Akçapınar"
       },
-      "tonight": "İrem Güneş",
-      "tonight_icon": "yoga",
       "logo": "logos/lemongrass.png",
       "events": [
         {
@@ -97,7 +95,14 @@
           "kind": "yoga",
           "title": "Lemongrass Yoga"
         }
-      ]
+      ],
+      "event_default": {
+        "kind": "yoga",
+        "name": "Yoga",
+        "title": "Lemongrass Yoga",
+        "from": "10:00",
+        "to": "11:00"
+      }
     },
     {
       "id": "kitebeach-akyaka",
