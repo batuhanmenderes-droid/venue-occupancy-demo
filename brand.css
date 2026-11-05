@@ -62,3 +62,24 @@ body.mapmode .viewmode { display: none; }
 #grid.aslist .venue .media { grid-column: 2; width: 56px; }
 #grid.aslist .venue .top { grid-column: 3; }
 #grid.aslist .venue .blurb { grid-column: 3; }
+/* List rows: logo · type / name / description · count on the right (below the gear and map buttons) */
+#grid.aslist .venue { grid-template-columns: 56px minmax(0, 1fr) max-content; }
+#grid.aslist .venue .media { grid-column: 1; }
+#grid.aslist .venue .top, #grid.aslist .venue .blurb { grid-column: 2; }
+#grid.aslist .venue .top { padding-right: 0; }
+#grid.aslist .venue .body > .stat { grid-column: 3; grid-row: 1 / span 2; align-self: end; justify-items: end; margin-top: 34px; padding-right: 0; }
+#grid.aslist .venue .stat .busyat { text-align: right; }
+#grid.aslist .venue .name { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 600px) {
+  #grid.aslist .venue { grid-template-columns: 44px minmax(0, 1fr) max-content; column-gap: 10px; padding: 14px 14px; }
+  #grid.aslist .venue .media { width: 44px; }
+  #grid.aslist .venue .media .logo { width: 44px; height: 44px; }
+  #grid.aslist .venue .type { font-size: 10px; }
+  #grid.aslist .venue .name { font-size: 16px; }
+  #grid.aslist .venue .blurb { font-size: 10.5px; line-height: 13px; }
+  #grid.aslist .venue .stat b { font-size: 52px; }
+  #grid.aslist .venue .stat .pp .vicon { width: 12px; height: 12px; }
+  #grid.aslist .venue .stat .busyat { font-size: 10.5px; }
+  #grid.aslist .venue .updated { font-size: 11px; }
+  #grid.aslist .venue .evtag { font-size: 11.5px; }
+}
