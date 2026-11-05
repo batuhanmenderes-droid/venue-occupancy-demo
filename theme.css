@@ -1147,6 +1147,6 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 .gear svg { display: block; width: 16px; height: 16px; margin: 0; }
 
 /* One-line venue description: list card under the name, detail page under the title */
-#grid .venue .blurb { margin-top: 4px; font: 400 12.5px/1.35 var(--font-text); color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#grid .venue .blurb { margin-top: 4px; font: 400 11px/14px var(--font-text); letter-spacing: -0.25px; color: var(--ink-2); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden; }
 .vblurb { margin: 4px 0 2px; font: 400 14.5px/1.4 var(--font-text); color: var(--ink-2); max-width: 60ch; }
 .vblurb[hidden] { display: none; }
