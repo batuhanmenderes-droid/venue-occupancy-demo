@@ -1,0 +1,37 @@
+/* "herkez nerde?!" brand (preview): Bricolage Grotesque for display, Inter for text, brand palette.
+   Loaded after theme.css; delete this file and its <link> to go back. */
+:root {
+  --font-display: "Bricolage Grotesque", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-text: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --brand-night: #0B0B10; --brand-paper: #FFFFFF; --brand-calm: #1F6BFF; --brand-active: #FFB400; --brand-full: #FF2D6F;
+  --series: var(--brand-calm); --series-soft: rgba(31, 107, 255, 0.14);
+  --ink: var(--brand-night); --live: var(--brand-full);
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --page: #0B0B10; --surface: #15151C; --surface-2: #1E1E27; --ink: #FFFFFF; --series: #4D8BFF; } }
+:root[data-theme="dark"] { --page: #0B0B10; --surface: #15151C; --surface-2: #1E1E27; --ink: #FFFFFF; --series: #4D8BFF; }
+:root[data-theme="dark"] body { background-color: #0B0B10; }
+
+/* Display type: ExtraBold, tight */
+h1, h2, .name, .stat b, .tile .value, .frame .count, .leaflet-tooltip.vlabel .vcount, .townlabel span, .sheet-title {
+  font-family: var(--font-display); font-weight: 800; letter-spacing: -0.03em;
+}
+#grid .venue .name { font-size: 20px; }
+#grid .venue .stat b { font-weight: 800; letter-spacing: -0.04em; font-variation-settings: "opsz" 96; }
+.type { letter-spacing: 0.06em; }
+
+/* Signals in the fixed order calm → active → full */
+.status.live .dot { background: var(--brand-full); box-shadow: 0 0 0 3px rgba(255, 45, 111, 0.22); animation: brandPing 2s ease-out infinite; }
+@keyframes brandPing { 0% { box-shadow: 0 0 0 0 rgba(255, 45, 111, 0.45); } 100% { box-shadow: 0 0 0 7px rgba(255, 45, 111, 0); } }
+.rising { color: #B37E00; background: rgba(255, 180, 0, 0.16); }
+.peaktag, .leaflet-tooltip.vlabel .vpeak { color: var(--brand-full); }
+.peaktag { background: rgba(255, 45, 111, 0.13); }
+.mapcheck[aria-checked="true"] { background: var(--brand-calm); border-color: var(--brand-calm); }
+.tabbar button[aria-current="page"], .tabbar button.on { color: var(--brand-calm); }
+
+/* Wordmark above the list */
+.brandhead { display: flex; flex-direction: column; align-items: center; gap: 4px; margin: 6px 0 18px; text-align: center; }
+.brandhead .wm { display: inline-flex; align-items: flex-end; gap: .06em; font: 800 44px/.95 var(--font-display); letter-spacing: -0.03em; color: var(--ink); }
+.brandhead .wm svg { height: .74em; width: auto; margin-bottom: .02em; color: var(--ink); }
+.brandhead .city { font: 600 13px/1 var(--font-text); color: var(--ink-2); letter-spacing: 0.02em; }
+body.mapmode .brandhead { display: none; }
+@media (max-width: 600px) { .brandhead .wm { font-size: 34px; } }

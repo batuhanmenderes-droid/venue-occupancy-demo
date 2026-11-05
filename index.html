@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Venues · Occupancy</title>
+<title>herkez nerde?! · Akyaka</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
 <script src="i18n.js?v=stat2"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
@@ -79,8 +79,10 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
+<link rel="stylesheet" href="brand.css?v=1">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
 <div class="vbg vbg-list" aria-hidden="true"></div>
 <!-- iOS-style tab bar at the bottom: List, Heatmap, Recommendations (sheet), Settings (sheet) -->
@@ -129,6 +131,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 </nav>
 <main>
   <p class="sub" id="subtitle" hidden></p>
+  <header class="brandhead"><span class="wm" role="img" aria-label="herkez nerde?!">herkez nerde<svg viewBox="0 5.5 132 102" aria-hidden="true"><use href="#mk-bold"/></svg></span><span class="city">Akyaka · Akçapınar</span></header>
   <div class="topbar">
     <div class="subbar">
     <div class="filters" role="group" data-i18n-aria="filterAria">
@@ -206,7 +209,7 @@ async function load() {
     const expected = peak ? null : v.expected_peak ?? (rising && v.simulated ? expectedPeak(v, now) : null);
     return { ...v, latest, updatedAt, status, rising, expected, peak };
   }));
-  document.title = `${t('venues')} · ${t('occupancy')}`;
+  document.title = 'herkez nerde?! · Akyaka';
   $('subtitle').textContent = t('listSub', venues.length, now.toTimeString().slice(0, 5));
   lastCards = cards;
   // Colour bands follow how many people are out in total (see setLevelScale in levels.js).
