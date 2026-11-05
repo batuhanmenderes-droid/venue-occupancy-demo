@@ -1136,10 +1136,7 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 .recchat button { width: 34px; height: 34px; padding: 0; display: grid; place-items: center; border-radius: 50%; border: 0; background: var(--series, #0a84ff); color: #fff; cursor: pointer; flex: none; }
 .recchat button svg { width: 16px; height: 16px; }
 
-/* List as a seamless grid: no gaps, square corners, type above the name */
-main:not(.venuepage) #grid { gap: 0 !important; }
-main:not(.venuepage) #grid .venue { border-radius: 0 !important; box-shadow: none !important; transform: none !important; }
-main:not(.venuepage) #grid .venue .media, main:not(.venuepage) #grid .venue .vthumb, main:not(.venuepage) #grid .venue .media > img { border-radius: 0 !important; }
+/* Venue type above the name */
 #grid .venue .top { flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 2px; }
 #grid .venue .stat { align-items: center; }
 #grid .venue .stat .gear { margin-left: auto; }
