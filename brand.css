@@ -48,7 +48,6 @@ body.mapmode .viewmode { display: none; }
 #grid.aslist .venue .media .logo { position: relative; right: auto; bottom: auto; width: 56px; height: 56px; }
 #grid.aslist .venue .top { grid-column: 2; grid-row: 1; padding-right: 80px; }
 #grid.aslist .venue .blurb { grid-column: 2; grid-row: 2; margin-top: -6px; }
-#grid.aslist .venue .body > :not(.top):not(.blurb):not(.cardchart):not(.stat) { grid-column: 1 / -1; }
 #grid.aslist .venue .stat { margin-top: 2px; }
 #grid.aslist .venue .body > .cardchart { z-index: -1; }
 #grid.aslist .venue .cardgear { top: 12px; left: auto; right: 48px; color: var(--ink-2); background: var(--fill); }
@@ -104,3 +103,11 @@ body.mapmode .viewmode { display: none; }
 #grid.aslist .venue .updated { box-sizing: border-box; padding-top: 14px; min-height: 42px; align-items: center; margin-top: 4px; }
 #grid.aslist .venue .cardgear, #grid.aslist .venue .mapcheck { bottom: 16px; }
 @media (max-width: 600px) { #grid.aslist .venue .cardgear, #grid.aslist .venue .mapcheck { bottom: 14px; } }
+
+/* Type, name and description as one block (gallery: same 8px gap as before; list: centred beside the logo) */
+#grid .venue .head { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+#grid .venue .head .blurb { margin-top: -2px; }
+#grid.aslist .venue .head { grid-column: 2; grid-row: 1; align-self: center; gap: 6px; }
+#grid.aslist .venue .head .blurb { margin-top: 0; }
+#grid.aslist .venue .media, #grid.aslist .venue .body > .stat { grid-row: 1; }
+#grid.aslist .venue .body > :not(.head):not(.cardchart):not(.stat) { grid-column: 1 / -1; }
