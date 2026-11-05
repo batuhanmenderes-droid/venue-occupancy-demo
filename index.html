@@ -1305,29 +1305,33 @@ const YOGA_ICON = '<svg class="vicon" viewBox="0 0 24 24" aria-hidden="true"><pa
 // today's event is over, the next day's event is shown instead.
 // State: upcoming (green) before it starts, live (yellow) while on, past (red) after it ends.
 const addDays = (iso, n) => { const d = new Date(`${iso}T12:00:00`); d.setDate(d.getDate() + n); return localIso(d).slice(0, 10); };
-function eventOn(v, day) {
-  const dated = v.events?.find(e => e.date === day), base = v.event_default;
-  if (dated || base) {
-    const e = { ...(base || {}), ...(dated || {}) };
-    return { name: e.name, kind: e.kind || 'show', from: e.from || base?.from || '21:00', to: e.to || base?.to || '02:00', day };
-  }
-  if (v.tonight) return { name: v.tonight, kind: v.tonight_icon === 'yoga' ? 'yoga' : 'show', from: '21:00', to: '02:00', day };
-  return null;
+// Events of one business night / day (times before 06:00 belong to the night that started the day before).
+function eventsOn(v, day) {
+  const base = v.event_default, dated = (v.events || []).filter(e => e.date === day);
+  if (dated.length) return dated.map(d => ({ ...(base || {}), ...d })).map(e => ({ name: e.name, kind: e.kind || 'show', from: e.from || '21:00', to: e.to || '02:00', day }));
+  if (base) return [{ name: base.name, kind: base.kind || 'show', from: base.from, to: base.to, day }];
+  if (v.tonight) return [{ name: v.tonight, kind: v.tonight_icon === 'yoga' ? 'yoga' : 'show', from: '21:00', to: '02:00', day }];
+  return [];
 }
 function eventWindow(e) {
+  const early = t => +t.slice(0, 2) < 6;  // 01:00 on a night's poster means after midnight
   const start = new Date(`${e.day}T${e.from}:00`), end = new Date(`${e.day}T${e.to}:00`);
-  if (end <= start) end.setDate(end.getDate() + 1);  // runs past midnight
+  if (early(e.from)) start.setDate(start.getDate() + 1);
+  if (early(e.to) || end <= start) end.setDate(end.getDate() + 1);
+  if (end <= start) end.setDate(end.getDate() + 1);
   return [start, end];
 }
 function eventFor(v, now = new Date()) {
   const today = localIso(new Date(now.getTime() - 6 * 3600000)).slice(0, 10);  // business day from 06:00
-  let e = eventOn(v, today);
   const stateOf = ev => { const [a, b] = eventWindow(ev); return now < a ? 'upcoming' : now < b ? 'live' : 'past'; };
-  if ((!e || stateOf(e) === 'past') && now.getHours() >= 16) {
-    const next = eventOn(v, addDays(today, 1));
+  // Several sets on one night: show the one on now, else the next one, else the last one.
+  const pick = list => { const st = list.map(e => ({ ...e, state: stateOf(e) })); return st.find(e => e.state === 'live') || st.find(e => e.state === 'upcoming') || st[st.length - 1] || null; };
+  const e = pick(eventsOn(v, today));
+  if ((!e || e.state === 'past') && now.getHours() >= 16) {
+    const next = eventsOn(v, addDays(today, 1))[0];
     if (next) return { ...next, state: 'upcoming', when: 'tomorrow' };
   }
-  return e ? { ...e, state: stateOf(e), when: 'today' } : null;
+  return e ? { ...e, when: 'today' } : null;
 }
 const eventIcon = e => e.kind === 'yoga' ? YOGA_ICON : MIC_ICON;
 const eventStateText = e => e.when === 'tomorrow' ? t('evTomorrow') : t(`ev_${e.state}`);

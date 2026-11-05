@@ -55,7 +55,27 @@
       "tonight": "Umutcan Genç",
       "expected_peak": 150,
       "logo": "logos/kulup.png?v=2",
-      "logo_scale": 1
+      "logo_scale": 1,
+      "events": [
+        {
+          "date": "2026-11-06",
+          "name": "Halil · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "01:00",
+          "source": "instagram"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Özgün · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "01:00",
+          "to": "04:00",
+          "source": "instagram"
+        }
+      ]
     },
     {
       "id": "lemongrass-cafe",

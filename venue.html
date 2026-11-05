@@ -496,7 +496,8 @@ function renderCalendar() {
     document.querySelector('.progchart').hidden = true;
     const base = venue.event_default || {};
     const days = Array.from({ length: 7 }, (_, k) => { const d = new Date(`${today()}T12:00:00`); d.setDate(d.getDate() + k); return localDay(d); });
-    const list = days.map(day => { const e = venue.events?.find(x => x.date === day); return e || base.name ? { ...base, ...(e || {}), date: day } : null; }).filter(Boolean);
+    const list = days.flatMap(day => { const es = (venue.events || []).filter(x => x.date === day); return es.length ? es.map(e => ({ ...base, ...e, date: day })) : base.name ? [{ ...base, date: day }] : []; });
+    if (!list.length) { prog.innerHTML = `<p class="empty">${t('noProgram')}</p>`; return; }
     prog.innerHTML = `<p class="hint">${base.title || list[0]?.title || ''}</p>` + list.map(e => `<div class="pday${e.date === today() ? ' today' : ''}">
       <span class="pdate">${e.date === today() ? t('today') : fmtDay(e.date)}</span>
       <span class="partist"><i style="background:#8d6be0"></i>${e.name}</span><span class="pset">${e.from || ''}${e.to ? `–${e.to}` : ''} · ${t(e.kind === 'yoga' ? 'eventYoga' : 'eventShow')}</span>
