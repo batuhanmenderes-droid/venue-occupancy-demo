@@ -1157,3 +1157,7 @@ body.mapmode .subbar { top: calc(14px + env(safe-area-inset-top, 0px)) !importan
 #grid .venue .stat .pp { display: inline-flex; color: var(--ink); margin-left: -2px; }
 #grid .venue .stat .pp .vicon { width: 16px; height: 16px; }
 #grid .venue .stat .busyat { margin-left: auto; font: 500 13px var(--font-text); color: var(--ink-2); }
+#grid .venue .stat { align-items: baseline; }
+#grid .venue .stat .pp { align-self: baseline; }
+#grid .venue .stat .pp .vicon { display: block; }
+#grid .venue .stat .pp .vicon { transform: translateY(1.6px); }
