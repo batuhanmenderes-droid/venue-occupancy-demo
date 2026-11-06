@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=nav1"></script>
+<script src="i18n.js?v=hex1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=27">
+<link rel="stylesheet" href="brand.css?v=30">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -416,31 +416,28 @@ function drawMap() {
   // While a route is shown, only its destination stays on the map.
   const placed = lastCards.filter(v => v.location && (routeTo ? v.id === routeTo.id : inCategory(v) && onMap(v)));
   markers.clearLayers();
-  const pins = spreadPins(placed);
+  // Venues that would overlap on screen merge into a hexagon cluster; the rest sit on their exact spot.
+  const { pins, singles, clusters } = clusterPins(placed);
   // Each venue gets an organic heat cloud in its level colour around its (possibly spread) pin;
   // the cloud grows and thickens with the crowd.
   // Quiet venues first, busy ones last and stronger, so a crowded spot's colour wins over the
   // greens and blues of several quiet neighbours.
   heat.setBlobs(placed.filter(v => v.latest && v.status?.state !== 'closed').sort((a, b) => a.latest.people - b.latest.people).map(v => ({
     seed: v.id,
-    latlng: pins.get(v.id).latlng,
+    latlng: L.latLng(v.location.lat, v.location.lon),  // clouds always sit on the true location
     color: HEAT.colors[LEVELS.indexOf(levelOf(v.latest.people))],
     alt: HEAT.shift[LEVELS.indexOf(levelOf(v.latest.people))] || null,
     strength: HEAT.opacity * (HEAT.minStrength + (1 - HEAT.minStrength) * Math.pow(Math.min(v.latest.people / HEAT.fullAt, 1), HEAT.curve)),
     meters: HEAT.baseM + Math.min(v.latest.people, 100) * HEAT.perPersonM,
     minPx: HEAT.basePx + Math.min(v.latest.people, 100) * HEAT.perPersonPx,  // keeps the cloud readable when zoomed out
   })));
-  const labels = placeLabels(placed, pins);
-  for (const v of placed) {
+  for (const c of clusters) addClusterMarker(c);
+  const labels = placeLabels(singles, pins, clusters);
+  for (const v of singles) {
     const n = v.latest ? v.latest.people : null;
     const lv = levelOf(n);
     const pin = pins.get(v.id);
     const closed = v.status?.state === 'closed';
-    // A pin pushed off its spot keeps a thin line and a dot at the true location.
-    if (pin.moved) {
-      L.polyline([[v.location.lat, v.location.lon], pin.latlng], { color: '#ffffff', weight: 1.5, opacity: 0.8, interactive: false }).addTo(markers);
-      L.circleMarker([v.location.lat, v.location.lon], { radius: 3, weight: 1, color: '#ffffff', fillColor: lv ? lv.color : '#898781', fillOpacity: 1, interactive: false }).addTo(markers);
-    }
     const m = L.marker(pin.latlng, {
       icon: L.divIcon({ className: `maplogo${closed ? ' is-closed' : ''}${n !== null && n < 10 ? ' is-low' : ''}`, html: `<div style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'};--s:${lv && !closed ? PIN_SCALE[LEVELS.indexOf(lv)] : 0.9};width:100%;height:100%">${logoHtml(v)}${closed ? `<span class="lockover">${LOCK_ICON}</span>` : ''}</div>`, iconSize: [PIN, PIN], iconAnchor: [PIN / 2, PIN / 2] }),
       title: v.name,
@@ -1654,11 +1651,13 @@ function findVenueLabel(p,w,h,radius,obstacles,preferred) {
   }
   return candidates.find(({box})=>box.x>8 && box.y>58 && box.x+box.w<size.x-8 && box.y+box.h<size.y-100 && !obstacles.some(b=>labelHit(b,box)));
 }
-function placeLabels(placed,pins) {
+function placeLabels(placed,pins,clusters=[]) {
   const obstacles=placed.map(v=> {
     const p=map.latLngToContainerPoint(pins.get(v.id).latlng),r=venuePinRadius(v);
     return {x:p.x-r,y:p.y-r,w:r*2,h:r*2};
   });
+  // Hexagon clusters are obstacles too, so no venue label lands on one.
+  for(const c of clusters){const p=map.latLngToContainerPoint(c.latlng),r=(64+Math.min(c.vs.length,8)*4)/2+6;obstacles.push({x:p.x-r,y:p.y-r,w:r*2,h:r*2});}
   const out=new Map(), labelled=[];
   for(const v of [...placed].sort((a,b)=>(b.latest?.people??-1)-(a.latest?.people??-1))) {
     const p=map.latLngToContainerPoint(pins.get(v.id).latlng);
@@ -1682,6 +1681,48 @@ function positionVenueTooltip(marker,v) {
   tip.options.direction=found.direction;tip.options.offset=found.offset;tip.update();
 }
 document.fonts?.ready.then(()=>{if(map)drawMap();});
+
+// ---- Hexagon clusters ----
+// Venues whose pins would overlap on screen are merged into one hexagon showing how many people are in
+// them together and how many venues it holds. Zooming in splits a cluster as its venues move apart; tapping
+// one zooms to its venues. At the deepest zoom nothing clusters any more (venues still on top of each other
+// are nudged apart there, without connector lines).
+const CLUSTER_GAP = 56;  // pin size (42) + 14 px
+function clusterPins(placed) {
+  const pins = new Map();
+  if (map.getZoom() >= map.getMaxZoom()) {
+    const spread = spreadPins(placed);
+    return { pins: spread, singles: placed, clusters: [] };
+  }
+  const pts = placed.map(v => map.latLngToContainerPoint([v.location.lat, v.location.lon]));
+  const parent = placed.map((_, i) => i), find = i => parent[i] === i ? i : (parent[i] = find(parent[i]));
+  for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++)
+    if (pts[i].distanceTo(pts[j]) < CLUSTER_GAP) parent[find(i)] = find(j);
+  const groups = new Map();
+  placed.forEach((v, i) => { const r = find(i); if (!groups.has(r)) groups.set(r, []); groups.get(r).push(i); });
+  const singles = [], clusters = [];
+  for (const idx of groups.values()) {
+    if (idx.length === 1) { const v = placed[idx[0]]; singles.push(v); pins.set(v.id, { latlng: L.latLng(v.location.lat, v.location.lon) }); continue; }
+    const cx = idx.reduce((a, i) => a + pts[i].x, 0) / idx.length, cy = idx.reduce((a, i) => a + pts[i].y, 0) / idx.length;
+    const latlng = map.containerPointToLatLng([cx, cy]), vs = idx.map(i => placed[i]);
+    clusters.push({ vs, latlng });
+    for (const v of vs) pins.set(v.id, { latlng });
+  }
+  return { pins, singles, clusters };
+}
+const HEX_PATH = s => { const r = s / 2, h = r * Math.sqrt(3) / 2; return `M${r} 0L${r + h} ${r / 2}L${r + h} ${r * 1.5}L${r} ${s}L${r - h} ${r * 1.5}L${r - h} ${r / 2}Z`; };
+function addClusterMarker(c) {
+  const open = c.vs.filter(v => v.status?.state !== 'closed' && v.latest);
+  const total = open.reduce((a, v) => a + v.latest.people, 0);
+  const top = open.reduce((m, v) => (!m || v.latest.people > m.latest.people ? v : m), null);
+  const lv = top ? levelOf(top.latest.people) : null;
+  const color = lv ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366';
+  const S = Math.round(64 + Math.min(c.vs.length, 8) * 4);
+  const html = `<div class="hexclus" style="--hc:${color};width:${S}px;height:${S}px"><svg viewBox="${-S * 0.07} ${-S * 0.07} ${S * 1.14} ${S * 1.14}" aria-hidden="true"><path d="${HEX_PATH(S)}"/></svg><span class="hc-n">${open.length ? total : '—'}<i>${PERSON_ICON}</i></span><span class="hc-v">${t('clusterVenues', c.vs.length)}</span></div>`;
+  const m = L.marker(c.latlng, { icon: L.divIcon({ className: 'hexmarker', html, iconSize: [S, S], iconAnchor: [S / 2, S / 2] }), title: c.vs.map(v => v.name).join(', '), zIndexOffset: 500 }).addTo(markers);
+  m.bindTooltip(`<div class="hc-list">${[...c.vs].sort((a, b) => (b.latest?.people ?? -1) - (a.latest?.people ?? -1)).map(v => `<div><span>${v.name}</span><b>${v.status?.state === 'closed' ? t('closed') : v.latest ? v.latest.people : '—'}</b></div>`).join('')}</div>`, { direction: 'top', offset: [0, -S / 2 - 6], className: 'vlabel hc-tip' });
+  m.on('click', () => map.flyToBounds(L.latLngBounds(c.vs.map(v => [v.location.lat, v.location.lon])).pad(0.6), { maxZoom: map.getMaxZoom(), duration: 0.6 }));
+}
 
 // Pins closer than MIN_GAP pixels are pushed apart on screen; zooming in shrinks the push until
 // every pin sits on its true location. Labels go to the side the pin was pushed towards.
