@@ -197,3 +197,10 @@ body.routing .mainnav { transform: translateY(-100%); }
 .maplogo.hex > div { --hexmask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2086.6%20100%22%3E%3Cpolygon%20points%3D%2243.30%2C4.25%2082.92%2C27.12%2082.92%2C72.88%2043.30%2C95.75%203.68%2C72.88%203.68%2C27.12%22%20fill%3D%22%23000%22%20stroke%3D%22%23000%22%20stroke-width%3D%228.5%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E"); }
 .maplogo.hex > div::before, .maplogo.hex .logo, .maplogo.hex .lockover, .maplogo.hex.is-low .logo::after {
   clip-path: none; -webkit-mask: var(--hexmask) center / 100% 100% no-repeat; mask: var(--hexmask) center / 100% 100% no-repeat; }
+/* Mini map label: just the head count, for venues whose full label has no room */
+.minilabel { pointer-events: none; display: grid; place-items: center; }
+.minilabel span { display: inline-flex; align-items: center; gap: 2px; height: 20px; padding: 0 7px 0 6px; border-radius: 10px; white-space: nowrap;
+  font: 800 12.5px/1 var(--font-display); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; color: var(--ink);
+  background: var(--glass-bg, var(--surface)); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: inset 0 0 0 1.5px var(--lv), 0 3px 8px rgba(0, 0, 0, 0.3); }
+.minilabel .vicon { position: static; width: 9px; height: 9px; transform: none; }
