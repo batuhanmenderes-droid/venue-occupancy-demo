@@ -237,3 +237,14 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 .leaflet-tooltip.vlabel .vartist { border-radius: 6px !important; }
 .minilabel span { border-radius: 4px; }
 .leaflet-tooltip.vlabel { border-radius: 4px !important; }
+/* Mini labels look like the full labels (same glass, border, shadow, count type), with more room inside */
+.minilabel span {
+  background: var(--glass-bg); -webkit-backdrop-filter: blur(16px) saturate(180%); backdrop-filter: blur(16px) saturate(180%);
+  border: 0.5px solid var(--glass-border);
+  box-shadow: 0 8px 22px -8px rgba(0, 0, 0, 0.28), inset 0 1px 0 var(--glass-hi);
+  padding: 6px 9px; gap: 4px; border-radius: 4px;
+  font: 800 15px/1 var(--font-display); letter-spacing: -0.03em; color: var(--ink);
+}
+.minilabel .vicon { width: 11px; height: 11px; }
+.minilabel span { position: relative; overflow: hidden; isolation: isolate; }
+.minilabel span > .cardchart { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 80%; z-index: -1; opacity: 0.32; pointer-events: none; }
