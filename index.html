@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=36">
+<link rel="stylesheet" href="brand.css?v=37">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -451,7 +451,7 @@ function drawMap() {
     const mini = labels.mini?.get(v.id);
     if (mini) {
       const b = mini.box, at = map.containerPointToLatLng([b.x + b.w / 2, b.y + b.h / 2]);
-      L.marker(at, { icon: L.divIcon({ className: 'minilabel', html: `<span style="--lv:${lv ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'}">${n}${PERSON_ICON}</span>`, iconSize: [b.w, b.h], iconAnchor: [b.w / 2, b.h / 2] }), interactive: false, keyboard: false }).addTo(markers);
+      L.marker(at, { icon: L.divIcon({ className: 'minilabel', html: `<span style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'}"${closed ? ` aria-label="${t('closed')}"` : ''}>${closed || n === null ? LOCK_ICON : `${n}${PERSON_ICON}`}</span>`, iconSize: [b.w, b.h], iconAnchor: [b.w / 2, b.h / 2] }), interactive: false, keyboard: false }).addTo(markers);
     }
     m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
   }
@@ -1665,7 +1665,12 @@ function placeLabels(placed,pins,clusters=[]) {
   // Hexagon clusters are obstacles too, so no venue label lands on one.
   for(const c of clusters){const p=map.latLngToContainerPoint(c.latlng),r=(64+Math.min(c.vs.length,8)*4)/2+6;obstacles.push({x:p.x-r,y:p.y-r,w:r*2,h:r*2});}
   const out=new Map(), labelled=[];
-  for(const v of [...placed].sort((a,b)=>(b.latest?.people??-1)-(a.latest?.people??-1))) {
+  // Full labels only for the busiest open venue and venues with an upcoming or ongoing event; every other
+  // venue gets a mini label (head count, or a lock when closed).
+  const open=placed.filter(v=>v.status?.state!=='closed'&&v.latest);
+  const busiest=open.reduce((m,v)=>!m||v.latest.people>m.latest.people?v:m,null);
+  const big=v=>v===busiest||(v.event&&(v.event.state==='upcoming'||v.event.state==='live'));
+  for(const v of [...placed].filter(big).sort((a,b)=>(b.latest?.people??-1)-(a.latest?.people??-1))) {
     const p=map.latLngToContainerPoint(pins.get(v.id).latlng);
     const {w,h}=labelSize(v), found=findVenueLabel(p,w,h,venuePinRadius(v),obstacles,labelPlacementMemory.get(v.id));
     if(found) {out.set(v.id,found);obstacles.push(found.box);labelled.push(p);labelPlacementMemory.set(v.id,found);}
@@ -1673,8 +1678,9 @@ function placeLabels(placed,pins,clusters=[]) {
   // Venues whose full label doesn't fit get a mini label with just the head count, where that fits.
   out.mini=new Map();
   for(const v of placed) {
-    if(out.has(v.id)||v.status?.state==='closed'||!v.latest)continue;
-    const p=map.latLngToContainerPoint(pins.get(v.id).latlng), w=String(v.latest.people).length*8+26, h=22;
+    if(out.has(v.id))continue;
+    const closed=v.status?.state==='closed'||!v.latest;
+    const p=map.latLngToContainerPoint(pins.get(v.id).latlng), w=closed?32:String(v.latest.people).length*8+32, h=26;
     const found=findVenueLabel(p,w,h,venuePinRadius(v)-6,obstacles);
     if(found) {out.mini.set(v.id,found);obstacles.push(found.box);}
   }
