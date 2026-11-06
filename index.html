@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=hex1"></script>
+<script src="i18n.js?v=filt1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=37">
+<link rel="stylesheet" href="brand.css?v=39">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -136,12 +136,17 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 </nav>
 <header class="mainnav" id="mainnav">
   <div class="nav-left">
+    <button class="filterbtn" id="filterBtn" aria-haspopup="true" aria-expanded="false" data-i18n-aria="filterMenu" data-i18n-title="filterMenu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="fb-label" data-i18n="filterMenu"></span><span class="fb-dot" id="filterDot" hidden></span></button>
+    <div class="filter-panel" id="filterPanel" hidden>
+      <div class="fp-head" data-i18n="filterAria"></div>
   <div class="filters" role="group" data-i18n-aria="filterAria">
-    <button data-cat="all" data-i18n-aria="filterAll" data-i18n-title="filterAll"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="7" r="2.6" fill="currentColor"/><circle cx="17" cy="7" r="2.6" fill="currentColor"/><circle cx="7" cy="17" r="2.6" fill="currentColor"/><circle cx="17" cy="17" r="2.6" fill="currentColor"/></svg></button>
-    <button data-cat="fun" data-i18n-aria="filterFun" data-i18n-title="filterFun"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14l-7 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 12v7M8 20h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.2 6.5h9.6" stroke="currentColor" stroke-width="1.8"/></svg></button>
-    <button data-cat="food" data-i18n-aria="filterFood" data-i18n-title="filterFood"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M4.5 3v5a2.5 2.5 0 0 0 5 0V3M7 11v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17 21V3c-2.2 1.2-3.5 4-3.5 7.5V13H17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg></button>
-    <button data-cat="activity" data-i18n-aria="filterActivity" data-i18n-title="filterActivity"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="14.5" cy="4.5" r="2" fill="currentColor"/><path d="M6 21l3-6 3 2.5V21M9 15l1.5-5.5L14 11l3 2.5M10.5 9.5 7 11M14 11l-1.5 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button data-cat="all" data-i18n-aria="filterAll" data-i18n-title="filterAll"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="7" r="2.6" fill="currentColor"/><circle cx="17" cy="7" r="2.6" fill="currentColor"/><circle cx="7" cy="17" r="2.6" fill="currentColor"/><circle cx="17" cy="17" r="2.6" fill="currentColor"/></svg><span data-i18n="filterAll"></span></button>
+    <button data-cat="fun" data-i18n-aria="filterFun" data-i18n-title="filterFun"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14l-7 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 12v7M8 20h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.2 6.5h9.6" stroke="currentColor" stroke-width="1.8"/></svg><span data-i18n="filterFun"></span></button>
+    <button data-cat="food" data-i18n-aria="filterFood" data-i18n-title="filterFood"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M4.5 3v5a2.5 2.5 0 0 0 5 0V3M7 11v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17 21V3c-2.2 1.2-3.5 4-3.5 7.5V13H17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg><span data-i18n="filterFood"></span></button>
+    <button data-cat="activity" data-i18n-aria="filterActivity" data-i18n-title="filterActivity"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="14.5" cy="4.5" r="2" fill="currentColor"/><path d="M6 21l3-6 3 2.5V21M9 15l1.5-5.5L14 11l3 2.5M10.5 9.5 7 11M14 11l-1.5 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="filterActivity"></span></button>
   </div>
+      <div class="fp-sort"><div class="fp-head" data-i18n="sortAria"></div><div class="fp-opts" id="sortOpts"><button data-sort="busy" data-i18n="sortBusy"></button><button data-sort="quiet" data-i18n="sortQuiet"></button><button data-sort="name" data-i18n="sortName"></button></div></div>
+    </div>
   </div>
   <a class="nav-logo wm" href="#liste" data-nav="liste" aria-label="herkez nerde?!">herkez nerde<svg viewBox="0 5.5 132 102" aria-hidden="true"><use href="#mk-bold"/></svg></a>
   <div class="nav-right">
@@ -356,6 +361,16 @@ applyListView();
 $('sort').onchange = e => { sortBy = e.target.value; try { localStorage.setItem('venueSort', sortBy); } catch {} renderGrid(); };
 syncFilters();
 
+// ---- Filter menu (top left): category and sort live under one button ----
+function syncFilterMenu() {
+  $('filterDot').hidden = category === 'all' && sortBy === 'busy';
+  document.querySelectorAll('#sortOpts [data-sort]').forEach(b => b.setAttribute('aria-pressed', b.dataset.sort === sortBy));
+}
+$('filterBtn').onclick = e => { e.stopPropagation(); const open = $('filterPanel').hidden; $('filterPanel').hidden = !open; $('filterBtn').setAttribute('aria-expanded', open); syncFilterMenu(); };
+document.addEventListener('click', e => { if (!$('filterPanel').hidden && !e.target.closest('#filterPanel, #filterBtn')) { $('filterPanel').hidden = true; $('filterBtn').setAttribute('aria-expanded', false); } });
+$('sortOpts').onclick = e => { const b = e.target.closest('[data-sort]'); if (!b) return; $('sort').value = b.dataset.sort; $('sort').dispatchEvent(new Event('change')); syncFilterMenu(); };
+document.querySelector('.filters').addEventListener('click', () => setTimeout(syncFilterMenu));
+syncFilterMenu();
 // True while the heatmap is the visible view and the page is in the foreground (animations pause otherwise).
 const mapOnScreen = () => document.body.classList.contains('mapmode') && !document.hidden;
 // ---- Tabs ----
@@ -451,7 +466,7 @@ function drawMap() {
     const mini = labels.mini?.get(v.id);
     if (mini) {
       const b = mini.box, at = map.containerPointToLatLng([b.x + b.w / 2, b.y + b.h / 2]);
-      L.marker(at, { icon: L.divIcon({ className: 'minilabel', html: `<span style="--lv:${lv && !closed ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'}"${closed ? ` aria-label="${t('closed')}"` : ''}>${closed || n === null ? LOCK_ICON : `${n}${PERSON_ICON}`}</span>`, iconSize: [b.w, b.h], iconAnchor: [b.w / 2, b.h / 2] }), interactive: false, keyboard: false }).addTo(markers);
+      L.marker(at, { icon: L.divIcon({ className: 'minilabel', html: `<span style="--lv:${lv ? HEAT.colors[LEVELS.indexOf(lv)] : '#636366'}">${n}${PERSON_ICON}</span>`, iconSize: [b.w, b.h], iconAnchor: [b.w / 2, b.h / 2] }), interactive: false, keyboard: false }).addTo(markers);
     }
     m.on('click', () => { location.href = `venue.html?mekan=${v.id}`; });
   }
@@ -1665,12 +1680,7 @@ function placeLabels(placed,pins,clusters=[]) {
   // Hexagon clusters are obstacles too, so no venue label lands on one.
   for(const c of clusters){const p=map.latLngToContainerPoint(c.latlng),r=(64+Math.min(c.vs.length,8)*4)/2+6;obstacles.push({x:p.x-r,y:p.y-r,w:r*2,h:r*2});}
   const out=new Map(), labelled=[];
-  // Full labels only for the busiest open venue and venues with an upcoming or ongoing event; every other
-  // venue gets a mini label (head count, or a lock when closed).
-  const open=placed.filter(v=>v.status?.state!=='closed'&&v.latest);
-  const busiest=open.reduce((m,v)=>!m||v.latest.people>m.latest.people?v:m,null);
-  const big=v=>v===busiest||(v.event&&(v.event.state==='upcoming'||v.event.state==='live'));
-  for(const v of [...placed].filter(big).sort((a,b)=>(b.latest?.people??-1)-(a.latest?.people??-1))) {
+  for(const v of [...placed].sort((a,b)=>(b.latest?.people??-1)-(a.latest?.people??-1))) {
     const p=map.latLngToContainerPoint(pins.get(v.id).latlng);
     const {w,h}=labelSize(v), found=findVenueLabel(p,w,h,venuePinRadius(v),obstacles,labelPlacementMemory.get(v.id));
     if(found) {out.set(v.id,found);obstacles.push(found.box);labelled.push(p);labelPlacementMemory.set(v.id,found);}
@@ -1678,9 +1688,8 @@ function placeLabels(placed,pins,clusters=[]) {
   // Venues whose full label doesn't fit get a mini label with just the head count, where that fits.
   out.mini=new Map();
   for(const v of placed) {
-    if(out.has(v.id))continue;
-    const closed=v.status?.state==='closed'||!v.latest;
-    const p=map.latLngToContainerPoint(pins.get(v.id).latlng), w=closed?32:String(v.latest.people).length*8+32, h=26;
+    if(out.has(v.id)||v.status?.state==='closed'||!v.latest)continue;
+    const p=map.latLngToContainerPoint(pins.get(v.id).latlng), w=String(v.latest.people).length*8+32, h=26;
     const found=findVenueLabel(p,w,h,venuePinRadius(v)-6,obstacles);
     if(found) {out.mini.set(v.id,found);obstacles.push(found.box);}
   }
