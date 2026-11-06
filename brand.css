@@ -233,3 +233,7 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 .filterbtn .fb-dot { left: auto; right: 7px; }
 /* Hexagon frame: 4px rim in the crowd-level colour */
 .maplogo.hex .logo, .maplogo.hex .lockover { inset: 4px; z-index: 1; }
+/* Label corners: full and mini labels 4px everywhere, event box inside a label 6px */
+.leaflet-tooltip.vlabel .vartist { border-radius: 6px !important; }
+.minilabel span { border-radius: 4px; }
+.leaflet-tooltip.vlabel { border-radius: 4px !important; }
