@@ -412,7 +412,7 @@
     {
       "id": "west-cafe-bistro",
       "background": "backgrounds/west-cafe-bistro.jpg",
-      "name": "West Cafe Bistro",
+      "name": "West Bistro",
       "type": "Kafe",
       "folder": null,
       "data": null,
@@ -587,7 +587,7 @@
     {
       "id": "motto-brew-coffee",
       "background": "backgrounds/motto-brew-coffee.jpg",
-      "name": "Motto Brew Coffee",
+      "name": "Motto Coffee",
       "type": "Kafe",
       "folder": null,
       "data": null,
