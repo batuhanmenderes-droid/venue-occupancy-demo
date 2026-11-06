@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=view1"></script>
+<script src="i18n.js?v=kitty1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -81,11 +81,14 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=20">
+<link rel="stylesheet" href="brand.css?v=21">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
 <!-- List view background: aerial photo of Akyaka, 2px blur under an 80% black veil (hidden on the map) -->
+<div class="kitties" id="kitties" hidden role="dialog" aria-modal="true" aria-labelledby="kittiesTitle">
+  <div class="kitties-card"><img src="art/kittens.svg" alt="" width="260" height="170"><h2 id="kittiesTitle" data-i18n="kittiesTitle">Watch Out!</h2><p data-i18n="kittiesText">Lots of kitties around. Please ride responsibly.</p><span class="kitties-hint" data-i18n="kittiesHint">Tap anywhere to close</span></div>
+</div>
 <div class="vbg vbg-list" aria-hidden="true"></div>
 <!-- iOS-style tab bar at the bottom: List, Heatmap, Recommendations (sheet), Settings (sheet) -->
 <div class="sheet-scrim" id="sheetScrim" hidden></div>
@@ -319,7 +322,17 @@ function showTab(name) {
   $('view-harita').hidden = !harita;
   document.body.classList.toggle('mapmode', harita);
   history.replaceState(null, '', `#${harita ? 'harita' : 'liste'}`);
-  if (harita) { initMap(); map.invalidateSize(); drawMap(); }
+  if (harita) { initMap(); map.invalidateSize(); drawMap(); showKitties(); }
+}
+// "Watch out, kitties" notice: shown the first time the heatmap opens on each visit; any tap closes it.
+let kittiesShown = false;
+function showKitties() {
+  const k = $('kitties'); if (kittiesShown || !k) return; kittiesShown = true;
+  k.hidden = false;
+  requestAnimationFrame(() => k.classList.add('on'));
+  const close = e => { e.preventDefault(); e.stopPropagation(); k.classList.remove('on'); setTimeout(() => { k.hidden = true; }, 200); document.removeEventListener('pointerdown', close, true);
+    const eat = ev => { ev.preventDefault(); ev.stopPropagation(); }; document.addEventListener('click', eat, true); setTimeout(() => document.removeEventListener('click', eat, true), 400); };
+  setTimeout(() => document.addEventListener('pointerdown', close, true), 50);
 }
 let currentView = 'liste', openSheet = null;  // the open sheet (Recommendations / Settings), if any
 

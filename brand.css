@@ -117,3 +117,14 @@ body.mapmode .viewmode { display: none; }
 #grid.aslist .venue .stat b { font-size: 68px; }
 @media (max-width: 600px) { #grid.aslist .venue .stat b { font-size: 44px; } }
 #grid.aslist .venue .stat .pp { order: -1; margin: 0 2px 0 0; }
+
+/* Heatmap notice: gray kittens, closes on any tap */
+.kitties { position: fixed; inset: 0; z-index: 5000; display: grid; place-items: center; padding: 16px; background: rgba(11, 11, 16, 0.45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity .2s; cursor: pointer; }
+.kitties.on { opacity: 1; }
+.kitties[hidden] { display: none; }
+.kitties-card { width: min(340px, 100%); padding: 22px 22px 18px; border-radius: 24px; text-align: center; background: var(--surface); color: var(--ink); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35); transform: translateY(10px) scale(.97); transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+.kitties.on .kitties-card { transform: none; }
+.kitties-card img { display: block; width: 100%; height: auto; margin: 0 auto 10px; }
+.kitties-card h2 { margin: 0 0 6px; font: 800 28px/1.05 var(--font-display); letter-spacing: -0.03em; }
+.kitties-card p { margin: 0; font: 400 15px/1.45 var(--font-text); color: var(--ink-2); }
+.kitties-hint { display: block; margin-top: 14px; font: 500 11.5px/1 var(--font-text); color: var(--muted); }
