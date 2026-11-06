@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=22">
+<link rel="stylesheet" href="brand.css?v=23">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -296,7 +296,7 @@ document.querySelector('.filters').onclick = e => {
   syncFilters(); renderGrid(); if (map) drawMap();
 };
 // Gallery (photo cards) or List (rows with the venue logo); remembered per browser.
-let listView = (() => { try { return localStorage.getItem('listView') === 'list' ? 'list' : 'gallery'; } catch { return 'gallery'; } })();
+let listView = (() => { try { return localStorage.getItem('listView') === 'gallery' ? 'gallery' : 'list'; } catch { return 'list'; } })();
 function applyListView() {
   $('grid').classList.toggle('aslist', listView === 'list');
   document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === listView));
@@ -310,6 +310,8 @@ applyListView();
 $('sort').onchange = e => { sortBy = e.target.value; try { localStorage.setItem('venueSort', sortBy); } catch {} renderGrid(); };
 syncFilters();
 
+// True while the heatmap is the visible view and the page is in the foreground (animations pause otherwise).
+const mapOnScreen = () => document.body.classList.contains('mapmode') && !document.hidden;
 // ---- Tabs ----
 let lastCards = [], map = null, markers = null, heat = null;
 queueMicrotask(renderLegend);  // after the HEAT settings further down are initialised
@@ -637,12 +639,16 @@ const WindLayer = L.Layer.extend({
     this._still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     this._reset();
     this._attachGl();
-    const tick = () => { this._step(); this._raf = requestAnimationFrame(tick); };
+    // Animate only while the heatmap is on screen and the wind is shown; otherwise idle cheaply.
+    const tick = () => {
+      if (mapOnScreen() && !document.body.classList.contains('kite-closed')) { this._step(); this._raf = requestAnimationFrame(tick); }
+      else this._raf = setTimeout(() => requestAnimationFrame(tick), 500);
+    };
     if (!this._still) this._raf = requestAnimationFrame(tick);
     return this;
   },
   onRemove(m) {
-    cancelAnimationFrame(this._raf);
+    cancelAnimationFrame(this._raf); clearTimeout(this._raf);
     this._gl?.off('idle', this._onIdle);
     L.DomUtil.remove(this._canvas);
     m.off('movestart zoomstart', this._clear, this).off('moveend zoomend resize', this._reset, this);
@@ -658,6 +664,7 @@ const WindLayer = L.Layer.extend({
     // Particle count follows the screen area (about one per 1800 px²).
     const n = Math.round(Math.min(1400, size.x * size.y / 1100));
     this._parts = Array.from({ length: n }, () => this._spawn(size, true));
+    this._grid = null;  // screen-space wind lookup, rebuilt for the new view
     if (this._still) this._drawStill();
   },
   // Water mask from the basemap's own water polygons (OpenMapTiles `water` layer), drawn at quarter
@@ -706,8 +713,19 @@ const WindLayer = L.Layer.extend({
     ctx.lineWidth = 1.6; ctx.lineCap = 'round'; ctx.globalAlpha = 0.5;
     // One path per wind-strength band, so each particle takes its band's colour.
     const paths = WIND_BANDS.map(() => new Path2D());
+    // Wind per 24 px screen cell, computed once per view (and when new wind data arrives) instead of
+    // un-projecting every particle through the tilted map on every frame.
+    const G = 24;
+    if (!this._grid || this._gridFor !== windField) {
+      const gw = Math.ceil(size.x / G) + 1, gh = Math.ceil(size.y / G) + 1, cells = new Array(gw * gh);
+      for (let gy = 0; gy < gh; gy++) for (let gx = 0; gx < gw; gx++) {
+        const ll = m.containerPointToLatLng([gx * G, gy * G]); cells[gy * gw + gx] = windAt(ll.lat, ll.lng);
+      }
+      this._grid = { gw, gh, cells }; this._gridFor = windField;
+    }
+    const { gw, gh, cells } = this._grid;
     for (const p of this._parts) {
-      const ll = m.containerPointToLatLng([p.x, p.y]), w = windAt(ll.lat, ll.lng), sp = Math.hypot(w.u, w.v);
+      const w = cells[Math.min(gh - 1, Math.max(0, Math.round(p.y / G))) * gw + Math.min(gw - 1, Math.max(0, Math.round(p.x / G)))], sp = Math.hypot(w.u, w.v);
       // Screen speed follows the wind: ~10 px/s in a 3 kn breeze, ~45 px/s at 20 kn.
       const k = (0.06 + sp * 0.035) / Math.max(0.1, sp);
       const nx = p.x + w.u * k, ny = p.y - w.v * k;
@@ -1499,7 +1517,7 @@ const HeatBlobs = L.Layer.extend({
     m.on('zoomstart', this._hide, this);
     m.on('zoomend', this._show, this);
     this._still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const tick = () => { this._draw(); if (!this._still) this._raf = setTimeout(() => requestAnimationFrame(tick), 40); };
+    const tick = () => { if (mapOnScreen()) this._draw(); if (!this._still) this._raf = setTimeout(() => requestAnimationFrame(tick), mapOnScreen() ? 40 : 500); };
     tick();
     return this;
   },
@@ -1523,7 +1541,8 @@ const HeatBlobs = L.Layer.extend({
   _show() { this._draw(); this._canvas.style.opacity = 1; },
   _draw() {
     const m = this._map; if (!m) return;
-    const size = m.getSize(), dpr = window.devicePixelRatio || 1, c = this._canvas;
+    // Soft radial gradients look the same at 1× and cost a quarter of the pixels on retina screens.
+    const size = m.getSize(), dpr = 1, c = this._canvas;
     L.DomUtil.setPosition(c, m.containerPointToLayerPoint([0, 0]));
     if (c.width !== size.x * dpr || c.height !== size.y * dpr) {
       c.width = size.x * dpr; c.height = size.y * dpr; c.style.width = `${size.x}px`; c.style.height = `${size.y}px`;
@@ -1740,7 +1759,7 @@ function card(v) {
   const media = v.background_video?.youtube
       ? videoThumb(v.background_video)
     : v.background
-      ? `<img src="${v.background}" alt="${v.name}" loading="lazy">`
+      ? `<img src="${v.background.replace(/^backgrounds\/([^/]+\.jpg)$/, 'backgrounds/thumbs/$1')}" alt="${v.name}" loading="lazy" decoding="async">`
     : v.latest && v.latest.file
       ? `<img src="${v.latest.file}" alt="${t('latestFrameAlt', v.name)}" loading="lazy">`
     : v.simulated

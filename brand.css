@@ -136,3 +136,6 @@ body.mapmode .viewmode { display: none; }
 .mapbrand .wm svg { height: .74em; width: auto; margin-bottom: .02em; color: var(--ink); }
 .mapbrand.off .wm { opacity: 0; }
 @media (max-width: 600px) { .mapbrand .wm { font-size: 28px; } }
+
+/* Performance: list cards sit on a plain gradient, so the glass blur behind them had no visible effect but cost GPU time on every scroll */
+#grid .venue { -webkit-backdrop-filter: none; backdrop-filter: none; }
