@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=kitty1"></script>
+<script src="i18n.js?v=nav1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=23">
+<link rel="stylesheet" href="brand.css?v=25">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -134,17 +134,25 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
   <button data-nav="rec" aria-controls="recSheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15l-1.8-4.4L5.5 9l4.7-1.4zM18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9z" fill="currentColor"/></svg><span data-i18n="recTitle">Recommendations</span></button>
   <button data-nav="settings" aria-controls="setSheet"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.3 2.5l.5 2.5c.6.2 1.2.6 1.7 1l2.4-.9 1.9 3.2-1.9 1.7a7 7 0 0 1 0 2l1.9 1.7-1.9 3.2-2.4-.9c-.5.4-1.1.8-1.7 1l-.5 2.5H9.6l-.5-2.5c-.6-.2-1.2-.6-1.7-1l-2.4.9-1.9-3.2L5 13a7 7 0 0 1 0-2L3.1 9.3 5 6.1l2.4.9c.5-.4 1.1-.8 1.7-1l.5-2.5h3.7zM11.5 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2z"/></svg><span data-i18n="settingsTitle">Settings</span></button>
 </nav>
+<header class="mainnav" id="mainnav">
+  <div class="nav-left">
+  <div class="filters" role="group" data-i18n-aria="filterAria">
+    <button data-cat="all" data-i18n-aria="filterAll" data-i18n-title="filterAll"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="7" r="2.6" fill="currentColor"/><circle cx="17" cy="7" r="2.6" fill="currentColor"/><circle cx="7" cy="17" r="2.6" fill="currentColor"/><circle cx="17" cy="17" r="2.6" fill="currentColor"/></svg></button>
+    <button data-cat="fun" data-i18n-aria="filterFun" data-i18n-title="filterFun"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14l-7 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 12v7M8 20h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.2 6.5h9.6" stroke="currentColor" stroke-width="1.8"/></svg></button>
+    <button data-cat="food" data-i18n-aria="filterFood" data-i18n-title="filterFood"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M4.5 3v5a2.5 2.5 0 0 0 5 0V3M7 11v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17 21V3c-2.2 1.2-3.5 4-3.5 7.5V13H17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg></button>
+    <button data-cat="activity" data-i18n-aria="filterActivity" data-i18n-title="filterActivity"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="14.5" cy="4.5" r="2" fill="currentColor"/><path d="M6 21l3-6 3 2.5V21M9 15l1.5-5.5L14 11l3 2.5M10.5 9.5 7 11M14 11l-1.5 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+  </div>
+  <a class="nav-logo wm" href="#liste" data-nav="liste" aria-label="herkez nerde?!">herkez nerde<svg viewBox="0 5.5 132 102" aria-hidden="true"><use href="#mk-bold"/></svg></a>
+  <div class="nav-right">
+    <button class="bell" id="bell" aria-haspopup="true" aria-expanded="false" data-i18n-aria="notifTitle" data-i18n-title="notifTitle"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5a5.5 5.5 0 0 0-5.5 5.5v3.3c0 .9-.3 1.8-.9 2.5L4.5 16.2h15l-1.1-1.4a4 4 0 0 1-.9-2.5V9A5.5 5.5 0 0 0 12 3.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9.8 19a2.3 2.3 0 0 0 4.4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span class="badge" id="bellBadge" hidden></span></button>
+    <div class="notif-panel" id="notifPanel" hidden role="dialog" aria-labelledby="notifTitle"><div class="notif-head" id="notifTitle" data-i18n="notifTitle">Notifications</div><div class="notif-list" id="notifList"></div></div>
+  </div>
+</header>
 <main>
   <p class="sub" id="subtitle" hidden></p>
-  <header class="brandhead"><span class="wm" role="img" aria-label="herkez nerde?!">herkez nerde<svg viewBox="0 5.5 132 102" aria-hidden="true"><use href="#mk-bold"/></svg></span><span class="city">Akyaka · Akçapınar</span></header>
   <div class="topbar">
     <div class="subbar">
-    <div class="filters" role="group" data-i18n-aria="filterAria">
-      <button data-cat="all" data-i18n-aria="filterAll" data-i18n-title="filterAll"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="7" cy="7" r="2.6" fill="currentColor"/><circle cx="17" cy="7" r="2.6" fill="currentColor"/><circle cx="7" cy="17" r="2.6" fill="currentColor"/><circle cx="17" cy="17" r="2.6" fill="currentColor"/></svg></button>
-      <button data-cat="fun" data-i18n-aria="filterFun" data-i18n-title="filterFun"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14l-7 8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 12v7M8 20h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7.2 6.5h9.6" stroke="currentColor" stroke-width="1.8"/></svg></button>
-      <button data-cat="food" data-i18n-aria="filterFood" data-i18n-title="filterFood"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3v8M4.5 3v5a2.5 2.5 0 0 0 5 0V3M7 11v10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17 21V3c-2.2 1.2-3.5 4-3.5 7.5V13H17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg></button>
-      <button data-cat="activity" data-i18n-aria="filterActivity" data-i18n-title="filterActivity"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="14.5" cy="4.5" r="2" fill="currentColor"/><path d="M6 21l3-6 3 2.5V21M9 15l1.5-5.5L14 11l3 2.5M10.5 9.5 7 11M14 11l-1.5 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
     <select id="sort" data-i18n-aria="sortAria">
       <option value="busy" data-i18n="sortBusy">Busiest first</option>
       <option value="quiet" data-i18n="sortQuiet">Quietest first</option>
@@ -226,9 +234,47 @@ async function load() {
   // Wind particles only while Kitebeach is open (they are about kiting conditions).
   document.body.classList.toggle('kite-closed', cards.find(c => c.id === 'kitebeach-akyaka')?.status?.state === 'closed');
   renderGrid();
+  renderNotes();
   if (map) drawMap();
 }
 
+// ---- Top navigation: notifications from the live data, hide-on-scroll in the list ----
+const NOTE_ICONS = { live: '🎶', up: '📅', peak: '🔥', rise: '📈' };
+function buildNotes(cards) {
+  const notes = [];
+  for (const v of cards) {
+    const e = v.event;
+    if (e && e.state === 'live') notes.push({ key: `ev:${v.id}:${e.day}:${e.name}`, kind: 'live', v, text: t('notifLive', e.name, v.name), sub: `${e.from}–${e.to}` });
+    else if (e && e.state === 'upcoming') notes.push({ key: `ev:${v.id}:${e.day}:${e.name}`, kind: 'up', v, text: t('notifUp', e.name, v.name), sub: `${eventStateText(e)} · ${e.from}–${e.to}` });
+    if (v.peak) notes.push({ key: `peak:${v.id}:${localIso(new Date()).slice(0, 13)}`, kind: 'peak', v, text: t('notifPeak', v.name), sub: t('notifPeople', v.latest?.people ?? 0) });
+    else if (v.rising) notes.push({ key: `rise:${v.id}:${localIso(new Date()).slice(0, 13)}`, kind: 'rise', v, text: t('notifRise', v.name), sub: t('notifPeople', v.latest?.people ?? 0) });
+  }
+  const order = { live: 0, peak: 1, rise: 2, up: 3 };
+  return notes.sort((a, b) => order[a.kind] - order[b.kind]);
+}
+let seenNotes = (() => { try { return new Set(JSON.parse(localStorage.getItem('seenNotes') || '[]')); } catch { return new Set(); } })();
+function renderNotes() {
+  const notes = buildNotes(lastCards), unseen = notes.filter(n => !seenNotes.has(n.key)).length;
+  $('bellBadge').hidden = !unseen; $('bellBadge').textContent = unseen > 9 ? '9+' : unseen;
+  $('notifList').innerHTML = notes.length ? notes.map(n => `<a class="note${seenNotes.has(n.key) ? '' : ' new'}" href="venue.html?mekan=${n.v.id}"><span class="note-ic" aria-hidden="true">${NOTE_ICONS[n.kind]}</span><span class="note-tx"><b>${n.text}</b><em>${n.sub}</em></span></a>`).join('') : `<p class="note-empty">${t('notifEmpty')}</p>`;
+}
+$('bell').onclick = e => {
+  e.stopPropagation();
+  const open = $('notifPanel').hidden;
+  $('notifPanel').hidden = !open; $('bell').setAttribute('aria-expanded', open);
+  if (open) { renderNotes(); buildNotes(lastCards).forEach(n => seenNotes.add(n.key)); try { localStorage.setItem('seenNotes', JSON.stringify([...seenNotes].slice(-300))); } catch {} $('bellBadge').hidden = true; }
+};
+document.addEventListener('click', e => { if (!$('notifPanel').hidden && !e.target.closest('#notifPanel, #bell')) { $('notifPanel').hidden = true; $('bell').setAttribute('aria-expanded', false); renderNotes(); } });
+$('mainnav').querySelector('.nav-logo').onclick = e => { e.preventDefault(); if (currentView !== 'liste') showTab('liste'); scrollTo({ top: 0, behavior: 'smooth' }); };
+// List view: the bar slides away while scrolling down and comes back on the way up; the map keeps it fixed.
+let navLastY = scrollY;
+addEventListener('scroll', () => {
+  const y = scrollY, nav = $('mainnav');
+  if (document.body.classList.contains('mapmode') || !$('notifPanel').hidden) { nav.classList.remove('navhide'); navLastY = y; return; }
+  if (y > navLastY + 6 && y > 80) nav.classList.add('navhide');
+  else if (y < navLastY - 6 || y < 40) nav.classList.remove('navhide');
+  if (Math.abs(y - navLastY) > 6) navLastY = y;
+}, { passive: true });
 // ---- Category filter + sort (filter applies to list and map, sort to the list) ----
 // Entertainment: pubs, bars, taverns, night clubs · Food: restaurants, taverns, cafes · Activity: gym, beach.
 const CATEGORIES = {
