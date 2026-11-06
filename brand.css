@@ -231,12 +231,5 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 .filterbtn .fb-label { display: none; }
 .filterbtn { width: 40px; padding: 0; justify-content: center; }
 .filterbtn .fb-dot { left: auto; right: 7px; }
-/* Hexagon frame: thicker, metallic silver-gold bevel; a thin inner line keeps the crowd-level colour */
-.maplogo.hex > div::before {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 38%, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, 0.35) 100%),
-    linear-gradient(135deg, #f7f8fa 0%, #c3c7cf 16%, #8a8f99 30%, #e8d59a 46%, #b88a2e 56%, #f4e3a8 66%, #9ca2ad 82%, #eef0f3 100%);
-}
-.maplogo.hex > div::after { content: ""; position: absolute; inset: 4.5px; background: var(--lv, #8e8e93);
-  -webkit-mask: var(--hexmask) center / 100% 100% no-repeat; mask: var(--hexmask) center / 100% 100% no-repeat; }
+/* Hexagon frame: thicker (6px) rim in the crowd-level colour */
 .maplogo.hex .logo, .maplogo.hex .lockover { inset: 6px; z-index: 1; }
