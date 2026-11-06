@@ -231,5 +231,5 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 .filterbtn .fb-label { display: none; }
 .filterbtn { width: 40px; padding: 0; justify-content: center; }
 .filterbtn .fb-dot { left: auto; right: 7px; }
-/* Hexagon frame: thicker (6px) rim in the crowd-level colour */
-.maplogo.hex .logo, .maplogo.hex .lockover { inset: 6px; z-index: 1; }
+/* Hexagon frame: 4px rim in the crowd-level colour */
+.maplogo.hex .logo, .maplogo.hex .lockover { inset: 4px; z-index: 1; }
