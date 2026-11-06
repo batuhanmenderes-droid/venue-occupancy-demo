@@ -129,13 +129,6 @@ body.mapmode .viewmode { display: none; }
 .kitties-card p { margin: 0; font: 400 15px/1.45 var(--font-text); color: var(--ink-2); }
 .kitties-hint { display: block; margin-top: 14px; font: 500 11.5px/1 var(--font-text); color: var(--muted); }
 
-/* Wordmark pinned on the map (moves with it, hidden when zoomed in) */
-.mapbrand { pointer-events: none; }
-.mapbrand .wm { position: absolute; transform: translate(-50%, -50%); display: inline-flex; align-items: flex-end; gap: .06em; white-space: nowrap;
-  font: 800 40px/.95 var(--font-display); letter-spacing: -0.03em; color: var(--ink); transition: opacity .25s; text-shadow: 0 1px 12px color-mix(in srgb, var(--page, #fff) 70%, transparent); }
-.mapbrand .wm svg { height: .74em; width: auto; margin-bottom: .02em; color: var(--ink); }
-.mapbrand.off .wm { opacity: 0; }
-@media (max-width: 600px) { .mapbrand .wm { font-size: 28px; } }
 
 /* Performance: list cards sit on a plain gradient, so the glass blur behind them had no visible effect but cost GPU time on every scroll */
 #grid .venue { -webkit-backdrop-filter: none; backdrop-filter: none; }
