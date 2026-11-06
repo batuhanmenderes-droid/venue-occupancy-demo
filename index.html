@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=46">
+<link rel="stylesheet" href="brand.css?v=49">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -1644,9 +1644,9 @@ function venueLabelHtml(v, hover = false) {
   return `${cardChart(v, hover ? 'h' : 'm')}<span class="vcount">${n===null?'—':n}${PERSON_ICON}</span><span class="vname">${v.name}</span>${v.peak?`<span class="vpeak">${PEAK_ICON}${t('atPeak')}</span>`:''}${v.rising?`<span class="vrise">${RISE_ICON}${t('rising')}</span>`:''}${expectLine(v)}${artistLine(v)}`;
 }
 function venuePinRadius(v) {
-  // Half the hexagon tile (pins are 78% on phones), plus the rim: labels sit right next to the tile.
+  // Half the hexagon's height (pins are 78% on phones); side labels use its half-width (× 0.866).
   const lv=levelOf(v.latest?.people ?? null), k=matchMedia('(max-width: 640px)').matches ? .78 : 1;
-  return PIN/2*k*(v.status?.state==='closed' ? .9 : PIN_SCALE[LEVELS.indexOf(lv)] || .9)+2;
+  return PIN/2*k*(v.status?.state==='closed' ? .9 : PIN_SCALE[LEVELS.indexOf(lv)] || .9);
 }
 function labelSize(v) {
   const el=document.createElement('div');
@@ -1659,7 +1659,7 @@ const CLUSTER_PX=120;
 const labelPlacementMemory=new Map();
 const labelHit=(a,b)=>a.x<b.x+b.w && b.x<a.x+a.w && a.y<b.y+b.h && b.y<a.y+a.h;
 function labelSpot(p,w,h,radius,direction,distance=0,shift=0) {
-  const g=radius+4+distance;
+  const g=(direction==='left'||direction==='right' ? radius*0.866 : radius)+4+distance;  // 4px from the tile's edge
   const offset={top:[shift,-g],bottom:[shift,g],left:[-g,shift],right:[g,shift]}[direction];
   const box={top:{x:p.x+shift-w/2,y:p.y-g-h},bottom:{x:p.x+shift-w/2,y:p.y+g},left:{x:p.x-g-w,y:p.y+shift-h/2},right:{x:p.x+g,y:p.y+shift-h/2}}[direction];
   return {direction,offset,box:{...box,w,h},distance,shift};
@@ -1690,7 +1690,7 @@ function placeLabels(placed,pins,clusters=[]) {
   for(const v of placed) {
     if(out.has(v.id)||v.status?.state==='closed'||!v.latest)continue;
     const p=map.latLngToContainerPoint(pins.get(v.id).latlng), w=String(v.latest.people).length*9+36, h=30;
-    const found=findVenueLabel(p,w,h,venuePinRadius(v)-6,obstacles);
+    const found=findVenueLabel(p,w,h,venuePinRadius(v),obstacles);
     if(found) {out.mini.set(v.id,found);obstacles.push(found.box);}
   }
   return out;
