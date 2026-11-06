@@ -188,3 +188,8 @@ body.routing .mainnav { transform: translateY(-100%); }
 .maplogo.hex .logo { position: absolute; inset: 3px; width: auto; height: auto; border-radius: 0; box-shadow: none; clip-path: var(--hex); }
 .maplogo.hex .lockover, .maplogo.hex.is-low .logo::after { border-radius: 0; clip-path: var(--hex); }
 .maplogo.hex .lockover { inset: 3px; }
+/* Regular hexagon (width = height × 0.866) and logos that fill it edge to edge */
+.maplogo.hex > div { width: 86.6% !important; margin-left: 6.7%; }
+.maplogo.hex .logo { background: #fff; }
+.maplogo.hex .logo img { top: 0; bottom: auto; left: -7.75%; right: auto; width: 115.5%; height: 100%; }  /* a square as tall as the hexagon: the round badge reaches every corner */
+.maplogo.hex .logo img { scale: 1.08; }  /* a little extra so dark badge margins never peek out at the corners */
