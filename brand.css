@@ -175,3 +175,9 @@ body.routing .mainnav { transform: translateY(-100%); }
   body:not(.mapmode) main:not(.venuepage) { padding-top: 72px; }
   body.mapmode .leaflet-top { top: 56px; }
 }
+/* Phones: the same floating, rounded tab bar as on desktop, lifted off the bottom edge */
+@media (max-width: 899px) {
+  .tabbar { left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); border-radius: 22px; padding: 6px 8px;
+    box-shadow: var(--shadow-float), var(--highlight); }
+  .routebar { bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
