@@ -801,6 +801,13 @@ function renderShare() {
   const meN = hourPeople(venue, date, hour);
   const peers = peersOf(venue).map(v => {
     const own = hourPeople(v, date, hour);
+    // `share_rank` (venues.json): a fixed order for the top of the ring (demo); the rest stay below it.
+    const rank = venue.share_rank, ri = rank?.indexOf(v.id) ?? -1, mi = rank?.indexOf(venue.id) ?? -1;
+    if (rank && mi >= 0) {
+      if (v.id === venue.id) return { v, n: meN, evs: eventsOnDay(v, date) };
+      const f = ri >= 0 ? 1 + (mi - ri) * 0.2 : 0.22 + simRandom(`${v.id}:${date}:${hour}`) * 0.3;
+      return { v, n: Math.round(meN * f), evs: eventsOnDay(v, date) };
+    }
     const n = v.id === venue.id ? meN : Math.max(own, Math.round(meN * (0.35 + simRandom(`${v.id}:${date}:${hour}`) * 0.65)));
     return { v, n, evs: eventsOnDay(v, date) };
   }).sort((a, b) => b.n - a.n);
