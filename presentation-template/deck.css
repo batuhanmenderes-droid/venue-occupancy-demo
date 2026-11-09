@@ -1448,3 +1448,6 @@ body {
 .flow-branch { top: 0; }
 .pkt--branch { top: 0; offset-path: path('M6,75 C90,75 70,415 146,415'); }
 .slide--how[data-step="1"] .how-title { top: 120px; }
+/* 23: a steady stream of frames from the cameras to the venue computer */
+.slide--how[data-step="1"] .pkt--stream { animation: frameStream 1.6s linear infinite; animation-delay: calc(.9s + var(--k) * .4s); }
+@keyframes frameStream { 0% { left: 0; opacity: 0; } 12% { opacity: 1; } 85% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
