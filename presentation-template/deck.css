@@ -1342,3 +1342,10 @@ body {
 .slide--thanks.is-active .thanks-meta { animation: rise 1s var(--ease) .24s both; }
 /* AI cards: full venue names (wrap instead of cutting off) */
 .vc-main b { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.15; }
+/* timed note: the bubble's bottom edge is fixed so a line can join it to the pin */
+.note { top: auto; bottom: 48%; }
+.pin-line { position: absolute; left: 40%; top: 52%; height: 10%; width: 0; margin-left: -1px; border-left: 3px dashed rgba(255, 110, 149, .9); z-index: 1; }
+.note { z-index: 2; }
+.pin { z-index: 2; }
+.slide--social.is-active .pin-line { animation: lineDown .5s var(--ease) 1.75s both; transform-origin: top; }
+@keyframes lineDown { from { transform: scaleY(0); } }
