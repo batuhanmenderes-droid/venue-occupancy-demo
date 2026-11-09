@@ -162,7 +162,12 @@
         "kulup",
         "dane-gokova",
         "poison-pub"
-      ]
+      ],
+      "record": {
+        "people": 305,
+        "at": "2026-10-25T00:40:00"
+      },
+      "avg_peak": 220
     },
     {
       "id": "lemongrass-cafe",

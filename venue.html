@@ -456,7 +456,8 @@ function renderTiles() {
   const byDay = {};
   for (const f of everything) if (new Date(f.timestamp) <= new Date()) byDay[dayOf(f)] = Math.max(byDay[dayOf(f)] ?? 0, f.people);
   const dayPeaks = Object.values(byDay);
-  const avgPeak = dayPeaks.length ? Math.round(dayPeaks.reduce((a, b) => a + b, 0) / dayPeaks.length) : null;
+  // `avg_peak` (venues.json) overrides the average daily peak (demo).
+  const avgPeak = venue.avg_peak ?? (dayPeaks.length ? Math.round(dayPeaks.reduce((a, b) => a + b, 0) / dayPeaks.length) : null);
   // Popularity: where the day's peak and average sit on the five crowd levels, as 1–5 stars in half steps.
   const lvl = n => LEVELS.indexOf(levelOf(n));
   const score = Math.round((1 + (lvl(peak) * 0.6 + lvl(Math.round(avg)) * 0.4)) * 2) / 2;
