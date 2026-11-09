@@ -1082,3 +1082,92 @@ body {
 /* title centring without transform (the entrance animation owns transform) */
 .how-title { left: 0; right: 0; text-align: center; transform: none; top: 50%; margin-top: -110px; transition: top 1s cubic-bezier(.65,0,.25,1), margin-top 1s cubic-bezier(.65,0,.25,1), font-size 1s cubic-bezier(.65,0,.25,1); }
 .slide--how[data-step="1"] .how-title { top: 140px; margin-top: 0; }
+
+/* ---------- 24–25 · Product roadmap ---------- */
+.slide--roadmap { padding: 90px 140px 90px; overflow: hidden; }
+.slide--roadmap .heat .h1 { width: 900px; height: 900px; right: -200px; left: auto; top: -200px; background: var(--calm); opacity: .26; }
+.slide--roadmap .heat .h2 { width: 640px; height: 640px; left: -200px; bottom: -260px; top: auto; background: var(--full); opacity: .16; }
+.rm-head { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 60px; }
+.rm-title { font-size: 104px; line-height: .95; }
+.rm-track { list-style: none; margin: 0 0 10px; padding: 0; display: flex; align-items: center; gap: 18px; }
+.rm-stage { display: flex; align-items: center; gap: 14px; padding: 12px 22px 12px 12px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,.04); color: var(--muted); transition: all .5s var(--ease); }
+.rm-stage b { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.08); font: 700 18px/1 var(--font-display); }
+.rm-stage span { font: 600 22px/1 var(--font-text); }
+.rm-stage.is-on { color: var(--ink); border-color: rgba(77,139,255,.5); background: rgba(31,107,255,.16); }
+.rm-stage.is-on b { background: var(--calm); color: #fff; }
+.rm-stage.is-done b { background: rgba(22,202,100,.25); color: var(--live); }
+.rm-line { width: 90px; height: 2px; background: rgba(255,255,255,.15); position: relative; overflow: hidden; }
+.rm-line i { position: absolute; inset: 0; background: var(--calm); transform-origin: left; transform: scaleX(0); transition: transform .8s var(--ease); }
+.slide--roadmap2 .rm-line i { transform: none; }
+
+.rm-body { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; column-gap: 110px; margin-top: 70px; }
+.rm-col { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.rm-h { margin: 0; font: 800 44px/1.05 var(--font-display); letter-spacing: -0.03em; color: var(--ink); }
+.rm-lead { margin: -6px 0 6px; font: 500 26px/1.35 var(--font-text); color: var(--ink-2); }
+
+/* pricing steps */
+.rm-price { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.rm-price li { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 22px 0 22px 64px; }
+.rm-price li::before { content: ""; position: absolute; left: 12px; top: 30px; width: 22px; height: 22px; border-radius: 50%; background: var(--calm); box-shadow: 0 0 0 6px rgba(31,107,255,.2); }
+.rm-price li:not(:last-child)::after { content: ""; position: absolute; left: 22px; top: 58px; bottom: -30px; width: 2px; background: linear-gradient(var(--calm), rgba(31,107,255,.2)); }
+.rm-price small { font: 600 18px/1 var(--font-text); letter-spacing: .12em; text-transform: uppercase; color: var(--calm-2); }
+.rm-price b { font: 700 36px/1.15 var(--font-display); letter-spacing: -0.02em; color: var(--ink); }
+.rm-price--tbd::before { background: transparent !important; border: 2px dashed var(--calm-2); box-shadow: none !important; }
+.rm-blank { display: inline-block; min-width: 120px; padding: 0 14px; border-radius: 12px; border: 2px dashed rgba(255,255,255,.35); color: var(--muted); text-align: center; }
+
+/* pilot venues */
+.rm-venues { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.rm-venues li { display: flex; align-items: center; gap: 20px; padding: 14px 22px 14px 14px; border-radius: 22px; background: rgba(255,255,255,.05); border: 1px solid var(--border); font: 600 28px/1 var(--font-text); color: var(--ink); }
+.rm-logo { flex: none; width: 60px; height: 60px; border-radius: 50%; overflow: hidden; background: #fff; }
+.rm-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* next stage */
+.rm-chips { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.rm-chips li { display: flex; align-items: center; gap: 14px; min-height: 84px; padding: 16px 22px; border-radius: 20px; background: rgba(255,255,255,.05); border: 1px solid var(--border); font: 600 23px/1.25 var(--font-text); color: var(--ink); }
+.rm-chips li::before { content: ""; flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--calm-2); box-shadow: 0 0 12px rgba(77,139,255,.6); }
+.rm-feat { display: flex; flex-direction: column; gap: 10px; padding-bottom: 6px; }
+.rm-feat-t { margin: 0; font: 600 25px/1.35 var(--font-text); color: var(--ink); }
+.rm-msg { align-self: flex-start; display: flex; flex-direction: column; gap: 4px; margin: 0; max-width: 700px; padding: 12px 20px 14px; border-radius: 24px 24px 24px 8px; background: #2C2C33; font: 500 22px/1.3 var(--font-text); color: #fff; }
+.rm-ch { font: 700 15px/1 var(--font-text); letter-spacing: .02em; color: var(--calm-2); }
+.rm-msg--pin { background: linear-gradient(135deg, rgba(255,45,111,.9), rgba(224,36,94,.9)); }
+.rm-msg--pin .rm-ch { color: rgba(255,255,255,.85); }
+
+/* entrances */
+.slide--roadmap.is-active .rm-price li, .slide--roadmap.is-active .rm-venues li, .slide--roadmap.is-active .rm-chips li, .slide--roadmap.is-active .rm-feat {
+  animation: rise .7s var(--ease) both; animation-delay: calc(.35s + var(--i) * .1s);
+}
+.slide--roadmap.is-active .rm-msg { animation: bubbleIn .55s cubic-bezier(.2,1.4,.4,1) both; animation-delay: calc(.9s + var(--i, 0) * .2s + var(--d, 0s)); transform-origin: 0 100%; }
+.slide--roadmap.is-active .rm-h, .slide--roadmap.is-active .rm-lead { animation: rise .7s var(--ease) .25s both; }
+.slide--roadmap:not(.is-held).is-active .rm-head { animation: rise .8s var(--ease) both; }
+
+/* 23: the frame drops from the venue computer into a trash bin below it */
+.flow-trash { position: relative; display: grid; place-items: center; width: 96px; height: 96px; margin-top: 18px; border-radius: 28px; color: #FF6961; background: rgba(255, 69, 58, .1); border: 1px solid rgba(255, 69, 58, .3); }
+.flow-trash svg { width: 50px; height: 50px; overflow: visible; }
+.flow-trash .lid { transform-origin: 19px 6.5px; }
+.flow-trash .flow-del { top: auto; bottom: -46px; }
+.flow-drop { position: absolute; left: 50%; top: 60px; width: 34px; height: 24px; margin-left: -17px; border-radius: 5px; background: linear-gradient(135deg, #8E8E93, #3a3a40); border: 2px solid #c8c8cc; opacity: 0; z-index: 2; }
+.slide--how[data-step="1"] .flow-drop { animation: frameDrop 6s cubic-bezier(.55,0,.8,.4) infinite 2.7s; }
+.slide--how[data-step="1"] .flow-trash .lid { animation: lidOpen 6s ease infinite 2.7s; }
+.slide--how[data-step="1"] .flow-del { animation: delShow 6s ease infinite 3.3s; }
+/* the frame appears on the computer, falls past the text into the bin and disappears */
+@keyframes frameDrop {
+  0% { opacity: 0; transform: none; }
+  3% { opacity: 1; transform: none; }
+  6% { opacity: 1; transform: none; }
+  16% { opacity: 1; transform: translateY(var(--fall, 300px)) scale(.7) rotate(18deg); }
+  19%, 100% { opacity: 0; transform: translateY(var(--fall, 300px)) scale(.3) rotate(18deg); }
+}
+@keyframes lidOpen { 0%, 6% { transform: none; } 10%, 17% { transform: rotate(-35deg); } 22%, 100% { transform: none; } }
+.flow-drop { --fall: 320px; }
+/* 23: warning banner above the KVKK link */
+.how-banner {
+  position: absolute; left: 50%; bottom: 112px; transform: translate(-50%, 20px); margin: 0;
+  display: inline-flex; align-items: center; gap: 16px; white-space: nowrap;
+  padding: 18px 30px; border-radius: 20px;
+  background: rgba(255, 180, 0, .14); border: 1px solid rgba(255, 180, 0, .45);
+  font: 700 28px/1.2 var(--font-text); color: #FFC94D;
+  box-shadow: 0 20px 50px -20px rgba(255, 180, 0, .35);
+  opacity: 0; transition: opacity .6s ease 1.5s, transform .6s var(--ease) 1.5s;
+}
+.slide--how[data-step="1"] .how-banner { opacity: 1; transform: translate(-50%, 0); }
+.kvkk-link { bottom: 56px; }
