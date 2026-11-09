@@ -131,13 +131,23 @@ function beachCount(v, at) {
 
 function simCount(v, at) {
   // `demo_now`: a demo venue's current reading is pinned to this many people (the two slots before it
-  // ramp up to it, so the chart rises instead of jumping).
+  // ramp up to it, so the chart rises instead of jumping). The rest of tonight is scaled to match: the
+  // crowd eases off from now and the night's peak comes back to about the same size.
   if (v.demo_now) {
-    const back = Math.round((slotStart(new Date()).getTime() - slotStart(at).getTime()) / (SIM_SLOT_MIN * 60000));
+    const nowSlot = slotStart(new Date()), back = Math.round((nowSlot.getTime() - slotStart(at).getTime()) / (SIM_SLOT_MIN * 60000));
     if (back === 0) return v.demo_now;
     if (back === 1) return Math.round(v.demo_now * 0.75);
     if (back === 2) return Math.round(v.demo_now * 0.45);
+    const dayEnd = new Date(nowSlot); if (dayEnd.getHours() >= 6) dayEnd.setDate(dayEnd.getDate() + 1); dayEnd.setHours(6, 0, 0, 0);
+    if (back < 0 && at < dayEnd) {
+      const k = v.demo_now / ((v.sim_scale || 10) * 0.95), hoursAhead = -back * SIM_SLOT_MIN / 60;
+      const floor = v.demo_now * Math.max(0.3, 1 - hoursAhead * 0.17);
+      return Math.round(Math.max(floor * (0.95 + simRandom(`${v.id}:f:${at.getTime()}`) * 0.1), simCountBase(v, at) * k));
+    }
   }
+  return simCountBase(v, at);
+}
+function simCountBase(v, at) {
   if (isClosed(v, at)) return 0;
   if (v.sim_profile === 'beach') return beachCount(v, at);
   const hour = at.getHours() + at.getMinutes() / 60;
