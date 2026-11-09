@@ -80,7 +80,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=54">
+<link rel="stylesheet" href="brand.css?v=55">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -184,7 +184,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 </main>
 
 <script src="levels.js?v=20261108b"></script>
-<script src="venue-state.js?v=20261109c"></script>
+<script src="venue-state.js?v=20261109d"></script>
 <script src="menu.js?v=20261108c"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -730,14 +730,19 @@ function patternData(v) {
   const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
   return (v._pat = { wk: wk.map(avg), hr: hr.map(avg) });
 }
+// Colour relative to the chart's own range (lowest → blue … highest → crimson), so every crowd colour shows
+// even when all values sit on one or two absolute levels.
+const relColor = (v, lo, hi) => LEVELS[Math.max(0, Math.min(4, Math.round((v - lo) / Math.max(1e-9, hi - lo) * 4)))].color;
 function barChart(box, values, labels, highlight) {
   if (!box.clientWidth) return;
   const W = Math.max(280, box.clientWidth), H = 190, m = { t: 22, r: 6, b: 24, l: 6 };
   const max = Math.max(1, ...values), n = values.length, bw = (W - m.l - m.r) / n;
+  // Bars start just below the smallest non-zero value, so differences read clearly (numbers stay real).
+  const nz = values.filter(v => v > 0), mn = nz.length ? Math.min(...nz) : 0, base = mn * 0.72;
   let g = '';
   values.forEach((v, i) => {
-    const h = v / max * (H - m.t - m.b), x = m.l + i * bw + bw * 0.14, y = H - m.b - h, w = bw * 0.72;
-    g += `<rect x="${x}" y="${y}" width="${w}" height="${Math.max(1, h)}" rx="3" fill="${levelOf(Math.round(v)).color}" opacity="${i === highlight ? 1 : 0.78}"/>`;
+    const h = v > 0 ? (0.08 + 0.92 * (v - base) / Math.max(1e-9, max - base)) * (H - m.t - m.b) : 0, x = m.l + i * bw + bw * 0.14, y = H - m.b - h, w = bw * 0.72;
+    g += `<rect x="${x}" y="${y}" width="${w}" height="${Math.max(1, h)}" rx="3" fill="${v > 0 ? relColor(v, mn, max) : 'var(--grid)'}" opacity="${i === highlight ? 1 : 0.85}"/>`;
     if (v === max || i === highlight) g += `<text x="${x + w / 2}" y="${y - 6}" text-anchor="middle" class="bc-v">${Math.round(v)}</text>`;
     if (labels[i]) g += `<text x="${x + w / 2}" y="${H - 7}" text-anchor="middle"${i === highlight ? ' class="bc-now"' : ''}>${labels[i]}</text>`;
   });
@@ -774,7 +779,8 @@ function eventsOnDay(v, date) {
   const d0 = new Date(`${date}T06:00:00`), d1 = new Date(d0.getTime() + 864e5);
   return eventWindows(v).filter(w => w.start < d1 && w.end > d0).map(w => w.e);
 }
-const SHARE_COLORS = ['#1F6BFF', '#16CA64', '#FFB400', '#8B5CF6', '#13CBD8', '#DD5E27', '#7C8799'];
+// Apple system colours (dark-mode variants), as Swift Charts uses them; this venue gets system pink.
+const IOS_ME = '#FF375F', IOS_COLORS = ['#0A84FF', '#30D158', '#FF9F0A', '#BF5AF2', '#64D2FF', '#5E5CE6', '#FFD60A'];
 let sharePick = null;
 function initSharePick() {
   if (sharePick) return;
@@ -794,91 +800,58 @@ function renderShare() {
   const total = peers.reduce((a, p) => a + p.n, 0);
   const me = peers.find(p => p.v.id === venue.id);
   $('shareHint').textContent = t('shareHint', [...new Set(peers.map(p => typeName(p.v.type)))].join(', '), peers.length);
-  // Slices: this venue, the five biggest others, the rest grouped.
+  // Slices: this venue, the five biggest others, the rest grouped (iOS / Swift Charts SectorMark look).
   const others = peers.filter(p => p !== me);
   const shown = [me, ...others.slice(0, 5)].filter(p => p && p.n > 0);
   const rest = others.slice(5).filter(p => p.n > 0), restN = rest.reduce((a, p) => a + p.n, 0);
-  const slices = shown.sort((a, b) => b.n - a.n).map((p, i) => ({ ...p, color: p === me ? '#FF2D6F' : SHARE_COLORS[i % SHARE_COLORS.length] }));
-  if (restN) slices.push({ rest: true, n: restN, count: rest.length, color: '#7C8799' });
-  const W = 560, H = 380, cx = W / 2, cy = 172, rx = 170, ry = 98, dep = 30;
-  let g = '';
-  if (!total) {
-    box.innerHTML = `<p class="share-empty">${t('shareEmpty')}</p>`;
-  } else {
+  let ci = 0;
+  const slices = shown.sort((a, b) => b.n - a.n).map(p => ({ ...p, color: p === me ? IOS_ME : IOS_COLORS[ci++ % IOS_COLORS.length] }));
+  if (restN) slices.push({ rest: true, n: restN, count: rest.length, color: '#8E8E93' });
+  peers.forEach(p => { p.color = slices.find(sl => sl.v === p.v)?.color || '#8E8E93'; });
+  if (!total) { box.innerHTML = `<p class="share-empty">${t('shareEmpty')}</p>`; }
+  else {
+    const S = 400, c = S / 2, R = 150, r = R * 0.618, gap = 3, cr = 6;
     let a = -Math.PI / 2;
-    const P = (ang, dx = 0, dy = 0) => [cx + dx + rx * Math.cos(ang), cy + dy + ry * Math.sin(ang)];
-    slices.forEach(sl => { sl.a0 = a; sl.a1 = a + sl.n / total * Math.PI * 2; sl.mid = (sl.a0 + sl.a1) / 2; a = sl.a1;
-      const pull = sl.v?.id === venue.id ? 14 : 0; sl.dx = Math.cos(sl.mid) * pull; sl.dy = Math.sin(sl.mid) * pull; });
-    const arc = (a0, a1, dx, dy, depth = 0) => { const [x0, y0] = P(a0, dx, dy + depth), [x1, y1] = P(a1, dx, dy + depth); return { x0, y0, x1, y1, large: a1 - a0 > Math.PI ? 1 : 0 }; };
-    // Look: gradient tops (light from the upper left), darker gradient walls, a soft shadow on the ground,
-    // a coloured glow under the pie, a glossy sheen and a light rim on the front edge; this venue's slice glows.
-    const shade = (hex, f) => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map(v => Math.round(f > 0 ? v + (255 - v) * f : v * (1 + f))); return `rgb(${c.join(',')})`; };
-    const meColor = '#FF2D6F';
-    let defs = `<filter id="spBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16"/></filter>
-      <filter id="spMeGlow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="${meColor}" flood-opacity=".9"/></filter>
-      <radialGradient id="spGlow"><stop offset="0" stop-color="${meColor}" stop-opacity=".38"/><stop offset=".55" stop-color="#1F6BFF" stop-opacity=".16"/><stop offset="1" stop-color="#1F6BFF" stop-opacity="0"/></radialGradient>
-      <radialGradient id="spSheen" cx=".32" cy=".18" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset=".45" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>`;
-    slices.forEach((sl, i) => { sl.i = i;
-      defs += `<linearGradient id="spg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${shade(sl.color, .38)}"/><stop offset=".55" stop-color="${sl.color}"/><stop offset="1" stop-color="${shade(sl.color, -.18)}"/></linearGradient>
-        <linearGradient id="sps${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(sl.color, -.28)}"/><stop offset="1" stop-color="${shade(sl.color, -.62)}"/></linearGradient>`; });
-    g += `<defs>${defs}</defs>`;
-    g += `<ellipse cx="${cx}" cy="${cy + dep / 2}" rx="${rx * 1.32}" ry="${ry * 1.5}" fill="url(#spGlow)"/>`;
-    g += `<ellipse cx="${cx + 6}" cy="${cy + dep + 20}" rx="${rx * 1.02}" ry="${ry * 0.72}" fill="#000" opacity=".55" filter="url(#spBlur)"/>`;
-    // Side walls: only the front half (screen-lower half, angle in 0…π) shows; draw them back to front.
-    const walls = [];
-    for (const sl of slices) for (const k of [0, 2 * Math.PI]) {
-      const s0 = Math.max(sl.a0, k), s1 = Math.min(sl.a1, k + Math.PI);
-      if (s1 > s0) walls.push({ sl, s0, s1 });
-    }
-    walls.sort((p, q) => Math.abs(Math.cos((q.s0 + q.s1) / 2)) - Math.abs(Math.cos((p.s0 + p.s1) / 2)));
-    for (const { sl, s0, s1 } of walls) {
-      const t1 = arc(s0, s1, sl.dx, sl.dy), b1 = arc(s0, s1, sl.dx, sl.dy, dep);
-      g += `<path d="M${t1.x0},${t1.y0} A${rx},${ry} 0 ${t1.large} 1 ${t1.x1},${t1.y1} L${b1.x1},${b1.y1} A${rx},${ry} 0 ${t1.large} 0 ${b1.x0},${b1.y0} Z" fill="url(#sps${sl.i})"/>`;
-    }
-    // Cut faces of the pulled-out slice (so it reads as a solid wedge).
-    for (const sl of slices.filter(s => s.dx || s.dy)) for (const ang of [sl.a0, sl.a1]) {
-      if (Math.sin(ang) < -0.2) continue;
-      const [ex, ey] = P(ang, sl.dx, sl.dy);
-      g += `<path d="M${cx + sl.dx},${cy + sl.dy} L${ex},${ey} L${ex},${ey + dep} L${cx + sl.dx},${cy + sl.dy + dep} Z" fill="${shade(sl.color, -.55)}"/>`;
-    }
-    for (const sl of slices) {
-      const t1 = arc(sl.a0, sl.a1, sl.dx, sl.dy);
-      const glow = sl.v?.id === venue.id ? ' filter="url(#spMeGlow)"' : '';
-      g += slices.length === 1 ? `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#spg${sl.i})"${glow}/>`
-        : `<path d="M${cx + sl.dx},${cy + sl.dy} L${t1.x0},${t1.y0} A${rx},${ry} 0 ${t1.large} 1 ${t1.x1},${t1.y1} Z" fill="url(#spg${sl.i})" stroke="rgba(255,255,255,.22)" stroke-width="1" stroke-linejoin="round"${glow}/>`;
-      // Percentage on the slice when it is big enough to hold it.
-      if (sl.n / total > 0.07) { const [lx, ly] = P(sl.mid, sl.dx, sl.dy); const px = cx + sl.dx + (lx - cx - sl.dx) * 0.62, py = cy + sl.dy + (ly - cy - sl.dy) * 0.62;
-        g += `<text x="${px}" y="${py + 5}" text-anchor="middle" class="sp-pct">${Math.round(sl.n / total * 100)}%</text>`; }
-    }
-    g += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#spSheen)" pointer-events="none"/>`;
-    g += `<path d="M${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>`;
-    g += `<path d="M${cx + rx},${cy + dep} A${rx},${ry} 0 0 1 ${cx - rx},${cy + dep}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="1.5"/>`;
-    // Labels around the pie: logo, name, people in that hour, and that day's events.
-    const labels = slices.map(sl => {
-      const front = Math.sin(sl.mid) > 0, right = Math.cos(sl.mid) >= 0;
-      const [ex, ey] = P(sl.mid, sl.dx, sl.dy + (front ? dep : 0));
-      return { sl, right, x: cx + (rx + 26) * Math.cos(sl.mid) + sl.dx, y: ey + (front ? 16 : -10) * Math.abs(Math.sin(sl.mid)), ex, ey };
-    });
-    for (const side of [true, false]) {  // keep labels on one side from stacking
-      const ls = labels.filter(l => l.right === side).sort((p, q) => p.y - q.y);
-      for (let i = 1; i < ls.length; i++) if (ls[i].y - ls[i - 1].y < 54) ls[i].y = ls[i - 1].y + 54;
-    }
-    const lbl = labels.map(({ sl, right, x, y }) => {
-      const pct = Math.round(sl.n / total * 100);
-      const name = sl.rest ? t('shareOthers', sl.count) : sl.v.name;
-      const logo = sl.rest ? '' : `<span class="sp-logo">${sl.v.logo ? `<img src="${sl.v.logo}" alt="">` : sl.v.name.slice(0, 2)}</span>`;
-      const ev = sl.evs?.[0] ? `<em>🎶 ${sl.evs[0].name} · ${sl.evs[0].from}</em>` : '';
-      // Keep labels inside the chart column (they are up to 170px wide).
-      const cw = box.clientWidth || W, px = x / W * cw, lx = right ? Math.min(px, cw - 172) : Math.max(px, 172);
-      return `<div class="sp-label ${right ? 'r' : 'l'}${sl.v?.id === venue.id ? ' me' : ''}" style="left:${lx}px;top:${y / H * 100}%;--c:${sl.color}">${logo}<span class="sp-tx"><b>${name}</b><span>${sl.n} ${t('people')} · ${pct}%</span>${ev}</span></div>`;
+    slices.forEach(sl => { sl.a0 = a; sl.a1 = a + sl.n / total * Math.PI * 2; sl.mid = (sl.a0 + sl.a1) / 2; a = sl.a1; });
+    const pt = (ang, rad) => `${(c + rad * Math.cos(ang)).toFixed(2)},${(c + rad * Math.sin(ang)).toFixed(2)}`;
+    // Rounded annular sector: the shape is drawn shrunk by the corner radius and stroked with that radius
+    // (round joins), which rounds every corner; the angular inset leaves an even gap between slices.
+    const sector = sl => {
+      const Ro = R - cr, Ri = r + cr, single = slices.length === 1;
+      if (single) return `<circle cx="${c}" cy="${c}" r="${(R + r) / 2}" fill="none" stroke="${sl.color}" stroke-width="${R - r}"/>`;
+      const dO = (gap / 2 + cr) / Ro, dI = (gap / 2 + cr) / Ri;
+      const o0 = sl.a0 + dO, o1 = sl.a1 - dO, i0 = sl.a0 + dI, i1 = sl.a1 - dI;
+      if (o1 <= o0 || i1 <= i0) return `<path d="M${pt(sl.mid, Ri)}L${pt(sl.mid, Ro)}" stroke="${sl.color}" stroke-width="${2 * cr}" stroke-linecap="round"/>`;
+      const lg = o1 - o0 > Math.PI ? 1 : 0;
+      return `<path d="M${pt(o0, Ro)} A${Ro},${Ro} 0 ${lg} 1 ${pt(o1, Ro)} L${pt(i1, Ri)} A${Ri},${Ri} 0 ${lg} 0 ${pt(i0, Ri)} Z" fill="${sl.color}" stroke="${sl.color}" stroke-width="${2 * cr}" stroke-linejoin="round"/>`;
+    };
+    const g = slices.map((sl, k) => `<g class="ios-sec" data-k="${k}">${sector(sl)}</g>`).join('');
+    // Logos just outside the ring for slices big enough to point at.
+    const badges = slices.map((sl, k) => {
+      if (sl.rest || sl.n / total < 0.05) return '';
+      const bx = c + (R + 26) * Math.cos(sl.mid), by = c + (R + 26) * Math.sin(sl.mid);
+      return `<span class="ios-badge" data-k="${k}" style="left:${bx / S * 100}%;top:${by / S * 100}%;--c:${sl.color}"><span class="sp-logo">${sl.v.logo ? `<img src="${sl.v.logo}" alt="">` : sl.v.name.slice(0, 2)}</span><b>${sl.n}</b></span>`;
     }).join('');
-    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t('shareTitle')}">${g}</svg>${lbl}`;
+    box.innerHTML = `<div class="ios-donut"><svg viewBox="0 0 ${S} ${S}" role="img" aria-label="${t('shareTitle')}">${g}</svg>${badges}<div class="ios-center" id="iosCenter"></div></div>`;
+    const centre = k => {
+      const sl = slices[k];
+      $('iosCenter').innerHTML = `<b>${Math.round(sl.n / total * 100)}%</b><span>${sl.rest ? t('shareOthers', sl.count) : sl.v.name}</span><em>${sl.n} ${t('people')}</em>`;
+      box.querySelectorAll('.ios-sec, .ios-badge').forEach(e => e.classList.toggle('dim', +e.dataset.k !== k));
+      $('shareList').querySelectorAll('.sl-row').forEach(e => e.classList.toggle('sel', e.dataset.id === sl.v?.id));
+    };
+    const home = Math.max(0, slices.findIndex(sl => sl.v?.id === venue.id));
+    centre(home);
+    box.querySelectorAll('.ios-sec').forEach(e => { e.onmouseenter = e.onclick = () => centre(+e.dataset.k); });
+    box.querySelector('svg').onmouseleave = () => centre(home);
+    renderShare._centre = (id) => { const k = slices.findIndex(sl => sl.v?.id === id); centre(k < 0 ? home : k); };
   }
   // Full list of similar venues under the chart.
   $('shareList').innerHTML = peers.map(p => {
     const pct = total ? Math.round(p.n / total * 100) : 0;
-    return `<a class="sl-row${p === me ? ' me' : ''}" href="venue.html?mekan=${p.v.id}"><span class="sp-logo">${p.v.logo ? `<img src="${p.v.logo}" alt="">` : p.v.name.slice(0, 2)}</span><span class="sl-name"><b>${p.v.name}</b>${p.evs.length ? `<em>${p.evs.map(e => `🎶 ${e.name} · ${e.from}–${e.to}`).join('<br>')}</em>` : ''}</span><span class="sl-n">${p.n}<small>${pct}%</small></span></a>`;
+    return `<a class="sl-row${p === me ? ' me' : ''}" data-id="${p.v.id}" href="venue.html?mekan=${p.v.id}" style="--c:${p.color}"><span class="sl-dot"></span><span class="sp-logo">${p.v.logo ? `<img src="${p.v.logo}" alt="">` : p.v.name.slice(0, 2)}</span><span class="sl-name"><b>${p.v.name}</b>${p.evs.length ? `<em>${p.evs.map(e => `🎶 ${e.name} · ${e.from}–${e.to}`).join('<br>')}</em>` : ''}</span><span class="sl-n">${p.n}<small>${pct}%</small></span></a>`;
   }).join('');
+  $('shareList').querySelectorAll('.sl-row').forEach(e => { e.onmouseenter = () => renderShare._centre?.(e.dataset.id); e.onmouseleave = () => renderShare._centre?.(venue.id); });
+  if (total) renderShare._centre?.(venue.id);
 }
 
 // ---- Crowd per event: the busiest moment while each announced event ran, newest first ----
@@ -894,11 +867,11 @@ function renderEventCrowd() {
   }).filter(Boolean).sort((a, b) => b.w.start - a.w.start).slice(0, 12);
   card.hidden = !rows.length;
   if (!rows.length) return;
-  const max = Math.max(...rows.map(r => r.peak), 1), best = rows.reduce((a, r) => r.peak > a.peak ? r : a);
+  const max = Math.max(...rows.map(r => r.peak), 1), min = Math.min(...rows.map(r => r.peak)), base = min * 0.6, best = rows.reduce((a, r) => r.peak > a.peak ? r : a);
   $('evCrowdSummary').textContent = t('evCrowdBest', best.w.e.name, best.peak);
   $('evBars').innerHTML = rows.map(r => `<div class="evbar${r.live ? ' live' : ''}${r === best ? ' best' : ''}" title="${t('evCrowdAvg', r.avg)}">
       <div class="evb-meta"><b>${r.w.e.name}</b><span>${fmtDay(r.w.e.date)} · ${r.w.e.from}–${r.w.e.to}${r.live ? ` · ${t('ev_live')}` : ''}</span></div>
-      <div class="evb-track"><div class="evb-fill" style="width:${Math.max(3, r.peak / max * 100)}%;--lv:${levelOf(r.peak).color}"></div></div>
+      <div class="evb-track"><div class="evb-fill" style="width:${Math.max(6, (r.peak - base) / Math.max(1, max - base) * 100)}%;--lv:${relColor(r.peak, min, max)}"></div></div>
       <div class="evb-n">${r.peak}<small>${t('people')}</small></div>
     </div>`).join('');
 }

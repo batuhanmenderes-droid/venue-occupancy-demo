@@ -147,6 +147,15 @@ function simCount(v, at) {
   }
   return simCountBase(v, at);
 }
+// Weekly rhythm for demo crowds (Mon … Sun, by the night's start: 02:00 on Saturday counts as Friday night).
+// Nightlife builds through the week to Friday and Saturday; daytime places peak at the weekend. Each venue
+// gets its own small twist (±10%) per weekday.
+const WEEK_NIGHT = [0.62, 0.7, 0.82, 0.98, 1.32, 1.5, 0.9], WEEK_DAY = [0.8, 0.82, 0.86, 0.92, 1.05, 1.3, 1.25];
+const NIGHT_TYPES = ['Kulüp', 'Pub', 'Bar', 'Meyhane'];
+function weekFactor(v, at) {
+  const d = new Date(at.getTime() - 6 * 3600000), wd = (d.getDay() + 6) % 7;
+  return (NIGHT_TYPES.includes(v.type) ? WEEK_NIGHT : WEEK_DAY)[wd] * (0.9 + simRandom(`${v.id}:wd${wd}`) * 0.2);
+}
 function simCountBase(v, at) {
   if (isClosed(v, at)) return 0;
   if (v.sim_profile === 'beach') return beachCount(v, at);
@@ -157,7 +166,7 @@ function simCountBase(v, at) {
   if (boost === 1 && (busy < 0.08 || r < 0.04)) return 0;  // quiet hours, and the odd empty moment
   // Demo scale (halved): up to ~10 people at a category's peak, with ±15% noise. A venue can set its own
   // peak (`sim_scale`), and announced events (venues.json `events`) pull a bigger crowd while they run.
-  return Math.max(0, Math.round((v.sim_scale || 10) * Math.max(busy, boost > 1 ? 0.35 : 0) * boost * (0.85 + r * 0.3)));
+  return Math.max(0, Math.round((v.sim_scale || 10) * weekFactor(v, at) * Math.max(busy, boost > 1 ? 0.35 : 0) * boost * (0.85 + r * 0.3)));
 }
 // Event windows on the clock: an event dated D from 22:00 to 01:00 runs D 22:00 → D+1 01:00; a set starting
 // before 06:00 belongs to the night that began the evening before (D+1). Each event draws its own crowd:
