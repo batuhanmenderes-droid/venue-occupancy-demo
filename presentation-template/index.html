@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=45">
+<link rel="stylesheet" href="deck.css?v=46">
 </head>
 <body>
 
@@ -520,6 +520,46 @@
             <div class="ai-typing" aria-hidden="true"><i></i><i></i><i></i></div>
           </div>
           <div class="ai-input" aria-hidden="true"><span>Bir şey sor…</span><i>↑</i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Push notifications on an iPhone lock screen: they drop in one after another when the slide opens -->
+    <section class="slide slide--push" aria-roledescription="slide" aria-label="Anlık bildirimler">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+      <div class="lock-phone">
+        <div class="lock-screen">
+          <div class="lock-wall" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="lock-status" aria-hidden="true"><span></span><span class="r"><span class="sig"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i></span><span class="bat"><i></i></span></span></div>
+          <div class="lock-top">
+            <svg class="lock-pad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+            <p class="lock-date">9 Kasım Pazartesi</p>
+            <p class="lock-time">16:00</p>
+          </div>
+          <div class="notifs">
+            <article class="notif" style="--i:0">
+              <img class="notif-app" src="assets/app-icon.svg" alt="" width="40" height="40">
+              <div class="notif-body">
+                <p class="notif-head"><b>HERKEZ NERDE?!</b><span>şimdi</span></p>
+                <p class="notif-title">Kulüp zirveye ulaştı</p>
+                <p class="notif-text">168 kişi</p>
+              </div>
+              <img class="notif-thumb" src="assets/logos/kulup.png" alt="" width="56" height="56">
+            </article>
+            <article class="notif" style="--i:1">
+              <img class="notif-app" src="assets/app-icon.svg" alt="" width="40" height="40">
+              <div class="notif-body">
+                <p class="notif-head"><b>HERKEZ NERDE?!</b><span>şimdi</span></p>
+                <p class="notif-title">No22 Riders Inn kalabalığı dağılma eğiliminde.</p>
+              </div>
+              <img class="notif-thumb" src="assets/logos/no22riders.png" alt="" width="56" height="56">
+            </article>
+          </div>
+          <div class="lock-bottom" aria-hidden="true">
+            <span class="lock-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6l-1 6h-4z"/><path d="M10 8v12a2 2 0 0 0 4 0V8"/></svg></span>
+            <span class="lock-home"></span>
+            <span class="lock-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span>
+          </div>
         </div>
       </div>
     </section>
