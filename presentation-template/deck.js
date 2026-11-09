@@ -37,9 +37,9 @@
     // and every [data-shared] element glides from its old position to its new one.
     const flow = from !== to && from.dataset.flow && from.dataset.flow === to.dataset.flow;
     clearTimeout(flowTimer);
-    slides.forEach((s) => s.classList.remove('flow-in', 'flow-out'));
+    slides.forEach((s) => s.classList.remove('flow-in', 'flow-out', 'via-flow'));
     if (flow) {
-      to.classList.add('flow-in');
+      to.classList.add('flow-in', 'via-flow');
       from.classList.add('flow-out');
       flowTimer = setTimeout(() => { from.classList.remove('flow-out'); to.classList.remove('flow-in'); }, 700);
     }
@@ -51,13 +51,17 @@
     });
     if (flow) {
       const k = parseFloat(getComputedStyle(root).getPropertyValue('--scale')) || 1;
+      to.querySelectorAll('[data-scroll]').forEach((sc) => { sc.scrollTop = 0; });
       to.querySelectorAll('[data-shared]').forEach((el) => {
         const twin = from.querySelector('[data-shared="' + el.dataset.shared + '"]');
         if (!twin || !el.animate) return;
+        // FLIP: start the element where (and as big as) its twin was, then let it settle.
         const a = twin.getBoundingClientRect(), b = el.getBoundingClientRect();
         const dx = (a.left - b.left) / k, dy = (a.top - b.top) / k;
-        el.animate([{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }],
-          { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' });
+        const sx = a.width / b.width, sy = a.height / b.height;
+        el.style.transformOrigin = '0 0';
+        el.animate([{ transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx + ',' + sy + ')' }, { transform: 'none' }],
+          { duration: 950, easing: 'cubic-bezier(.65,0,.25,1)' });
       });
     }
     counter.textContent = (index + 1) + ' / ' + slides.length;
@@ -72,12 +76,34 @@
   next.addEventListener('click', () => go(index + 1));
   window.addEventListener('hashchange', () => go(fromHash(), false));
 
+  // ---- Slides with their own scrolling page ([data-scroll]) ----
+  // Scrolling moves the page first; the deck moves on only once the page is at that end.
+  const scroller = () => slides[index].querySelector('[data-scroll]');
+  const canScroll = (sc, dir) => dir > 0 ? sc.scrollTop + sc.clientHeight < sc.scrollHeight - 2 : sc.scrollTop > 2;
+  const scale = () => parseFloat(getComputedStyle(root).getPropertyValue('--scale')) || 1;
+  stage.querySelectorAll('[data-scroll]').forEach((sc) => {
+    sc.addEventListener('scroll', () => sc.closest('.slide').classList.toggle('is-scrolled', sc.scrollTop > 10), { passive: true });
+  });
+  // Step through the page by keys or buttons: a screenful at a time, else the next slide.
+  function step(dir, big) {
+    const sc = scroller();
+    if (sc && canScroll(sc, dir)) {
+      sc.scrollBy({ top: dir * (big ? sc.clientHeight * 0.85 : 260), behavior: 'smooth' });
+      return;
+    }
+    go(index + dir);
+  }
+
   document.addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     switch (e.key) {
-      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter':
+      case 'ArrowDown': e.preventDefault(); step(1, false); break;
+      case 'ArrowUp': e.preventDefault(); step(-1, false); break;
+      case 'PageDown': case ' ': e.preventDefault(); step(1, true); break;
+      case 'PageUp': e.preventDefault(); step(-1, true); break;
+      case 'ArrowRight': case 'Enter':
         e.preventDefault(); go(index + 1); break;
-      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace':
+      case 'ArrowLeft': case 'Backspace':
         e.preventDefault(); go(index - 1); break;
       case 'Home': go(0); break;
       case 'End': go(slides.length - 1); break;
@@ -87,18 +113,34 @@
 
   // ---- Scroll wheel / trackpad: one slide per gesture ----
   // A trackpad keeps sending inertial events after the swipe; stay locked until they pause.
-  let wheelSum = 0, wheelLocked = false, lastWheel = 0, lockStart = 0;
+  let wheelSum = 0, wheelLocked = false, lastWheel = 0, lockStart = 0, lastInner = 0;
   document.addEventListener('wheel', (e) => {
     e.preventDefault();
     const now = Date.now();
+    const raw = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    const delta = e.deltaMode === 1 ? raw * 40 : e.deltaMode === 2 ? raw * 800 : raw;
     if (wheelLocked) {
       const quiet = now - lastWheel > 220, long = now - lockStart > 700;
       lastWheel = now;
       if (!(quiet && long)) return;
       wheelLocked = false;
     }
+    const sc = scroller();
+    if (sc) {
+      const dir = delta > 0 ? 1 : -1;
+      if (canScroll(sc, dir)) {
+        // move the page by the same distance on screen as the gesture
+        const by = delta / scale();
+        if (Math.abs(delta) >= 50) sc.scrollBy({ top: by, behavior: 'smooth' });
+        else sc.scrollTop += by;
+        lastInner = now; wheelSum = 0;
+        return;
+      }
+      // The page just hit its end during this gesture: let the gesture finish before leaving.
+      if (now - lastInner < 350) { lastInner = now; return; }
+    }
     lastWheel = now;
-    wheelSum += Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    wheelSum += delta;
     if (Math.abs(wheelSum) < 40) return;
     go(index + (wheelSum > 0 ? 1 : -1));
     wheelSum = 0;
@@ -107,17 +149,24 @@
   }, { passive: false });
 
   // ---- Swipe / tap ----
-  let sx = 0, sy = 0, st = 0;
+  let sx = 0, sy = 0, st = 0, atTop = true, atEnd = true;
   document.addEventListener('touchstart', (e) => {
     if (e.touches.length !== 1) return;
     sx = e.touches[0].clientX; sy = e.touches[0].clientY; st = Date.now();
+    const sc = scroller();
+    atTop = !sc || !canScroll(sc, -1);
+    atEnd = !sc || !canScroll(sc, 1);
   }, { passive: true });
   document.addEventListener('touchend', (e) => {
     if (controls.contains(e.target)) return;
     const t = e.changedTouches[0];
     const dx = t.clientX - sx, dy = t.clientY - sy;
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) go(index + (dx < 0 ? 1 : -1));
-    else if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.2) go(index + (dy < 0 ? 1 : -1));
+    else if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.2) {
+      // On a scrolling page the swipe scrolls it natively; leave only from the end the swipe started at.
+      if (dy < 0 && atEnd) go(index + 1);
+      else if (dy > 0 && atTop) go(index - 1);
+    }
     else if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && Date.now() - st < 300) {
       // tap on the right / left third of the screen
       if (t.clientX > window.innerWidth * 0.66) go(index + 1);

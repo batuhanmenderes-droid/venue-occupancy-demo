@@ -429,7 +429,6 @@ body {
 /* iMac: 16:9 screen, black bezel, coloured chin, stand. Same size on both slides; only its height on the slide differs. */
 .imac { --w: 1240px; position: absolute; z-index: 1; left: calc(50% - var(--w) / 2); width: var(--w); will-change: transform; }
 .imac--low  { top: 660px; }
-.imac--high { top: 52px; }
 .imac-screen {
   position: relative; padding: 16px; border-radius: 26px 26px 0 0;
   background: #0a0a0c;
@@ -451,14 +450,46 @@ body {
 
 .slide--imac.is-active .flow-copy > * { animation: rise .9s var(--ease) both; }
 .slide--imac.is-active .flow-copy > :nth-child(2) { animation-delay: .1s; }
-.slide--imac.is-active:not(.flow-in) .imac--low { animation: imacUp 1.1s var(--ease) both; }
+.slide--imac.is-active:not(.via-flow) .imac--low { animation: imacUp 1.1s var(--ease) both; }
 @keyframes imacUp { from { opacity: 0; transform: translateY(120px); } to { opacity: 1; transform: none; } }
 
 /* Flow transition (slides sharing data-flow): the new slide appears at once underneath; the old one stays on
    top with a transparent background while its copy slides up and out; deck.js moves the shared iMac. */
 .slide.flow-in { transform: none !important; transition: none !important; }
 .slide.flow-out { z-index: 3; background: transparent; transform: none !important; visibility: visible !important; transition: none !important; pointer-events: none; }
-.slide.flow-out .heat, .slide.flow-out [data-shared] { visibility: hidden; }
+.slide.flow-out .heat, .slide.flow-out [data-shared], .slide.flow-out .scroll-hint { visibility: hidden; }
+/* 10 → 11: the iMac body falls away while its screen grows to full screen */
+.slide.flow-out .imac { animation: imacAway .45s var(--ease) both; }
+@keyframes imacAway { to { opacity: 0; transform: translateY(80px); } }
+/* 11 → 10: the stand and chin come back as the screen shrinks into place */
+.slide.flow-in .imac-chin, .slide.flow-in .imac-neck, .slide.flow-in .imac-foot { animation: fadeUp .7s var(--ease) .2s both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+
+/* ---------- 11 · Full-screen panel page (scrolls inside the slide) ---------- */
+.slide--fullpage { padding: 0; background: #000; overflow: hidden; }
+.page-scroll {
+  position: absolute; inset: 0;
+  overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: none;
+  transform-origin: 0 0;
+  outline: none;
+}
+.page-scroll::-webkit-scrollbar { display: none; }
+.page-scroll img { display: block; width: 100%; height: auto; }
+.scroll-hint {
+  position: absolute; left: 50%; bottom: 120px; z-index: 2;
+  display: grid; place-items: center;
+  width: 64px; height: 64px; margin-left: -32px; border-radius: 50%;
+  color: #fff;
+  background: rgba(21, 21, 28, .6); border: 1px solid rgba(255,255,255,.18);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  transition: opacity .4s var(--ease);
+  pointer-events: none;
+}
+.scroll-hint svg { width: 30px; height: 30px; }
+.slide--fullpage.is-active .scroll-hint { animation: hintBob 1.6s ease-in-out 1s infinite; }
+.slide--fullpage.is-scrolled .scroll-hint { opacity: 0; }
+@keyframes hintBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 .slide.flow-out .flow-copy { animation: flowOut .6s var(--ease) both; }
 @keyframes flowOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-160px); } }
 

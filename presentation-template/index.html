@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=12">
+<link rel="stylesheet" href="deck.css?v=15">
 </head>
 <body>
 
@@ -263,22 +263,22 @@
           <p class="imac-note">Ziyaretçi ne zaman geliyor, ne zaman gidiyor. Hangi etkinlik daha yoğundu, kalabalık ne zaman sokaklara taştı, hangi etkinlik maliyetini karşılamadı. Hepsi tek panelde özelleştirilebilir veri görselleştirmesi.</p>
         </div>
       </div>
-      <div class="imac imac--low" data-shared="imac" aria-hidden="true">
-        <div class="imac-screen"><img src="assets/panel-kulup.jpg?v=2" alt="" width="2400" height="1350" decoding="async"></div>
+      <div class="imac imac--low" aria-hidden="true">
+        <div class="imac-screen"><img data-shared="screen" src="assets/panel-kulup-full.jpg" alt="" width="2400" height="4026" decoding="async"></div>
         <div class="imac-chin"></div>
         <div class="imac-neck"></div>
         <div class="imac-foot"></div>
       </div>
     </section>
 
-    <!-- 11 · Panel: the iMac has moved up and is fully in view -->
-    <section class="slide slide--imac" data-flow="imac" aria-roledescription="slide" aria-label="Panel ekranı">
-      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
-      <div class="imac imac--high" data-shared="imac" aria-hidden="true">
-        <div class="imac-screen"><img src="assets/panel-kulup.jpg?v=2" alt="" width="2400" height="1350" decoding="async"></div>
-        <div class="imac-chin"></div>
-        <div class="imac-neck"></div>
-        <div class="imac-foot"></div>
+    <!-- 11 · Panel full screen: the iMac screen grows to fill the slide; the venue page scrolls
+         inside it (data-scroll), and the deck moves on only once the page is at its end. -->
+    <section class="slide slide--fullpage" data-flow="imac" aria-roledescription="slide" aria-label="Panel ekranı: Kulüp">
+      <div class="page-scroll" data-scroll data-shared="screen" tabindex="-1">
+        <img src="assets/panel-kulup-full.jpg" alt="Kulüp işletme detay sayfası: anlık ziyaretçi sayısı, rekor, m² başına yoğunluk, gün içi grafik, etkinlik bazında kalabalık ve sezonlara göre rekorlar" width="2400" height="4026" decoding="async">
+      </div>
+      <div class="scroll-hint" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </div>
     </section>
 
@@ -309,6 +309,6 @@
 <div class="progress" aria-hidden="true"><i id="bar"></i></div>
 <p class="rotate-hint" id="rotateHint">Daha büyük görmek için telefonu yan çevirin</p>
 
-<script src="deck.js?v=12"></script>
+<script src="deck.js?v=15"></script>
 </body>
 </html>
