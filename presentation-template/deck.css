@@ -1466,3 +1466,6 @@ body {
 .slide--how[data-step="1"] .flow-db-row { animation: dbRow 6s ease infinite 4.5s; }
 @keyframes dbRow { 0% { opacity: 0; transform: translateY(6px); } 6%, 45% { opacity: 1; transform: none; } 55%, 100% { opacity: 0; } }
 .flow-drop--num { --fall: 290px; }
+/* 23: database icon level with the trash bin (the server's text is one line shorter) */
+.flow-db { margin-top: 48px; }
+.flow-drop--num { --fall: 320px; }
