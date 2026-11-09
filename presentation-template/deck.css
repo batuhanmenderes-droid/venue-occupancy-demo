@@ -940,3 +940,6 @@ body {
 /* status-bar strip above the app so the island does not cover its header */
 .mob-frame { top: 52px; }
 .mob-frame iframe { height: 795px; }
+/* 20: the profile page slides up (not down) to uncover the map */
+.rv-page { box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+.slide--reveal[data-step="1"] .rv-page { transform: translateY(-100%); }
