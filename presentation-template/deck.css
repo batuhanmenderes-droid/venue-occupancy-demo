@@ -1349,3 +1349,17 @@ body {
 .pin { z-index: 2; }
 .slide--social.is-active .pin-line { animation: lineDown .5s var(--ease) 1.75s both; transform-origin: top; }
 @keyframes lineDown { from { transform: scaleY(0); } }
+
+/* 23: the business panel sits above the visitor's phone; the app's data branches to both */
+.flow-node--panel { position: absolute; left: 0; right: 0; top: -292px; gap: 8px; }
+.flow-icon--panel { width: 120px; height: 120px; border-radius: 34px; }
+.flow-icon--panel svg { width: 58px; height: 58px; }
+.flow-node--panel h3 { margin-top: 4px; font-size: 26px; }
+.flow-node--panel p { font-size: 18px; }
+.flow-count--panel { top: 92px; }
+.flow-conn { overflow: visible; }
+.flow-branch { position: absolute; left: 0; top: -260px; overflow: visible; }
+.flow-branch path { fill: none; stroke: rgba(255,255,255,.35); stroke-width: 2; stroke-dasharray: 8 6; }
+.pkt--branch { top: -260px; left: 0; transform: none; offset-path: path('M6,335 C90,335 70,28 162,28'); offset-rotate: 0deg; offset-anchor: center; }
+.slide--how[data-step="1"] .pkt--branch { animation: pktBranch 6s linear infinite; animation-delay: calc(1.8s + 3 * 1.1s); }
+@keyframes pktBranch { 0% { offset-distance: 0%; opacity: 0; } 3% { opacity: 1; } 15% { offset-distance: 100%; opacity: 1; } 18%, 100% { offset-distance: 100%; opacity: 0; } }
