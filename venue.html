@@ -796,7 +796,14 @@ function renderShare() {
   const box = $('shareChart'); if (!box || !venue || !allVenues.length) return;
   initSharePick();
   const { date, hour } = sharePick;
-  const peers = peersOf(venue).map(v => ({ v, n: hourPeople(v, date, hour), evs: eventsOnDay(v, date) })).sort((a, b) => b.n - a.n);
+  // Demo: competitors never sit far below this venue in the chosen hour, so the ring is spread more evenly
+  // (each gets 35–100% of this venue's crowd, fixed per venue, date and hour).
+  const meN = hourPeople(venue, date, hour);
+  const peers = peersOf(venue).map(v => {
+    const own = hourPeople(v, date, hour);
+    const n = v.id === venue.id ? meN : Math.max(own, Math.round(meN * (0.35 + simRandom(`${v.id}:${date}:${hour}`) * 0.65)));
+    return { v, n, evs: eventsOnDay(v, date) };
+  }).sort((a, b) => b.n - a.n);
   const total = peers.reduce((a, p) => a + p.n, 0);
   const me = peers.find(p => p.v.id === venue.id);
   $('shareHint').textContent = t('shareHint', [...new Set(peers.map(p => typeName(p.v.type)))].join(', '), peers.length);
