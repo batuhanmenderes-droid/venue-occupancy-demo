@@ -14,10 +14,17 @@
     if (pending++ === 0) {
       try { saved = localStorage.getItem('themePref'); localStorage.setItem('themePref', 'dark'); } catch (e) {}
     }
-    frame.addEventListener('load', () => {
+    // put the viewer's setting back even if this frame never finishes loading
+    let done = false;
+    const release = () => {
+      if (done) return; done = true;
       if (--pending === 0) {
         try { if (saved == null) localStorage.removeItem('themePref'); else localStorage.setItem('themePref', saved); } catch (e) {}
       }
+    };
+    setTimeout(release, 8000);
+    frame.addEventListener('load', () => {
+      release();
       try { onload && onload(frame.contentWindow, frame.contentDocument); } catch (e) {}
     }, { once: true });
     frame.src = src;

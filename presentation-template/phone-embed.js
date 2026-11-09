@@ -30,7 +30,9 @@
     const pick = keep.map((k) => cards.find((c) => norm(nameOf(c)).startsWith(norm(k).slice(0, 3))));
     cards.forEach((c) => { c.style.display = pick.includes(c) ? '' : 'none'; });
     const shown = pick.filter(Boolean);
-    if (shown.some((c, i) => grid.children[i] !== c)) shown.forEach((c) => grid.appendChild(c));
+    // compare against the visible cards only, or moving them would re-trigger the observer forever
+    const visible = Array.from(grid.children).filter((c) => c.style.display !== 'none');
+    if (shown.some((c, i) => visible[i] !== c)) shown.forEach((c) => grid.appendChild(c));
   }
 
   // zoom the map out over every venue marker so blue → red crowd levels are all in view
@@ -79,12 +81,18 @@
     });
   }
 
-  const near = (el) => {
+  const near = (el, d) => {
     const me = slides.indexOf(el.closest('.slide'));
     const i = slides.findIndex((s) => s.classList.contains('is-active'));
-    return Math.abs(i - me) <= 2;
+    return Math.abs(i - me) <= d;
   };
-  function check() { boxes.forEach((b) => { if (!b.dataset.ready && near(b)) { b.dataset.ready = '1'; setup(b); } }); }
+  // load embeds near the current slide; free the ones far away (several live maps at once are heavy)
+  function check() {
+    boxes.forEach((b) => {
+      if (!b.dataset.ready && near(b, 1)) { b.dataset.ready = '1'; setup(b); }
+      else if (b.dataset.ready && !near(b, 3)) { b.innerHTML = ''; delete b.dataset.ready; }
+    });
+  }
   new MutationObserver(check).observe(document.getElementById('stage'), { subtree: true, attributes: true, attributeFilter: ['class'] });
   check();
 })();
