@@ -116,7 +116,11 @@ setInterval(applyTheme, 60000);
 
 // Beach profile (Kitebeach): 30–50 early kiters 09:00–10:00, fills up from 10:00, swings between
 // 1000 and 1200 from 12:00 to 16:00, eases off after 16:00 and empties abruptly once the sun has set.
+// Kitebeach's own crowd model (peak ~1,100); `beach_peak` (venues.json) scales it to another peak size.
 function beachCount(v, at) {
+  return Math.round(beachCountRaw(v, at) * (v.beach_peak ? v.beach_peak / 1100 : 1));
+}
+function beachCountRaw(v, at) {
   const h = at.getHours() + at.getMinutes() / 60, sunset = sunsetHour(at, v.location?.lat, v.location?.lon);
   const r = simRandom(`${v.id}:${slotStart(at).getTime()}`);
   if (h >= 12 && h < 16) return Math.round(1000 + r * 200);                 // 12–16: peak, 1000–1200

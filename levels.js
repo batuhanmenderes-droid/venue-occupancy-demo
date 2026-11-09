@@ -16,11 +16,11 @@ function loadLevels() {
   } catch {}
   syncRanges();
 }
-// The thresholds above are for a busy town (about 1500 people out across all venues). With fewer people out
+// The thresholds above are for a busy town (about 500 people out across all venues). With fewer people out
 // they stretch up, so a venue is only purple when it is a real outlier: scale = √(1500 / total), between 1×
 // and 3× (e.g. 100 people in town → 3×: Quiet 0–30 … Very crowded 121+). The list page sets it from the
 // live total; the venue page reuses the last value.
-const LEVEL_REF_TOTAL = 1500;
+const LEVEL_REF_TOTAL = 500;  // tuned to the demo crowd sizes (venues 20–90 at night)
 let LEVEL_SCALE = (() => { try { return Math.min(3, Math.max(1, +localStorage.getItem('levelScale') || 1)); } catch { return 1; } })();
 const scaledMax = l => l.max === Infinity ? Infinity : Math.round(l.max * LEVEL_SCALE);
 function setLevelScale(total) {
