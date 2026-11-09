@@ -80,7 +80,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=53">
+<link rel="stylesheet" href="brand.css?v=54">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -798,7 +798,7 @@ function renderShare() {
   const others = peers.filter(p => p !== me);
   const shown = [me, ...others.slice(0, 5)].filter(p => p && p.n > 0);
   const rest = others.slice(5).filter(p => p.n > 0), restN = rest.reduce((a, p) => a + p.n, 0);
-  const slices = shown.sort((a, b) => b.n - a.n).map((p, i) => ({ ...p, color: p === me ? 'var(--brand-full)' : SHARE_COLORS[i % SHARE_COLORS.length] }));
+  const slices = shown.sort((a, b) => b.n - a.n).map((p, i) => ({ ...p, color: p === me ? '#FF2D6F' : SHARE_COLORS[i % SHARE_COLORS.length] }));
   if (restN) slices.push({ rest: true, n: restN, count: rest.length, color: '#7C8799' });
   const W = 560, H = 380, cx = W / 2, cy = 172, rx = 170, ry = 98, dep = 30;
   let g = '';
@@ -810,6 +810,20 @@ function renderShare() {
     slices.forEach(sl => { sl.a0 = a; sl.a1 = a + sl.n / total * Math.PI * 2; sl.mid = (sl.a0 + sl.a1) / 2; a = sl.a1;
       const pull = sl.v?.id === venue.id ? 14 : 0; sl.dx = Math.cos(sl.mid) * pull; sl.dy = Math.sin(sl.mid) * pull; });
     const arc = (a0, a1, dx, dy, depth = 0) => { const [x0, y0] = P(a0, dx, dy + depth), [x1, y1] = P(a1, dx, dy + depth); return { x0, y0, x1, y1, large: a1 - a0 > Math.PI ? 1 : 0 }; };
+    // Look: gradient tops (light from the upper left), darker gradient walls, a soft shadow on the ground,
+    // a coloured glow under the pie, a glossy sheen and a light rim on the front edge; this venue's slice glows.
+    const shade = (hex, f) => { const n = parseInt(hex.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map(v => Math.round(f > 0 ? v + (255 - v) * f : v * (1 + f))); return `rgb(${c.join(',')})`; };
+    const meColor = '#FF2D6F';
+    let defs = `<filter id="spBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16"/></filter>
+      <filter id="spMeGlow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="0" stdDeviation="8" flood-color="${meColor}" flood-opacity=".9"/></filter>
+      <radialGradient id="spGlow"><stop offset="0" stop-color="${meColor}" stop-opacity=".38"/><stop offset=".55" stop-color="#1F6BFF" stop-opacity=".16"/><stop offset="1" stop-color="#1F6BFF" stop-opacity="0"/></radialGradient>
+      <radialGradient id="spSheen" cx=".32" cy=".18" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset=".45" stop-color="#fff" stop-opacity=".08"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>`;
+    slices.forEach((sl, i) => { sl.i = i;
+      defs += `<linearGradient id="spg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${shade(sl.color, .38)}"/><stop offset=".55" stop-color="${sl.color}"/><stop offset="1" stop-color="${shade(sl.color, -.18)}"/></linearGradient>
+        <linearGradient id="sps${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(sl.color, -.28)}"/><stop offset="1" stop-color="${shade(sl.color, -.62)}"/></linearGradient>`; });
+    g += `<defs>${defs}</defs>`;
+    g += `<ellipse cx="${cx}" cy="${cy + dep / 2}" rx="${rx * 1.32}" ry="${ry * 1.5}" fill="url(#spGlow)"/>`;
+    g += `<ellipse cx="${cx + 6}" cy="${cy + dep + 20}" rx="${rx * 1.02}" ry="${ry * 0.72}" fill="#000" opacity=".55" filter="url(#spBlur)"/>`;
     // Side walls: only the front half (screen-lower half, angle in 0…π) shows; draw them back to front.
     const walls = [];
     for (const sl of slices) for (const k of [0, 2 * Math.PI]) {
@@ -819,22 +833,26 @@ function renderShare() {
     walls.sort((p, q) => Math.abs(Math.cos((q.s0 + q.s1) / 2)) - Math.abs(Math.cos((p.s0 + p.s1) / 2)));
     for (const { sl, s0, s1 } of walls) {
       const t1 = arc(s0, s1, sl.dx, sl.dy), b1 = arc(s0, s1, sl.dx, sl.dy, dep);
-      g += `<path d="M${t1.x0},${t1.y0} A${rx},${ry} 0 ${t1.large} 1 ${t1.x1},${t1.y1} L${b1.x1},${b1.y1} A${rx},${ry} 0 ${t1.large} 0 ${b1.x0},${b1.y0} Z" fill="${sl.color}" style="filter:brightness(.62)"/>`;
+      g += `<path d="M${t1.x0},${t1.y0} A${rx},${ry} 0 ${t1.large} 1 ${t1.x1},${t1.y1} L${b1.x1},${b1.y1} A${rx},${ry} 0 ${t1.large} 0 ${b1.x0},${b1.y0} Z" fill="url(#sps${sl.i})"/>`;
     }
     // Cut faces of the pulled-out slice (so it reads as a solid wedge).
     for (const sl of slices.filter(s => s.dx || s.dy)) for (const ang of [sl.a0, sl.a1]) {
       if (Math.sin(ang) < -0.2) continue;
       const [ex, ey] = P(ang, sl.dx, sl.dy);
-      g += `<path d="M${cx + sl.dx},${cy + sl.dy} L${ex},${ey} L${ex},${ey + dep} L${cx + sl.dx},${cy + sl.dy + dep} Z" fill="${sl.color}" style="filter:brightness(.5)"/>`;
+      g += `<path d="M${cx + sl.dx},${cy + sl.dy} L${ex},${ey} L${ex},${ey + dep} L${cx + sl.dx},${cy + sl.dy + dep} Z" fill="${shade(sl.color, -.55)}"/>`;
     }
     for (const sl of slices) {
       const t1 = arc(sl.a0, sl.a1, sl.dx, sl.dy);
-      g += slices.length === 1 ? `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${sl.color}"/>`
-        : `<path d="M${cx + sl.dx},${cy + sl.dy} L${t1.x0},${t1.y0} A${rx},${ry} 0 ${t1.large} 1 ${t1.x1},${t1.y1} Z" fill="${sl.color}" stroke="rgba(0,0,0,.25)" stroke-width="1"/>`;
+      const glow = sl.v?.id === venue.id ? ' filter="url(#spMeGlow)"' : '';
+      g += slices.length === 1 ? `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#spg${sl.i})"${glow}/>`
+        : `<path d="M${cx + sl.dx},${cy + sl.dy} L${t1.x0},${t1.y0} A${rx},${ry} 0 ${t1.large} 1 ${t1.x1},${t1.y1} Z" fill="url(#spg${sl.i})" stroke="rgba(255,255,255,.22)" stroke-width="1" stroke-linejoin="round"${glow}/>`;
       // Percentage on the slice when it is big enough to hold it.
       if (sl.n / total > 0.07) { const [lx, ly] = P(sl.mid, sl.dx, sl.dy); const px = cx + sl.dx + (lx - cx - sl.dx) * 0.62, py = cy + sl.dy + (ly - cy - sl.dy) * 0.62;
         g += `<text x="${px}" y="${py + 5}" text-anchor="middle" class="sp-pct">${Math.round(sl.n / total * 100)}%</text>`; }
     }
+    g += `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#spSheen)" pointer-events="none"/>`;
+    g += `<path d="M${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy}" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/>`;
+    g += `<path d="M${cx + rx},${cy + dep} A${rx},${ry} 0 0 1 ${cx - rx},${cy + dep}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="1.5"/>`;
     // Labels around the pie: logo, name, people in that hour, and that day's events.
     const labels = slices.map(sl => {
       const front = Math.sin(sl.mid) > 0, right = Math.cos(sl.mid) >= 0;
