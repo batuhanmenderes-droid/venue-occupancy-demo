@@ -153,7 +153,8 @@
         "tr": "DJ setleri ve hafta sonu partileriyle Akyaka'nın gece kulübü."
       },
       "simulated": true,
-      "sim_scale": 28
+      "sim_scale": 28,
+      "sim_full_day": true
     },
     {
       "id": "lemongrass-cafe",

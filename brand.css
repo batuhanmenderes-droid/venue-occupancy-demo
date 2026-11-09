@@ -251,3 +251,17 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 /* Map labels: no extra Leaflet tooltip margin, so the 4px gap to the hexagon is the real gap */
 .leaflet-tooltip.vlabel.leaflet-tooltip-left, .leaflet-tooltip.vlabel.leaflet-tooltip-right,
 .leaflet-tooltip.vlabel.leaflet-tooltip-top, .leaflet-tooltip.vlabel.leaflet-tooltip-bottom { margin: 0 !important; }
+
+/* Venue page: crowd per event (horizontal bars) */
+.evbars { display: grid; gap: 10px; margin-top: 6px; }
+.evbar { display: grid; grid-template-columns: minmax(150px, 230px) 1fr 70px; align-items: center; gap: 14px; }
+.evb-meta { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.evb-meta b { font: 600 14px/1.2 var(--font-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.evb-meta span { font: 400 12px/1.2 var(--font-text); color: var(--ink-2); }
+.evb-track { height: 14px; border-radius: 4px; background: var(--fill); overflow: hidden; }
+.evb-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, color-mix(in srgb, var(--lv) 70%, transparent), var(--lv)); }
+.evb-n { font: 800 20px/1 var(--font-display); letter-spacing: -0.03em; text-align: right; font-variant-numeric: tabular-nums; }
+.evb-n small { display: block; margin-top: 2px; font: 500 10.5px/1 var(--font-text); letter-spacing: 0; color: var(--muted); }
+.evbar.best .evb-meta b::after { content: " ★"; color: var(--brand-active); }
+.evbar.live .evb-meta span { color: var(--ev-live, #d6a300); }
+@media (max-width: 600px) { .evbar { grid-template-columns: 1fr 52px; } .evb-track { grid-column: 1 / -1; grid-row: 2; } .evb-n { grid-row: 1; grid-column: 2; font-size: 17px; } }

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=filt1"></script>
+<script src="i18n.js?v=evc2"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -80,7 +80,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=49">
+<link rel="stylesheet" href="brand.css?v=50">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -118,6 +118,11 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
         <input type="range" id="daySlider" min="0" max="0" step="1" data-i18n-aria="day">
         <div class="dayticks" id="dayTicks"></div>
       </div>
+    </div>
+    <div class="card chartcard evcrowd" id="evCrowdCard" hidden>
+      <div class="chead"><h2 data-i18n="evCrowdTitle"></h2><span class="daylabel" id="evCrowdSummary"></span></div>
+      <p class="hint" data-i18n="evCrowdHint"></p>
+      <div class="evbars" id="evBars"></div>
     </div>
     <div class="card chartcard seasoncard">
       <div class="chead"><h2 data-i18n="seasonTitle"></h2><span class="daylabel" id="seasonSummary"></span></div>
@@ -168,7 +173,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 </main>
 
 <script src="levels.js?v=20261108b"></script>
-<script src="venue-state.js?v=20261108b"></script>
+<script src="venue-state.js?v=20261109a"></script>
 <script src="menu.js?v=20261108c"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -287,6 +292,7 @@ function refresh(force) {
   renderRows();
   renderChart();
   renderSeasons();
+  renderEventCrowd();
   if (frames.length) select(followLatest ? frames.length - 1 : current); else clearFrame();
 }
 
@@ -297,7 +303,7 @@ function showVTab(name) {
     document.querySelector(`[data-vtab="${k}"]`).setAttribute('aria-selected', k === name);
   }
   params.set('tab', name); history.replaceState(null, '', `?${params}`);
-  if (name === 'density') { renderChart(); renderSeasons(); }
+  if (name === 'density') { renderChart(); renderSeasons(); renderEventCrowd(); }
   if (name === 'calendar') renderProgramChart();
   if (name === 'website') renderWebsite();
   if (name === 'menu') renderMenu();
@@ -694,6 +700,28 @@ function weeklyHistory() {
 
 // ---- All-time high by season (weekly, since 2021) ----
 const SEASON_COLORS = ['#64b5f6', '#4cd964', '#ffcc00', '#ff8a3d'];
+// ---- Crowd per event: the busiest moment while each announced event ran, newest first ----
+function renderEventCrowd() {
+  const card = $('evCrowdCard'); if (!card || !venue) return;
+  const now = new Date();
+  const rows = eventWindows(venue).filter(w => w.start <= now).map(w => {
+    // Demo venues: rebuild that night's frames; camera venues: use the frames we have.
+    const src = simVenue ? simFrames(venue, w.e.date, now) : everything;
+    const inWin = src.filter(f => { const t = new Date(f.timestamp); return t >= w.start && t < w.end && t <= now; });
+    if (!inWin.length) return null;
+    return { w, peak: Math.max(...inWin.map(f => f.people)), avg: Math.round(inWin.reduce((a, f) => a + f.people, 0) / inWin.length), live: now < w.end };
+  }).filter(Boolean).sort((a, b) => b.w.start - a.w.start).slice(0, 12);
+  card.hidden = !rows.length;
+  if (!rows.length) return;
+  const max = Math.max(...rows.map(r => r.peak), 1), best = rows.reduce((a, r) => r.peak > a.peak ? r : a);
+  $('evCrowdSummary').textContent = t('evCrowdBest', best.w.e.name, best.peak);
+  $('evBars').innerHTML = rows.map(r => `<div class="evbar${r.live ? ' live' : ''}${r === best ? ' best' : ''}" title="${t('evCrowdAvg', r.avg)}">
+      <div class="evb-meta"><b>${r.w.e.name}</b><span>${fmtDay(r.w.e.date)} · ${r.w.e.from}–${r.w.e.to}${r.live ? ` · ${t('ev_live')}` : ''}</span></div>
+      <div class="evb-track"><div class="evb-fill" style="width:${Math.max(3, r.peak / max * 100)}%;--lv:${levelOf(r.peak).color}"></div></div>
+      <div class="evb-n">${r.peak}<small>${t('people')}</small></div>
+    </div>`).join('');
+}
+
 function renderSeasons() {
   const box = $('seasonChart');
   if (!box || !box.clientWidth || !venue) return;
@@ -767,10 +795,15 @@ function renderChart() {
   const W = Math.max(300, box.clientWidth), H = Math.round(Math.min(340, Math.max(220, W * 0.3)));
   const m = { t: 12, r: 12, b: 26, l: 40 };
   const secs = f => { const [h, mi, s] = hms(f.timestamp).split(':').map(Number); return (f.timestamp.slice(0, 10) > day ? 86400 : 0) + h * 3600 + mi * 60 + s; };
-  const t0 = Math.min(8 * 3600, all.length ? Math.floor(secs(all[0]) / 3600) * 3600 : Infinity);
-  const t1 = Math.max(24 * 3600, all.length ? Math.ceil(secs(all[all.length - 1]) / 3600) * 3600 : 0);
+  // Demo venues with `sim_full_day` (Kulüp): the rest of today's night is drawn as a dashed "expected" line,
+  // so the whole day's chart is filled.
+  const nowT = new Date();
+  const future = simVenue?.sim_full_day && day === today() ? simFrames(simVenue, day, new Date(8.64e15)).filter(f => new Date(f.timestamp) > nowT) : [];
+  const span = [...all, ...future];
+  const t0 = Math.min(8 * 3600, span.length ? Math.floor(secs(span[0]) / 3600) * 3600 : Infinity);
+  const t1 = Math.max(24 * 3600, span.length ? Math.ceil(secs(span[span.length - 1]) / 3600) * 3600 : 0);
   // A "nice" tick step (1, 2 or 5 × 10ⁿ) giving about five gridlines, whether the peak is 10 or 1,200.
-  const peakN = Math.max(10, ...frames.map(f => f.people));
+  const peakN = Math.max(10, ...frames.map(f => f.people), ...future.map(f => f.people));
   const raw = peakN / 5, mag = Math.pow(10, Math.floor(Math.log10(raw)));
   const tick = [1, 2, 5, 10].map(k => k * mag).find(k => k >= raw);
   const max = Math.ceil(peakN / tick) * tick;
@@ -796,6 +829,13 @@ function renderChart() {
     g += `<defs>${grad('lvlLine', 1)}${grad('lvlArea', 0.22)}</defs>`;
     g += `<path d="${area}" fill="url(#lvlArea)"/>`;
     g += `<path d="${line}" fill="none" stroke="url(#lvlLine)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  }
+  if (future.length) {
+    const fp = [...(points.length ? [points[points.length - 1]] : []), ...future.map(f => ({ x: x(secs(f)), y: y(f.people) }))];
+    const fl = roundedLine(fp.map(p => [p.x, p.y]));
+    g += `<path d="${fl}L${fp[fp.length - 1].x},${y(0)}L${fp[0].x},${y(0)}Z" fill="var(--series)" opacity="0.08"/>`;
+    g += `<path d="${fl}" fill="none" stroke="var(--series)" stroke-width="2" stroke-dasharray="5 5" stroke-linecap="round" opacity="0.8"/>`;
+    g += `<text x="${fp[0].x + 8}" y="${m.t + 12}" fill="var(--ink-2)" style="font-size:11px">${t('expectedLine')}</text>`;
   }
   g += `<line id="cross" y1="${m.t}" y2="${H - m.b}" stroke="var(--axis)" stroke-width="1" visibility="hidden"/>`;
   g += points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${levelOf(frames[p.i].people).color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
