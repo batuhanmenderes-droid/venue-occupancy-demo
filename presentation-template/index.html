@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=33">
+<link rel="stylesheet" href="deck.css?v=35">
 </head>
 <body>
 
@@ -508,7 +508,47 @@
       <div class="rv-hint chat-hint" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
     </section>
 
-    <!-- 23 · Empty slide to duplicate -->
+    <!-- 23 · "Nasıl çalışıyor?" big title; the next scroll moves it up and draws the data flow below,
+         with a picture travelling only as far as the venue's computer and only the count going further. -->
+    <section class="slide slide--how" data-steps="1" aria-roledescription="slide" aria-label="Nasıl çalışıyor?">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <h2 class="display how-title">Nasıl çalışıyor?</h2>
+      <div class="flow">
+          <div class="flow-node" style="--i:0">
+            <div class="flow-icon flow-icon--cam"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5l12-3.5 2 6-12 3.5z"/><path d="M17 8.5l3.5-1v5l-3.5-.5"/><path d="M7 13l-1.5 6.5M4 19.5h4"/></svg></div>
+            <h3>Güvenlik kameraları</h3>
+            <p>Mekandaki mevcut kameralar işletme bilgisayarına bağlanır.</p>
+          </div>
+          <div class="flow-conn" style="--i:0" aria-hidden="true"><i></i><span class="pkt pkt--frame" aria-hidden="true"></span></div>
+          <div class="flow-node" style="--i:1">
+            <div class="flow-icon flow-icon--pc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M9 20h6M12 16v4"/></svg></div><span class="flow-tag">15 dk</span><span class="flow-del" aria-hidden="true">Görüntü silindi</span>
+            <h3>İşletme bilgisayarı</h3>
+            <p>15 dakikada bir görüntü alınır, kişi sayımı yapılır ve görüntü yok edilir.</p>
+          </div>
+          <div class="flow-conn" style="--i:1" aria-hidden="true"><i></i><span class="pkt pkt--num" aria-hidden="true">287</span></div>
+          <div class="flow-node" style="--i:2">
+            <div class="flow-icon flow-icon--srv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3.5" width="16" height="7" rx="1.5"/><rect x="4" y="13.5" width="16" height="7" rx="1.5"/><path d="M8 7h.01M8 17h.01M12 7h4M12 17h4"/></svg></div>
+            <h3>Sunucu</h3>
+            <p>Sunucuya yalnızca sayım verisi gider.</p>
+          </div>
+          <div class="flow-conn" style="--i:2" aria-hidden="true"><i></i><span class="pkt pkt--num" aria-hidden="true">287</span></div>
+          <div class="flow-node" style="--i:3">
+            <div class="flow-icon flow-icon--app"><svg viewBox="0 5.5 132 102" aria-hidden="true"><use href="#mk-bold"/></svg></div>
+            <h3>herkez nerde?!</h3>
+            <p>Sayım verisi uygulamaya aktarılır.</p>
+          </div>
+          <div class="flow-conn" style="--i:3" aria-hidden="true"><i></i><span class="pkt pkt--num" aria-hidden="true">287</span></div>
+          <div class="flow-node" style="--i:4">
+            <div class="flow-icon flow-icon--phone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></div><span class="flow-count" aria-hidden="true">287 kişi</span>
+            <h3>Tüketicinin telefonu</h3>
+            <p>Tüketici kalabalığı rakamlar eşliğinde görür.</p>
+          </div>
+      </div>
+      <a class="kvkk-link" id="kvkk-link" href="#kvkk">KVKK Aydınlatma Metni<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+      <div class="rv-hint how-hint" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+    </section>
+
+    <!-- 24 · Empty slide to duplicate -->
     <section class="slide slide--blank" aria-roledescription="slide" aria-label="Boş slayt">
       <header class="slide-head">
         <p class="eyebrow">Bölüm</p>

@@ -1003,3 +1003,82 @@ body {
 }
 .chat-map img { display: block; width: 100%; height: auto; }
 .slide--chat[data-step="1"] .chat-map { opacity: 1; transform: none; }
+
+/* ---------- 23 · How it works: big title → flow ---------- */
+.slide--how { padding: 0; overflow: hidden; }
+.slide--how .heat .h1 { width: 1100px; height: 900px; left: 400px; right: auto; top: 160px; background: var(--calm); opacity: .30; }
+.slide--how .heat .h2 { width: 600px; height: 600px; right: -160px; left: auto; bottom: -240px; top: auto; background: var(--full); opacity: .18; }
+.how-title {
+  position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap;
+  font-size: 220px; line-height: 1; letter-spacing: -0.05em;
+  transform: translate(-50%, -50%);
+  transition: top 1s cubic-bezier(.65,0,.25,1), font-size 1s cubic-bezier(.65,0,.25,1), transform 1s cubic-bezier(.65,0,.25,1);
+}
+.slide--how.is-active .how-title { animation: rise 1s var(--ease) .2s both; }
+.slide--how[data-step="1"] .how-title { top: 150px; font-size: 104px; }
+
+.flow {
+  position: absolute; left: 100px; right: 100px; top: 330px;
+  display: grid; grid-template-columns: 1fr 96px 1fr 96px 1fr 96px 1fr 96px 1fr; align-items: start;
+}
+.flow-node {
+  position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px;
+  opacity: 0; transform: translateY(40px);
+  transition: opacity .6s var(--ease), transform .6s var(--ease);
+  transition-delay: calc(.5s + var(--i) * .22s);
+}
+.flow-icon {
+  display: grid; place-items: center; width: 150px; height: 150px; border-radius: 40px;
+  background: linear-gradient(160deg, rgba(48, 48, 58, .9), rgba(24, 24, 30, .9));
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 30px 60px -30px rgba(0,0,0,.9);
+  color: var(--ink);
+}
+.flow-icon svg { width: 72px; height: 72px; }
+.flow-icon--app { background: #0B0B10; }
+.flow-icon--app svg { width: 84px; height: auto; color: #fff; }
+.flow-node h3 { margin: 10px 0 0; font: 800 30px/1.1 var(--font-display); letter-spacing: -0.02em; color: var(--ink); }
+.flow-node p { margin: 0; max-width: 300px; font: 400 21px/1.45 var(--font-text); color: var(--ink-2); text-wrap: pretty; }
+.flow-tag {
+  position: absolute; top: -12px; left: calc(50% + 46px);
+  padding: 6px 12px; border-radius: 999px; background: var(--calm); color: #fff; font: 700 17px/1 var(--font-text);
+}
+.flow-del, .flow-count {
+  position: absolute; top: 112px; left: 50%; transform: translateX(-50%);
+  padding: 7px 14px; border-radius: 999px; white-space: nowrap; font: 700 16px/1 var(--font-text);
+  opacity: 0;
+}
+.flow-del { background: rgba(255, 69, 58, .18); color: #FF6961; border: 1px solid rgba(255, 69, 58, .35); }
+.flow-count { background: var(--full); color: #fff; }
+.flow-conn { position: relative; height: 150px; opacity: 0; transition: opacity .5s ease; transition-delay: calc(.65s + var(--i) * .22s); }
+.flow-conn i { position: absolute; left: 6px; right: 6px; top: 74px; height: 2px; background: repeating-linear-gradient(90deg, rgba(255,255,255,.35) 0 8px, transparent 8px 14px); }
+.flow-conn i::after { content: ""; position: absolute; right: -4px; top: -5px; border: 6px solid transparent; border-left: 8px solid rgba(255,255,255,.45); }
+.pkt { position: absolute; top: 75px; left: 0; transform: translate(-50%, -50%); opacity: 0; }
+.pkt--frame { width: 34px; height: 24px; border-radius: 5px; background: linear-gradient(135deg, #8E8E93, #3a3a40); border: 2px solid #c8c8cc; }
+.pkt--num { padding: 4px 10px; border-radius: 999px; background: var(--full); color: #fff; font: 700 16px/1 var(--font-text); box-shadow: 0 0 16px rgba(255,45,111,.6); }
+
+.slide--how[data-step="1"] .flow-node { opacity: 1; transform: none; }
+.slide--how[data-step="1"] .flow-conn { opacity: 1; }
+/* one 6 s cycle: a frame goes camera → computer, it is counted and deleted, then only the number travels on */
+.slide--how[data-step="1"] .pkt { animation: pktMove 6s linear infinite; animation-delay: calc(1.8s + var(--i) * 1.1s); }
+.slide--how[data-step="1"] .flow-del { animation: delShow 6s ease infinite 2.7s; }
+.slide--how[data-step="1"] .flow-count { animation: countShow 6s ease infinite 6.3s; }
+@keyframes pktMove { 0% { left: 0; opacity: 0; } 3% { opacity: 1; } 15% { left: 100%; opacity: 1; } 18%, 100% { left: 100%; opacity: 0; } }
+@keyframes delShow { 0% { opacity: 0; transform: translate(-50%, 6px); } 6%, 22% { opacity: 1; transform: translate(-50%, 0); } 30%, 100% { opacity: 0; } }
+@keyframes countShow { 0% { opacity: 0; transform: translate(-50%, 6px) scale(.8); } 6%, 40% { opacity: 1; transform: translate(-50%, 0); } 50%, 100% { opacity: 0; } }
+
+.kvkk-link {
+  position: absolute; left: 50%; bottom: 120px; transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 500 22px/1 var(--font-text); color: var(--ink-2); text-decoration: underline; text-underline-offset: 6px; text-decoration-color: rgba(255,255,255,.3);
+  opacity: 0; transition: opacity .6s ease 1.8s, color .2s;
+}
+.kvkk-link:hover { color: var(--ink); }
+.slide--how[data-step="1"] .kvkk-link { opacity: 1; }
+.slide--how:not([data-step="1"]) .kvkk-link { pointer-events: none; }
+.how-hint { z-index: 2; }
+.slide--how.is-active:not([data-step="1"]) .how-hint { animation: hintBob 1.6s ease-in-out 1.6s infinite; }
+.slide--how[data-step="1"] .how-hint { opacity: 0; }
+/* title centring without transform (the entrance animation owns transform) */
+.how-title { left: 0; right: 0; text-align: center; transform: none; top: 50%; margin-top: -110px; transition: top 1s cubic-bezier(.65,0,.25,1), margin-top 1s cubic-bezier(.65,0,.25,1), font-size 1s cubic-bezier(.65,0,.25,1); }
+.slide--how[data-step="1"] .how-title { top: 140px; margin-top: 0; }
