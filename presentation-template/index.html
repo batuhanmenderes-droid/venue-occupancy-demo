@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=15">
+<link rel="stylesheet" href="deck.css?v=17">
 </head>
 <body>
 
@@ -264,7 +264,7 @@
         </div>
       </div>
       <div class="imac imac--low" aria-hidden="true">
-        <div class="imac-screen"><img data-shared="screen" src="assets/panel-kulup-full.jpg" alt="" width="2400" height="4026" decoding="async"></div>
+        <div class="imac-screen"><img data-shared="screen" src="assets/panel-kulup-full.jpg?v=2" alt="" width="2400" height="5337" decoding="async"></div>
         <div class="imac-chin"></div>
         <div class="imac-neck"></div>
         <div class="imac-foot"></div>
@@ -275,14 +275,68 @@
          inside it (data-scroll), and the deck moves on only once the page is at its end. -->
     <section class="slide slide--fullpage" data-flow="imac" aria-roledescription="slide" aria-label="Panel ekranı: Kulüp">
       <div class="page-scroll" data-scroll data-shared="screen" tabindex="-1">
-        <img src="assets/panel-kulup-full.jpg" alt="Kulüp işletme detay sayfası: anlık ziyaretçi sayısı, rekor, m² başına yoğunluk, gün içi grafik, etkinlik bazında kalabalık ve sezonlara göre rekorlar" width="2400" height="4026" decoding="async">
+        <img src="assets/panel-kulup-full.jpg?v=2" alt="Kulüp işletme detay sayfası: anlık ziyaretçi sayısı, rekor, m² başına yoğunluk, gün içi grafik, haftanın günleri ve saatlere göre kalabalık, Akyaka içindeki pay, etkinliğe ve sezona göre kalabalık" width="2400" height="5337" decoding="async">
       </div>
       <div class="scroll-hint" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </div>
     </section>
 
-    <!-- 12 · Empty slide to duplicate -->
+    <!-- 12 · Live metric cards taken out of the panel page: explanations left, cards right.
+         live-metrics.js ticks the numbers while this slide is on screen. -->
+    <section class="slide slide--metrics" aria-roledescription="slide" aria-label="Anlık metrikler">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <p class="eyebrow metrics-eyebrow"><span class="live-dot"></span>Panel · Anlık metrikler</p>
+
+      <div class="m-explain">
+        <h3>Son ölçüm</h3>
+        <p>Kameradan gelen en güncel ziyaretçi sayısı. Yanındaki çubuklar son üç saati gösterir; son bir saatteki artış ya da azalış tek bakışta okunur.</p>
+      </div>
+      <div class="mcard" data-live="last">
+        <div class="mcard-main">
+          <div class="mlabel">Son ölçüm</div>
+          <div class="mvalue"><b data-out="last">287</b><svg class="mperson" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="4.5"/><path d="M3.5 21c.6-4.6 4.1-7.5 8.5-7.5s7.9 2.9 8.5 7.5z"/></svg></div>
+          <div class="mmeta"><span class="mstatus">Çok kalabalık</span><span class="mchip mchip--up" data-out="hourChip">▲ +158 son 1 saatte</span></div>
+        </div>
+        <div class="mbars">
+          <div class="mbar"><span class="bv">0</span><i style="--h:0"></i><span class="bl">14:00</span></div>
+          <div class="mbar"><span class="bv">129</span><i style="--h:.6"></i><span class="bl">15:00</span></div>
+          <div class="mbar is-now"><span class="bv" data-out="hourBar">215</span><i data-bar="hourBar" style="--h:1"></i><span class="bl">16:00</span></div>
+        </div>
+      </div>
+
+      <div class="m-explain">
+        <h3>Tüm zamanların en yükseği</h3>
+        <p>Mekanın rekor kalabalığı. Bugünün en yüksek sayısı rekor ve günlük ortalamayla yan yana; rekora ne kadar yaklaşıldığı anlık görülür.</p>
+      </div>
+      <div class="mcard" data-live="record">
+        <div class="mcard-main">
+          <div class="mlabel">Tüm zamanların en yükseği</div>
+          <div class="mvalue"><b data-out="record">305</b><svg class="mperson" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="4.5"/><path d="M3.5 21c.6-4.6 4.1-7.5 8.5-7.5s7.9 2.9 8.5 7.5z"/></svg></div>
+          <div class="mmeta"><span class="mstatus">Çok kalabalık</span><span class="mchip mchip--down" data-out="recordChip">▼ -18 bugün rekora göre</span></div>
+        </div>
+        <div class="mbars">
+          <div class="mbar"><span class="bv" data-out="recordBar">305</span><i data-bar="recordBar" style="--h:1"></i><span class="bl">Rekor</span></div>
+          <div class="mbar"><span class="bv">220</span><i data-bar="avgBar" style="--h:.72"></i><span class="bl">Ortalama</span></div>
+          <div class="mbar is-now"><span class="bv" data-out="todayBar">287</span><i data-bar="todayBar" style="--h:.94"></i><span class="bl">bugün</span></div>
+        </div>
+      </div>
+
+      <div class="m-explain">
+        <h3>m² başına kişi</h3>
+        <p>Ziyaretçi sayısının mekanın alanına bölünmesiyle bulunan tahmini yoğunluk. Her kare yaklaşık 1 m²; mekanın ne kadar dolu hissettirdiğini gösterir.</p>
+      </div>
+      <div class="mcard mcard--density" data-live="density">
+        <div class="mcard-main">
+          <div class="mlabel">m² başına kişi (tahmini)</div>
+          <div class="mvalue"><b data-out="density">1,15</b><span class="munit">/ m²</span></div>
+          <div class="m2grid" data-out="grid" aria-hidden="true"></div>
+          <div class="mfoot">tahmini alan 250 m²</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 · Empty slide to duplicate -->
     <section class="slide slide--blank" aria-roledescription="slide" aria-label="Boş slayt">
       <header class="slide-head">
         <p class="eyebrow">Bölüm</p>
@@ -310,5 +364,6 @@
 <p class="rotate-hint" id="rotateHint">Daha büyük görmek için telefonu yan çevirin</p>
 
 <script src="deck.js?v=15"></script>
+<script src="live-metrics.js?v=2"></script>
 </body>
 </html>

@@ -338,3 +338,11 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 .sl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c); }
 .sl-row.sel { background: color-mix(in srgb, var(--c) 16%, transparent); }
 @media (max-width: 600px) { .ios-badge { display: flex; } .ios-badge .sp-logo { width: 24px; height: 24px; } .ios-center b { font-size: 32px; } }
+
+/* Event crowd: placeholder profile picture next to each event */
+.evbar { grid-template-columns: 38px minmax(130px, 210px) 1fr 70px; }
+.evb-ava { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; flex: none;
+  font: 700 13px/1 var(--font-text); letter-spacing: .02em; color: #fff;
+  background: radial-gradient(circle at 30% 25%, hsl(var(--h) 85% 72%), hsl(var(--h) 70% 42%) 70%, hsl(calc(var(--h) + 40) 70% 30%));
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px hsl(var(--h) 70% 55% / .55); }
+@media (max-width: 600px) { .evbar { grid-template-columns: 34px 1fr 52px; } .evb-ava { width: 34px; height: 34px; grid-row: 1 / span 2; } .evb-track { grid-column: 2 / -1; } .evb-n { grid-column: 3; } }

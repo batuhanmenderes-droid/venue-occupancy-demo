@@ -80,7 +80,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=55">
+<link rel="stylesheet" href="brand.css?v=56">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -869,6 +869,10 @@ function renderShare() {
   if (total) renderShare._centre?.(venue.id);
 }
 
+// Placeholder profile picture for a performer: initials on a colour picked from the name.
+const performer = n => n.split(' · ')[0];
+const initials = n => performer(n).split(/\s+/).filter(Boolean).map(w => w[0]).join('').slice(0, 2).toLocaleUpperCase('tr');
+const avatarHue = n => { let h = 0; for (const ch of performer(n)) h = (h * 31 + ch.charCodeAt(0)) % 360; return h; };
 // ---- Crowd per event: the busiest moment while each announced event ran, newest first ----
 function renderEventCrowd() {
   const card = $('evCrowdCard'); if (!card || !venue) return;
@@ -885,6 +889,7 @@ function renderEventCrowd() {
   const max = Math.max(...rows.map(r => r.peak), 1), min = Math.min(...rows.map(r => r.peak)), base = min * 0.6, best = rows.reduce((a, r) => r.peak > a.peak ? r : a);
   $('evCrowdSummary').textContent = t('evCrowdBest', best.w.e.name, best.peak);
   $('evBars').innerHTML = rows.map(r => `<div class="evbar${r.live ? ' live' : ''}${r === best ? ' best' : ''}" title="${t('evCrowdAvg', r.avg)}">
+      <span class="evb-ava" style="--h:${avatarHue(r.w.e.name)}" aria-hidden="true">${initials(r.w.e.name)}</span>
       <div class="evb-meta"><b>${r.w.e.name}</b><span>${fmtDay(r.w.e.date)} · ${r.w.e.from}–${r.w.e.to}${r.live ? ` · ${t('ev_live')}` : ''}</span></div>
       <div class="evb-track"><div class="evb-fill" style="width:${Math.max(6, (r.peak - base) / Math.max(1, max - base) * 100)}%;--lv:${relColor(r.peak, min, max)}"></div></div>
       <div class="evb-n">${r.peak}<small>${t('people')}</small></div>

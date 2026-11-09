@@ -548,3 +548,83 @@ body {
   .slide { position: relative; height: var(--slide-h); opacity: 1 !important; visibility: visible !important; transform: none !important; break-after: page; }
   .controls, .progress, .rotate-hint { display: none !important; }
 }
+
+/* ---------- 12 · Live metric cards (rebuilt from the panel page; numbers tick in live-metrics.js) ---------- */
+.slide--metrics {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 920px;
+  grid-template-rows: repeat(3, 1fr);
+  column-gap: 96px; row-gap: 26px;
+  padding: 128px var(--pad-x) 72px;
+  overflow: hidden;
+}
+.slide--metrics .heat .h1 { width: 900px; height: 900px; right: -200px; top: 60px; background: var(--calm); opacity: .30; }
+.slide--metrics .heat .h2 { width: 560px; height: 560px; left: -160px; right: auto; bottom: -200px; top: auto; background: var(--full); opacity: .16; }
+.metrics-eyebrow { position: absolute; top: 60px; left: var(--pad-x); z-index: 1; }
+.m-explain { position: relative; z-index: 1; align-self: center; display: flex; flex-direction: column; gap: 14px; padding-right: 20px; }
+.m-explain h3 { margin: 0; font: 800 50px/1.02 var(--font-display); letter-spacing: -0.03em; color: var(--ink); }
+.m-explain p { margin: 0; font: 400 25px/1.45 var(--font-text); color: var(--ink-2); text-wrap: pretty; max-width: 34ch; }
+
+.mcard {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px;
+  padding: 28px 36px 28px 36px;
+  border-radius: 34px;
+  background: linear-gradient(160deg, rgba(40, 36, 40, .82), rgba(22, 20, 26, .82));
+  border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 30px 60px -30px rgba(0,0,0,.8);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  min-height: 0;
+}
+.mcard-main { display: flex; flex-direction: column; min-width: 0; }
+.mlabel { font: 600 27px/1.2 var(--font-text); color: var(--ink-2); }
+.mvalue { display: flex; align-items: flex-end; gap: 14px; margin: 6px 0 auto; }
+.mvalue b {
+  font: 500 128px/.92 var(--font-display); letter-spacing: -0.035em; font-variant-numeric: tabular-nums;
+  background: linear-gradient(180deg, #fff 55%, #c9dcff 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.mperson { width: 46px; height: 46px; margin-bottom: 8px; fill: rgba(235, 235, 245, .62); }
+.munit { font: 600 36px/1 var(--font-display); color: var(--ink-2); margin-bottom: 14px; }
+.mmeta { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.mstatus { display: inline-flex; align-items: center; gap: 12px; font: 600 26px/1 var(--font-text); color: #FF453A; }
+.mstatus::before {
+  content: "!"; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+  background: #FF453A; color: #fff; font: 800 20px/1 var(--font-text);
+}
+.mchip { display: inline-flex; align-items: center; height: 46px; padding: 0 18px; border-radius: 999px; font: 700 25px/1 var(--font-text); background: rgba(255, 255, 255, .07); font-variant-numeric: tabular-nums; }
+.mchip--up { color: #FFB400; }
+.mchip--down { color: #4D8BFF; }
+
+.mbars { display: grid; grid-template-columns: repeat(3, 64px); column-gap: 12px; align-items: end; }
+.mbar { display: grid; grid-template-rows: auto 1fr auto; justify-items: center; row-gap: 10px; height: 100%; }
+.mbar .bv { font: 600 25px/1 var(--font-display); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.mbar.is-now .bv { color: var(--ink); }
+.mbar i {
+  align-self: end; width: 100%;
+  height: calc(var(--h, 0) * 100%); min-height: 8px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .09);
+  transition: height .5s var(--ease);
+}
+.mbar.is-now i { background: linear-gradient(180deg, #4D8BFF, #1F55D6); box-shadow: 0 0 24px rgba(77, 139, 255, .35); }
+.mbar .bl { font: 500 20px/1 var(--font-text); color: var(--muted); }
+
+.mcard--density { grid-template-columns: 1fr; }
+.m2grid { display: grid; grid-template-columns: repeat(20, 1fr); gap: 7px; margin: 18px 0 14px; }
+.m2grid i { aspect-ratio: 1; border-radius: 5px; background: rgba(255, 255, 255, .08); transition: background .3s, box-shadow .3s; }
+.m2grid i.on { background: #4D8BFF; box-shadow: 0 0 12px rgba(77, 139, 255, .55); }
+.mfoot { font: 500 22px/1 var(--font-text); color: var(--muted); }
+
+/* Cards come out one after another; explanations follow */
+.slide--metrics.is-active .mcard { animation: cardIn .9s var(--ease) both; }
+.slide--metrics.is-active .m-explain { animation: rise .9s var(--ease) both; }
+/* children: heat, eyebrow, then explain/card pairs */
+.slide--metrics.is-active > :nth-child(3) { animation-delay: .1s; }
+.slide--metrics.is-active > :nth-child(6) { animation-delay: .12s; }
+.slide--metrics.is-active > :nth-child(5) { animation-delay: .22s; }
+.slide--metrics.is-active > :nth-child(8) { animation-delay: .24s; }
+.slide--metrics.is-active > :nth-child(7) { animation-delay: .34s; }
+@keyframes cardIn { from { opacity: 0; transform: translateX(120px) scale(.96); } to { opacity: 1; transform: none; } }
+/* Value flash when a number changes */
+.mvalue b.tick { animation: tick .45s var(--ease); }
+@keyframes tick { 0% { filter: brightness(1.6); } 100% { filter: none; } }
