@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=38">
+<link rel="stylesheet" href="deck.css?v=40">
 </head>
 <body>
 
@@ -586,8 +586,8 @@
       </div>
     </section>
 
-    <!-- 25 · Product roadmap, stage 2: what comes next for venues and for visitors -->
-    <section class="slide slide--roadmap slide--roadmap2" data-hold="roadmap" aria-roledescription="slide" aria-label="Ürün Yol Haritası: Yeni özellikler">
+    <!-- 25 · Roadmap stage 2, venues: CRM-integrated dashboard components (illustrative numbers) -->
+    <section class="slide slide--roadmap slide--roadmap2 slide--crm" data-hold="roadmap" aria-roledescription="slide" aria-label="Ürün Yol Haritası: Mekanlar için">
       <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
       <header class="rm-head">
         <h2 class="display rm-title">Ürün Yol Haritası</h2>
@@ -597,38 +597,103 @@
           <li class="rm-stage is-on"><b>02</b><span>Yeni özellikler</span></li>
         </ol>
       </header>
-      <div class="rm-body">
-        <div class="rm-col">
-          <h3 class="rm-h">Mekanlar için</h3>
-          <p class="rm-lead">CRM entegrasyonu ile yeni dashboard componentleri</p>
-          <ul class="rm-chips">
-            <li style="--i:0">Kalabalığın ne kadarı satışa dönüyor</li>
-            <li style="--i:1">Kişi başına yapılan harcama</li>
-            <li style="--i:2">Haftalık, aylık, senelik geçmiş</li>
-            <li style="--i:3">Geleceğe dair AI forecast</li>
-            <li style="--i:4">Mekan ve hizmet enflasyonu ölçümü</li>
-            <li style="--i:5">Etkinlik bazında performans ölçümü</li>
+      <div class="rm-sub">
+        <h3 class="rm-h">Mekanlar için</h3>
+        <p class="rm-lead">CRM entegrasyonu ile yeni dashboard componentleri</p>
+        <span class="rm-demo">Temsili veri</span>
+      </div>
+      <div class="crm-grid">
+        <article class="dcard" style="--i:0">
+          <h4>Kalabalığın ne kadarı satışa dönüyor</h4>
+          <div class="dc-row">
+            <svg class="dc-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="48" class="bg"/><circle cx="60" cy="60" r="48" class="fg" pathLength="100" style="--v:38"/></svg>
+            <div class="dc-kpi"><b>%38</b><span>287 kişiden 109 adisyon</span></div>
+          </div>
+        </article>
+        <article class="dcard" style="--i:1">
+          <h4>Kişi başına yapılan harcama</h4>
+          <div class="dc-kpi dc-kpi--big"><b>₺640</b><span class="dc-chip up">▲ %8 geçen aya göre</span></div>
+          <svg class="dc-spark" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M0,48 L30,44 L60,46 L90,38 L120,40 L150,30 L180,33 L210,24 L240,26 L270,16 L300,12"/></svg>
+        </article>
+        <article class="dcard" style="--i:2">
+          <div class="dc-top"><h4>Geçmiş</h4><span class="dc-seg"><i>Hafta</i><i class="on">Ay</i><i>Yıl</i></span></div>
+          <div class="dc-bars" aria-hidden="true"><i style="--h:0.42;--i:0"></i><i style="--h:0.5;--i:1"></i><i style="--h:0.46;--i:2"></i><i style="--h:0.61;--i:3"></i><i style="--h:0.58;--i:4"></i><i style="--h:0.7;--i:5"></i><i style="--h:0.83;--i:6"></i><i style="--h:0.95;--i:7"></i><i style="--h:0.88;--i:8"></i><i style="--h:0.66;--i:9"></i><i style="--h:0.52;--i:10"></i><i style="--h:0.48;--i:11"></i></div>
+          <div class="dc-axis"><span>Oca</span><span>Haz</span><span>Ara</span></div>
+        </article>
+        <article class="dcard" style="--i:3">
+          <div class="dc-top"><h4>Geleceğe dair AI forecast</h4><span class="dc-chip ai">✦ AI</span></div>
+          <svg class="dc-fc" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true">
+            <path class="band" d="M180,58 C210,40 240,30 300,18 L300,62 C240,72 210,78 180,70 Z"/>
+            <path class="past" pathLength="100" d="M0,92 C30,88 50,70 80,74 C110,78 130,52 150,56 C165,59 172,62 180,64"/>
+            <path class="next" pathLength="100" d="M180,64 C210,58 240,48 300,40"/>
+            <line x1="180" y1="6" x2="180" y2="108" class="now"/>
+          </svg>
+          <p class="dc-note">Cumartesi tahmini: <b>310 kişi</b></p>
+        </article>
+        <article class="dcard" style="--i:4">
+          <h4>Mekan ve hizmet enflasyonu</h4>
+          <ul class="dc-infl">
+            <li><span>Menü fiyatlarınız</span><i style="--w:.84"></i><b>%+4,2</b></li>
+            <li><span>Akyaka ortalaması</span><i style="--w:.62" class="muted"></i><b>%+3,1</b></li>
+            <li><span>Benzer mekanlar</span><i style="--w:.7" class="muted"></i><b>%+3,5</b></li>
           </ul>
-        </div>
-        <div class="rm-col">
-          <h3 class="rm-h">Tüketici için</h3>
-          <div class="rm-feat" style="--i:0">
-            <p class="rm-feat-t">Lokasyon, mekan ve etkinlik bazında chat kanalları.</p>
-            <p class="rm-msg"><span class="rm-ch">Kulüp-UmutcanGenc</span>Çok iyi çalıyor aaabi!!</p>
-            <p class="rm-msg" style="--d:.25s"><span class="rm-ch">Akyaka-Genel</span>Burada önerebileceğiniz spor salonu var mı?</p>
-          </div>
-          <div class="rm-feat" style="--i:1">
-            <p class="rm-feat-t">Lokasyonlara bırakılabilecek zaman ayarlı metin, görsel içerikler.</p>
-            <p class="rm-msg rm-msg--pin"><span class="rm-ch">Kucuk-Akyaka</span>Buraya bayıldım mutlaka gelin!</p>
-          </div>
-          <div class="rm-feat" style="--i:2">
-            <p class="rm-feat-t">Onaylı profillerle başka insanlarla bağlantı kurabilme imkanı.</p>
-          </div>
-        </div>
+        </article>
+        <article class="dcard" style="--i:5">
+          <h4>Etkinlik bazında performans</h4>
+          <ul class="dc-ev">
+            <li><span>Deniz · DJ set</span><i style="--w:1"></i><b>₺69K</b></li>
+            <li><span>Retro Night</span><i style="--w:.86"></i><b>₺59K</b></li>
+            <li><span>Mert Kaya · Live</span><i style="--w:.64"></i><b>₺44K</b></li>
+            <li><span>Özgün · DJ set</span><i style="--w:.38" class="low"></i><b>₺26K</b></li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <!-- 26 · Empty slide to duplicate -->
+    <!-- 26 · Roadmap stage 2, visitors: chat channels, timed notes on the map, verified profiles -->
+    <section class="slide slide--roadmap slide--roadmap2 slide--social" data-hold="roadmap" aria-roledescription="slide" aria-label="Ürün Yol Haritası: Tüketici için">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <header class="rm-head">
+        <h2 class="display rm-title">Ürün Yol Haritası</h2>
+        <ol class="rm-track" aria-label="Aşamalar">
+          <li class="rm-stage is-done"><b>01</b><span>Pilot</span></li>
+          <li class="rm-line" aria-hidden="true"><i></i></li>
+          <li class="rm-stage is-on"><b>02</b><span>Yeni özellikler</span></li>
+        </ol>
+      </header>
+      <div class="rm-sub"><h3 class="rm-h">Tüketici için</h3></div>
+      <div class="soc-grid">
+        <article class="soc" style="--i:0">
+          <div class="soc-vis soc-chat">
+            <div class="chat-tabs"><span class="on"># Kulüp-UmutcanGenc</span><span># Akyaka-Genel</span></div>
+            <p class="cmsg"><b>Kulüp-UmutcanGenc</b>Çok iyi çalıyor aaabi!!</p>
+            <p class="cmsg cmsg--2"><b>Akyaka-Genel</b>Burada önerebileceğiniz spor salonu var mı?</p>
+          </div>
+          <p class="soc-t">Lokasyon, mekan ve etkinlik bazında chat kanalları.</p>
+        </article>
+        <article class="soc" style="--i:1">
+          <div class="soc-vis soc-map">
+            <img src="assets/map-desk.jpg" alt="" width="2400" height="1350" decoding="async">
+            <span class="pin" aria-hidden="true"></span>
+            <div class="note"><span class="note-ch">Kucuk-Akyaka</span>Buraya bayıldım mutlaka gelin!<span class="note-timer">⏱ 24 saat kaldı</span></div>
+          </div>
+          <p class="soc-t">Lokasyonlara bırakılabilecek zaman ayarlı metin, görsel içerikler.</p>
+        </article>
+        <article class="soc" style="--i:2">
+          <div class="soc-vis soc-net" aria-hidden="true">
+            <svg class="net-lines" viewBox="0 0 520 420" preserveAspectRatio="none"><path d="M260,210 L120,110 M260,210 L400,100 M260,210 L110,320 M260,210 L410,320"/></svg>
+            <span class="av av--c" style="--x:50%;--y:50%">S</span>
+            <span class="av" style="--x:23%;--y:26%">E</span>
+            <span class="av" style="--x:77%;--y:24%">M</span>
+            <span class="av" style="--x:21%;--y:76%">A</span>
+            <span class="av" style="--x:79%;--y:76%">D</span>
+          </div>
+          <p class="soc-t">Onaylı profillerle başka insanlarla bağlantı kurabilme imkanı.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 27 · Empty slide to duplicate -->
     <section class="slide slide--blank" aria-roledescription="slide" aria-label="Boş slayt">
       <header class="slide-head">
         <p class="eyebrow">Bölüm</p>
