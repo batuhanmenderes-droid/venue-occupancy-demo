@@ -796,3 +796,47 @@ body {
 .slide--comp.is-active .sc-badge { animation: scPop .5s var(--ease) both; animation-delay: calc(.4s + var(--d)); }
 @keyframes scPop { from { opacity: 0; transform: translate(-50%, -50%) scale(.6); } to { opacity: 1; transform: translate(-50%, -50%); } }
 .slide--comp.is-active .sc-row { animation: rise .6s var(--ease) both; animation-delay: calc(.5s + var(--i) * .05s); }
+
+/* ---------- 18 · Calendar and menu tabs in two browser windows ---------- */
+.browser-card { background: #0d0d10; }
+.bc-bar { display: flex; gap: 8px; align-items: center; height: 34px; padding: 0 16px; background: rgba(255,255,255,.06); border-bottom: 1px solid rgba(255,255,255,.08); }
+.bc-bar i { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,.22); }
+.bc-bar i:nth-child(1) { background: #FF5F57; } .bc-bar i:nth-child(2) { background: #FEBC2E; } .bc-bar i:nth-child(3) { background: #28C840; }
+.slide--tabs.is-active .browser-card img { animation: tabScroll 9s ease-in-out 1.4s infinite alternate; }
+/* a slow look down the page and back, as if someone is reading it */
+.browser-card { max-height: 640px; }
+@keyframes tabScroll { 0%, 15% { transform: translateY(0); } 85%, 100% { transform: translateY(-14%); } }
+.slide--tabs .browser-card { height: 560px; max-height: none; }
+@keyframes tabScroll { 0%, 15% { transform: translateY(0); } 85%, 100% { transform: translateY(-11%); } }
+
+/* 18–19 v2: one tab per slide, a wide browser window whose page scrolls slowly down and back */
+.slide--tabs { grid-template-columns: minmax(0, 1fr); }
+.slide--tabs .browser-card { height: 700px; }
+.slide--tabs.is-active .browser-card img { animation: tabScroll2 10s ease-in-out 1.2s infinite alternate; }
+@keyframes tabScroll2 { 0%, 12% { transform: translateY(0); } 88%, 100% { transform: translateY(var(--scroll, -20%)); } }
+
+/* ---------- 20 · Detail page in the centre, heat-map screens spread out to both edges ---------- */
+.slide--spread { padding: 0; overflow: hidden; perspective: 2600px; }
+.slide--spread .heat .h1 { width: 1300px; height: 900px; left: 310px; right: auto; top: 90px; background: var(--calm); opacity: .30; }
+.slide--spread .heat .h2 { width: 600px; height: 600px; left: -160px; right: auto; top: 520px; bottom: auto; background: var(--full); opacity: .20; }
+.slide--spread .heat .h3 { width: 600px; height: 600px; right: -160px; top: -120px; background: var(--active); opacity: .16; }
+.spread-screen {
+  position: absolute; margin: 0; top: 50%;
+  border-radius: 22px; overflow: hidden;
+  background: #0a0a0c;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 50px 120px -30px rgba(0,0,0,.95);
+}
+.spread-screen img { display: block; width: 100%; aspect-ratio: 16 / 9; height: auto; object-fit: cover; object-position: top; }
+.spread-screen--main { z-index: 3; width: 1180px; left: calc(50% - 590px); margin-top: -332px; border-radius: 26px; }
+.spread-screen--left, .spread-screen--right { z-index: 1; width: 980px; margin-top: -276px; filter: brightness(.82); }
+.spread-screen--left { left: -170px; transform-origin: right center; transform: rotateY(14deg); }
+.spread-screen--right { right: -170px; transform-origin: left center; transform: rotateY(-14deg); }
+.spread-screen--left img { object-position: left center; }
+.spread-screen--right img { object-position: right center; }
+/* entrance: the detail page comes up first, then both maps slide out from underneath it */
+.slide--spread.is-active .spread-screen--main { animation: spreadMain .9s var(--ease) both; }
+.slide--spread.is-active .spread-screen--left { animation: spreadLeft 1.2s cubic-bezier(.2,.8,.2,1) .55s both; }
+.slide--spread.is-active .spread-screen--right { animation: spreadRight 1.2s cubic-bezier(.2,.8,.2,1) .55s both; }
+@keyframes spreadMain { from { opacity: 0; transform: translateY(70px) scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes spreadLeft { from { opacity: 0; transform: translateX(560px) rotateY(0deg) scale(.86); } to { opacity: 1; transform: rotateY(14deg); } }
+@keyframes spreadRight { from { opacity: 0; transform: translateX(-560px) rotateY(0deg) scale(.86); } to { opacity: 1; transform: rotateY(-14deg); } }
