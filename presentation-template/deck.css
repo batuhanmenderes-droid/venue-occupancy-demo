@@ -945,3 +945,40 @@ body {
 .slide--reveal[data-step="1"] .rv-page { transform: translateY(-100%); }
 /* 21: room between point 5's sentence and its sub-list */
 .mob-steps > li > span { margin-bottom: 16px; }
+
+/* ---------- 22 · Questions as chat bubbles, then the closing line ---------- */
+.slide--chat { padding: 0; overflow: hidden; }
+.slide--chat .heat .h1 { width: 900px; height: 900px; left: -200px; top: 60px; background: var(--calm); opacity: .30; }
+.slide--chat .heat .h2 { width: 700px; height: 700px; right: -160px; left: auto; top: 200px; bottom: auto; background: var(--full); opacity: .24; }
+.slide--chat .heat .h3 { width: 600px; height: 600px; left: 700px; right: auto; bottom: -300px; top: auto; background: var(--active); opacity: .14; }
+.chat-bubbles { position: absolute; inset: 0; transition: transform .9s var(--ease), filter .9s var(--ease), opacity .9s var(--ease); }
+.bubble {
+  position: absolute; top: var(--y); margin: 0; max-width: 760px;
+  padding: 26px 36px; border-radius: 40px;
+  font: 500 36px/1.3 var(--font-text); letter-spacing: -0.01em; color: #fff;
+  box-shadow: 0 24px 50px -20px rgba(0,0,0,.7);
+}
+.bubble--visitor { left: var(--x); background: #2C2C33; border-bottom-left-radius: 12px; }
+.bubble--owner { right: var(--r); background: linear-gradient(135deg, #FF2D6F, #E0245E); border-bottom-right-radius: 12px; }
+/* pop in one by one, then float gently */
+.slide--chat.is-active .bubble {
+  animation: bubbleIn .6s cubic-bezier(.2, 1.4, .4, 1) both, bubbleFloat 6s ease-in-out infinite;
+  animation-delay: calc(.35s + var(--i) * .55s), calc(1.2s + var(--i) * .55s);
+}
+.bubble--visitor { transform-origin: 0 100%; }
+.bubble--owner { transform-origin: 100% 100%; }
+@keyframes bubbleIn { from { opacity: 0; transform: scale(.4) translateY(30px); } to { opacity: 1; transform: none; } }
+@keyframes bubbleFloat { 50% { transform: translateY(-8px); } }
+.chat-line {
+  position: absolute; left: 50%; top: 50%; width: 1400px; margin: 0;
+  transform: translate(-50%, -40%); opacity: 0;
+  font-size: 104px; line-height: 1; text-align: center;
+  transition: opacity .7s var(--ease) .2s, transform .9s var(--ease) .2s;
+  pointer-events: none;
+}
+.chat-hint { z-index: 2; }
+.slide--chat.is-active:not([data-step="1"]) .chat-hint { animation: hintBob 1.6s ease-in-out 4s infinite; }
+/* step 1: bubbles step back, the line comes forward */
+.slide--chat[data-step="1"] .chat-bubbles { transform: scale(.9); filter: blur(6px); opacity: .28; }
+.slide--chat[data-step="1"] .chat-line { opacity: 1; transform: translate(-50%, -50%); }
+.slide--chat[data-step="1"] .chat-hint { opacity: 0; }
