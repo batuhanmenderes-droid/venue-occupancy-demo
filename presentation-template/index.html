@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=25">
+<link rel="stylesheet" href="deck.css?v=27">
 </head>
 <body>
 
@@ -409,9 +409,7 @@
         <h3>Etkinliğe göre kalabalık</h3>
         <p>Her etkinlikte görülen en yüksek kalabalık, en yeniden eskiye. Hangi DJ, sanatçı ya da konseptin daha çok kişi çektiği ve hangi etkinliğin maliyetini karşılamadığı net görülür.</p>
       </div>
-      <figure class="comp-card reveal-x">
-        <img src="assets/cmp-events.jpg?v=2" alt="Etkinliğe göre kalabalık" width="2724" height="1040" decoding="async">
-      </figure>
+      <figure class="comp-card embed-card"><div class="app-embed" data-mode="card" data-src="../venue.html?mekan=kulup&amp;lang=tr&amp;tab=density" data-card="Etkinliğe göre kalabalık" data-title="Etkinliğe göre kalabalık"></div></figure>
     </section>
 
     <!-- 17 · Panel component: Sezonlara göre tüm zamanların en yükseği -->
@@ -422,10 +420,7 @@
         <h3>Sezonlara göre tüm zamanların en yükseği</h3>
         <p>2021'den bu yana her haftanın zirvesi, sezonlarla birlikte. Sezonların birbirine göre performansı ve rekorun ne zaman kırıldığı uzun vadeli planlamaya ışık tutar.</p>
       </div>
-      <figure class="comp-card reveal-x">
-        <img src="assets/cmp-seasons.jpg?v=2" alt="Sezonlara göre tüm zamanların en yükseği" width="2724" height="850" decoding="async">
-        <span class="live-ping live-ping--record" style="left:96.54%;top:38.3%" aria-hidden="true"></span>
-      </figure>
+      <figure class="comp-card embed-card"><div class="app-embed" data-mode="card" data-src="../venue.html?mekan=kulup&amp;lang=tr&amp;tab=density" data-card="Sezonlara göre tüm zamanların en yükseği" data-title="Sezonlara göre tüm zamanların en yükseği"></div></figure>
     </section>
 
     <!-- 18 · Venue page tab: Aktivite takvimi (the page scrolls slowly inside the window) -->
@@ -436,10 +431,7 @@
         <h3>Aktivite takvimi</h3>
         <p>Etkinlik takvimi işletmenin instagram sayfasından çekilir ve yayınlanır.</p>
       </div>
-      <figure class="comp-card browser-card" style="--scroll:-17%">
-        <div class="bc-bar" aria-hidden="true"><i></i><i></i><i></i></div>
-        <img src="assets/tab-calendar.jpg" alt="Kulüp aktivite takvimi: geçmiş etkinlikler" width="2400" height="1700" decoding="async">
-      </figure>
+      <figure class="comp-card embed-card embed-card--page"><div class="app-embed" data-mode="page" data-src="../venue.html?mekan=kulup&amp;lang=tr&amp;tab=calendar" data-title="Aktivite takvimi"></div></figure>
     </section>
 
     <!-- 19 · Venue page tab: Menü (the page scrolls slowly inside the window) -->
@@ -450,18 +442,24 @@
         <h3>Menü</h3>
         <p>Menü, sosyal medya linkleri, iletişim, rezervasyon, web sayfası ve mekana ait görseller.</p>
       </div>
-      <figure class="comp-card browser-card" style="--scroll:-41%">
-        <div class="bc-bar" aria-hidden="true"><i></i><i></i><i></i></div>
-        <img src="assets/tab-menu.jpg" alt="Kulüp menüsü: kokteyller, biralar, alkolsüz, atıştırmalıklar" width="2400" height="1700" decoding="async">
-      </figure>
+      <figure class="comp-card embed-card embed-card--page"><div class="app-embed" data-mode="page" data-src="../venue.html?mekan=kulup&amp;lang=tr&amp;tab=menu" data-title="Menü"></div></figure>
     </section>
 
-    <!-- 20 · Kulüp's detail page large in the centre; heat-map screens slide out from behind it to both edges -->
-    <section class="slide slide--spread" aria-roledescription="slide" aria-label="Kulüp detay sayfası ve yoğunluk haritası">
-      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
-      <figure class="spread-screen spread-screen--left" aria-hidden="true"><img src="assets/map-desk.jpg" alt="" width="2400" height="1350" decoding="async"></figure>
-      <figure class="spread-screen spread-screen--right" aria-hidden="true"><img src="assets/map-desk.jpg" alt="" width="2400" height="1350" decoding="async"></figure>
-      <figure class="spread-screen spread-screen--main"><img src="assets/panel-kulup-full.jpg?v=3" alt="Kulüp detay sayfası: anlık ziyaretçi sayısı, rekor ve m² başına yoğunluk" width="2400" height="5390" decoding="async"></figure>
+    <!-- 20 · "Tam kontrol." Step 0: Kulüp's detail page full screen under a black overlay with the text.
+         Step 1 (next scroll): the overlay lifts, the page slides down and the live map view (the app itself,
+         loaded by reveal-map.js) is revealed underneath. -->
+    <section class="slide slide--reveal" data-steps="1" aria-roledescription="slide" aria-label="Tam kontrol">
+      <div class="rv-map">
+        <iframe title="herkez nerde?! harita görünümü" tabindex="-1" loading="lazy"></iframe>
+      </div>
+      <div class="rv-page"><img src="assets/panel-kulup-full.jpg?v=3" alt="Kulüp işletme profil sayfası" width="2400" height="5390" decoding="async"></div>
+      <div class="rv-overlay">
+        <div class="rv-copy">
+          <h2 class="display rv-title">Tam kontrol.</h2>
+          <p class="rv-text">İşletme profil sayfasında istediği datayı tüketici ve diğer işletmelerle paylaşır.</p>
+        </div>
+        <div class="rv-hint" aria-hidden="true"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+      </div>
     </section>
 
     <!-- 21 · Empty slide to duplicate -->
@@ -491,8 +489,10 @@
 <div class="progress" aria-hidden="true"><i id="bar"></i></div>
 <p class="rotate-hint" id="rotateHint">Daha büyük görmek için telefonu yan çevirin</p>
 
-<script src="deck.js?v=15"></script>
+<script src="deck.js?v=16"></script>
 <script src="live-metrics.js?v=3"></script>
 <script src="share-chart.js?v=1"></script>
+<script src="embed.js?v=2"></script>
+<script src="reveal-map.js?v=2"></script>
 </body>
 </html>

@@ -29,6 +29,8 @@
     const from = slides[index];
     index = Math.max(0, Math.min(slides.length - 1, i));
     const to = slides[index];
+    // arriving from below lands on a stepped slide's last step, from above on its first
+    if (to !== from && to.dataset.steps) to.dataset.step = slides.indexOf(from) > index ? to.dataset.steps : 0;
     // Slides sharing a data-hold group keep the phone still: no slide-in, the old slide stays
     // underneath until the new one has faded in, so only the copy and the screen change.
     const held = from !== to && from.dataset.hold && from.dataset.hold === to.dataset.hold;
@@ -72,8 +74,17 @@
   }
   const fromHash = () => (parseInt(location.hash.slice(1), 10) || 1) - 1;
 
-  prev.addEventListener('click', () => go(index - 1));
-  next.addEventListener('click', () => go(index + 1));
+  // ---- In-slide steps ([data-steps="n"]) ----
+  // A slide can play n steps of its own (it gets data-step="0…n" for CSS) before the deck moves on.
+  function move(dir) {
+    const sl = slides[index], max = +sl.dataset.steps || 0, cur = +sl.dataset.step || 0;
+    if (max && dir > 0 && cur < max) { sl.dataset.step = cur + 1; return; }
+    if (max && dir < 0 && cur > 0) { sl.dataset.step = cur - 1; return; }
+    go(index + dir);
+  }
+
+  prev.addEventListener('click', () => move(-1));
+  next.addEventListener('click', () => move(1));
   window.addEventListener('hashchange', () => go(fromHash(), false));
 
   // ---- Slides with their own scrolling page ([data-scroll]) ----
@@ -91,7 +102,7 @@
       sc.scrollBy({ top: dir * (big ? sc.clientHeight * 0.85 : 260), behavior: 'smooth' });
       return;
     }
-    go(index + dir);
+    move(dir);
   }
 
   document.addEventListener('keydown', (e) => {
@@ -102,9 +113,9 @@
       case 'PageDown': case ' ': e.preventDefault(); step(1, true); break;
       case 'PageUp': e.preventDefault(); step(-1, true); break;
       case 'ArrowRight': case 'Enter':
-        e.preventDefault(); go(index + 1); break;
+        e.preventDefault(); move(1); break;
       case 'ArrowLeft': case 'Backspace':
-        e.preventDefault(); go(index - 1); break;
+        e.preventDefault(); move(-1); break;
       case 'Home': go(0); break;
       case 'End': go(slides.length - 1); break;
       case 'f': case 'F': toggleFullscreen(); break;
@@ -142,7 +153,7 @@
     lastWheel = now;
     wheelSum += delta;
     if (Math.abs(wheelSum) < 40) return;
-    go(index + (wheelSum > 0 ? 1 : -1));
+    move(wheelSum > 0 ? 1 : -1);
     wheelSum = 0;
     wheelLocked = true;
     lockStart = now;
@@ -161,16 +172,16 @@
     if (controls.contains(e.target)) return;
     const t = e.changedTouches[0];
     const dx = t.clientX - sx, dy = t.clientY - sy;
-    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) go(index + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) move(dx < 0 ? 1 : -1);
     else if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.2) {
       // On a scrolling page the swipe scrolls it natively; leave only from the end the swipe started at.
-      if (dy < 0 && atEnd) go(index + 1);
-      else if (dy > 0 && atTop) go(index - 1);
+      if (dy < 0 && atEnd) move(1);
+      else if (dy > 0 && atTop) move(-1);
     }
     else if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && Date.now() - st < 300) {
       // tap on the right / left third of the screen
-      if (t.clientX > window.innerWidth * 0.66) go(index + 1);
-      else if (t.clientX < window.innerWidth * 0.33) go(index - 1);
+      if (t.clientX > window.innerWidth * 0.66) move(1);
+      else if (t.clientX < window.innerWidth * 0.33) move(-1);
     }
   }, { passive: true });
 

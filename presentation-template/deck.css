@@ -815,28 +815,46 @@ body {
 .slide--tabs.is-active .browser-card img { animation: tabScroll2 10s ease-in-out 1.2s infinite alternate; }
 @keyframes tabScroll2 { 0%, 12% { transform: translateY(0); } 88%, 100% { transform: translateY(var(--scroll, -20%)); } }
 
-/* ---------- 20 · Detail page in the centre, heat-map screens spread out to both edges ---------- */
-.slide--spread { padding: 0; overflow: hidden; perspective: 2600px; }
-.slide--spread .heat .h1 { width: 1300px; height: 900px; left: 310px; right: auto; top: 90px; background: var(--calm); opacity: .30; }
-.slide--spread .heat .h2 { width: 600px; height: 600px; left: -160px; right: auto; top: 520px; bottom: auto; background: var(--full); opacity: .20; }
-.slide--spread .heat .h3 { width: 600px; height: 600px; right: -160px; top: -120px; background: var(--active); opacity: .16; }
-.spread-screen {
-  position: absolute; margin: 0; top: 50%;
-  border-radius: 22px; overflow: hidden;
-  background: #0a0a0c;
-  box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 50px 120px -30px rgba(0,0,0,.95);
+
+/* ---------- 20 · "Tam kontrol." overlay → page slides down → live map underneath ---------- */
+.slide--reveal { padding: 0; overflow: hidden; background: #000; }
+.rv-map, .rv-page, .rv-overlay { position: absolute; inset: 0; }
+.rv-map iframe { width: 100%; height: 100%; border: 0; display: block; pointer-events: none; background: #0B0B10; }
+.rv-map { transform: scale(1.06); filter: brightness(.6); transition: transform 1.3s cubic-bezier(.2,.8,.2,1) .25s, filter 1s ease .25s; }
+.rv-page { z-index: 2; box-shadow: 0 -30px 80px rgba(0,0,0,.6); transition: transform 1.15s cubic-bezier(.7,0,.2,1) .2s; }
+.rv-page img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.rv-overlay {
+  z-index: 3; display: flex; flex-direction: column; justify-content: center;
+  padding: 0 200px;
+  background: linear-gradient(90deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.78) 55%, rgba(0,0,0,.6) 100%);
+  transition: opacity .6s ease;
 }
-.spread-screen img { display: block; width: 100%; aspect-ratio: 16 / 9; height: auto; object-fit: cover; object-position: top; }
-.spread-screen--main { z-index: 3; width: 1180px; left: calc(50% - 590px); margin-top: -332px; border-radius: 26px; }
-.spread-screen--left, .spread-screen--right { z-index: 1; width: 980px; margin-top: -276px; filter: brightness(.82); }
-.spread-screen--left { left: -170px; transform-origin: right center; transform: rotateY(14deg); }
-.spread-screen--right { right: -170px; transform-origin: left center; transform: rotateY(-14deg); }
-.spread-screen--left img { object-position: left center; }
-.spread-screen--right img { object-position: right center; }
-/* entrance: the detail page comes up first, then both maps slide out from underneath it */
-.slide--spread.is-active .spread-screen--main { animation: spreadMain .9s var(--ease) both; }
-.slide--spread.is-active .spread-screen--left { animation: spreadLeft 1.2s cubic-bezier(.2,.8,.2,1) .55s both; }
-.slide--spread.is-active .spread-screen--right { animation: spreadRight 1.2s cubic-bezier(.2,.8,.2,1) .55s both; }
-@keyframes spreadMain { from { opacity: 0; transform: translateY(70px) scale(.94); } to { opacity: 1; transform: none; } }
-@keyframes spreadLeft { from { opacity: 0; transform: translateX(560px) rotateY(0deg) scale(.86); } to { opacity: 1; transform: rotateY(14deg); } }
-@keyframes spreadRight { from { opacity: 0; transform: translateX(-560px) rotateY(0deg) scale(.86); } to { opacity: 1; transform: rotateY(-14deg); } }
+.rv-copy { max-width: 1100px; display: flex; flex-direction: column; gap: 36px; }
+.rv-title { font-size: 200px; line-height: .9; letter-spacing: -0.05em; }
+.rv-text { margin: 0; font: 400 44px/1.4 var(--font-text); color: var(--ink-2); max-width: 26ch; text-wrap: pretty; }
+.rv-hint {
+  position: absolute; left: 50%; bottom: 120px; margin-left: -32px;
+  display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%;
+  color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);
+}
+.slide--reveal.is-active:not([data-step="1"]) .rv-hint { animation: hintBob 1.6s ease-in-out 1.6s infinite; }
+.slide--reveal.is-active .rv-copy > * { animation: rise 1s var(--ease) both; }
+.slide--reveal.is-active .rv-copy > :nth-child(2) { animation-delay: .15s; }
+.slide--reveal.is-active .rv-overlay { animation: rvFade .9s ease both; }
+@keyframes rvFade { from { opacity: 0; } }
+/* step 1 */
+.slide--reveal[data-step="1"] .rv-overlay { opacity: 0; pointer-events: none; animation: none; }
+.slide--reveal[data-step="1"] .rv-page { transform: translateY(100%); }
+.slide--reveal[data-step="1"] .rv-map { transform: none; filter: none; }
+
+/* ---------- 16–19 · Live app embeds (embed.js) ---------- */
+.embed-card { background: transparent; }
+.app-embed { position: relative; width: 100%; height: 520px; overflow: hidden; border-radius: inherit; background: #0B0B10; }
+.app-embed iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; background: #0B0B10; }
+.embed-card--page .app-embed { height: 700px; }
+@media (hover: none) { .app-embed iframe { pointer-events: none; } }
+
+/* ---------- 20 · text centred ---------- */
+.rv-overlay { align-items: center; text-align: center; padding: 0 160px; background: rgba(0, 0, 0, .78); }
+.rv-copy { align-items: center; }
+.rv-text { margin-left: auto; margin-right: auto; }
