@@ -135,9 +135,31 @@ function simCount(v, at) {
   const hour = at.getHours() + at.getMinutes() / 60;
   const busy = dayCurve(hour, v.type);
   const r = simRandom(`${v.id}:${slotStart(at).getTime()}`);
-  if (busy < 0.08 || r < 0.04) return 0;                   // quiet hours, and the odd empty moment
-  // Demo scale (halved): up to ~10 people at a category's peak, with ±15% noise.
-  return Math.max(0, Math.round(10 * busy * (0.85 + r * 0.3)));
+  const boost = eventBoost(v, at);
+  if (boost === 1 && (busy < 0.08 || r < 0.04)) return 0;  // quiet hours, and the odd empty moment
+  // Demo scale (halved): up to ~10 people at a category's peak, with ±15% noise. A venue can set its own
+  // peak (`sim_scale`), and announced events (venues.json `events`) pull a bigger crowd while they run.
+  return Math.max(0, Math.round((v.sim_scale || 10) * Math.max(busy, boost > 1 ? 0.35 : 0) * boost * (0.85 + r * 0.3)));
+}
+// Event windows on the clock: an event dated D from 22:00 to 01:00 runs D 22:00 → D+1 01:00; a set starting
+// before 06:00 belongs to the night that began the evening before (D+1). Each event draws its own crowd:
+// 1.5–3.1× a normal night, fixed per event, ramping up over the half hour before it starts.
+function eventWindows(v) {
+  if (v._evWin) return v._evWin;
+  const at = (date, hm) => { const d = new Date(`${date}T${hm}:00`); if (+hm.slice(0, 2) < 6) d.setDate(d.getDate() + 1); return d; };
+  return (v._evWin = (v.events || []).filter(e => e.date && e.from && e.to).map(e => {
+    const start = at(e.date, e.from); let end = at(e.date, e.to); if (end <= start) end = new Date(end.getTime() + 864e5);
+    return { e, start, end, boost: 1.5 + simRandom(`${v.id}:${e.date}:${e.name}`) * 1.6 };
+  }));
+}
+function eventBoost(v, at) {
+  const t = at.getTime();
+  for (const w of eventWindows(v)) {
+    if (t >= w.start.getTime() && t < w.end.getTime()) return w.boost;
+    const lead = w.start.getTime() - t;
+    if (lead > 0 && lead < 30 * 60000) return 1 + (w.boost - 1) * (1 - lead / (30 * 60000));
+  }
+  return 1;
 }
 // One simulated frame per 40-minute slot of a business day (06:00 → 06:00), up to `until`.
 function simFrames(v, day, until = new Date()) {

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css">
+<link rel="stylesheet" href="deck.css?v=11">
 </head>
 <body>
 
@@ -242,7 +242,47 @@
       </div>
     </section>
 
-    <!-- 10 · Empty slide to duplicate -->
+    <!-- 10 · Panel: copy on top, iMac peeking from the bottom 2/5.
+         Slides 10–11 share data-flow="imac": scrolling on moves the same iMac up into slide 11. -->
+    <section class="slide slide--imac" data-flow="imac" aria-roledescription="slide" aria-label="Panel">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+      <div class="imac-copy flow-copy">
+        <div class="imac-intro">
+          <p class="eyebrow">Tek platform. İki ürün.</p>
+          <h2 class="display imac-title">Panel</h2>
+          <p class="feature"><span class="feature-tag">Ana Feature</span>Sadece işletme sahibinin erişebileceği bir panel üzerinden anlık metrikler.</p>
+        </div>
+        <div class="imac-detail">
+          <ul class="checks">
+            <li>Mekandaki anlık ziyaretçi sayımı.</li>
+            <li>Geçmiş tarih ve senelerdeki ziyaretçi sayımları.</li>
+            <li>m² başına düşen ziyaretçi sayımı.</li>
+            <li>Performans analizi ve gelecek zamanlardaki tahminler.</li>
+            <li>Gerçekleşen etkinliklere gelen ziyaretçi sayımları.</li>
+          </ul>
+          <p class="imac-note">Ziyaretçi ne zaman geliyor, ne zaman gidiyor. Hangi etkinlik daha yoğundu, kalabalık ne zaman sokaklara taştı, hangi etkinlik maliyetini karşılamadı. Hepsi tek panelde özelleştirilebilir veri görselleştirmesi.</p>
+        </div>
+      </div>
+      <div class="imac imac--low" data-shared="imac" aria-hidden="true">
+        <div class="imac-screen"><img src="assets/panel-venue.jpg" alt="" width="2400" height="1350" decoding="async"></div>
+        <div class="imac-chin"></div>
+        <div class="imac-neck"></div>
+        <div class="imac-foot"></div>
+      </div>
+    </section>
+
+    <!-- 11 · Panel: the iMac has moved up and is fully in view -->
+    <section class="slide slide--imac" data-flow="imac" aria-roledescription="slide" aria-label="Panel ekranı">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+      <div class="imac imac--high" data-shared="imac" aria-hidden="true">
+        <div class="imac-screen"><img src="assets/panel-venue.jpg" alt="" width="2400" height="1350" decoding="async"></div>
+        <div class="imac-chin"></div>
+        <div class="imac-neck"></div>
+        <div class="imac-foot"></div>
+      </div>
+    </section>
+
+    <!-- 12 · Empty slide to duplicate -->
     <section class="slide slide--blank" aria-roledescription="slide" aria-label="Boş slayt">
       <header class="slide-head">
         <p class="eyebrow">Bölüm</p>
@@ -269,6 +309,6 @@
 <div class="progress" aria-hidden="true"><i id="bar"></i></div>
 <p class="rotate-hint" id="rotateHint">Daha büyük görmek için telefonu yan çevirin</p>
 
-<script src="deck.js"></script>
+<script src="deck.js?v=11"></script>
 </body>
 </html>

@@ -66,6 +66,60 @@
       "logo_scale": 1,
       "events": [
         {
+          "date": "2026-10-16",
+          "name": "Deniz · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-17",
+          "name": "Retro Night",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-23",
+          "name": "Selin · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-24",
+          "name": "Afro House Night",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:30",
+          "to": "03:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-30",
+          "name": "Mert Kaya · Live",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "21:30",
+          "to": "00:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-31",
+          "name": "Halloween Party",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "04:00",
+          "source": "demo"
+        },
+        {
           "date": "2026-11-06",
           "name": "Halil · DJ set",
           "kind": "show",
@@ -82,13 +136,24 @@
           "from": "01:00",
           "to": "04:00",
           "source": "instagram"
+        },
+        {
+          "date": "2026-11-07",
+          "name": "Techno Saturday",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "23:00",
+          "to": "04:00",
+          "source": "demo"
         }
       ],
       "instagram": "kulupakyaka",
       "blurb": {
         "en": "Akyaka's night club for DJ sets and weekend parties.",
         "tr": "DJ setleri ve hafta sonu partileriyle Akyaka'nın gece kulübü."
-      }
+      },
+      "simulated": true,
+      "sim_scale": 28
     },
     {
       "id": "lemongrass-cafe",

@@ -385,6 +385,78 @@ body {
 .slide--logo.is-active .logo-lockup { animation: rise .9s var(--ease) both; }
 .slide--logo.is-active .logo-text { animation: rise 1s var(--ease) .12s both; }
 
+/* ---------- Panel: iMac mockup ---------- */
+.slide--imac { overflow: hidden; }
+.slide--imac .heat i { filter: blur(150px); }
+.slide--imac .heat .h1 { width: 1200px; height: 900px; left: 360px; right: auto; top: 420px; background: var(--calm); opacity: .36; }
+.slide--imac .heat .h2 { width: 600px; height: 600px; left: -200px; right: auto; top: -260px; bottom: auto; background: var(--calm); opacity: .22; }
+.slide--imac .heat .h3 { width: 560px; height: 560px; right: -160px; top: 520px; bottom: auto; background: var(--full); opacity: .20; }
+
+.imac-copy {
+  position: relative; z-index: 2;
+  display: grid; grid-template-columns: 640px minmax(0, 1fr); column-gap: 96px; align-items: start;
+  height: 560px;
+}
+.imac-intro { display: flex; flex-direction: column; gap: 24px; }
+.imac-title { font-size: 168px; line-height: .9; margin-top: 4px; }
+.feature { margin: 16px 0 0; font: 500 30px/1.4 var(--font-text); color: var(--ink); text-wrap: pretty; }
+.feature-tag {
+  display: table; margin-bottom: 14px; padding: 8px 16px; border-radius: 999px;
+  background: rgba(31, 107, 255, .18); border: 1px solid rgba(77, 139, 255, .35);
+  font: 700 20px/1 var(--font-text); letter-spacing: .08em; text-transform: uppercase; color: var(--calm-2);
+}
+.imac-detail { display: flex; flex-direction: column; gap: 28px; padding-top: 12px; }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.checks li {
+  display: grid; grid-template-columns: 36px minmax(0, 1fr); column-gap: 16px; align-items: center;
+  font: 500 26px/1.3 var(--font-text); color: var(--ink);
+}
+.checks li::before {
+  content: ""; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--live) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 18px no-repeat;
+}
+.imac-note {
+  margin: 0; padding: 20px 24px; border-radius: 18px;
+  background: rgba(255, 255, 255, .04); border: 1px solid var(--border);
+  font: 400 22px/1.5 var(--font-text); color: var(--ink-2); text-wrap: pretty;
+}
+
+/* iMac: 16:9 screen, black bezel, coloured chin, stand. Same size on both slides; only its height on the slide differs. */
+.imac { --w: 1240px; position: absolute; z-index: 1; left: calc(50% - var(--w) / 2); width: var(--w); will-change: transform; }
+.imac--low  { top: 660px; }
+.imac--high { top: 52px; }
+.imac-screen {
+  position: relative; padding: 16px; border-radius: 26px 26px 0 0;
+  background: #0a0a0c;
+  box-shadow: 0 0 0 2px #2b2d33, 0 50px 120px -30px rgba(0,0,0,.9);
+}
+.imac-screen img { display: block; width: 100%; aspect-ratio: 16 / 9; height: auto; object-fit: cover; object-position: top; border-radius: 6px; }
+.imac-screen::after { content: ""; position: absolute; inset: 16px; border-radius: 6px; pointer-events: none; background: linear-gradient(120deg, rgba(255,255,255,.07), rgba(255,255,255,0) 30%); }
+.imac-chin {
+  height: 96px; border-radius: 0 0 26px 26px;
+  background: linear-gradient(180deg, #c9ccd3 0%, #aeb2bb 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 2px #2b2d33;
+}
+.imac-neck {
+  width: 300px; height: 140px; margin: 0 auto;
+  background: linear-gradient(90deg, #9da1aa, #d4d7dd 45%, #b6bac2);
+  clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%);
+}
+.imac-foot { width: 380px; height: 14px; margin: 0 auto; border-radius: 0 0 10px 10px; background: linear-gradient(180deg, #c3c6cd, #8e929b); }
+
+.slide--imac.is-active .flow-copy > * { animation: rise .9s var(--ease) both; }
+.slide--imac.is-active .flow-copy > :nth-child(2) { animation-delay: .1s; }
+.slide--imac.is-active:not(.flow-in) .imac--low { animation: imacUp 1.1s var(--ease) both; }
+@keyframes imacUp { from { opacity: 0; transform: translateY(120px); } to { opacity: 1; transform: none; } }
+
+/* Flow transition (slides sharing data-flow): the new slide appears at once underneath; the old one stays on
+   top with a transparent background while its copy slides up and out; deck.js moves the shared iMac. */
+.slide.flow-in { transform: none !important; transition: none !important; }
+.slide.flow-out { z-index: 3; background: transparent; transform: none !important; opacity: 1 !important; visibility: visible !important; transition: none !important; pointer-events: none; }
+.slide.flow-out .heat, .slide.flow-out [data-shared] { visibility: hidden; }
+.slide.flow-out .flow-copy { animation: flowOut .6s var(--ease) both; }
+@keyframes flowOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-160px); } }
+
 /* ---------- Generic slide ---------- */
 .slide--blank { display: flex; flex-direction: column; gap: 64px; }
 .slide-head { display: flex; flex-direction: column; gap: 24px; }

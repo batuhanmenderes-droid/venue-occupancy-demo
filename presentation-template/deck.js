@@ -12,6 +12,7 @@
   const bar = document.getElementById('bar');
   const controls = document.querySelector('.controls');
   let index = 0;
+  let flowTimer;
 
   // ---- Fit ----
   function fit() {
@@ -32,12 +33,33 @@
     // underneath until the new one has faded in, so only the copy and the screen change.
     const held = from !== to && from.dataset.hold && from.dataset.hold === to.dataset.hold;
     slides.forEach((s) => s.classList.toggle('is-held', !!held && (s === from || s === to)));
+    // Slides sharing a data-flow group: the new slide shows at once, the old copy slides up and out,
+    // and every [data-shared] element glides from its old position to its new one.
+    const flow = from !== to && from.dataset.flow && from.dataset.flow === to.dataset.flow;
+    clearTimeout(flowTimer);
+    slides.forEach((s) => s.classList.remove('flow-in', 'flow-out'));
+    if (flow) {
+      to.classList.add('flow-in');
+      from.classList.add('flow-out');
+      flowTimer = setTimeout(() => { from.classList.remove('flow-out'); to.classList.remove('flow-in'); }, 700);
+    }
     slides.forEach((s, n) => {
       s.classList.toggle('is-active', n === index);
       s.classList.toggle('is-prev', n < index);
       s.setAttribute('aria-hidden', n === index ? 'false' : 'true');
       s.inert = n !== index;
     });
+    if (flow) {
+      const k = parseFloat(getComputedStyle(root).getPropertyValue('--scale')) || 1;
+      to.querySelectorAll('[data-shared]').forEach((el) => {
+        const twin = from.querySelector('[data-shared="' + el.dataset.shared + '"]');
+        if (!twin || !el.animate) return;
+        const a = twin.getBoundingClientRect(), b = el.getBoundingClientRect();
+        const dx = (a.left - b.left) / k, dy = (a.top - b.top) / k;
+        el.animate([{ transform: 'translate(' + dx + 'px,' + dy + 'px)' }, { transform: 'none' }],
+          { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' });
+      });
+    }
     counter.textContent = (index + 1) + ' / ' + slides.length;
     bar.style.width = (slides.length > 1 ? (index / (slides.length - 1)) * 100 : 100) + '%';
     prev.disabled = index === 0;
@@ -63,6 +85,27 @@
     }
   });
 
+  // ---- Scroll wheel / trackpad: one slide per gesture ----
+  // A trackpad keeps sending inertial events after the swipe; stay locked until they pause.
+  let wheelSum = 0, wheelLocked = false, lastWheel = 0, lockStart = 0;
+  document.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const now = Date.now();
+    if (wheelLocked) {
+      const quiet = now - lastWheel > 220, long = now - lockStart > 700;
+      lastWheel = now;
+      if (!(quiet && long)) return;
+      wheelLocked = false;
+    }
+    lastWheel = now;
+    wheelSum += Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    if (Math.abs(wheelSum) < 40) return;
+    go(index + (wheelSum > 0 ? 1 : -1));
+    wheelSum = 0;
+    wheelLocked = true;
+    lockStart = now;
+  }, { passive: false });
+
   // ---- Swipe / tap ----
   let sx = 0, sy = 0, st = 0;
   document.addEventListener('touchstart', (e) => {
@@ -74,6 +117,7 @@
     const t = e.changedTouches[0];
     const dx = t.clientX - sx, dy = t.clientY - sy;
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2) go(index + (dx < 0 ? 1 : -1));
+    else if (Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.2) go(index + (dy < 0 ? 1 : -1));
     else if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && Date.now() - st < 300) {
       // tap on the right / left third of the screen
       if (t.clientX > window.innerWidth * 0.66) go(index + 1);
