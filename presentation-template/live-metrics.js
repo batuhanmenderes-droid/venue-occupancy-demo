@@ -54,9 +54,10 @@
 
   // Random walk around a busy night, with an occasional bigger jump (a group walking in or out).
   function step() {
+    // pulled back towards 287 so the night stays busy but below the 305 record
     const big = Math.random() < 0.15;
-    const d = big ? (Math.random() < 0.5 ? -1 : 1) * (8 + Math.floor(Math.random() * 10)) : Math.round((Math.random() - 0.45) * 8);
-    count = Math.max(248, Math.min(312, count + d));
+    const noise = big ? (Math.random() < 0.5 ? -1 : 1) * (6 + Math.floor(Math.random() * 8)) : Math.round((Math.random() - 0.5) * 9);
+    count = Math.max(262, Math.min(301, Math.round(count + (287 - count) * 0.2 + noise)));
     render();
   }
 

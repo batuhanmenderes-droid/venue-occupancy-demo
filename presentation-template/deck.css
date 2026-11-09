@@ -628,3 +628,39 @@ body {
 /* Value flash when a number changes */
 .mvalue b.tick { animation: tick .45s var(--ease); }
 @keyframes tick { 0% { filter: brightness(1.6); } 100% { filter: none; } }
+/* fit: tighter type and a smaller m² grid so all three cards stay inside their rows */
+.mvalue b { font-size: 112px; }
+.mperson { width: 40px; height: 40px; margin-bottom: 6px; }
+.mcard { padding: 26px 34px; }
+.mmeta { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.mbars { grid-template-columns: repeat(3, 88px); column-gap: 10px; }
+.mbar i { width: 64px; }
+.mbar .bl { font-size: 19px; white-space: nowrap; }
+.mcard--density .mvalue { margin-bottom: 0; }
+.m2grid { gap: 6px; margin: 16px 0 12px; max-width: 700px; }
+.m2grid i { border-radius: 4px; }
+/* calmer layout: narrower cards, smaller type, more air between rows */
+.slide--metrics { grid-template-columns: minmax(0, 1fr) 740px; column-gap: 140px; row-gap: 44px; padding: 170px 180px 120px; }
+.metrics-eyebrow { top: 84px; left: 180px; }
+.m-explain { gap: 12px; }
+.m-explain h3 { font-size: 40px; }
+.m-explain p { font-size: 22px; max-width: 32ch; }
+.mcard { padding: 22px 30px; border-radius: 28px; column-gap: 20px; }
+.mlabel { font-size: 21px; }
+.mvalue { gap: 10px; margin-top: 4px; }
+.mvalue b { font-size: 84px; }
+.mperson { width: 30px; height: 30px; margin-bottom: 4px; }
+.munit { font-size: 26px; margin-bottom: 8px; }
+.mstatus { font-size: 20px; gap: 9px; }
+.mstatus::before { width: 23px; height: 23px; font-size: 15px; }
+.mchip { height: 36px; padding: 0 14px; font-size: 19px; }
+.mmeta { gap: 10px 14px; }
+.mbars { grid-template-columns: repeat(3, 72px); column-gap: 6px; }
+.mbar { row-gap: 8px; }
+.mbar i { width: 48px; border-radius: 8px; }
+.mbar .bv { font-size: 20px; }
+.mbar .bl { font-size: 15px; }
+.m2grid { gap: 5px; margin: 12px 0 10px; max-width: 520px; }
+.m2grid i { border-radius: 3px; }
+.m2grid i.on { box-shadow: 0 0 8px rgba(77, 139, 255, .45); }
+.mfoot { font-size: 17px; }
