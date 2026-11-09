@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=27">
+<link rel="stylesheet" href="deck.css?v=29">
 </head>
 <body>
 
@@ -344,10 +344,7 @@
         <h3>Gün boyu kişi sayısı</h3>
         <p>Kameranın her karesi grafikte bir nokta. Ölçülen çizgi kalabalığın gün içinde nasıl arttığını gösterir; kesikli çizgi gecenin geri kalanı için beklenen kalabalığı, noktalı çizgi son 8 haftanın aynı gününün ortalamasını verir. Alttaki kaydırıcıyla geçmiş günlere dönülür.</p>
       </div>
-      <figure class="comp-card reveal-x">
-        <img src="assets/cmp-day.jpg?v=2" alt="Gün boyu kişi sayısı" width="2724" height="1030" decoding="async">
-        <span class="live-ping" style="left:44.56%;top:20.1%" aria-hidden="true"></span>
-      </figure>
+      <figure class="comp-card embed-card"><div class="app-embed" data-mode="card" data-src="../venue.html?mekan=kulup&amp;lang=tr&amp;tab=density" data-card="Gün boyu kişi sayısı" data-title="Gün boyu kişi sayısı"></div></figure>
     </section>
 
     <!-- 14 · Panel components: week days and hours -->
@@ -448,8 +445,8 @@
     <!-- 20 · "Tam kontrol." Step 0: Kulüp's detail page full screen under a black overlay with the text.
          Step 1 (next scroll): the overlay lifts, the page slides down and the live map view (the app itself,
          loaded by reveal-map.js) is revealed underneath. -->
-    <section class="slide slide--reveal" data-steps="1" aria-roledescription="slide" aria-label="Tam kontrol">
-      <div class="rv-map">
+    <section class="slide slide--reveal" data-steps="1" data-flow="map" aria-roledescription="slide" aria-label="Tam kontrol">
+      <div class="rv-map" data-shared="map">
         <iframe title="herkez nerde?! harita görünümü" tabindex="-1" loading="lazy"></iframe>
       </div>
       <div class="rv-page"><img src="assets/panel-kulup-full.jpg?v=3" alt="Kulüp işletme profil sayfası" width="2400" height="5390" decoding="async"></div>
@@ -462,7 +459,39 @@
       </div>
     </section>
 
-    <!-- 21 · Empty slide to duplicate -->
+    <!-- 21 · The heat map on a phone. Arriving from 20 the desktop map shrinks into the phone; every scroll
+         adds the next point on the left and points at it on the live mobile app (mobile-tour.js). -->
+    <section class="slide slide--mobile" data-flow="map" data-steps="5" aria-roledescription="slide" aria-label="Sıcaklık haritası">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+      <div class="mob-copy">
+        <p class="eyebrow"><span class="crumb">01</span>Sıcaklık Haritası</p>
+        <p class="mob-intro">Ve bu veri, oyunlaştırılmış Akyaka ve Akçapınar haritası üzerindeki kalabalığı ‘sıcaklık haritası’ üzerinden göstermek için kullanılır.</p>
+        <ol class="mob-steps">
+          <li data-s="1">Lokasyon verisi ile kullanıcının yeri saptanır.</li>
+          <li data-s="2">Kullanıcının lokasyonu merkeze alınarak POI’ler ve o çevredeki kalabalık renklerle gösterilir. Etiketler üzerinde gerçek rakam ve yaklaşan etkinlikler gösterilir.</li>
+          <li data-s="3">Kullanıcı istediği mekanları filtreleyebilir.</li>
+          <li data-s="4">AI Asistan ile mekanlar hakkında bilgi ve öneri alabilir.</li>
+          <li data-s="5">
+            <span>POI’lere tıklayarak mekanların detay sayfasına girer. İşletmenin paylaşmak istediği şekilde mekanın adres, iletişim, fotoğraf, websitesi, konsept ve menü fiyatlarına ek olarak:</span>
+            <ul class="mob-sub">
+              <li>Anlık kişi sayısı</li>
+              <li>Mekanın yoğunluk trendi</li>
+              <li>m² üzerine düşen ziyaretçi</li>
+              <li>Etkinlik, gün ve saate göre yoğunluk verisini detaylı şekilde görebilir.</li>
+            </ul>
+          </li>
+        </ol>
+      </div>
+      <div class="mob-bezel" aria-hidden="true"><i class="mob-island"></i></div>
+      <div class="mob-screen" aria-label="herkez nerde?! mobil uygulama">
+        <div class="mob-frame mob-frame--map"><iframe title="Mobil harita" tabindex="-1"></iframe></div>
+        <div class="mob-frame mob-frame--detail"><iframe title="Kulüp detay sayfası" tabindex="-1"></iframe></div>
+        <div class="mob-spot" aria-hidden="true"></div>
+        <div class="mob-desk" aria-hidden="true"><img src="assets/map-desk.jpg" alt="" width="2400" height="1350" decoding="async"></div>
+      </div>
+    </section>
+
+    <!-- 22 · Empty slide to duplicate -->
     <section class="slide slide--blank" aria-roledescription="slide" aria-label="Boş slayt">
       <header class="slide-head">
         <p class="eyebrow">Bölüm</p>
@@ -494,5 +523,6 @@
 <script src="share-chart.js?v=1"></script>
 <script src="embed.js?v=2"></script>
 <script src="reveal-map.js?v=2"></script>
+<script src="mobile-tour.js?v=2"></script>
 </body>
 </html>

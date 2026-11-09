@@ -858,3 +858,85 @@ body {
 .rv-overlay { align-items: center; text-align: center; padding: 0 160px; background: rgba(0, 0, 0, .78); }
 .rv-copy { align-items: center; }
 .rv-text { margin-left: auto; margin-right: auto; }
+
+/* ---------- 21 · Heat map on a phone (mobile-tour.js) ---------- */
+.slide--mobile { --sx: 1277px; --sy: 100px; --sw: 407px; --sh: 880px; padding: 0; overflow: hidden; }
+.slide--mobile .heat .h1 { width: 900px; height: 900px; right: -120px; left: auto; top: 80px; background: var(--calm); opacity: .34; }
+.slide--mobile .heat .h2 { width: 520px; height: 520px; right: 360px; left: auto; bottom: -220px; top: auto; background: var(--full); opacity: .2; }
+.slide--mobile .heat .h3 { width: 600px; height: 600px; left: -240px; top: -260px; background: var(--calm); opacity: .16; }
+.mob-copy { position: absolute; left: 140px; top: 0; bottom: 0; width: 960px; z-index: 2; display: flex; flex-direction: column; justify-content: center; gap: 26px; }
+.mob-intro { margin: 0; font: 600 34px/1.35 var(--font-display); letter-spacing: -0.01em; color: var(--ink); text-wrap: pretty; max-width: 28ch; }
+.mob-steps { list-style: none; margin: 4px 0 0; padding: 0; counter-reset: ms; display: flex; flex-direction: column; gap: 4px; }
+.mob-steps > li {
+  counter-increment: ms;
+  display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 20px; align-items: start;
+  padding: 12px 18px 12px 12px; border-radius: 18px;
+  font: 400 23px/1.42 var(--font-text); color: var(--ink);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .45s var(--ease), transform .45s var(--ease), background .3s;
+}
+.mob-steps > li::before {
+  content: counter(ms); display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(31, 107, 255, .16); color: var(--calm-2); font: 700 20px/1 var(--font-display); margin-top: -3px;
+}
+.mob-steps > li.shown { opacity: .42; transform: none; }
+.mob-steps > li.active { opacity: 1; background: rgba(255, 255, 255, .06); }
+.mob-steps > li.active::before { background: var(--calm); color: #fff; }
+.mob-steps > li > span { grid-column: 2; }
+.mob-sub { grid-column: 2; list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 22px; }
+.mob-sub li { display: flex; gap: 10px; font: 600 20px/1.35 var(--font-text); color: var(--ink); }
+.mob-sub li::before { content: ""; flex: none; width: 9px; height: 9px; margin-top: 9px; border-radius: 50%; background: var(--full); }
+
+/* phone: the screen box is positioned on the slide so it can grow from / shrink to full screen */
+.mob-screen {
+  position: absolute; z-index: 3; overflow: hidden;
+  left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh);
+  border-radius: 48px; background: #0B0B10;
+}
+.mob-bezel {
+  position: absolute; z-index: 2;
+  left: calc(var(--sx) - 14px); top: calc(var(--sy) - 14px); width: calc(var(--sw) + 28px); height: calc(var(--sh) + 28px);
+  border-radius: 62px;
+  background: linear-gradient(145deg, #5a5a63 0%, #2a2a31 22%, #18181d 50%, #2a2a31 78%, #4a4a52 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.18), inset 0 0 0 5px #0c0c10, 0 60px 120px -30px rgba(0,0,0,.9);
+}
+.mob-island { position: absolute; z-index: 5; left: 50%; top: 26px; width: 118px; height: 34px; margin-left: -59px; border-radius: 20px; background: #000; }
+.mob-bezel .mob-island { display: none; }
+.mob-screen::before { content: ""; position: absolute; z-index: 6; left: 50%; top: 12px; width: 118px; height: 34px; margin-left: -59px; border-radius: 20px; background: #000; }
+.mob-frame { position: absolute; inset: 0; transition: transform .7s cubic-bezier(.65,0,.25,1); }
+.mob-frame iframe { position: absolute; left: 0; top: 0; width: 390px; height: 844px; border: 0; transform-origin: 0 0; transform: scale(calc(407 / 390)); pointer-events: none; background: #0B0B10; }
+.mob-frame--detail { transform: translateX(100%); box-shadow: -20px 0 40px rgba(0,0,0,.5); }
+.slide--mobile[data-step="5"] .mob-frame--detail { transform: none; }
+.slide--mobile[data-step="5"] .mob-frame--map { transform: translateX(-30%); }
+.mob-spot {
+  position: absolute; z-index: 4; left: 50%; top: 50%; width: 0; height: 0;
+  border-radius: 16px; border: 3px solid #4D8BFF; opacity: 0;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, .45), 0 0 24px rgba(77, 139, 255, .6);
+  transition: left .6s var(--ease), top .6s var(--ease), width .6s var(--ease), height .6s var(--ease), opacity .4s;
+  pointer-events: none;
+}
+.mob-spot.on { opacity: 1; animation: spotPulse 1.8s ease-in-out infinite; }
+@keyframes spotPulse { 50% { border-color: #9DBDFF; } }
+.mob-desk { position: absolute; inset: 0; z-index: 7; opacity: 0; pointer-events: none; }
+.mob-desk img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* entrance */
+.slide--mobile.is-active .mob-copy > :not(.mob-steps) { animation: rise .9s var(--ease) .5s both; }
+.slide--mobile.is-active:not(.via-flow) .mob-screen, .slide--mobile.is-active:not(.via-flow) .mob-bezel { animation: phoneUp2 1s var(--ease) both; }
+@keyframes phoneUp2 { from { opacity: 0; transform: translateY(80px); } to { opacity: 1; transform: none; } }
+/* arriving from slide 20: the full-screen desktop map shrinks into the phone, then turns into the live mobile app */
+.slide--mobile.via-flow.is-active .mob-screen { animation: morphIn 1.15s cubic-bezier(.65,0,.25,1) both; }
+.slide--mobile.via-flow.is-active .mob-desk { animation: deskOut 1.15s ease both; }
+.slide--mobile.via-flow.is-active .mob-bezel { animation: bezelIn .5s ease .85s both; }
+@keyframes morphIn {
+  from { left: 0; top: 0; width: 1920px; height: 1080px; border-radius: 0; }
+  to { left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh); border-radius: 48px; }
+}
+@keyframes deskOut { 0%, 55% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes bezelIn { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: none; } }
+/* leaving back to 20: everything clears fast so the desktop map shows */
+.slide--mobile.flow-out > * { animation: fadeAway .3s ease both !important; }
+@keyframes fadeAway { to { opacity: 0; } }
+/* status-bar strip above the app so the island does not cover its header */
+.mob-frame { top: 52px; }
+.mob-frame iframe { height: 795px; }
