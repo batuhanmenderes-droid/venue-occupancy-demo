@@ -267,6 +267,27 @@ body {
   background: rgba(31, 107, 255, .16); color: var(--calm-2);
   font: 700 20px/1 var(--font-display);
 }
+.points + .points, .headline + .points { margin-top: 18px; }
+.split-copy .points li { padding: 24px 0; }
+/* Fewer points: larger type so the column fills the slide */
+.slide--roomy .split-copy { justify-content: center; padding-top: 72px; padding-bottom: 72px; }
+.slide--roomy .points li { font-size: 27px; padding: 30px 0; }
+.slide--roomy .quote { font-size: 36px; }
+.point-stack { display: flex; flex-direction: column; gap: 16px; }
+.quote {
+  position: relative; margin: 0;
+  padding: 22px 28px 22px 64px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(31, 107, 255, .18), rgba(31, 107, 255, .06));
+  border: 1px solid rgba(77, 139, 255, .30);
+  font: 600 30px/1.32 var(--font-display); letter-spacing: -0.01em; color: var(--ink);
+  text-wrap: pretty;
+}
+.quote::before {
+  content: "\201C"; position: absolute; left: 20px; top: 8px;
+  font: 800 72px/1 var(--font-display); color: var(--calm-2);
+}
+.quote::after { content: "\201D"; }
 .callout {
   display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 20px; align-items: start;
   margin: 8px 0 0; padding: 24px 28px 24px 24px;
