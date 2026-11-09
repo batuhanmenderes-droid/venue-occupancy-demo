@@ -711,3 +711,88 @@ body {
 .slide--comp.is-active .live-ping { animation: ping2 1.8s ease-out 2.2s infinite; }
 .live-ping--record { border-color: #FF2D6F; }
 @keyframes ping2 { 0% { opacity: .95; transform: scale(.8); } 100% { opacity: 0; transform: scale(3.2); } }
+
+/* 13–17 v2: text block top-left, the component below at nearly full width so chart details read */
+.slide--comp {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  align-content: center; align-items: start;
+  row-gap: 34px;
+  padding: 110px 100px 80px;
+}
+.slide--comp .metrics-eyebrow { left: 100px; top: 54px; }
+.slide--comp .comp-explain { flex-direction: row; align-items: baseline; gap: 48px; }
+.slide--comp .comp-explain h3 { flex: none; font-size: 44px; max-width: 620px; }
+.slide--comp .comp-explain p { font-size: 22px; max-width: 70ch; }
+.slide--comp .comp-card { width: 100%; max-width: 1720px; justify-self: center; border-radius: 24px; }
+/* week + hours: side by side, as in the app */
+.slide--comp-pair { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; column-gap: 40px; row-gap: 30px; }
+.slide--comp-pair .comp-explain { flex-direction: column; gap: 10px; }
+.slide--comp-pair .comp-explain h3 { font-size: 38px; }
+.slide--comp-pair .comp-explain p { font-size: 21px; }
+.slide--comp-pair .comp-card { width: 100%; justify-self: stretch; }
+.slide--comp-pair > :nth-child(3) { grid-column: 1; grid-row: 1; }
+.slide--comp-pair > :nth-child(4) { grid-column: 1; grid-row: 2; }
+.slide--comp-pair > :nth-child(5) { grid-column: 2; grid-row: 1; }
+.slide--comp-pair > :nth-child(6) { grid-column: 2; grid-row: 2; }
+.slide--comp.is-active .comp-card { animation-name: cardUp; }
+@keyframes cardUp { from { opacity: 0; transform: translateY(80px) scale(.98); } to { opacity: 1; transform: none; } }
+
+/* ---------- 15 · Share of Akyaka's crowd, rebuilt in HTML (share-chart.js) ---------- */
+.share-card {
+  padding: 34px 40px 30px;
+  background: linear-gradient(160deg, rgba(42, 30, 26, .9), rgba(20, 18, 22, .92));
+  border: 1px solid rgba(255, 255, 255, .1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 40px 80px -30px rgba(0,0,0,.9);
+}
+.sc-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; }
+.sc-head h4 { margin: 0; font: 800 30px/1.1 var(--font-display); letter-spacing: -0.03em; color: var(--ink); }
+.sc-head p { margin: 8px 0 0; font: 400 17px/1.4 var(--font-text); color: var(--muted); }
+.sc-controls { display: flex; gap: 10px; flex: none; }
+.sc-pill {
+  display: inline-flex; align-items: center; gap: 14px; height: 50px; padding: 0 18px; border-radius: 14px;
+  background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+  font: 500 19px/1 var(--font-text); color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.sc-pill--ghost { border-radius: 999px; color: var(--ink-2); }
+.sc-body { display: grid; grid-template-columns: minmax(0, 1fr) 640px; column-gap: 60px; align-items: center; margin-top: 10px; }
+.sc-donut { position: relative; width: 470px; aspect-ratio: 1; justify-self: center; margin: 10px 0; }
+.sc-donut svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.sc-sec { cursor: pointer; transition: opacity .25s; transform-origin: 200px 200px; }
+.sc-sec.dim, .sc-badge.dim { opacity: .3; }
+.sc-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; text-align: center; }
+.sc-center b { font: 800 66px/1 var(--font-display); letter-spacing: -0.04em; color: var(--ink); }
+.sc-center span { margin-top: 6px; font: 600 21px/1.2 var(--font-text); color: var(--ink); max-width: 200px; }
+.sc-center small { margin-top: 4px; font: 400 18px/1.2 var(--font-text); color: var(--ink-2); }
+.sc-center.swap > * { animation: scSwap .35s var(--ease); }
+@keyframes scSwap { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.sc-badge {
+  position: absolute; transform: translate(-50%, -50%);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  transition: opacity .25s; pointer-events: none;
+}
+.sc-badge .sc-logo { width: 46px; height: 46px; box-shadow: 0 0 0 3px var(--c); }
+.sc-badge b { font: 700 16px/1 var(--font-text); color: var(--muted); }
+.sc-logo { display: block; flex: none; width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #fff; }
+.sc-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.sc-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.sc-row {
+  display: grid; grid-template-columns: 14px 40px minmax(0, 1fr) auto; column-gap: 16px; align-items: center;
+  padding: 6px 16px; border-radius: 14px; cursor: default;
+  transition: background .25s;
+}
+.sc-row .sc-dot { width: 14px; height: 14px; border-radius: 50%; }
+.sc-name { font: 600 20px/1.2 var(--font-text); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-num { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+.sc-num b { font: 700 23px/1 var(--font-display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.sc-num small { margin-top: 3px; font: 500 14px/1 var(--font-text); color: var(--muted); }
+.sc-row.sel { background: rgba(255, 255, 255, .07); }
+.sc-row.me.sel { background: rgba(255, 55, 95, .22); }
+
+/* entrance: the ring turns in slice by slice, badges and rows follow */
+.slide--comp.is-active .sc-sec { animation: scSec .8s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(.45s + var(--d)); }
+@keyframes scSec { from { opacity: 0; transform: rotate(-24deg) scale(.86); } to { opacity: 1; transform: none; } }
+.slide--comp.is-active .sc-badge { animation: scPop .5s var(--ease) both; animation-delay: calc(.4s + var(--d)); }
+@keyframes scPop { from { opacity: 0; transform: translate(-50%, -50%) scale(.6); } to { opacity: 1; transform: translate(-50%, -50%); } }
+.slide--comp.is-active .sc-row { animation: rise .6s var(--ease) both; animation-delay: calc(.5s + var(--i) * .05s); }

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=20">
+<link rel="stylesheet" href="deck.css?v=22">
 </head>
 <body>
 
@@ -378,8 +378,26 @@
         <h3>Akyaka'daki kalabalığın payı</h3>
         <p>Benzer mekanlar arasında, seçilen saatte kalabalığın ne kadarının sizde olduğu. Rakiplere göre konumunuzu şu an için ya da geçmiş herhangi bir saat için karşılaştırın.</p>
       </div>
-      <figure class="comp-card reveal-o">
-        <img src="assets/cmp-share.jpg?v=2" alt="Akyaka'daki kalabalığın payı" width="2724" height="1054" decoding="async">
+      <!-- Rebuilt in HTML/SVG from the app's data (share-chart.js draws the ring and the list) -->
+      <figure class="comp-card share-card" id="shareCard">
+        <header class="sc-head">
+          <div>
+            <h4>Akyaka'daki kalabalığın payı</h4>
+            <p>Benzer 11 mekân arasında (Gece kulübü, Pub, Meyhane, Bar): seçilen saatte her birindeki kişi sayısı. Demo verisi.</p>
+          </div>
+          <div class="sc-controls" aria-hidden="true">
+            <span class="sc-pill">09.11.2026<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
+            <span class="sc-pill">16:00</span>
+            <span class="sc-pill sc-pill--ghost">Şimdi</span>
+          </div>
+        </header>
+        <div class="sc-body">
+          <div class="sc-donut">
+            <svg viewBox="0 0 400 400" role="img" aria-label="Akyaka'daki kalabalığın payı"></svg>
+            <div class="sc-center" aria-live="polite"><b></b><span></span><small></small></div>
+          </div>
+          <ol class="sc-list"></ol>
+        </div>
       </figure>
     </section>
 
@@ -439,5 +457,6 @@
 
 <script src="deck.js?v=15"></script>
 <script src="live-metrics.js?v=3"></script>
+<script src="share-chart.js?v=1"></script>
 </body>
 </html>
