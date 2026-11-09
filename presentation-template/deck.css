@@ -664,3 +664,50 @@ body {
 .m2grid i { border-radius: 3px; }
 .m2grid i.on { box-shadow: 0 0 8px rgba(77, 139, 255, .45); }
 .mfoot { font-size: 17px; }
+
+/* ---------- 13–17 · Panel components (cropped from the app, revealed as if being drawn) ---------- */
+.slide--comp {
+  display: grid; grid-template-columns: 470px minmax(0, 1fr);
+  column-gap: 90px; align-items: center;
+  padding: 150px 130px 110px 180px;
+  overflow: hidden;
+}
+.slide--comp .metrics-eyebrow { left: 180px; top: 84px; }
+.slide--comp .heat .h1 { width: 1000px; height: 900px; right: -220px; top: 60px; background: var(--calm); opacity: .26; }
+.slide--comp .heat .h2 { width: 560px; height: 560px; left: -180px; right: auto; bottom: -220px; top: auto; background: var(--full); opacity: .14; }
+.comp-explain { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 14px; }
+.comp-explain h3 { margin: 0; font: 800 42px/1.05 var(--font-display); letter-spacing: -0.03em; color: var(--ink); text-wrap: balance; }
+.comp-explain p { margin: 0; font: 400 22px/1.5 var(--font-text); color: var(--ink-2); text-wrap: pretty; }
+.comp-card {
+  position: relative; z-index: 1; margin: 0;
+  border-radius: 26px; overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 40px 80px -30px rgba(0,0,0,.9);
+  background: #141217;
+}
+.comp-card img { display: block; width: 100%; height: auto; }
+
+/* week + hours: two rows, narrower cards */
+.slide--comp-pair { grid-template-rows: 1fr 1fr; row-gap: 40px; }
+.slide--comp-pair .comp-card { width: 820px; justify-self: end; }
+
+/* entrance: card slides in, then its contents are drawn */
+.slide--comp.is-active .comp-card { animation: cardIn .9s var(--ease) both; }
+.slide--comp.is-active .comp-explain { animation: rise .9s var(--ease) .15s both; }
+.slide--comp-pair.is-active > :nth-child(5) { animation-delay: .25s; }
+.slide--comp-pair.is-active > :nth-child(6) { animation-delay: .15s; }
+.slide--comp.is-active .reveal-x img { animation: revealX 1.8s cubic-bezier(.45,0,.2,1) .45s both; }
+.slide--comp.is-active .reveal-y img { animation: revealY 1.3s cubic-bezier(.45,0,.2,1) .45s both; }
+.slide--comp-pair.is-active > :nth-child(6) img { animation-delay: .75s; }
+.slide--comp.is-active .reveal-o img { animation: revealO 1.6s cubic-bezier(.45,0,.2,1) .45s both; }
+@keyframes revealX { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes revealY { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes revealO { from { clip-path: circle(0% at 30% 55%); } to { clip-path: circle(150% at 30% 55%); } }
+
+/* live point: a ring that keeps pinging on the latest reading / the record */
+.live-ping {
+  position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%;
+  border: 3px solid #4D8BFF; opacity: 0;
+}
+.slide--comp.is-active .live-ping { animation: ping2 1.8s ease-out 2.2s infinite; }
+.live-ping--record { border-color: #FF2D6F; }
+@keyframes ping2 { 0% { opacity: .95; transform: scale(.8); } 100% { opacity: 0; transform: scale(3.2); } }

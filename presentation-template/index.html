@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=19">
+<link rel="stylesheet" href="deck.css?v=20">
 </head>
 <body>
 
@@ -264,7 +264,7 @@
         </div>
       </div>
       <div class="imac imac--low" aria-hidden="true">
-        <div class="imac-screen"><img data-shared="screen" src="assets/panel-kulup-full.jpg?v=2" alt="" width="2400" height="5337" decoding="async"></div>
+        <div class="imac-screen"><img data-shared="screen" src="assets/panel-kulup-full.jpg?v=3" alt="" width="2400" height="5390" decoding="async"></div>
         <div class="imac-chin"></div>
         <div class="imac-neck"></div>
         <div class="imac-foot"></div>
@@ -275,7 +275,7 @@
          inside it (data-scroll), and the deck moves on only once the page is at its end. -->
     <section class="slide slide--fullpage" data-flow="imac" aria-roledescription="slide" aria-label="Panel ekranı: Kulüp">
       <div class="page-scroll" data-scroll data-shared="screen" tabindex="-1">
-        <img src="assets/panel-kulup-full.jpg?v=2" alt="Kulüp işletme detay sayfası: anlık ziyaretçi sayısı, rekor, m² başına yoğunluk, gün içi grafik, haftanın günleri ve saatlere göre kalabalık, Akyaka içindeki pay, etkinliğe ve sezona göre kalabalık" width="2400" height="5337" decoding="async">
+        <img src="assets/panel-kulup-full.jpg?v=3" alt="Kulüp işletme detay sayfası: anlık ziyaretçi sayısı, rekor, m² başına yoğunluk, gün içi grafik, haftanın günleri ve saatlere göre kalabalık, Akyaka içindeki pay, etkinliğe ve sezona göre kalabalık" width="2400" height="5390" decoding="async">
       </div>
       <div class="scroll-hint" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
@@ -336,7 +336,81 @@
       </div>
     </section>
 
-    <!-- 13 · Empty slide to duplicate -->
+    <!-- 13 · Panel component: Gün boyu kişi sayısı -->
+    <section class="slide slide--comp" aria-roledescription="slide" aria-label="Gün boyu kişi sayısı">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <p class="eyebrow metrics-eyebrow"><span class="live-dot"></span>Panel</p>
+      <div class="comp-explain">
+        <h3>Gün boyu kişi sayısı</h3>
+        <p>Kameranın her karesi grafikte bir nokta. Ölçülen çizgi kalabalığın gün içinde nasıl arttığını gösterir; kesikli çizgi gecenin geri kalanı için beklenen kalabalığı, noktalı çizgi son 8 haftanın aynı gününün ortalamasını verir. Alttaki kaydırıcıyla geçmiş günlere dönülür.</p>
+      </div>
+      <figure class="comp-card reveal-x">
+        <img src="assets/cmp-day.jpg?v=2" alt="Gün boyu kişi sayısı" width="2724" height="1030" decoding="async">
+        <span class="live-ping" style="left:44.56%;top:20.1%" aria-hidden="true"></span>
+      </figure>
+    </section>
+
+    <!-- 14 · Panel components: week days and hours -->
+    <section class="slide slide--comp slide--comp-pair" aria-roledescription="slide" aria-label="Haftanın günlerine ve saatlere göre kalabalık">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <p class="eyebrow metrics-eyebrow"><span class="live-dot"></span>Panel</p>
+      <div class="comp-explain">
+        <h3>Haftanın günlerine göre kalabalık</h3>
+        <p>Son 8 haftanın ortalamasıyla hangi günlerin dolu, hangilerinin boş geçtiği. Personel, stok ve etkinlik planı bu dağılıma göre yapılabilir.</p>
+      </div>
+      <figure class="comp-card reveal-y">
+        <img src="assets/cmp-week.jpg?v=2" alt="Haftanın günlerine göre kalabalık" width="1350" height="576" decoding="async">
+      </figure>
+      <div class="comp-explain">
+        <h3>Saatlere göre kalabalık</h3>
+        <p>Kalabalığın günün hangi saatinde zirve yaptığı. Açılış saatleri, happy hour ve duyurular için doğru zamanı gösterir.</p>
+      </div>
+      <figure class="comp-card reveal-y">
+        <img src="assets/cmp-hours.jpg?v=2" alt="Saatlere göre kalabalık" width="1350" height="576" decoding="async">
+      </figure>
+    </section>
+
+    <!-- 15 · Panel component: Akyaka'daki kalabalığın payı -->
+    <section class="slide slide--comp" aria-roledescription="slide" aria-label="Akyaka'daki kalabalığın payı">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <p class="eyebrow metrics-eyebrow"><span class="live-dot"></span>Panel</p>
+      <div class="comp-explain">
+        <h3>Akyaka'daki kalabalığın payı</h3>
+        <p>Benzer mekanlar arasında, seçilen saatte kalabalığın ne kadarının sizde olduğu. Rakiplere göre konumunuzu şu an için ya da geçmiş herhangi bir saat için karşılaştırın.</p>
+      </div>
+      <figure class="comp-card reveal-o">
+        <img src="assets/cmp-share.jpg?v=2" alt="Akyaka'daki kalabalığın payı" width="2724" height="1054" decoding="async">
+      </figure>
+    </section>
+
+    <!-- 16 · Panel component: Etkinliğe göre kalabalık -->
+    <section class="slide slide--comp" aria-roledescription="slide" aria-label="Etkinliğe göre kalabalık">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <p class="eyebrow metrics-eyebrow"><span class="live-dot"></span>Panel</p>
+      <div class="comp-explain">
+        <h3>Etkinliğe göre kalabalık</h3>
+        <p>Her etkinlikte görülen en yüksek kalabalık, en yeniden eskiye. Hangi DJ, sanatçı ya da konseptin daha çok kişi çektiği ve hangi etkinliğin maliyetini karşılamadığı net görülür.</p>
+      </div>
+      <figure class="comp-card reveal-x">
+        <img src="assets/cmp-events.jpg?v=2" alt="Etkinliğe göre kalabalık" width="2724" height="1040" decoding="async">
+      </figure>
+    </section>
+
+    <!-- 17 · Panel component: Sezonlara göre tüm zamanların en yükseği -->
+    <section class="slide slide--comp" aria-roledescription="slide" aria-label="Sezonlara göre tüm zamanların en yükseği">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <p class="eyebrow metrics-eyebrow"><span class="live-dot"></span>Panel</p>
+      <div class="comp-explain">
+        <h3>Sezonlara göre tüm zamanların en yükseği</h3>
+        <p>2021'den bu yana her haftanın zirvesi, sezonlarla birlikte. Sezonların birbirine göre performansı ve rekorun ne zaman kırıldığı uzun vadeli planlamaya ışık tutar.</p>
+      </div>
+      <figure class="comp-card reveal-x">
+        <img src="assets/cmp-seasons.jpg?v=2" alt="Sezonlara göre tüm zamanların en yükseği" width="2724" height="850" decoding="async">
+        <span class="live-ping live-ping--record" style="left:96.54%;top:38.3%" aria-hidden="true"></span>
+      </figure>
+    </section>
+
+    <!-- 18 · Empty slide to duplicate -->
     <section class="slide slide--blank" aria-roledescription="slide" aria-label="Boş slayt">
       <header class="slide-head">
         <p class="eyebrow">Bölüm</p>
