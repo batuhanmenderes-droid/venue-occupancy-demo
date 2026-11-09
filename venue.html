@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=evc2"></script>
+<script src="i18n.js?v=share2"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -80,7 +80,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=50">
+<link rel="stylesheet" href="brand.css?v=53">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -114,10 +114,21 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
       <div class="chead"><h2 data-i18n="chartTitle"></h2><span class="daylabel" id="dayLabel"></span></div>
       <p class="hint" data-i18n="chartHint"></p>
       <div class="chart" id="chart"><div class="tip" id="tip"></div></div>
+      <div class="chartlegend" id="chartLegend"></div>
       <div class="dayslider">
         <input type="range" id="daySlider" min="0" max="0" step="1" data-i18n-aria="day">
         <div class="dayticks" id="dayTicks"></div>
       </div>
+    </div>
+    <section class="grid2 patterns">
+      <div class="card chartcard"><div class="chead"><h2 data-i18n="byWeekdayTitle"></h2><span class="daylabel" id="wkSummary"></span></div><p class="hint" data-i18n="patternHint"></p><div class="barchart" id="wkChart"></div></div>
+      <div class="card chartcard"><div class="chead"><h2 data-i18n="byHourTitle"></h2><span class="daylabel" id="hrSummary"></span></div><p class="hint" data-i18n="patternHint"></p><div class="barchart" id="hrChart"></div></div>
+    </section>
+    <div class="card chartcard sharecard" id="shareCard">
+      <div class="chead"><h2 data-i18n="shareTitle"></h2>
+        <div class="sharepick"><input type="date" id="shareDate" data-i18n-aria="shareDate"><select id="shareHour" data-i18n-aria="shareHour"></select><button class="pill" id="shareNow" data-i18n="shareNow"></button></div></div>
+      <p class="hint" id="shareHint"></p>
+      <div class="sharewrap"><div class="sharechart" id="shareChart"></div><div class="sharelist" id="shareList"></div></div>
     </div>
     <div class="card chartcard evcrowd" id="evCrowdCard" hidden>
       <div class="chead"><h2 data-i18n="evCrowdTitle"></h2><span class="daylabel" id="evCrowdSummary"></span></div>
@@ -190,6 +201,7 @@ const localDay = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,
 const today = () => dayOf({ timestamp: new Date() });
 // everything = every frame of the venue; all = the selected day's frames;
 // frames = the selected day's frames whose timestamp has already passed.
+let allVenues = [];
 let venue = null, countRule = '', everything = [], all = [], frames = [], days = [], current = 0, points = [], day = '', updatedAt = '', dataUrl = '';
 
 // Floor area used for the people-per-m² estimate when a venue has no `area_m2` of its own.
@@ -293,6 +305,8 @@ function refresh(force) {
   renderChart();
   renderSeasons();
   renderEventCrowd();
+  renderPatterns();
+  renderShare();
   if (frames.length) select(followLatest ? frames.length - 1 : current); else clearFrame();
 }
 
@@ -303,7 +317,7 @@ function showVTab(name) {
     document.querySelector(`[data-vtab="${k}"]`).setAttribute('aria-selected', k === name);
   }
   params.set('tab', name); history.replaceState(null, '', `?${params}`);
-  if (name === 'density') { renderChart(); renderSeasons(); renderEventCrowd(); }
+  if (name === 'density') { renderChart(); renderSeasons(); renderEventCrowd(); renderPatterns(); renderShare(); }
   if (name === 'calendar') renderProgramChart();
   if (name === 'website') renderWebsite();
   if (name === 'menu') renderMenu();
@@ -313,6 +327,7 @@ document.querySelector('.vtabs').onclick = e => { const b = e.target.closest('[d
 async function load() {
   const id = params.get('mekan') || 'lemongrass-cafe';
   const { venues } = await (await fetch(`data/venues.json?t=${Date.now()}`)).json();
+  allVenues = venues.map(withSettings);
   const found = venues.find(v => v.id === id);
   if (!found) { location.replace('./'); return; }
   venue = withSettings(found);
@@ -343,7 +358,7 @@ async function load() {
   }
   showHeader(venue);
   showVTab(['density', 'calendar', 'menu', 'website'].includes(params.get('tab')) ? params.get('tab') : 'density');
-  addEventListener('resize', () => { renderChart(); renderProgramChart(); renderSeasons(); });
+  addEventListener('resize', () => { renderChart(); renderProgramChart(); renderSeasons(); renderPatterns(); renderShare(); });
   if (venue.simulated) simVenue = venue;
   else if (venue.data) { dataUrl = venue.data; countRule = localized(venue, 'count_rule'); }
   else { renderEmpty(); return; }
@@ -700,6 +715,154 @@ function weeklyHistory() {
 
 // ---- All-time high by season (weekly, since 2021) ----
 const SEASON_COLORS = ['#64b5f6', '#4cd964', '#ffcc00', '#ff8a3d'];
+// ---- Crowd by weekday and by hour (demo: simulated over the last 8 weeks) ----
+function patternData(v) {
+  if (v._pat) return v._pat;
+  const wk = Array.from({ length: 7 }, () => []), hr = Array.from({ length: 24 }, () => []);
+  const noon = new Date(); noon.setHours(12, 0, 0, 0);
+  for (let k = 1; k <= 56; k++) {
+    const d = new Date(noon); d.setDate(d.getDate() - k);
+    const fr = simFrames(v, localDay(d), new Date(8.64e15));
+    if (!fr.length) continue;
+    wk[(d.getDay() + 6) % 7].push(Math.max(...fr.map(f => f.people)));
+    for (const f of fr) hr[new Date(f.timestamp).getHours()].push(f.people);
+  }
+  const avg = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : 0;
+  return (v._pat = { wk: wk.map(avg), hr: hr.map(avg) });
+}
+function barChart(box, values, labels, highlight) {
+  if (!box.clientWidth) return;
+  const W = Math.max(280, box.clientWidth), H = 190, m = { t: 22, r: 6, b: 24, l: 6 };
+  const max = Math.max(1, ...values), n = values.length, bw = (W - m.l - m.r) / n;
+  let g = '';
+  values.forEach((v, i) => {
+    const h = v / max * (H - m.t - m.b), x = m.l + i * bw + bw * 0.14, y = H - m.b - h, w = bw * 0.72;
+    g += `<rect x="${x}" y="${y}" width="${w}" height="${Math.max(1, h)}" rx="3" fill="${levelOf(Math.round(v)).color}" opacity="${i === highlight ? 1 : 0.78}"/>`;
+    if (v === max || i === highlight) g += `<text x="${x + w / 2}" y="${y - 6}" text-anchor="middle" class="bc-v">${Math.round(v)}</text>`;
+    if (labels[i]) g += `<text x="${x + w / 2}" y="${H - 7}" text-anchor="middle"${i === highlight ? ' class="bc-now"' : ''}>${labels[i]}</text>`;
+  });
+  box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img">${g}</svg>`;
+}
+function renderPatterns() {
+  if (!venue || !$('wkChart')) return;
+  const { wk, hr } = patternData(venue), now = new Date();
+  const wkNames = Array.from({ length: 7 }, (_, i) => new Date(2024, 0, 1 + i).toLocaleDateString(LANG === 'tr' ? 'tr-TR' : 'en-GB', { weekday: 'short' }));
+  barChart($('wkChart'), wk, wkNames, (now.getDay() + 6) % 7);
+  const best = wk.indexOf(Math.max(...wk));
+  $('wkSummary').textContent = t('patternBest', wkNames[best]);
+  // Hours run 06 → 05 so a night stays in one piece.
+  const order = Array.from({ length: 24 }, (_, i) => (i + 6) % 24);
+  barChart($('hrChart'), order.map(h => hr[h]), order.map(h => h % 3 === 0 ? String(h).padStart(2, '0') : ''), order.indexOf(now.getHours()));
+  const bh = hr.indexOf(Math.max(...hr));
+  $('hrSummary').textContent = t('patternBest', `${String(bh).padStart(2, '0')}:00`);
+}
+
+// ---- Share of the crowd among similar venues (isometric pie) ----
+const PEER_GROUPS = [['Pub', 'Bar', 'Meyhane', 'Kulüp'], ['Restoran', 'Meyhane', 'Kafe'], ['Spor', 'Plaj']];
+const peersOf = v => { const g = PEER_GROUPS.find(g => g.includes(v.type)) || [v.type]; return allVenues.filter(x => g.includes(x.type)); };
+// Most people seen at a venue during one clock hour (demo: from the simulation, 20-minute samples).
+// Venues without their own demo scale get a typical crowd size for their type (demo data).
+const PEER_SCALE = { Kulüp: 60, Pub: 34, Bar: 24, Meyhane: 30, Restoran: 32, Kafe: 20, Spor: 18, Plaj: 40 };
+function hourPeople(v, date, hour) {
+  const base = new Date(`${date}T${String(hour).padStart(2, '0')}:00:00`); let m = 0;
+  const sv = v.sim_scale ? v : Object.assign(Object.create(v), { sim_scale: PEER_SCALE[v.type] || 20 });
+  for (let mi = 0; mi < 60; mi += 20) m = Math.max(m, simCount(sv, slotStart(new Date(base.getTime() + mi * 60000))));
+  return m;
+}
+// Events running (or announced) on the selected business day, for the labels.
+function eventsOnDay(v, date) {
+  const d0 = new Date(`${date}T06:00:00`), d1 = new Date(d0.getTime() + 864e5);
+  return eventWindows(v).filter(w => w.start < d1 && w.end > d0).map(w => w.e);
+}
+const SHARE_COLORS = ['#1F6BFF', '#16CA64', '#FFB400', '#8B5CF6', '#13CBD8', '#DD5E27', '#7C8799'];
+let sharePick = null;
+function initSharePick() {
+  if (sharePick) return;
+  const now = new Date();
+  sharePick = { date: localDay(now), hour: now.getHours() };
+  $('shareHour').innerHTML = Array.from({ length: 24 }, (_, h) => `<option value="${h}">${String(h).padStart(2, '0')}:00</option>`).join('');
+  $('shareDate').value = sharePick.date; $('shareHour').value = sharePick.hour;
+  $('shareDate').onchange = e => { if (e.target.value) { sharePick.date = e.target.value; renderShare(); } };
+  $('shareHour').onchange = e => { sharePick.hour = +e.target.value; renderShare(); };
+  $('shareNow').onclick = () => { const n = new Date(); sharePick = { date: localDay(n), hour: n.getHours() }; $('shareDate').value = sharePick.date; $('shareHour').value = sharePick.hour; renderShare(); };
+}
+function renderShare() {
+  const box = $('shareChart'); if (!box || !venue || !allVenues.length) return;
+  initSharePick();
+  const { date, hour } = sharePick;
+  const peers = peersOf(venue).map(v => ({ v, n: hourPeople(v, date, hour), evs: eventsOnDay(v, date) })).sort((a, b) => b.n - a.n);
+  const total = peers.reduce((a, p) => a + p.n, 0);
+  const me = peers.find(p => p.v.id === venue.id);
+  $('shareHint').textContent = t('shareHint', [...new Set(peers.map(p => typeName(p.v.type)))].join(', '), peers.length);
+  // Slices: this venue, the five biggest others, the rest grouped.
+  const others = peers.filter(p => p !== me);
+  const shown = [me, ...others.slice(0, 5)].filter(p => p && p.n > 0);
+  const rest = others.slice(5).filter(p => p.n > 0), restN = rest.reduce((a, p) => a + p.n, 0);
+  const slices = shown.sort((a, b) => b.n - a.n).map((p, i) => ({ ...p, color: p === me ? 'var(--brand-full)' : SHARE_COLORS[i % SHARE_COLORS.length] }));
+  if (restN) slices.push({ rest: true, n: restN, count: rest.length, color: '#7C8799' });
+  const W = 560, H = 380, cx = W / 2, cy = 172, rx = 170, ry = 98, dep = 30;
+  let g = '';
+  if (!total) {
+    box.innerHTML = `<p class="share-empty">${t('shareEmpty')}</p>`;
+  } else {
+    let a = -Math.PI / 2;
+    const P = (ang, dx = 0, dy = 0) => [cx + dx + rx * Math.cos(ang), cy + dy + ry * Math.sin(ang)];
+    slices.forEach(sl => { sl.a0 = a; sl.a1 = a + sl.n / total * Math.PI * 2; sl.mid = (sl.a0 + sl.a1) / 2; a = sl.a1;
+      const pull = sl.v?.id === venue.id ? 14 : 0; sl.dx = Math.cos(sl.mid) * pull; sl.dy = Math.sin(sl.mid) * pull; });
+    const arc = (a0, a1, dx, dy, depth = 0) => { const [x0, y0] = P(a0, dx, dy + depth), [x1, y1] = P(a1, dx, dy + depth); return { x0, y0, x1, y1, large: a1 - a0 > Math.PI ? 1 : 0 }; };
+    // Side walls: only the front half (screen-lower half, angle in 0…π) shows; draw them back to front.
+    const walls = [];
+    for (const sl of slices) for (const k of [0, 2 * Math.PI]) {
+      const s0 = Math.max(sl.a0, k), s1 = Math.min(sl.a1, k + Math.PI);
+      if (s1 > s0) walls.push({ sl, s0, s1 });
+    }
+    walls.sort((p, q) => Math.abs(Math.cos((q.s0 + q.s1) / 2)) - Math.abs(Math.cos((p.s0 + p.s1) / 2)));
+    for (const { sl, s0, s1 } of walls) {
+      const t1 = arc(s0, s1, sl.dx, sl.dy), b1 = arc(s0, s1, sl.dx, sl.dy, dep);
+      g += `<path d="M${t1.x0},${t1.y0} A${rx},${ry} 0 ${t1.large} 1 ${t1.x1},${t1.y1} L${b1.x1},${b1.y1} A${rx},${ry} 0 ${t1.large} 0 ${b1.x0},${b1.y0} Z" fill="${sl.color}" style="filter:brightness(.62)"/>`;
+    }
+    // Cut faces of the pulled-out slice (so it reads as a solid wedge).
+    for (const sl of slices.filter(s => s.dx || s.dy)) for (const ang of [sl.a0, sl.a1]) {
+      if (Math.sin(ang) < -0.2) continue;
+      const [ex, ey] = P(ang, sl.dx, sl.dy);
+      g += `<path d="M${cx + sl.dx},${cy + sl.dy} L${ex},${ey} L${ex},${ey + dep} L${cx + sl.dx},${cy + sl.dy + dep} Z" fill="${sl.color}" style="filter:brightness(.5)"/>`;
+    }
+    for (const sl of slices) {
+      const t1 = arc(sl.a0, sl.a1, sl.dx, sl.dy);
+      g += slices.length === 1 ? `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${sl.color}"/>`
+        : `<path d="M${cx + sl.dx},${cy + sl.dy} L${t1.x0},${t1.y0} A${rx},${ry} 0 ${t1.large} 1 ${t1.x1},${t1.y1} Z" fill="${sl.color}" stroke="rgba(0,0,0,.25)" stroke-width="1"/>`;
+      // Percentage on the slice when it is big enough to hold it.
+      if (sl.n / total > 0.07) { const [lx, ly] = P(sl.mid, sl.dx, sl.dy); const px = cx + sl.dx + (lx - cx - sl.dx) * 0.62, py = cy + sl.dy + (ly - cy - sl.dy) * 0.62;
+        g += `<text x="${px}" y="${py + 5}" text-anchor="middle" class="sp-pct">${Math.round(sl.n / total * 100)}%</text>`; }
+    }
+    // Labels around the pie: logo, name, people in that hour, and that day's events.
+    const labels = slices.map(sl => {
+      const front = Math.sin(sl.mid) > 0, right = Math.cos(sl.mid) >= 0;
+      const [ex, ey] = P(sl.mid, sl.dx, sl.dy + (front ? dep : 0));
+      return { sl, right, x: cx + (rx + 26) * Math.cos(sl.mid) + sl.dx, y: ey + (front ? 16 : -10) * Math.abs(Math.sin(sl.mid)), ex, ey };
+    });
+    for (const side of [true, false]) {  // keep labels on one side from stacking
+      const ls = labels.filter(l => l.right === side).sort((p, q) => p.y - q.y);
+      for (let i = 1; i < ls.length; i++) if (ls[i].y - ls[i - 1].y < 54) ls[i].y = ls[i - 1].y + 54;
+    }
+    const lbl = labels.map(({ sl, right, x, y }) => {
+      const pct = Math.round(sl.n / total * 100);
+      const name = sl.rest ? t('shareOthers', sl.count) : sl.v.name;
+      const logo = sl.rest ? '' : `<span class="sp-logo">${sl.v.logo ? `<img src="${sl.v.logo}" alt="">` : sl.v.name.slice(0, 2)}</span>`;
+      const ev = sl.evs?.[0] ? `<em>🎶 ${sl.evs[0].name} · ${sl.evs[0].from}</em>` : '';
+      // Keep labels inside the chart column (they are up to 170px wide).
+      const cw = box.clientWidth || W, px = x / W * cw, lx = right ? Math.min(px, cw - 172) : Math.max(px, 172);
+      return `<div class="sp-label ${right ? 'r' : 'l'}${sl.v?.id === venue.id ? ' me' : ''}" style="left:${lx}px;top:${y / H * 100}%;--c:${sl.color}">${logo}<span class="sp-tx"><b>${name}</b><span>${sl.n} ${t('people')} · ${pct}%</span>${ev}</span></div>`;
+    }).join('');
+    box.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${t('shareTitle')}">${g}</svg>${lbl}`;
+  }
+  // Full list of similar venues under the chart.
+  $('shareList').innerHTML = peers.map(p => {
+    const pct = total ? Math.round(p.n / total * 100) : 0;
+    return `<a class="sl-row${p === me ? ' me' : ''}" href="venue.html?mekan=${p.v.id}"><span class="sp-logo">${p.v.logo ? `<img src="${p.v.logo}" alt="">` : p.v.name.slice(0, 2)}</span><span class="sl-name"><b>${p.v.name}</b>${p.evs.length ? `<em>${p.evs.map(e => `🎶 ${e.name} · ${e.from}–${e.to}`).join('<br>')}</em>` : ''}</span><span class="sl-n">${p.n}<small>${pct}%</small></span></a>`;
+  }).join('');
+}
+
 // ---- Crowd per event: the busiest moment while each announced event ran, newest first ----
 function renderEventCrowd() {
   const card = $('evCrowdCard'); if (!card || !venue) return;
@@ -799,11 +962,26 @@ function renderChart() {
   // so the whole day's chart is filled.
   const nowT = new Date();
   const future = simVenue?.sim_full_day && day === today() ? simFrames(simVenue, day, new Date(8.64e15)).filter(f => new Date(f.timestamp) > nowT) : [];
+  // Average for this weekday: the same slot on the previous 8 same weekdays (demo venues: simulated;
+  // camera venues: the frames we have for those days).
+  const avgLine = (() => {
+    const start = new Date(`${day}T06:00:00`), out = [];
+    for (let tt = start.getTime(); tt < start.getTime() + 864e5; tt += SIM_SLOT_MIN * 60000) {
+      const vals = [];
+      for (let k = 1; k <= 8; k++) {
+        const at = new Date(tt - k * 7 * 864e5);
+        if (simVenue) vals.push(simCount(simVenue, at));
+        else { const f = everything.find(f => Math.abs(new Date(f.timestamp) - at) < SIM_SLOT_MIN * 30000); if (f) vals.push(f.people); }
+      }
+      if (vals.length) out.push({ timestamp: localIso(new Date(tt)), people: vals.reduce((a, b) => a + b, 0) / vals.length });
+    }
+    return out;
+  })();
   const span = [...all, ...future];
   const t0 = Math.min(8 * 3600, span.length ? Math.floor(secs(span[0]) / 3600) * 3600 : Infinity);
   const t1 = Math.max(24 * 3600, span.length ? Math.ceil(secs(span[span.length - 1]) / 3600) * 3600 : 0);
   // A "nice" tick step (1, 2 or 5 × 10ⁿ) giving about five gridlines, whether the peak is 10 or 1,200.
-  const peakN = Math.max(10, ...frames.map(f => f.people), ...future.map(f => f.people));
+  const peakN = Math.max(10, ...frames.map(f => f.people), ...future.map(f => f.people), ...avgLine.map(f => f.people));
   const raw = peakN / 5, mag = Math.pow(10, Math.floor(Math.log10(raw)));
   const tick = [1, 2, 5, 10].map(k => k * mag).find(k => k >= raw);
   const max = Math.ceil(peakN / tick) * tick;
@@ -835,8 +1013,13 @@ function renderChart() {
     const fl = roundedLine(fp.map(p => [p.x, p.y]));
     g += `<path d="${fl}L${fp[fp.length - 1].x},${y(0)}L${fp[0].x},${y(0)}Z" fill="var(--series)" opacity="0.08"/>`;
     g += `<path d="${fl}" fill="none" stroke="var(--series)" stroke-width="2" stroke-dasharray="5 5" stroke-linecap="round" opacity="0.8"/>`;
-    g += `<text x="${fp[0].x + 8}" y="${m.t + 12}" fill="var(--ink-2)" style="font-size:11px">${t('expectedLine')}</text>`;
   }
+  if (avgLine.length > 1) {
+    const al = roundedLine(avgLine.map(f => [x(secs(f)), y(f.people)]));
+    g += `<path d="${al}" fill="none" stroke="var(--ink-2)" stroke-width="2" stroke-dasharray="0.5 5" stroke-linecap="round" opacity="0.9"/>`;
+  }
+  const wd = new Date(`${day}T12:00:00`).toLocaleDateString(LANG === 'tr' ? 'tr-TR' : 'en-GB', { weekday: 'long' });
+  $('chartLegend').innerHTML = `<span class="lg-actual">${t('legendActual')}</span>${future.length ? `<span class="lg-expected">${t('expectedLine')}</span>` : ''}${avgLine.length > 1 ? `<span class="lg-avg">${t('legendAvg', wd)}</span>` : ''}`;
   g += `<line id="cross" y1="${m.t}" y2="${H - m.b}" stroke="var(--axis)" stroke-width="1" visibility="hidden"/>`;
   g += points.map(p => `<circle cx="${p.x}" cy="${p.y}" r="4.5" fill="${levelOf(frames[p.i].people).color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
   g += `<circle id="sel" r="7" fill="none" stroke="var(--series)" stroke-width="2"/>`;
