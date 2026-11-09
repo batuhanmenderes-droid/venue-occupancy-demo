@@ -982,3 +982,24 @@ body {
 .slide--chat[data-step="1"] .chat-bubbles { transform: scale(.9); filter: blur(6px); opacity: .28; }
 .slide--chat[data-step="1"] .chat-line { opacity: 1; transform: translate(-50%, -50%); }
 .slide--chat[data-step="1"] .chat-hint { opacity: 0; }
+/* 22 v2: step 1 scatters the bubbles off screen, shows the line at the top and raises the desktop heat map below */
+.slide--chat[data-step="1"] .chat-bubbles { transform: none; filter: none; opacity: 1; }
+.slide--chat[data-step="1"] .bubble {
+  animation: none; opacity: 0;
+  transform: translate(var(--dx), var(--dy)) scale(.7) rotate(calc(var(--dx) / 60px * 1deg));
+  transition: transform .9s cubic-bezier(.5,0,.2,1), opacity .7s ease;
+  transition-delay: calc(var(--i) * .04s);
+}
+.slide--chat .bubble { transition: transform .8s var(--ease), opacity .6s ease; }
+.chat-line { top: 92px; transform: translate(-50%, 30px); font-size: 78px; width: 1500px; }
+.slide--chat[data-step="1"] .chat-line { transform: translate(-50%, 0); }
+.chat-map {
+  position: absolute; left: 50%; top: 330px; width: 1500px; margin: 0 0 0 -750px;
+  border-radius: 28px 28px 0 0; overflow: hidden; opacity: 0;
+  transform: translateY(260px);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 -20px 80px -20px rgba(77,139,255,.35);
+  transition: transform 1.1s cubic-bezier(.2,.8,.2,1) .25s, opacity .6s ease .25s;
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%); mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+}
+.chat-map img { display: block; width: 100%; height: auto; }
+.slide--chat[data-step="1"] .chat-map { opacity: 1; transform: none; }
