@@ -50,27 +50,32 @@ body {
 }
 :fullscreen .stage, .is-fit .stage { border-radius: 0; box-shadow: none; }
 
+/* Vertical scroll: slides are stacked like a page. Upcoming slides wait below, past ones above;
+   moving on pushes the current slide up and the next one in from the bottom (and back again). */
 .slide {
+  --ease-scroll: cubic-bezier(.76, 0, .24, 1);
   position: absolute; inset: 0;
   padding: var(--pad-y) var(--pad-x);
   background: var(--night);
-  opacity: 0; visibility: hidden;
-  transform: translateX(40px);
-  transition: opacity .5s var(--ease), transform .6s var(--ease), visibility 0s linear .6s;
+  visibility: hidden;
+  transform: translateY(100%);
+  transition: transform .9s var(--ease-scroll), visibility 0s linear .9s;
 }
-.slide.is-prev { transform: translateX(-40px); }
+.slide.is-prev { transform: translateY(-100%); }
 .slide.is-active {
-  opacity: 1; visibility: visible; transform: none;
-  transition: opacity .5s var(--ease), transform .6s var(--ease), visibility 0s;
+  visibility: visible; transform: none;
+  transition: transform .9s var(--ease-scroll), visibility 0s;
 }
+.stage.no-anim .slide { transition: none !important; }
 
 /* Held transition (slides in the same data-hold group): nothing moves, the new slide fades in
    on top of the old one, which disappears only once it is covered. */
 .slide.is-active { z-index: 2; }
 .slide.is-held { transform: none !important; }
-.slide.is-held.is-active { transition: opacity .5s var(--ease), visibility 0s; }
-.slide.is-held:not(.is-active) { z-index: 1; transition: opacity 0s linear .55s, visibility 0s linear .55s; }
+.slide.is-held.is-active { transition: visibility 0s; animation: heldIn .5s var(--ease) both; }
+.slide.is-held:not(.is-active) { z-index: 1; transition: visibility 0s linear .55s; }
 .slide.is-held .phone--flat { animation: none !important; }
+@keyframes heldIn { from { opacity: 0; } to { opacity: 1; } }
 
 /* ---------- Type ---------- */
 .display, .headline {
@@ -452,7 +457,7 @@ body {
 /* Flow transition (slides sharing data-flow): the new slide appears at once underneath; the old one stays on
    top with a transparent background while its copy slides up and out; deck.js moves the shared iMac. */
 .slide.flow-in { transform: none !important; transition: none !important; }
-.slide.flow-out { z-index: 3; background: transparent; transform: none !important; opacity: 1 !important; visibility: visible !important; transition: none !important; pointer-events: none; }
+.slide.flow-out { z-index: 3; background: transparent; transform: none !important; visibility: visible !important; transition: none !important; pointer-events: none; }
 .slide.flow-out .heat, .slide.flow-out [data-shared] { visibility: hidden; }
 .slide.flow-out .flow-copy { animation: flowOut .6s var(--ease) both; }
 @keyframes flowOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-160px); } }
@@ -460,7 +465,7 @@ body {
 /* ---------- Generic slide ---------- */
 .slide--blank { display: flex; flex-direction: column; gap: 64px; }
 .slide-head { display: flex; flex-direction: column; gap: 24px; }
-.slide-body { flex: 1; min-height: 0; }
+.slide--blank.is-active .slide-head > * { animation: rise .9s var(--ease) .25s both; }.slide-body { flex: 1; min-height: 0; }
 
 /* ---------- Controls ---------- */
 .controls {

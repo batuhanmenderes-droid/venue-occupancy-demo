@@ -154,7 +154,9 @@
       },
       "simulated": true,
       "sim_scale": 28,
-      "sim_full_day": true
+      "sim_full_day": true,
+      "area_m2": 250,
+      "demo_now": 287
     },
     {
       "id": "lemongrass-cafe",

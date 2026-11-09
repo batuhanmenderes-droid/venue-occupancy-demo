@@ -130,6 +130,14 @@ function beachCount(v, at) {
 }
 
 function simCount(v, at) {
+  // `demo_now`: a demo venue's current reading is pinned to this many people (the two slots before it
+  // ramp up to it, so the chart rises instead of jumping).
+  if (v.demo_now) {
+    const back = Math.round((slotStart(new Date()).getTime() - slotStart(at).getTime()) / (SIM_SLOT_MIN * 60000));
+    if (back === 0) return v.demo_now;
+    if (back === 1) return Math.round(v.demo_now * 0.75);
+    if (back === 2) return Math.round(v.demo_now * 0.45);
+  }
   if (isClosed(v, at)) return 0;
   if (v.sim_profile === 'beach') return beachCount(v, at);
   const hour = at.getHours() + at.getMinutes() / 60;

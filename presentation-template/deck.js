@@ -147,6 +147,9 @@
   window.addEventListener('resize', fit);
   window.addEventListener('orientationchange', fit);
   fit();
+  // First paint: place the opening slide without the scroll animation.
+  stage.classList.add('no-anim');
   go(fromHash(), false);
+  requestAnimationFrame(() => requestAnimationFrame(() => stage.classList.remove('no-anim')));
   wake();
 })();
