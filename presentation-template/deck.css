@@ -271,8 +271,9 @@ body {
 .split-copy .points li { padding: 24px 0; }
 /* Fewer points: larger type so the column fills the slide */
 .slide--roomy .split-copy { justify-content: center; padding-top: 72px; padding-bottom: 72px; }
-.slide--roomy .points li { font-size: 27px; padding: 30px 0; }
-.slide--roomy .quote { font-size: 36px; }
+.slide--roomy .points li { font-size: 24px; padding: 20px 0; }
+.slide--roomy .quote { font-size: 31px; padding-top: 18px; padding-bottom: 18px; }
+.slide--roomy .point-stack { gap: 12px; }
 .point-stack { display: flex; flex-direction: column; gap: 16px; }
 .quote {
   position: relative; margin: 0;
