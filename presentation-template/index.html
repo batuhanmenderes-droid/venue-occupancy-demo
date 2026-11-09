@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=40">
+<link rel="stylesheet" href="deck.css?v=43">
 </head>
 <body>
 
@@ -36,8 +36,6 @@
         <h1 class="display wordmark" aria-label="Herkes Nerede?">Herkes <span class="nowrap">Nerede<svg viewBox="0 5.5 132 102" aria-hidden="true"><use href="#mk-bold"/></svg></span></h1>
         <p class="lead">İşletmeler için gerçek zamanlı ziyaretçi sayımı ve bilgisi, ziyaretçiler için anlık yoğunluk haritası ve işletmeler hakkında bilgilenme şansı.</p>
         <footer class="meta">
-          <span>Batuhan Menderes</span>
-          <span class="sep" aria-hidden="true"></span>
           <span>09.11.26</span>
         </footer>
       </div>
@@ -491,6 +489,54 @@
       </div>
     </section>
 
+    <!-- AI assistant: the question, then the answer arriving in parts with venue cards in between (ai-chat.js plays it) -->
+    <section class="slide slide--ai" aria-roledescription="slide" aria-label="YZ Asistanı">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+      <div class="ai-copy">
+        <p class="eyebrow"><span class="crumb">01</span>Sıcaklık Haritası</p>
+        <h2 class="display ai-title"><span class="ai-spark" aria-hidden="true">✦</span>YZ Asistanı</h2>
+        <p class="ai-text">İşletmelerin verdiği bilgiler eşliğinde kuralları belirlenen YZ Asistanı, kullanıcının sorduğu sorular ışığında önerilerde bulunur.</p>
+      </div>
+      <div class="ai-phone" aria-label="YZ Asistanı sohbeti">
+        <div class="ai-screen">
+          <header class="ai-bar"><span class="ai-dot">✦</span><b>YZ Asistanı</b><small>herkez nerde?!</small></header>
+          <div class="ai-feed">
+            <p class="ai-item msg msg--me" data-t="0">Akyakaya yeni geldim bana günümü dolduracak şekilde önerilerde bulunur musun?</p>
+            <p class="ai-item msg msg--ai" data-t="1">Akçapınarda olduğunu görüyorum. Sabah kahveni mutlaka lemongrassta içmelisin eğer yoga ile ilgileniyorsan çok iyi fırsat 1 saat sonra etkinlik başlıyor.</p>
+            <div class="ai-item vc" data-t="2">
+              <span class="vc-logo"><img src="assets/logos/lemongrass.png" alt=""></span>
+              <div class="vc-main"><b>Lemongrass Cafe</b><span>Kafe · Akçapınar</span></div>
+              <div class="vc-side"><span class="vc-chip">Yoga · 1 saat sonra</span><span class="vc-lvl vc-lvl--calm"><i></i>Sakin</span></div>
+            </div>
+            <p class="ai-item msg msg--ai" data-t="3">Sonrasında Kite sahiline bir uğramalısın 12:00 gibi oldukça kalabalık ve canlı olur. Akyakada olmanın en güzel tarafı Kitebeachdir.</p>
+            <div class="ai-item vc" data-t="4">
+              <span class="vc-logo"><img src="assets/logos/kitebeach.png" alt=""></span>
+              <div class="vc-main"><b>Kitebeach Akyaka</b><span>Plaj · Gökova Körfezi</span></div>
+              <div class="vc-side"><span class="vc-chip">12:00 civarı zirve</span><span class="vc-lvl vc-lvl--full"><i></i>Çok kalabalık</span></div>
+            </div>
+            <p class="ai-item msg msg--ai" data-t="5">Akşam yemeğini Mosso’da yiyebilir ve sonrasında eğer Pop müzik seviyorsan No22’de Deniz Sipahi’ye, DJ performansı seviyorsan Kulüp’e gitmelisin.</p>
+            <div class="ai-item vc" data-t="6">
+              <span class="vc-logo vc-logo--txt">M</span>
+              <div class="vc-main"><b>Mosso</b><span>Restoran · Akşam yemeği</span></div>
+              <div class="vc-side"><span class="vc-chip">Akşam</span><span class="vc-lvl vc-lvl--active"><i></i>Hareketli</span></div>
+            </div>
+            <div class="ai-item vc" data-t="7">
+              <span class="vc-logo"><img src="assets/logos/no22riders.png" alt=""></span>
+              <div class="vc-main"><b>No22 Riders Inn</b><span>Pop · Deniz Sipahi</span></div>
+              <div class="vc-side"><span class="vc-chip">Bu gece</span><span class="vc-lvl vc-lvl--active"><i></i>Hareketli</span></div>
+            </div>
+            <div class="ai-item vc" data-t="8">
+              <span class="vc-logo"><img src="assets/logos/kulup.png" alt=""></span>
+              <div class="vc-main"><b>Kulüp</b><span>DJ performansı</span></div>
+              <div class="vc-side"><span class="vc-chip">Bu gece</span><span class="vc-lvl vc-lvl--full"><i></i>Zirvede</span></div>
+            </div>
+            <div class="ai-typing" aria-hidden="true"><i></i><i></i><i></i></div>
+          </div>
+          <div class="ai-input" aria-hidden="true"><span>Bir şey sor…</span><i>↑</i></div>
+        </div>
+      </div>
+    </section>
+
     <!-- 22 · Questions people ask (visitors left, venue owners right) pop in as chat bubbles;
          the next scroll pushes them back and brings in the closing line. -->
     <section class="slide slide--chat" data-steps="1" aria-roledescription="slide" aria-label="Tek uygulama">
@@ -693,13 +739,17 @@
       </div>
     </section>
 
-    <!-- 27 · Empty slide to duplicate -->
-    <section class="slide slide--blank" aria-roledescription="slide" aria-label="Boş slayt">
-      <header class="slide-head">
-        <p class="eyebrow">Bölüm</p>
-        <h2 class="headline">Slayt başlığı</h2>
-      </header>
-      <div class="slide-body"></div>
+    <!-- Thank you -->
+    <section class="slide slide--divider slide--thanks" aria-roledescription="slide" aria-label="Teşekkürler">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+      <div class="divider-copy">
+        <div class="logo-lockup">
+          <img class="logo-icon" src="assets/app-icon.svg" alt="" width="160" height="160">
+          <p class="logo-wm" aria-label="herkez nerde?!">herkez nerde<svg viewBox="0 5.5 132 102" aria-hidden="true"><use href="#mk-bold"/></svg></p>
+        </div>
+        <h2 class="display thanks-title">Teşekkürler</h2>
+        <p class="thanks-meta"><span>Batuhan Menderes</span><span class="sep" aria-hidden="true"></span><span>09.11.26</span></p>
+      </div>
     </section>
 
   </div>
@@ -726,5 +776,6 @@
 <script src="embed.js?v=2"></script>
 <script src="reveal-map.js?v=2"></script>
 <script src="mobile-tour.js?v=2"></script>
+<script src="ai-chat.js?v=1"></script>
 </body>
 </html>
