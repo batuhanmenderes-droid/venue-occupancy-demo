@@ -1469,3 +1469,14 @@ body {
 /* 23: database icon level with the trash bin (the server's text is one line shorter) */
 .flow-db { margin-top: 48px; }
 .flow-drop--num { --fall: 320px; }
+/* pilot roadmap: five steps */
+.rm-price--5 li { padding: 13px 0 13px 64px; gap: 5px; }
+.rm-price--5 li::before { top: 19px; }
+.rm-price--5 li:not(:last-child)::after { top: 47px; bottom: -19px; }
+.rm-price--5 b { font-size: 27px; line-height: 1.22; }
+.rm-price--5 small { font-size: 16px; }
+.rm-price--5 .rm-blank { min-width: 0; padding: 0 12px; font-size: .9em; }
+.rm-price--5 li { padding: 19px 0 19px 64px; }
+.rm-price--5 li::before { top: 25px; }
+.rm-price--5 li:not(:last-child)::after { top: 53px; bottom: -25px; }
+.rm-price--5 b { font-size: 30px; }
