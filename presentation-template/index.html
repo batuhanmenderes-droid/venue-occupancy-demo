@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B0B10">
+<title>Herkes Nerede? Sunum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+
+<!-- Product logo mark (same as the app's wordmark: question-mark curve + rising bar) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5">
+      <stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/>
+    </linearGradient>
+    <symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol>
+  </defs>
+</svg>
+
+<!-- 16:9 deck. Every slide is drawn on a fixed 1920 × 1080 canvas and scaled to fit the screen,
+     so layouts stay identical from a phone to a projector. Add a slide by copying a <section class="slide">. -->
+<main class="deck" aria-roledescription="carousel" aria-label="Sunum">
+  <div class="stage" id="stage">
+
+    <!-- 1 · Title + product mockup -->
+    <section class="slide slide--title" aria-roledescription="slide" aria-label="Başlık">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+
+      <div class="title-copy">
+        <p class="eyebrow"><span class="live-dot"></span>Etiket</p>
+        <h1 class="display wordmark" aria-label="Herkes Nerede?">Herkes <span class="nowrap">Nerede<svg viewBox="0 5.5 132 102" aria-hidden="true"><use href="#mk-bold"/></svg></span></h1>
+        <p class="lead">İşletmeler için gerçek zamanlı ziyaretçi sayımı ve bilgisi, ziyaretçiler için anlık yoğunluk haritası ve işletmeler hakkında bilgilenme şansı.</p>
+        <footer class="meta">
+          <span>Batuhan Menderes</span>
+          <span class="sep" aria-hidden="true"></span>
+          <span>09.11.26</span>
+        </footer>
+      </div>
+
+      <div class="mockup" aria-hidden="true">
+        <div class="phone">
+          <div class="phone-btn phone-btn--action"></div>
+          <div class="phone-btn phone-btn--vol-up"></div>
+          <div class="phone-btn phone-btn--vol-down"></div>
+          <div class="phone-btn phone-btn--power"></div>
+          <div class="phone-screen">
+            <img src="assets/app-map.jpg" alt="" width="780" height="1688" decoding="async">
+            <div class="island"></div>
+          </div>
+        </div>
+        <div class="phone-shadow"></div>
+      </div>
+    </section>
+
+    <!-- 2 · Section title (copy for each main heading; mark the current sub-topic with .is-current) -->
+    <section class="slide slide--section" aria-roledescription="slide" aria-label="Bölüm 1: Herkes Nerede App">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
+      <div class="section-num" aria-hidden="true">01</div>
+      <div class="section-copy">
+        <p class="eyebrow">Bölüm 1</p>
+        <h2 class="display section-title">Herkes Nerede App</h2>
+        <ol class="toc" type="a">
+          <li class="is-current"><span class="toc-key">a</span><span class="toc-label">Sıcaklık Haritası</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 3 · Content left, product mockup filling the right half -->
+    <section class="slide slide--split" aria-roledescription="slide" aria-label="Ziyaretçi İçgörüleri">
+      <div class="split-copy">
+        <p class="eyebrow"><span class="crumb">01</span>Sıcaklık Haritası</p>
+        <h2 class="headline">Ziyaretçi İçgörüleri</h2>
+        <div class="slide-body"></div>
+      </div>
+      <div class="split-media" aria-hidden="true">
+        <div class="heat"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+        <div class="phone phone--flat">
+          <div class="phone-btn phone-btn--action"></div>
+          <div class="phone-btn phone-btn--vol-up"></div>
+          <div class="phone-btn phone-btn--vol-down"></div>
+          <div class="phone-btn phone-btn--power"></div>
+          <div class="phone-screen">
+            <img src="assets/app-map.jpg" alt="" width="780" height="1688" decoding="async">
+            <div class="island"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · Empty slide to duplicate -->
+    <section class="slide slide--blank" aria-roledescription="slide" aria-label="Boş slayt">
+      <header class="slide-head">
+        <p class="eyebrow">Bölüm</p>
+        <h2 class="headline">Slayt başlığı</h2>
+      </header>
+      <div class="slide-body"></div>
+    </section>
+
+  </div>
+</main>
+
+<nav class="controls" aria-label="Sunum kontrolleri">
+  <button class="ctl" id="prev" type="button" aria-label="Önceki slayt">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <span class="counter" id="counter" aria-live="polite">1 / 1</span>
+  <button class="ctl" id="next" type="button" aria-label="Sonraki slayt">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <button class="ctl" id="fs" type="button" aria-label="Tam ekran">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+  </button>
+</nav>
+<div class="progress" aria-hidden="true"><i id="bar"></i></div>
+<p class="rotate-hint" id="rotateHint">Daha büyük görmek için telefonu yan çevirin</p>
+
+<script src="deck.js"></script>
+</body>
+</html>
