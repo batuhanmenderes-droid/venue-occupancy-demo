@@ -367,6 +367,24 @@ body {
 .slide--divider.is-active .divider-mark { animation: rise .9s var(--ease) both; }
 .slide--divider.is-active .divider-title { animation: rise 1s var(--ease) .1s both; }
 
+/* ---------- Logo + paragraph ---------- */
+.slide--logo .divider-copy { gap: 72px; max-width: 1320px; }
+.logo-lockup { display: flex; align-items: center; gap: 44px; }
+.logo-icon { width: 160px; height: 160px; border-radius: 36px; box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 24px 60px -16px rgba(0,0,0,.8); }
+.logo-wm {
+  display: inline-flex; align-items: flex-end; gap: .06em; margin: 0;
+  font: 800 150px/.95 var(--font-display); letter-spacing: -0.03em; color: var(--ink);
+  font-variation-settings: "opsz" 96;
+}
+.logo-wm svg { height: .74em; width: auto; margin-bottom: .02em; color: var(--ink); }
+.logo-text {
+  margin: 0; text-align: center;
+  font: 400 38px/1.5 var(--font-text); color: var(--ink-2);
+  text-wrap: pretty;
+}
+.slide--logo.is-active .logo-lockup { animation: rise .9s var(--ease) both; }
+.slide--logo.is-active .logo-text { animation: rise 1s var(--ease) .12s both; }
+
 /* ---------- Generic slide ---------- */
 .slide--blank { display: flex; flex-direction: column; gap: 64px; }
 .slide-head { display: flex; flex-direction: column; gap: 24px; }
