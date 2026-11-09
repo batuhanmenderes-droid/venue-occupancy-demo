@@ -1451,3 +1451,18 @@ body {
 /* 23: a steady stream of frames from the cameras to the venue computer */
 .slide--how[data-step="1"] .pkt--stream { animation: frameStream 1.6s linear infinite; animation-delay: calc(.9s + var(--k) * .4s); }
 @keyframes frameStream { 0% { left: 0; opacity: 0; } 12% { opacity: 1; } 85% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
+
+/* 23: the server writes each count to the database below it */
+.flow-db { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 18px; }
+.flow-db-icon { display: grid; place-items: center; width: 96px; height: 96px; border-radius: 28px; color: var(--calm-2); background: rgba(31, 107, 255, .12); border: 1px solid rgba(77, 139, 255, .35); }
+.flow-db-icon svg { width: 52px; height: 52px; }
+.flow-db-text { margin: 0; max-width: 240px; font: 500 18px/1.4 var(--font-text); color: var(--ink-2); }
+.flow-db-row { display: inline-flex; gap: 6px; opacity: 0; }
+.flow-db-row b, .flow-db-row i { padding: 5px 9px; border-radius: 8px; font: 700 14px/1 var(--font-text); font-style: normal; white-space: nowrap; }
+.flow-db-row b { background: var(--full); color: #fff; }
+.flow-db-row i { background: rgba(255,255,255,.08); color: var(--ink-2); }
+.flow-drop--num { width: auto; height: auto; margin-left: 0; padding: 4px 10px; border: 0; border-radius: 999px; background: var(--full); color: #fff; font: 700 16px/1 var(--font-text); box-shadow: 0 0 16px rgba(255,45,111,.6); transform-origin: center; left: 50%; translate: -50% 0; }
+.slide--how[data-step="1"] .flow-drop--num { animation: frameDrop 6s cubic-bezier(.55,0,.8,.4) infinite 3.8s; }
+.slide--how[data-step="1"] .flow-db-row { animation: dbRow 6s ease infinite 4.5s; }
+@keyframes dbRow { 0% { opacity: 0; transform: translateY(6px); } 6%, 45% { opacity: 1; transform: none; } 55%, 100% { opacity: 0; } }
+.flow-drop--num { --fall: 290px; }
