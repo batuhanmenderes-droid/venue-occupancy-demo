@@ -64,6 +64,14 @@ body {
   transition: opacity .5s var(--ease), transform .6s var(--ease), visibility 0s;
 }
 
+/* Held transition (slides in the same data-hold group): nothing moves, the new slide fades in
+   on top of the old one, which disappears only once it is covered. */
+.slide.is-active { z-index: 2; }
+.slide.is-held { transform: none !important; }
+.slide.is-held.is-active { transition: opacity .5s var(--ease), visibility 0s; }
+.slide.is-held:not(.is-active) { z-index: 1; transition: opacity 0s linear .55s, visibility 0s linear .55s; }
+.slide.is-held .phone--flat { animation: none !important; }
+
 /* ---------- Type ---------- */
 .display, .headline {
   font-family: var(--font-display);

@@ -25,7 +25,13 @@
 
   // ---- Navigation ----
   function go(i, push) {
+    const from = slides[index];
     index = Math.max(0, Math.min(slides.length - 1, i));
+    const to = slides[index];
+    // Slides sharing a data-hold group keep the phone still: no slide-in, the old slide stays
+    // underneath until the new one has faded in, so only the copy and the screen change.
+    const held = from !== to && from.dataset.hold && from.dataset.hold === to.dataset.hold;
+    slides.forEach((s) => s.classList.toggle('is-held', !!held && (s === from || s === to)));
     slides.forEach((s, n) => {
       s.classList.toggle('is-active', n === index);
       s.classList.toggle('is-prev', n < index);
