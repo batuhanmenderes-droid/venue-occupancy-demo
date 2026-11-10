@@ -1509,3 +1509,5 @@ body {
   from { left: var(--m-x, 0px); top: var(--m-y, 0px); width: var(--m-w, 1920px); height: var(--m-h, 1080px); border-radius: var(--m-r, 0px); }
   to { left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh); border-radius: 48px; }
 }
+/* slide 24: the live desktop heat map instead of a screenshot */
+.chat-map .app-embed { height: 760px; border-radius: 0; }

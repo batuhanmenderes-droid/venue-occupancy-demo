@@ -8,23 +8,14 @@
   const W = 1600; // the app's desktop width the embeds are laid out at
   const slides = Array.from(document.querySelectorAll('.slide'));
 
-  // Dark theme for every embed: set the app's preference while embeds load, then put it back.
-  let pending = 0, saved;
+  // Load an app page into an iframe. (The app opens in its dark theme by default, so the viewer's own
+  // settings are never touched.)
+  // APP_VER busts the browser cache for the embedded app pages; bump it when the app changes.
+  const APP_VER = '20261110a';
   window.loadAppFrame = function (frame, src, onload) {
-    if (pending++ === 0) {
-      try { saved = localStorage.getItem('themePref'); localStorage.setItem('themePref', 'dark'); } catch (e) {}
-    }
-    // put the viewer's setting back even if this frame never finishes loading
-    let done = false;
-    const release = () => {
-      if (done) return; done = true;
-      if (--pending === 0) {
-        try { if (saved == null) localStorage.removeItem('themePref'); else localStorage.setItem('themePref', saved); } catch (e) {}
-      }
-    };
-    setTimeout(release, 8000);
+    const [path, hash] = src.split('#');
+    src = path + (path.includes('?') ? '&' : '?') + 'emb=' + APP_VER + (hash ? '#' + hash : '');
     frame.addEventListener('load', () => {
-      release();
       try { onload && onload(frame.contentWindow, frame.contentDocument); } catch (e) {}
     }, { once: true });
     frame.src = src;
