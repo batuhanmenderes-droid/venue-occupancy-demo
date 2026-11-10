@@ -1499,3 +1499,4 @@ body {
 .points li::before { color: #fff; }
 /* component slides: the explanation runs to the chart's right edge */
 .slide--comp:not(.slide--comp-pair) .comp-explain p { flex: 1; max-width: none; }
+.slide--comp:not(.slide--comp-pair) .comp-explain { align-items: center; }
