@@ -1492,3 +1492,8 @@ body {
 .slide--vc .split-copy .points li { padding: 13px 0; }
 .slide--vc .split-copy .callout { padding: 18px 24px 18px 20px; }
 .slide--vc { --vc-bottom: 314px; }
+
+/* problem lists: white numbers, no separators, a little more room between points */
+.points { border-top: 0; display: flex; flex-direction: column; gap: 12px; }
+.points li { border-bottom: 0; }
+.points li::before { color: #fff; }
