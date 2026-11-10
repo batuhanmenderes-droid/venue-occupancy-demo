@@ -1480,3 +1480,7 @@ body {
 .rm-price--5 li::before { top: 25px; }
 .rm-price--5 li:not(:last-child)::after { top: 53px; bottom: -25px; }
 .rm-price--5 b { font-size: 30px; }
+/* slide 3: label + title at the same place as slide 2; the points sit in the middle of the space below */
+.slide--roomy .split-copy { justify-content: flex-start; padding-top: 88px; padding-bottom: 88px; }
+.slide--roomy .split-copy .points { margin-top: auto; margin-bottom: auto; }
+.slide--roomy .split-copy { padding-bottom: 250px; }
