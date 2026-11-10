@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="deck.css?v=67">
+<link rel="stylesheet" href="deck.css?v=68">
 </head>
 <body>
 
@@ -443,6 +443,35 @@
       </div>
     </section>
 
+    <!-- "Sıcaklık Haritası": same layout as the Panel slide. Arriving from "Tam kontrol." the full-screen map
+         settles into the iMac; moving on, the iMac screen turns into the phone of the next slide (data-flow="map"). -->
+    <section class="slide slide--imac slide--heat" data-flow="map" aria-roledescription="slide" aria-label="Sıcaklık Haritası">
+      <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i><i class="h3"></i></div>
+      <div class="imac-copy flow-copy">
+        <div class="imac-intro">
+          <p class="eyebrow">Tek platform. İki ürün.</p>
+          <h2 class="display imac-title imac-title--long">Sıcaklık Haritası</h2>
+          <p class="feature"><span class="feature-tag">Ana Özellik</span>Ziyaretçiler için sıcaklık haritası üzerinden ‘hangi mekana gitmeli’nin cevabı.</p>
+        </div>
+        <div class="imac-detail">
+          <ul class="checks">
+            <li>Lokasyon verisi ile kullanıcının yeri saptanır.</li>
+            <li>Mekanlar ve çevredeki yoğunluk renklerle gösterilir.</li>
+            <li>Etiketlerde gerçek rakamlar ve yaklaşan etkinlikler.</li>
+            <li>Mekan filtreleme ve AI Asistan ile öneriler.</li>
+            <li>Mekan detay sayfaları: menü, iletişim, yoğunluk verisi.</li>
+          </ul>
+          <p class="imac-note">Bu veri, oyunlaştırılmış Akyaka ve Akçapınar haritası üzerindeki kalabalığı ‘sıcaklık haritası’ üzerinden göstermek için kullanılır.</p>
+        </div>
+      </div>
+      <div class="imac imac--low" aria-hidden="true">
+        <div class="imac-screen"><img data-shared="map" src="assets/map-desk.jpg" alt="" width="2400" height="1350" decoding="async"></div>
+        <div class="imac-chin"></div>
+        <div class="imac-neck"></div>
+        <div class="imac-foot"></div>
+      </div>
+    </section>
+
     <!-- 21 · The heat map on a phone. Arriving from 20 the desktop map shrinks into the phone; every scroll
          adds the next point on the left and points at it on the live mobile app (mobile-tour.js). -->
     <section class="slide slide--mobile" data-flow="map" data-steps="5" aria-roledescription="slide" aria-label="Sıcaklık haritası">
@@ -452,7 +481,7 @@
         <p class="mob-intro">Ve bu veri, oyunlaştırılmış Akyaka ve Akçapınar haritası üzerindeki kalabalığı ‘sıcaklık haritası’ üzerinden göstermek için kullanılır.</p>
         <ol class="mob-steps">
           <li data-s="1">Lokasyon verisi ile kullanıcının yeri saptanır.</li>
-          <li data-s="2">Kullanıcının lokasyonu merkeze alınarak POI’ler ve o çevredeki kalabalık renklerle gösterilir. Etiketler üzerinde gerçek rakam ve yaklaşan etkinlikler gösterilir.</li>
+          <li data-s="2">Kullanıcının lokasyonu merkeze alınarak mekanlar ve o çevredeki yoğunluk renklerle gösterilir. Etiketler üzerinde gerçek rakam ve yaklaşan etkinlikler gösterilir.</li>
           <li data-s="3">Kullanıcı istediği mekanları filtreleyebilir.</li>
           <li data-s="4">AI Asistan ile mekanlar hakkında bilgi ve öneri alabilir.</li>
           <li data-s="5">
@@ -820,13 +849,13 @@
 <div class="progress" aria-hidden="true"><i id="bar"></i></div>
 <p class="rotate-hint" id="rotateHint">Daha büyük görmek için telefonu yan çevirin</p>
 
-<script src="deck.js?v=16"></script>
+<script src="deck.js?v=17"></script>
 <script src="live-metrics.js?v=3"></script>
 <script src="share-chart.js?v=1"></script>
 <script src="embed.js?v=4"></script>
 <script src="reveal-map.js?v=2"></script>
 <script src="phone-embed.js?v=4"></script>
-<script src="mobile-tour.js?v=2"></script>
+<script src="mobile-tour.js?v=3"></script>
 <script src="ai-chat.js?v=1"></script>
 </body>
 </html>

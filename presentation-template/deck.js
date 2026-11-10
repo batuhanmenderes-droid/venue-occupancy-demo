@@ -41,6 +41,20 @@
     clearTimeout(flowTimer);
     slides.forEach((s) => s.classList.remove('flow-in', 'flow-out', 'via-flow'));
     if (flow) {
+      // A screen that morphs in (the phone on the heat-map slide) starts from where the previous slide's map
+      // was, so it can come from full screen or from the iMac.
+      const morph = to.querySelector('.mob-screen'), twin = from.querySelector('[data-shared="map"]');
+      if (morph) {
+        if (twin) {
+          const k = parseFloat(getComputedStyle(root).getPropertyValue('--scale')) || 1;
+          const st = stage.getBoundingClientRect(), r = twin.getBoundingClientRect();
+          to.style.setProperty('--m-x', (r.left - st.left) / k + 'px');
+          to.style.setProperty('--m-y', (r.top - st.top) / k + 'px');
+          to.style.setProperty('--m-w', r.width / k + 'px');
+          to.style.setProperty('--m-h', r.height / k + 'px');
+          to.style.setProperty('--m-r', (twin.closest('.imac') ? 6 : 0) + 'px');
+        } else ['--m-x', '--m-y', '--m-w', '--m-h', '--m-r'].forEach((v) => to.style.removeProperty(v));
+      }
       to.classList.add('flow-in', 'via-flow');
       from.classList.add('flow-out');
       flowTimer = setTimeout(() => { from.classList.remove('flow-out'); to.classList.remove('flow-in'); }, 700);

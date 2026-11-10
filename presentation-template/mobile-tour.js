@@ -36,7 +36,7 @@
       const logo = Array.from(mapDoc.querySelectorAll('.leaflet-marker-icon')).find((m) => m.innerHTML.includes('kulup'));
       return [label, logo];
     },
-    3: () => [mapDoc.getElementById('filterBtn')],
+    3: () => [mapDoc.getElementById('filterBtn'), mapDoc.getElementById('filterPanel')],
     4: () => [mapDoc.querySelector('.tabbar [data-nav="rec"]') || Array.from(mapDoc.querySelectorAll('.tabbar button')).find((b) => /Öneri/.test(b.textContent))],
   };
   function pointAt(step) {
@@ -68,8 +68,18 @@
     } catch (e) { then(); }
   }
 
+  // step 3 opens the app's filter panel (and any other step closes it again)
+  function showFilters(on) {
+    if (!mapDoc) return;
+    const panel = mapDoc.getElementById('filterPanel'), btn = mapDoc.getElementById('filterBtn');
+    if (!panel || !btn) return;
+    if (on && panel.hidden) btn.click();
+    if (!on && !panel.hidden) { panel.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+  }
+
   function render() {
     const step = +slide.dataset.step || 0;
+    showFilters(step === 3);
     items.forEach((li) => {
       const s = +li.dataset.s;
       li.classList.toggle('shown', s <= step);

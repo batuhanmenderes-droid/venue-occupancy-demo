@@ -1502,3 +1502,10 @@ body {
 .slide--comp:not(.slide--comp-pair) .comp-explain { align-items: center; }
 .slide--comp:not(.slide--comp-pair) .comp-explain p { text-align: right; }
 .rv-text { max-width: 40ch; }
+
+/* heat-map slide in the Panel layout; the phone on the next slide grows out of its iMac screen */
+.imac-title--long { font-size: 112px; line-height: .95; }
+@keyframes morphIn {
+  from { left: var(--m-x, 0px); top: var(--m-y, 0px); width: var(--m-w, 1920px); height: var(--m-h, 1080px); border-radius: var(--m-r, 0px); }
+  to { left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh); border-radius: 48px; }
+}
