@@ -1500,3 +1500,4 @@ body {
 /* component slides: the explanation runs to the chart's right edge */
 .slide--comp:not(.slide--comp-pair) .comp-explain p { flex: 1; max-width: none; }
 .slide--comp:not(.slide--comp-pair) .comp-explain { align-items: center; }
+.slide--comp:not(.slide--comp-pair) .comp-explain p { text-align: right; }
