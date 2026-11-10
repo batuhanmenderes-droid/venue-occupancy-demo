@@ -55,6 +55,23 @@
     }, { capture: true });
   }
 
+  // "Crowd per event": busiest event on top (the app lists newest first); re-applied when it re-renders
+  function sortEvents(win, doc) {
+    const bars = doc.getElementById('evBars');
+    if (!bars) return;
+    const n = (r) => parseInt((r.querySelector('.evb-n') || {}).textContent, 10) || 0;
+    const apply = () => {
+      const rows = Array.from(bars.children);
+      const sorted = rows.slice().sort((a, b) => n(b) - n(a));
+      if (sorted.some((r, i) => rows[i] !== r)) sorted.forEach((r) => bars.appendChild(r));
+      const card = bars.closest('.card');
+      const hint = card && Array.from(card.querySelectorAll('p, .hint')).find((e) => /en yeniden eskiye/.test(e.textContent));
+      if (hint) hint.textContent = hint.textContent.replace('en yeniden eskiye', 'en kalabalıktan en sakine');
+    };
+    apply();
+    new win.MutationObserver(apply).observe(bars, { childList: true });
+  }
+
   function findCard(doc, title) {
     return Array.from(doc.querySelectorAll('.card')).find((c) =>
       Array.from(c.querySelectorAll('*')).some((e) => e.children.length === 0 && e.textContent.trim() === title));
@@ -80,6 +97,7 @@
       st.textContent = '#kitties{display:none!important}html{scrollbar-width:none}::-webkit-scrollbar{display:none}' + (mode === 'card' ? '.langswitch{display:none!important}' : '');
       doc.head.appendChild(st);
       forward(win, doc, mode);
+      if (box.dataset.sort === 'events-desc') sortEvents(win, doc);
       if (mode !== 'card') return;
       // Keep the chosen card in view and the box exactly its size (the page re-renders on its own).
       const place = () => {
