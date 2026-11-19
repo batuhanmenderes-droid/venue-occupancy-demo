@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=share2"></script>
+<script src="i18n.js?v=noframe1"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -141,17 +141,10 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
       <div class="chart" id="seasonChart"><div class="tip" id="seasonTip"></div></div>
       <div class="slegend" id="seasonLegend"></div>
     </div>
-    <section class="grid2 lower">
+    <section class="lower">
       <div class="card">
         <h2 data-i18n="tableView"></h2>
         <div class="tablewrap"><table><thead><tr><th data-i18n="thTime"></th><th data-i18n="thPeople"></th><th data-i18n="thNote"></th></tr></thead><tbody id="rows"></tbody></table></div>
-      </div>
-      <div class="card frame">
-        <h2 data-i18n="selectedFrame"></h2>
-        <p class="hint" id="frameTime">&nbsp;</p>
-        <div class="frameimg"><img id="frameImg" alt=""></div>
-        <div class="row"><div><span class="count" id="frameCount"></span> <span style="color:var(--ink-2)" data-i18n="people"></span></div></div>
-        <div class="note" id="frameNote"></div>
       </div>
     </section>
   </section>
@@ -1061,28 +1054,11 @@ function markSelected() {
   if (p) { sel.setAttribute('cx', p.x); sel.setAttribute('cy', p.y); }
 }
 
-// ---- Selected frame (blurred so no one can be recognised) ----
-function clearFrame(msg) {
-  $('frameImg').removeAttribute('src');
-  $('frameImg').closest('.frameimg').classList.add('empty');
-  $('frameTime').textContent = msg || ' ';
-  $('frameCount').textContent = '—';
-  $('frameNote').textContent = '';
-}
+// ---- Selected point: highlights its table row and the dot on the chart (the frame card was removed) ----
+function clearFrame() {}
 function select(i) {
   if (!frames.length) return;
   current = Math.max(0, Math.min(frames.length - 1, i));
-  const f = frames[current];
-  const wrap = $('frameImg').closest('.frameimg');
-  wrap.classList.remove('empty');
-  wrap.classList.toggle('demo', !f.file);
-  $('frameImg').src = f.file || 'backgrounds/noise.webp';  // demo frames show TV static
-  $('frameImg').alt = t('frameAlt', hms(f.timestamp));
-  $('frameTime').textContent = `${fmtDay(dayOf(f))} · ${hms(f.timestamp)} · ${f.camera}`;
-  $('frameCount').textContent = f.people;
-  const note = localized(f, 'note');
-  $('frameNote').innerHTML = `${levelBadge(f.people)}${note ? ' · ' : ''}`;
-  $('frameNote').append(note);
   document.querySelectorAll('#rows tr').forEach(r => r.classList.toggle('on', +r.dataset.i === current));
   markSelected();
 }
