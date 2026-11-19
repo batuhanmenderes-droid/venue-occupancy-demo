@@ -161,20 +161,20 @@
         },
         {
           "date": "2026-11-06",
-          "name": "Özgün · DJ set",
-          "kind": "show",
-          "title": "Kulüp",
-          "from": "01:00",
-          "to": "04:00",
-          "source": "instagram"
-        },
-        {
-          "date": "2026-11-06",
           "name": "Halil · DJ set",
           "kind": "show",
           "title": "Kulüp",
           "from": "22:00",
           "to": "01:00",
+          "source": "instagram"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Özgün · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "01:00",
+          "to": "04:00",
           "source": "instagram"
         },
         {
@@ -198,6 +198,15 @@
         {
           "date": "2026-11-14",
           "name": "Deniz · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-19",
+          "name": "Burak · DJ set",
           "kind": "show",
           "title": "Kulüp",
           "from": "22:00",
