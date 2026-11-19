@@ -224,7 +224,9 @@
         "people": 305,
         "at": "2026-10-25T00:40:00"
       },
-      "avg_peak": 220
+      "avg_peak": 220,
+      "demo_now": 287,
+      "demo_now_date": "2026-11-19"
     },
     {
       "id": "lemongrass-cafe",

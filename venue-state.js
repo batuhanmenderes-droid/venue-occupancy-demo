@@ -137,7 +137,7 @@ function simCount(v, at) {
   // `demo_now`: a demo venue's current reading is pinned to this many people (the two slots before it
   // ramp up to it, so the chart rises instead of jumping). The rest of tonight is scaled to match: the
   // crowd eases off from now and the night's peak comes back to about the same size.
-  if (v.demo_now) {
+  if (v.demo_now && (!v.demo_now_date || localIso(new Date()).slice(0, 10) === v.demo_now_date)) {
     const nowSlot = slotStart(new Date()), back = Math.round((nowSlot.getTime() - slotStart(at).getTime()) / (SIM_SLOT_MIN * 60000));
     if (back === 0) return v.demo_now;
     if (back === 1) return Math.round(v.demo_now * 0.75);
