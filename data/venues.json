@@ -70,6 +70,42 @@
       "logo_scale": 1,
       "events": [
         {
+          "date": "2026-10-02",
+          "name": "Halil · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-03",
+          "name": "Techno Saturday",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "23:00",
+          "to": "04:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-09",
+          "name": "Özgün · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:30",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-10",
+          "name": "Retro Night",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
           "date": "2026-10-16",
           "name": "Deniz · DJ set",
           "kind": "show",
@@ -125,20 +161,20 @@
         },
         {
           "date": "2026-11-06",
-          "name": "Halil · DJ set",
-          "kind": "show",
-          "title": "Kulüp",
-          "from": "22:00",
-          "to": "01:00",
-          "source": "instagram"
-        },
-        {
-          "date": "2026-11-06",
           "name": "Özgün · DJ set",
           "kind": "show",
           "title": "Kulüp",
           "from": "01:00",
           "to": "04:00",
+          "source": "instagram"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Halil · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "01:00",
           "source": "instagram"
         },
         {
@@ -148,6 +184,24 @@
           "title": "Kulüp",
           "from": "23:00",
           "to": "04:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-13",
+          "name": "Selin · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-14",
+          "name": "Deniz · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
           "source": "demo"
         }
       ],
@@ -188,6 +242,132 @@
       "logo": "logos/lemongrass.png",
       "events": [
         {
+          "date": "2026-10-20",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-21",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-22",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-23",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-24",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-26",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-27",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-28",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-29",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-30",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-31",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-02",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-03",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-04",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
           "date": "2026-11-05",
           "name": "Gizem Civan",
           "kind": "yoga",
@@ -218,6 +398,87 @@
           "title": "Lemongrass Yoga",
           "from": "10:00",
           "to": "11:00"
+        },
+        {
+          "date": "2026-11-09",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-10",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-11",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-12",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-13",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-14",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-16",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-17",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-18",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
         }
       ],
       "instagram": "lemongrasscommunity",
