@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=share3"></script>
+<script src="i18n.js?v=slick1"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=60">
+<link rel="stylesheet" href="brand.css?v=63">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -169,7 +169,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
     </div>
     </div>
   </div>
-  <section id="view-liste" role="tabpanel"><div class="grid" id="grid"></div></section>
+  <section id="view-liste" role="tabpanel"><div class="pulse" id="pulse"></div><div class="grid" id="grid"></div></section>
   <section id="view-harita" role="tabpanel" hidden>
     <div class="mapwrap">
       <div id="map" data-i18n-aria="mapAria"></div>
@@ -306,13 +306,32 @@ function sorted(cards) {
 // does not switch to its small player with on-screen buttons.
 const vthumbFit = new ResizeObserver(entries => entries.forEach(({ target: el, contentRect: r }) =>
   el.style.setProperty('--k', Math.max(r.width / 1280, r.height / 720) * 1.12)));
+// ---- Summary strip above the list: people out now, the busiest venue, events tonight ----
+function renderPulse(cards) {
+  const box = $('pulse'); if (!box) return;
+  const open = cards.filter(v => v.latest && v.status?.state !== 'closed');
+  const total = open.reduce((a, v) => a + v.latest.people, 0);
+  const top = open.reduce((m, v) => !m || v.latest.people > m.latest.people ? v : m, null);
+  const tonight = cards.filter(v => v.event && (v.event.state === 'live' || (v.event.state === 'upcoming' && !v.event.when))).length;
+  box.innerHTML = `
+    <div class="pchip"><b>${total.toLocaleString(LANG === 'tr' ? 'tr-TR' : 'en-GB')}</b><span class="pc-s">${t('people')}</span><span class="pc-k"><i class="pc-ic"><i class="pc-live"></i></i>${t('pulseOut')}</span></div>
+    ${top ? `<a class="pchip" href="venue.html?mekan=${top.id}"><b>${top.latest.people}<svg class="pc-go" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></b><span class="pc-s">${top.name}</span><span class="pc-k"><i class="pc-ic">${PEAK_ICON}</i>${t('pulseBusiest')}</span></a>` : ''}
+    <div class="pchip"><b>${tonight}</b><span class="pc-s">${t('pulseEventsS')}</span><span class="pc-k"><i class="pc-ic">${MIC_ICON}</i>${t('pulseEvents')}</span></div>`;
+}
 function renderGrid() {
   renderGridNodes();
   document.querySelectorAll('.vthumb:not([data-fit])').forEach(el => { el.dataset.fit = 1; vthumbFit.observe(el); ytReveal(el.querySelector('iframe')); });
 }
 function renderGridNodes() {
   const grid = $('grid'), tpl = document.createElement('template');
-  tpl.innerHTML = sorted(lastCards.filter(inCategory)).map(card).join('');
+  const list = sorted(lastCards.filter(inCategory));
+  const live = list.filter(v => v.latest && v.status?.state !== 'closed');
+  const top = Math.max(1, ...live.map(v => v.latest.people));
+  // Rank (busiest first only) and each venue's crowd against the busiest one, for the row meter.
+  let r = 0;
+  list.forEach(v => { const on = v.latest && v.status?.state !== 'closed'; v._share = on ? v.latest.people / top : 0; v._rank = sortBy === 'busy' && on && v.latest.people > 0 ? ++r : 0; });
+  renderPulse(lastCards.filter(inCategory));
+  tpl.innerHTML = list.map(card).join('');
   const old = new Map([...grid.children].map(el => [el.dataset.id, el]));
   const nodes = [...tpl.content.children].map(el => {
     const prev = old.get(el.dataset.id), keep = prev?.querySelector('.vthumb'), nk = el.querySelector('.vthumb');
@@ -332,6 +351,7 @@ function renderGridNodes() {
   const used = new Set(nodes);
   [...grid.children].forEach(c => used.has(c) || c.remove());
   nodes.forEach((n, i) => {
+    n.style.setProperty('--i', Math.min(i, 14));
     const at = grid.children[i] || null;
     if (at !== n) n.isConnected && grid.moveBefore ? grid.moveBefore(n, at) : grid.insertBefore(n, at);
   });
@@ -1898,9 +1918,10 @@ function card(v) {
   return `<a class="venue${closed ? ' is-closed' : ''}" data-id="${v.id}" href="venue.html?mekan=${v.id}"${lv && !closed ? ` style="--lv:${lv.color}"` : ''}>
     <div class="media" style="position:relative">${media}${statusChip(v)}${logoHtml(v)}<button class="gear cardgear" data-settings="${v.id}" aria-label="${t('settingsFor', v.name)}">${GEAR_ICON}</button><button class="mapcheck" role="checkbox" aria-checked="${onMap(v)}" data-mapcheck="${v.id}" title="${t('showOnMap')}" aria-label="${t('showOnMap')}: ${v.name}">${CHECK_ICON}</button></div>
     <div class="body">${cardChart(v)}
-      <div class="head"><div class="top"><span class="type">${typeName(v.type)}</span><span class="name">${v.name}</span></div>
+      <div class="head"><div class="top"><span class="type">${v._rank ? `<em class="rank">${String(v._rank).padStart(2, '0')}</em>` : ''}${typeName(v.type)}</span><span class="name">${v.name}</span></div>
       ${v.blurb ? `<div class="blurb">${v.blurb[LANG] || v.blurb.en}</div>` : ''}</div>
       <div class="stat">${stat}</div>
+      ${v._share ? `<div class="meter" aria-hidden="true"><i style="width:${Math.max(4, Math.round(v._share * 100))}%"></i></div>` : ''}
       ${v.event ? `<div class="evtag ev-${v.event.state}">${eventIcon(v.event)}<span class="ev-name">${v.event.name}</span><span class="ev-time">${v.event.from}–${v.event.to}</span><span class="ev-state">${eventStateText(v.event)}</span></div>` : ''}
       ${v.peak ? `<div class="peaktag">${PEAK_ICON}${t('atPeak')}</div>` : ''}
       ${v.rising ? `<div class="rising">${RISE_ICON}${t('rising')}</div>` : ''}
