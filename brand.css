@@ -367,3 +367,9 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 .vl-row .vrow > span { padding: 0 !important; margin-top: 0 !important; border-top: 0 !important; }
 .vl-row .vrow { line-height: 1; }
 .vl-row .vcount { line-height: 1 !important; padding-top: 1px !important; }
+
+/* One-row label v2: count (Barlow Bold) | name · trend chart icon */
+.vl-row .vcount { order: 0; margin-left: 0 !important; font: 700 16px/1 "Barlow", var(--font-text) !important; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.vl-row .vsep { width: 1px; height: 14px; background: color-mix(in srgb, var(--ink) 22%, transparent); flex: none; }
+.vl-row .vtrend { width: auto; height: auto; background: none !important; border-radius: 0; margin-left: 2px; }
+.vl-row .vtrend svg { width: 15px; height: 15px; }

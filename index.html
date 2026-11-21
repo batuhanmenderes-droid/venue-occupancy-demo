@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="logos/app-icon-dark-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&family=Barlow:wght@700&display=swap">
 <script src="i18n.js?v=heat2"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=66">
+<link rel="stylesheet" href="brand.css?v=67">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -1674,16 +1674,17 @@ const HeatBlobs = L.Layer.extend({
 
 // Measure the actual label content, including artists, expectations and status lines.
 const TREND_ICONS = {
-  up: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3.5M3.8 7.6 8 3.4l4.2 4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  down: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v9.5M3.8 8.4 8 12.6l4.2-4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  flat: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  // Trend-chart icons (rising / falling / steady line with an arrow head).
+  up: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 7-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8h6v6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  down: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l6 6 4-4 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 16h6v-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  flat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M15 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 function venueLabelHtml(v, hover = false) {
   const closed=v.status?.state==='closed', n=v.latest?.people ?? null;
   if(v.coming_soon) return `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>`;
   if(closed) return `<span class="vclosed">${t('closed')}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`;
   // Permanent map labels are one row: trend icon (up / down / steady) · name · count with the person icon.
-  if(!hover) return `<span class="vrow"><span class="vtrend t-${v.trend||'flat'}" aria-label="${t('trend_'+(v.trend||'flat'))}">${TREND_ICONS[v.trend||'flat']}</span><span class="vname">${v.name}</span><span class="vcount">${n===null?'—':n}${PERSON_ICON}</span></span>`;
+  if(!hover) return `<span class="vrow"><span class="vcount">${n===null?'—':n}${PERSON_ICON}</span><span class="vsep" aria-hidden="true"></span><span class="vname">${v.name}</span><span class="vtrend t-${v.trend||'flat'}" aria-label="${t('trend_'+(v.trend||'flat'))}">${TREND_ICONS[v.trend||'flat']}</span></span>`;
   return `${cardChart(v, hover ? 'h' : 'm')}<span class="vcount">${n===null?'—':n}${PERSON_ICON}</span><span class="vname">${v.name}</span>${v.peak?`<span class="vpeak">${PEAK_ICON}${t('atPeak')}</span>`:''}${v.rising?`<span class="vrise">${RISE_ICON}${t('rising')}</span>`:''}${expectLine(v)}${artistLine(v)}`;
 }
 function venuePinRadius(v) {
@@ -1693,49 +1694,68 @@ function venuePinRadius(v) {
 }
 function labelSize(v) {
   const el=document.createElement('div');
-  el.className='leaflet-tooltip vlabel'; el.innerHTML=venueLabelHtml(v);
+  el.className='leaflet-tooltip vlabel vl-row'; el.innerHTML=venueLabelHtml(v);  // measured exactly as it will be drawn
   el.style.cssText='position:fixed;left:-10000px;top:0;visibility:hidden;pointer-events:none;width:max-content;transform:none';
   map.getContainer().appendChild(el); const r=el.getBoundingClientRect(); el.remove();
-  return {w:Math.ceil(r.width)+2,h:Math.ceil(r.height)+2};
+  return {w:Math.ceil(r.width),h:Math.ceil(r.height)};
 }
 const CLUSTER_PX=120;
 const labelPlacementMemory=new Map();
 const labelHit=(a,b)=>a.x<b.x+b.w && b.x<a.x+a.w && a.y<b.y+b.h && b.y<a.y+a.h;
 function labelSpot(p,w,h,radius,direction,distance=0,shift=0) {
-  const g=(direction==='left'||direction==='right' ? radius*0.866 : radius)+4+distance;  // 4px from the tile's edge
+  const g=(direction==='left'||direction==='right' ? radius*0.866 : radius)+LABEL_GAP+distance;  // 7px from the tile's edge
   const offset={top:[shift,-g],bottom:[shift,g],left:[-g,shift],right:[g,shift]}[direction];
   const box={top:{x:p.x+shift-w/2,y:p.y-g-h},bottom:{x:p.x+shift-w/2,y:p.y+g},left:{x:p.x-g-w,y:p.y+shift-h/2},right:{x:p.x+g,y:p.y+shift-h/2}}[direction];
   return {direction,offset,box:{...box,w,h},distance,shift};
 }
-function findVenueLabel(p,w,h,radius,obstacles,preferred) {
-  const size=map.getSize(), candidates=[];
-  if(preferred)candidates.push(labelSpot(p,w,h,radius,preferred.direction,preferred.distance,preferred.shift));
-  for(const distance of [0,8,18,32]) for(const direction of ['right','left','top','bottom']) {
-    for(const shift of [0,-24,24,-48,48]) candidates.push(labelSpot(p,w,h,radius,direction,distance,shift));
+// Labels sit 6–8px from their own pin, never on another pin or label. Every spot along the four sides is
+// tried (sliding along a side only as far as the label still faces its pin); of the spots that fit, the best
+// composition wins: the side with no neighbouring pins, then the most centred spot, keeping the last side.
+const LABEL_GAP=7, PIN_PAD=4, LABEL_PAD=3;
+function findVenueLabel(p,w,h,radius,obstacles,preferred,pinsNear=[]) {
+  const size=map.getSize(), rx=radius*0.866, valid=[];
+  const fits=box=>box.x>8 && box.y>70 && box.x+box.w<size.x-8 && box.y+box.h<size.y-100 && !obstacles.some(b=>labelHit(b,box));
+  for(const distance of [0,1]) for(const direction of ['right','left','top','bottom']) {
+    const side=direction==='left'||direction==='right', reach=side ? h/2+radius*0.4 : w/2-6;
+    for(let shift=0; Math.abs(shift)<=reach; shift=shift>0 ? -shift : -shift+4) {
+      const c=labelSpot(p,w,h,radius,direction,distance,shift);
+      if(!fits(c.box)) continue;
+      // Neighbouring pins on this side make the spot crowded.
+      const crowd=pinsNear.filter(q=>{const dx=q.x-p.x, dy=q.y-p.y; return {right:dx>4,left:dx<-4,top:dy<-4,bottom:dy>4}[direction] && Math.hypot(dx,dy)<130;}).length;
+      const score=crowd*10+Math.abs(shift)/6+distance*2+(side?0:1.5)+(preferred&&preferred.direction===direction?-4:0);
+      valid.push({...c,score});
+    }
   }
-  return candidates.find(({box})=>box.x>8 && box.y>58 && box.x+box.w<size.x-8 && box.y+box.h<size.y-100 && !obstacles.some(b=>labelHit(b,box)));
+  valid.sort((a,b)=>a.score-b.score);
+  return valid[0];
 }
 function placeLabels(placed,pins,clusters=[]) {
-  const obstacles=placed.map(v=> {
-    const p=map.latLngToContainerPoint(pins.get(v.id).latlng),r=venuePinRadius(v);
-    return {x:p.x-r,y:p.y-r,w:r*2,h:r*2};
+  // Every pin (its hexagon box plus a small margin) is an obstacle.
+  const pinPts=placed.map(v=>map.latLngToContainerPoint(pins.get(v.id).latlng));
+  // Packed honeycomb tiles are drawn at normal size; single pins grow with their crowd level.
+  const kk=matchMedia('(max-width: 640px)').matches ? .78 : 1, rad=v=>pins.get(v.id)?.packed ? PIN/2*kk : venuePinRadius(v);
+  const obstacles=placed.map((v,i)=> {
+    const p=pinPts[i],r=rad(v),hw=r*0.866+PIN_PAD,hh=r+PIN_PAD;
+    return {x:p.x-hw,y:p.y-hh,w:hw*2,h:hh*2};
   });
+  const pad=b=>({x:b.x-LABEL_PAD,y:b.y-LABEL_PAD,w:b.w+LABEL_PAD*2,h:b.h+LABEL_PAD*2});
   // Hexagon clusters are obstacles too, so no venue label lands on one.
   for(const c of clusters){const p=map.latLngToContainerPoint(c.latlng),r=(64+Math.min(c.vs.length,8)*4)/2+6;obstacles.push({x:p.x-r,y:p.y-r,w:r*2,h:r*2});}
   const out=new Map(), labelled=[];
   for(const v of [...placed].sort((a,b)=>(b.latest?.people??-1)-(a.latest?.people??-1))) {
     if(v.status?.state==='closed')continue;  // closed venues get no map label (hover still shows it)
     const p=map.latLngToContainerPoint(pins.get(v.id).latlng);
-    const {w,h}=labelSize(v), found=findVenueLabel(p,w,h,venuePinRadius(v),obstacles,labelPlacementMemory.get(v.id));
-    if(found) {out.set(v.id,found);obstacles.push(found.box);labelled.push(p);labelPlacementMemory.set(v.id,found);}
+    const near=pinPts.filter(q=>q!==p && (q.x!==p.x||q.y!==p.y));
+    const {w,h}=labelSize(v), found=findVenueLabel(p,w,h,rad(v),obstacles,labelPlacementMemory.get(v.id),near);
+    if(found) {out.set(v.id,found);obstacles.push(pad(found.box));labelled.push(p);labelPlacementMemory.set(v.id,found);}
   }
   // Venues whose full label doesn't fit get a mini label with just the head count, where that fits.
   out.mini=new Map();
   for(const v of placed) {
     if(out.has(v.id)||v.status?.state==='closed'||!v.latest)continue;
-    const p=map.latLngToContainerPoint(pins.get(v.id).latlng), w=String(v.latest.people).length*9+36, h=30;
-    const found=findVenueLabel(p,w,h,venuePinRadius(v),obstacles);
-    if(found) {out.mini.set(v.id,found);obstacles.push(found.box);}
+    const p=map.latLngToContainerPoint(pins.get(v.id).latlng), w=String(v.latest.people).length*9+30, h=28;
+    const found=findVenueLabel(p,w,h,rad(v),obstacles,null,pinPts.filter(q=>q.x!==p.x||q.y!==p.y));
+    if(found) {out.mini.set(v.id,found);obstacles.push(pad(found.box));}
   }
   return out;
 }
