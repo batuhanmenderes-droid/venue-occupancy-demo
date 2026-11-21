@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&display=swap">
-<script src="i18n.js?v=slick1"></script>
+<script src="i18n.js?v=heat2"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
@@ -81,7 +81,7 @@ h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
 .updated { color: var(--muted); font-size: 12px; border-top: 1px solid var(--grid); padding-top: 8px; }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=64">
+<link rel="stylesheet" href="brand.css?v=66">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -206,11 +206,12 @@ async function load() {
   const { venues } = await (await fetch(`data/venues.json?t=${Date.now()}`)).json();
   const now = new Date();
   const cards = await Promise.all(venues.map(withSettings).map(async v => {
-    let latest = null, updatedAt = '', rising = false;
+    let latest = null, updatedAt = '', rising = false, prevN = null;
     if (v.simulated) {
       latest = simLatest(v, now);
       updatedAt = latest.timestamp;
       rising = risingSim(v, now);
+      prevN = simCount(v, new Date(slotStart(now).getTime() - SIM_SLOT_MIN * 60000));
     } else if (v.data) {
       const { frames, updated_at } = await (await fetch(`${v.data}?t=${Date.now()}`)).json();
       updatedAt = updated_at || '';
@@ -218,6 +219,7 @@ async function load() {
       const due = frames.filter(f => new Date(f.timestamp) <= now);
       latest = due[due.length - 1] || null;
       rising = risingFromFrames(due);
+      prevN = due.length > 1 ? due[due.length - 2].people : null;
       // Today's frames (business day from 06:00) for the faint chart behind the card.
       const dayStart = new Date(now); dayStart.setHours(6, 0, 0, 0); if (dayStart > now) dayStart.setDate(dayStart.getDate() - 1);
       v.today = due.filter(f => new Date(f.timestamp) >= dayStart);
@@ -229,7 +231,9 @@ async function load() {
     rising = rising && status.state !== 'closed' && !peak;
     // A venue's own `expected_peak` (venues.json, e.g. a booked night) wins over the demo forecast.
     const expected = peak ? null : v.expected_peak ?? (rising && v.simulated ? expectedPeak(v, now) : null);
-    return { ...v, latest, updatedAt, status, rising, expected, peak };
+    // Trend for the map label: up / down / flat against the previous reading.
+    const trend = latest && prevN !== null ? (latest.people > prevN * 1.04 + 0.5 ? 'up' : latest.people < prevN * 0.96 - 0.5 ? 'down' : 'flat') : 'flat';
+    return { ...v, latest, updatedAt, status, rising, expected, peak, trend };
   }));
   document.title = 'herkez nerde?! · Akyaka';
   $('subtitle').textContent = t('listSub', venues.length, now.toTimeString().slice(0, 5));
@@ -479,7 +483,7 @@ function drawMap() {
     const label = labels.get(v.id);
     m.bindTooltip(venueLabelHtml(v, !label), {
       permanent: !!label, direction: label?.direction || 'top',
-      offset: label?.offset || [0, -venuePinRadius(v)-8], className: 'vlabel',
+      offset: label?.offset || [0, -venuePinRadius(v)-8], className: label ? 'vlabel vl-row' : 'vlabel',
     });
     m.on('tooltipopen', () => positionVenueTooltip(m, v));
     const mini = labels.mini?.get(v.id);
@@ -1510,6 +1514,8 @@ function rgba(hex, a) {
 const HEAT_DEFAULT = {
   baseM: 10, perPersonM: 1, basePx: 90, perPersonPx: 1,
   minStrength: 0.48, fullAt: 30, curve: 1.3, opacity: 1, blur: 8,
+  // Resolution and style of the clouds (Settings › Map › Heat clouds).
+  res: 1, scale: 1, lobes: 11, spread: 1, core: 0.32, edge: 0.15, speed: 1, blend: 'source-over',
   colors: ['#0e6bdd', '#16ca64', '#ffc800', '#dd5e27', '#c11a4c'],
   shift: ['#d4d4d4', '#13cbd8', '#e0962e', '#c11a4c', '#8d0ee1'],
 };
@@ -1547,6 +1553,15 @@ function addHeatPanel() {
         ${slider('curve', t('heatCurve'), 0.3, 3, 0.1)}
         ${slider('opacity', t('heatOpacity'), 0.2, 2, 0.05)}
         ${slider('blur', t('heatBlur'), 0, 24, 1, 'px')}
+        <h4>${t('heatStyle')}</h4>
+        ${slider('res', t('heatRes'), 0.25, 2, 0.25, '×')}
+        ${slider('scale', t('heatScale'), 0.3, 3, 0.05, '×')}
+        ${slider('lobes', t('heatLobes'), 1, 20, 1)}
+        ${slider('spread', t('heatSpread'), 0, 2.5, 0.05, '×')}
+        ${slider('core', t('heatCore'), 0.05, 1, 0.01)}
+        ${slider('edge', t('heatEdge'), 0, 0.6, 0.01)}
+        ${slider('speed', t('heatSpeed'), 0, 3, 0.1, '×')}
+        <label>${t('heatBlend')} <span><select data-hb>${['source-over', 'screen', 'lighter', 'multiply', 'overlay', 'soft-light'].map(m => `<option value="${m}">${t('blend_' + m.replace('-', '_'))}</option>`).join('')}</select></span></label>
         <h4>${t('heatColors')}</h4>
         <div class="hp-colors">${LEVELS.map((l, i) => `
           <div class="hp-row"><span>${l.name}</span>
@@ -1560,6 +1575,7 @@ function addHeatPanel() {
     const apply = () => { saveHeat(); document.querySelector('.heatcanvas')?.style.setProperty('filter', `blur(${HEAT.blur}px) saturate(1.15)`); renderLegend(); drawMap(); };
     const sync = () => {
       qa('[data-h]').forEach(i => { i.value = HEAT[i.dataset.h]; q(`[data-ho="${i.dataset.h}"]`).textContent = HEAT[i.dataset.h]; });
+      q('[data-hb]').value = HEAT.blend || 'source-over';
       qa('[data-c]').forEach(i => { i.value = HEAT.colors[i.dataset.c]; });
       qa('[data-sc]').forEach(i => { i.checked = !!HEAT.shift[i.dataset.sc]; });
       qa('[data-s]').forEach(i => { i.value = HEAT.shift[i.dataset.s] || HEAT.colors[i.dataset.s]; i.disabled = !HEAT.shift[i.dataset.s]; });
@@ -1569,6 +1585,7 @@ function addHeatPanel() {
       q('.zp-toggle').setAttribute('aria-expanded', !b.hidden);
     };
     qa('[data-h]').forEach(i => i.oninput = () => { HEAT[i.dataset.h] = +i.value; sync(); apply(); });
+    q('[data-hb]').onchange = e => { HEAT.blend = e.target.value; apply(); };
     qa('[data-c]').forEach(i => i.oninput = () => { HEAT.colors[i.dataset.c] = i.value; apply(); });
     qa('[data-sc]').forEach(i => i.onchange = () => { HEAT.shift[i.dataset.sc] = i.checked ? q(`[data-s="${i.dataset.sc}"]`).value : null; sync(); apply(); });
     qa('[data-s]').forEach(i => i.oninput = () => { HEAT.shift[i.dataset.s] = i.value; apply(); });
@@ -1605,8 +1622,8 @@ const HeatBlobs = L.Layer.extend({
   setBlobs(blobs) {
     this._blobs = blobs.map(b => {
       const rnd = seeded(b.seed);
-      const lobes = Array.from({ length: 11 }, (_, i) => ({
-        ang: rnd() * Math.PI * 2, dist: i === 0 ? 0 : 0.15 + rnd() * 0.5, size: i === 0 ? 0.75 : 0.32 + rnd() * 0.42,
+      const lobes = Array.from({ length: Math.max(1, Math.round(HEAT.lobes)) }, (_, i) => ({
+        ang: rnd() * Math.PI * 2, dist: i === 0 ? 0 : (0.15 + rnd() * 0.5) * HEAT.spread, size: i === 0 ? 0.75 : 0.32 + rnd() * 0.42,
         speed: 0.6 + rnd() * 0.9, phase: rnd() * Math.PI * 2, wave: 1.2 + rnd() * 1.6,
       }));
       return { ...b, lobes };
@@ -1618,7 +1635,7 @@ const HeatBlobs = L.Layer.extend({
   _draw() {
     const m = this._map; if (!m) return;
     // Soft radial gradients look the same at 1× and cost a quarter of the pixels on retina screens.
-    const size = m.getSize(), dpr = 1, c = this._canvas;
+    const size = m.getSize(), dpr = Math.max(0.25, Math.min(2, HEAT.res || 1)), c = this._canvas;
     L.DomUtil.setPosition(c, m.containerPointToLayerPoint([0, 0]));
     if (c.width !== size.x * dpr || c.height !== size.y * dpr) {
       c.width = size.x * dpr; c.height = size.y * dpr; c.style.width = `${size.x}px`; c.style.height = `${size.y}px`;
@@ -1626,12 +1643,12 @@ const HeatBlobs = L.Layer.extend({
     const ctx = c.getContext('2d');
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, size.x, size.y);
-    ctx.globalCompositeOperation = 'source-over';  // normal blending: crowded clusters keep their colours instead of burning to white
-    const time = this._still ? 0 : performance.now() / 1000;
+    ctx.globalCompositeOperation = HEAT.blend || 'source-over';  // default: normal blending, crowded clusters keep their colours
+    const time = this._still ? 0 : performance.now() / 1000 * (HEAT.speed ?? 1);
     for (const b of this._blobs) {
       const p = m.latLngToContainerPoint(b.latlng);
       const mpp = 40075016.686 * Math.cos(b.latlng.lat * Math.PI / 180) / Math.pow(2, m.getZoom() + 8);
-      const R = Math.max(b.meters / mpp, b.minPx);
+      const R = Math.max(b.meters / mpp, b.minPx) * (HEAT.scale || 1);
       b.lobes.forEach(l => {
         // Two waves per lobe: one sways it around the pin, one swells and shrinks it, so the cloud
         // ripples outward like a moving crowd.
@@ -1645,8 +1662,8 @@ const HeatBlobs = L.Layer.extend({
         // Each lobe crosses to the second colour and back on its own phase, so both tints live in the cloud.
         const col = b.alt ? mixHex(b.color, b.alt, (Math.sin(time * 0.45 + l.phase * 2.3) + 1) / 2) : b.color;
         const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-        g.addColorStop(0, rgba(col, 0.32 * b.strength));
-        g.addColorStop(0.5, rgba(col, 0.15 * b.strength));
+        g.addColorStop(0, rgba(col, HEAT.core * b.strength));
+        g.addColorStop(0.5, rgba(col, HEAT.edge * b.strength));
         g.addColorStop(1, rgba(col, 0));
         ctx.fillStyle = g;
         ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
@@ -1656,10 +1673,17 @@ const HeatBlobs = L.Layer.extend({
 });
 
 // Measure the actual label content, including artists, expectations and status lines.
+const TREND_ICONS = {
+  up: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13V3.5M3.8 7.6 8 3.4l4.2 4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  down: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v9.5M3.8 8.4 8 12.6l4.2-4.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  flat: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+};
 function venueLabelHtml(v, hover = false) {
   const closed=v.status?.state==='closed', n=v.latest?.people ?? null;
   if(v.coming_soon) return `<span class="vname">${v.name}</span><span class="vsoon">${t('soon')}</span>`;
   if(closed) return `<span class="vclosed">${t('closed')}</span><span class="vname">${v.name}</span>${expectLine(v)}${artistLine(v)}`;
+  // Permanent map labels are one row: trend icon (up / down / steady) · name · count with the person icon.
+  if(!hover) return `<span class="vrow"><span class="vtrend t-${v.trend||'flat'}" aria-label="${t('trend_'+(v.trend||'flat'))}">${TREND_ICONS[v.trend||'flat']}</span><span class="vname">${v.name}</span><span class="vcount">${n===null?'—':n}${PERSON_ICON}</span></span>`;
   return `${cardChart(v, hover ? 'h' : 'm')}<span class="vcount">${n===null?'—':n}${PERSON_ICON}</span><span class="vname">${v.name}</span>${v.peak?`<span class="vpeak">${PEAK_ICON}${t('atPeak')}</span>`:''}${v.rising?`<span class="vrise">${RISE_ICON}${t('rising')}</span>`:''}${expectLine(v)}${artistLine(v)}`;
 }
 function venuePinRadius(v) {

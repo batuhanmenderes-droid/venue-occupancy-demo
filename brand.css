@@ -352,3 +352,18 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
   background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2086.6%20100%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cfilter%20id%3D%22b%22%20x%3D%22-10%25%22%20y%3D%22-10%25%22%20width%3D%22120%25%22%20height%3D%22120%25%22%3E%3CfeGaussianBlur%20stdDeviation%3D%220.4%22/%3E%3C/filter%3E%3C/defs%3E%3Cpolygon%20points%3D%2243.30%2C4.25%2082.92%2C27.12%2082.92%2C72.88%2043.30%2C95.75%203.68%2C72.88%203.68%2C27.12%22%20fill%3D%22none%22%20stroke%3D%22%23000%22%20stroke-opacity%3D%22.25%22%20stroke-width%3D%224.75%22%20stroke-linejoin%3D%22round%22%20filter%3D%22url%28%23b%29%22/%3E%3C/svg%3E") center / 100% 100% no-repeat,
     linear-gradient(160deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 42%, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.2) 100%); }
 .maplogo.hex > div::before { background: linear-gradient(160deg, color-mix(in srgb, var(--lv, #8e8e93) 78%, #fff) 0%, var(--lv, #8e8e93) 48%, color-mix(in srgb, var(--lv, #8e8e93) 82%, #000) 100%); }
+
+/* Map labels: one row — trend icon · name · count */
+.leaflet-tooltip.vlabel.vl-row { display: block !important; padding: 6px 9px !important; }
+.vl-row .vrow { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+.vl-row .vtrend { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; flex: none; }
+.vl-row .vtrend svg { width: 12px; height: 12px; }
+.vl-row .t-up { color: #16CA64; background: rgba(22, 202, 100, 0.16); }
+.vl-row .t-down { color: #FF375F; background: rgba(255, 55, 95, 0.16); }
+.vl-row .t-flat { color: var(--ink-2); background: color-mix(in srgb, var(--ink) 10%, transparent); }
+.vl-row .vname { font: 600 12.5px/1 var(--font-text) !important; color: var(--ink) !important; max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+.vl-row .vcount { margin-left: 4px; display: inline-flex; align-items: center; gap: 3px; font: 800 15px/1 var(--font-display) !important; }
+.vl-row .vcount .vicon { position: static; width: 11px; height: 11px; transform: none; }
+.vl-row .vrow > span { padding: 0 !important; margin-top: 0 !important; border-top: 0 !important; }
+.vl-row .vrow { line-height: 1; }
+.vl-row .vcount { line-height: 1 !important; padding-top: 1px !important; }
