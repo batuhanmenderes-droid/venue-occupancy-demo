@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 170" role="img" aria-label="Two gray kittens">
+  <ellipse cx="130" cy="156" rx="112" ry="9" fill="#000" opacity=".12"/>
+  <!-- big kitten -->
+  <g>
+    <path d="M52 150c-30 4-34-26-14-30" fill="none" stroke="#7d7d86" stroke-width="10" stroke-linecap="round"/>
+    <ellipse cx="88" cy="118" rx="40" ry="36" fill="#8e8e97"/>
+    <path d="M66 98c6 6 6 14 2 20M110 98c-6 6-6 14-2 20M88 92v12" stroke="#74747d" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <ellipse cx="88" cy="128" rx="20" ry="22" fill="#c9c9cf"/>
+    <ellipse cx="70" cy="152" rx="12" ry="7" fill="#9d9da5"/>
+    <ellipse cx="106" cy="152" rx="12" ry="7" fill="#9d9da5"/>
+    <path d="M58 56 54 20l28 20z" fill="#8e8e97"/><path d="M118 56l4-36-28 20z" fill="#8e8e97"/>
+    <path d="M61 47 59 29l13 10z" fill="#f2b3c0"/><path d="M115 47l2-18-13 10z" fill="#f2b3c0"/>
+    <circle cx="88" cy="66" r="34" fill="#8e8e97"/>
+    <path d="M76 36c2 6 2 10 0 14M88 33v14M100 36c-2 6-2 10 0 14" stroke="#74747d" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <ellipse cx="88" cy="80" rx="16" ry="12" fill="#c9c9cf"/>
+    <ellipse cx="74" cy="64" rx="7" ry="8.5" fill="#1d1d22"/><ellipse cx="102" cy="64" rx="7" ry="8.5" fill="#1d1d22"/>
+    <circle cx="76.5" cy="61" r="2.6" fill="#fff"/><circle cx="104.5" cy="61" r="2.6" fill="#fff"/>
+    <path d="M84 75h8l-4 4.5z" fill="#e58aa0"/>
+    <path d="M88 79.5c-1 4-6 5-8 2M88 79.5c1 4 6 5 8 2" stroke="#1d1d22" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <path d="M70 78 46 74M70 82 47 86M106 78l24-4M106 82l23 4" stroke="#f4f4f6" stroke-width="1.6" stroke-linecap="round"/>
+    <ellipse cx="64" cy="76" rx="5" ry="3" fill="#f2b3c0" opacity=".6"/><ellipse cx="112" cy="76" rx="5" ry="3" fill="#f2b3c0" opacity=".6"/>
+  </g>
+  <!-- small kitten -->
+  <g>
+    <path d="M222 150c22 2 26-22 10-26" fill="none" stroke="#a1a1aa" stroke-width="8" stroke-linecap="round"/>
+    <ellipse cx="184" cy="128" rx="32" ry="27" fill="#b2b2ba"/>
+    <path d="M168 114c4 5 4 10 1 15M200 114c-4 5-4 10-1 15" stroke="#9a9aa3" stroke-width="4" stroke-linecap="round" fill="none"/>
+    <ellipse cx="184" cy="136" rx="15" ry="16" fill="#dedee3"/>
+    <ellipse cx="170" cy="153" rx="10" ry="6" fill="#bfbfc6"/><ellipse cx="198" cy="153" rx="10" ry="6" fill="#bfbfc6"/>
+    <path d="M160 86l-4-30 24 16z" fill="#b2b2ba"/><path d="M208 86l4-30-24 16z" fill="#b2b2ba"/>
+    <path d="M163 78l-2-14 11 8z" fill="#f2b3c0"/><path d="M205 78l2-14-11 8z" fill="#f2b3c0"/>
+    <circle cx="184" cy="94" r="28" fill="#b2b2ba"/>
+    <path d="M175 70c1 5 1 8 0 11M184 68v11M193 70c-1 5-1 8 0 11" stroke="#9a9aa3" stroke-width="3.4" stroke-linecap="round" fill="none"/>
+    <ellipse cx="184" cy="106" rx="13" ry="10" fill="#dedee3"/>
+    <ellipse cx="173" cy="93" rx="6" ry="7.5" fill="#1d1d22"/><ellipse cx="195" cy="93" rx="6" ry="7.5" fill="#1d1d22"/>
+    <circle cx="175" cy="90.5" r="2.2" fill="#fff"/><circle cx="197" cy="90.5" r="2.2" fill="#fff"/>
+    <path d="M181 102h6l-3 3.6z" fill="#e58aa0"/>
+    <path d="M184 105.6c-.8 3-4.6 4-6.4 1.6M184 105.6c.8 3 4.6 4 6.4 1.6" stroke="#1d1d22" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <path d="M170 104l-20-3M170 107l-19 4M198 104l20-3M198 107l19 4" stroke="#fafafb" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

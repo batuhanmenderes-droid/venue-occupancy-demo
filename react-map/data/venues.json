@@ -1,0 +1,1014 @@
+{
+  "venues": [
+    {
+      "id": "poison-pub",
+      "background": "backgrounds/poison-pub.jpg",
+      "name": "Poison Pub",
+      "type": "Pub",
+      "folder": "poisonpub-cctv",
+      "data": "data/poison-pub.json",
+      "count_rule": "Yalnızca kameraya yakın kişiler sayılır.",
+      "location": {
+        "lat": 37.0518952,
+        "lon": 28.3260592,
+        "approx": false,
+        "label": "Karanfil Sokak, Akyaka"
+      },
+      "logo": "logos/poisonpub.png",
+      "count_rule_en": "Only people close to the camera are counted.",
+      "events": [],
+      "blurb": {
+        "en": "Rock-leaning pub on Karanfil Street with themed nights.",
+        "tr": "Karanfil Sokak'ta tema geceleri yapan rock ağırlıklı pub."
+      },
+      "sim_scale": 60,
+      "simulated": true
+    },
+    {
+      "id": "no22-riders-inn",
+      "name": "No22 Riders Inn",
+      "type": "Kulüp",
+      "folder": "no22riders-cctv",
+      "data": "data/no22-riders-inn.json",
+      "location": {
+        "lat": 37.0514953,
+        "lon": 28.3276248,
+        "approx": false,
+        "label": "Karanfil Sokak, Akyaka"
+      },
+      "logo": "logos/no22riders.png?v=2",
+      "website": "https://no22ridersinn.com/home/",
+      "background": "backgrounds/no22-riders-inn.jpg",
+      "record": {
+        "people": 137,
+        "at": "2023-08-12T23:42:00"
+      },
+      "area_m2": 250,
+      "logo_scale": 1,
+      "events": [],
+      "blurb": {
+        "en": "Riders' bar with DJs and live music late into the night.",
+        "tr": "Gece geç saatlere kadar DJ ve canlı müzikli rider barı."
+      },
+      "sim_scale": 70,
+      "simulated": true
+    },
+    {
+      "id": "kulup",
+      "background": "backgrounds/kulup.jpg",
+      "name": "Kulüp",
+      "type": "Kulüp",
+      "folder": "kulup-cctv",
+      "data": "data/kulup.json",
+      "location": {
+        "lat": 37.053901,
+        "lon": 28.342248,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kulup.png?v=2",
+      "logo_scale": 1,
+      "events": [
+        {
+          "date": "2026-10-02",
+          "name": "Halil · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-03",
+          "name": "Techno Saturday",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "23:00",
+          "to": "04:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-09",
+          "name": "Özgün · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:30",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-10",
+          "name": "Retro Night",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-16",
+          "name": "Deniz · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-17",
+          "name": "Retro Night",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-23",
+          "name": "Selin · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-24",
+          "name": "Umutcan Genç",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:30",
+          "to": "03:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-30",
+          "name": "Mert Kaya · Live",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "21:30",
+          "to": "00:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-31",
+          "name": "Halloween Party",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "04:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Halil · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "01:00",
+          "source": "instagram"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Özgün · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "01:00",
+          "to": "04:00",
+          "source": "instagram"
+        },
+        {
+          "date": "2026-11-07",
+          "name": "Techno Saturday",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "23:00",
+          "to": "04:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-13",
+          "name": "Selin · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-14",
+          "name": "Deniz · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-19",
+          "name": "Burak · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        }
+      ],
+      "instagram": "kulupakyaka",
+      "blurb": {
+        "en": "Akyaka's night club for DJ sets and weekend parties.",
+        "tr": "DJ setleri ve hafta sonu partileriyle Akyaka'nın gece kulübü."
+      },
+      "simulated": true,
+      "sim_scale": 60,
+      "sim_full_day": true,
+      "area_m2": 250,
+      "share_rank": [
+        "kulup",
+        "no22-riders-inn",
+        "dane-gokova",
+        "poison-pub"
+      ],
+      "record": {
+        "people": 305,
+        "at": "2026-10-25T00:40:00"
+      },
+      "avg_peak": 220,
+      "demo_now": 287,
+      "demo_now_date": "2026-11-19"
+    },
+    {
+      "id": "lemongrass-cafe",
+      "background": "backgrounds/lemongrass-cafe.jpg",
+      "name": "Lemongrass Cafe",
+      "type": "Kafe",
+      "folder": "Lemongrass-cctv",
+      "data": "data/lemongrass-cafe.json",
+      "location": {
+        "lat": 37.0262,
+        "lon": 28.3585,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/lemongrass.png",
+      "events": [
+        {
+          "date": "2026-10-20",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-21",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-22",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-23",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-24",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-26",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-27",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-28",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-29",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-30",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-31",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-02",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-03",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-04",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-05",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
+        },
+        {
+          "date": "2026-11-07",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
+        },
+        {
+          "date": "2026-11-08",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
+        },
+        {
+          "date": "2026-11-09",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-10",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-11",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-12",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-13",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-14",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-16",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-17",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-18",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        }
+      ],
+      "instagram": "lemongrasscommunity",
+      "blurb": {
+        "en": "Garden café in Akçapınar with morning yoga and coffee.",
+        "tr": "Sabah yogası ve kahvesiyle Akçapınar'da bahçe kafe."
+      },
+      "sim_scale": 45,
+      "simulated": true
+    },
+    {
+      "id": "kitebeach-akyaka",
+      "name": "Kitebeach Akyaka",
+      "type": "Plaj",
+      "folder": null,
+      "data": null,
+      "location": {
+        "lat": 37.037453,
+        "lon": 28.3294399,
+        "approx": false,
+        "label": "Kite Plajı, Akyaka"
+      },
+      "logo": "logos/kitebeach.png?v=2",
+      "background_video": {
+        "youtube": "V9AhK54xsxY",
+        "start": 0
+      },
+      "logo_scale": 1,
+      "simulated": true,
+      "sim_profile": "beach",
+      "hours": {
+        "open": "08:00",
+        "close": "20:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Kitesurf beach on Gökova Bay with lessons and a beach bar.",
+        "tr": "Gökova Körfezi'nde ders ve plaj barı olan kitesurf plajı."
+      },
+      "beach_peak": 140
+    },
+    {
+      "id": "rahat-meyhane",
+      "background": "backgrounds/rahat-meyhane.jpg",
+      "name": "Rahat Meyhane",
+      "type": "Meyhane",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0520866,
+        "lon": 28.3277923,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/rahatmeyhane.png",
+      "hours": {
+        "open": "18:00",
+        "close": "01:00"
+      },
+      "description": "",
+      "categories": [
+        "food"
+      ],
+      "blurb": {
+        "en": "Laid-back meyhane for meze, rakı and long dinners.",
+        "tr": "Meze, rakı ve uzun sofralar için rahat bir meyhane."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "kucuk-akyaka",
+      "name": "Küçük",
+      "type": "Bar",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0539959,
+        "lon": 28.3432161,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kucukakyaka.png",
+      "hours": {
+        "open": "17:00",
+        "close": "02:00"
+      },
+      "description": "",
+      "categories": [
+        "activity"
+      ],
+      "background": "backgrounds/kucuk-akyaka.jpg",
+      "blurb": {
+        "en": "Small cocktail bar in the heart of Akyaka.",
+        "tr": "Akyaka'nın merkezinde küçük bir kokteyl barı."
+      },
+      "sim_scale": 40
+    },
+    {
+      "id": "rahat-social",
+      "background": "backgrounds/rahat-social.jpg",
+      "name": "Rahat Social",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.057157,
+        "lon": 28.3262423,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/rahatsocial.png",
+      "hours": {
+        "open": "09:00",
+        "close": "00:00"
+      },
+      "description": "",
+      "instagram": "rahatsocial",
+      "blurb": {
+        "en": "All-day café with wood-fired pizza, focaccia and coffee.",
+        "tr": "Odun fırını pizza, focaccia ve kahveyle gün boyu açık kafe."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "dane-gokova",
+      "name": "Dane Gökova",
+      "type": "Kulüp",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.028469,
+        "lon": 28.3588752,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/danegokova.png",
+      "hours": {
+        "open": "22:00",
+        "close": "04:00"
+      },
+      "description": "",
+      "background": "backgrounds/dane-gokova.jpg",
+      "blurb": {
+        "en": "Night club in Akçapınar with DJ nights.",
+        "tr": "Akçapınar'da DJ geceleri yapan gece kulübü."
+      },
+      "sim_scale": 55
+    },
+    {
+      "id": "muhtar",
+      "background": "backgrounds/muhtar.jpg",
+      "name": "Muhtar",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0261761,
+        "lon": 28.3591953,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/muhtar.png",
+      "hours": {
+        "open": "11:00",
+        "close": "23:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Restaurant in Akçapınar serving grills and home-style dishes.",
+        "tr": "Akçapınar'da ızgara ve ev yemekleri sunan restoran."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "chicken-loop",
+      "background": "backgrounds/chicken-loop.jpg",
+      "name": "Chicken Loop",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0265205,
+        "lon": 28.358654,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/chickenloop.png",
+      "hours": {
+        "open": "11:00",
+        "close": "23:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Kiters' restaurant in Akçapınar for burgers and casual meals.",
+        "tr": "Akçapınar'da burger ve günlük yemekler için kiter restoranı."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "back-loop",
+      "name": "Back Loop",
+      "type": "Meyhane",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0258867,
+        "lon": 28.3556907,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/backloop.png",
+      "hours": {
+        "open": "16:00",
+        "close": "01:00"
+      },
+      "description": "",
+      "categories": [
+        "food"
+      ],
+      "background": "backgrounds/back-loop.jpg",
+      "blurb": {
+        "en": "Meyhane in Akçapınar with meze and evening drinks.",
+        "tr": "Akçapınar'da meze ve akşam içkileri sunan meyhane."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "kukla",
+      "background": "backgrounds/kukla.jpg",
+      "name": "Kukla Pub",
+      "type": "Pub",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0518376,
+        "lon": 28.3258831,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kukla.png",
+      "hours": {
+        "open": "19:00",
+        "close": "03:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Cosy pub in Akyaka for beer and music.",
+        "tr": "Bira ve müzik için Akyaka'da samimi bir pub."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "suma",
+      "background": "backgrounds/suma.jpg",
+      "name": "Suma Restorant",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.052071,
+        "lon": 28.3269782,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/suma.png",
+      "hours": {
+        "open": "12:00",
+        "close": "00:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Restaurant in Akyaka for dinner and drinks.",
+        "tr": "Akyaka'da akşam yemeği ve içki için restoran."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "west-cafe-bistro",
+      "background": "backgrounds/west-cafe-bistro.jpg",
+      "name": "West Bistro",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0547467,
+        "lon": 28.3404817,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/westcafebistro.png",
+      "hours": {
+        "open": "08:30",
+        "close": "23:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Bistro café in Akyaka for breakfast, lunch and coffee.",
+        "tr": "Kahvaltı, öğle yemeği ve kahve için Akyaka'da bistro kafe."
+      },
+      "sim_scale": 40
+    },
+    {
+      "id": "yelken",
+      "name": "Yelken Pub",
+      "type": "Pub",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0522577,
+        "lon": 28.3257767,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/yelken.png?v=2",
+      "hours": {
+        "open": "17:00",
+        "close": "02:00"
+      },
+      "description": "",
+      "logo_scale": 1,
+      "background": "backgrounds/yelken.jpg",
+      "blurb": {
+        "en": "Pub in Akyaka for drinks and evening music.",
+        "tr": "Akyaka'da içki ve akşam müziği için pub."
+      },
+      "sim_scale": 40
+    },
+    {
+      "id": "akcapinar-tostcusu",
+      "background": "backgrounds/akcapinar-tostcusu.jpg",
+      "name": "Akçapınar Tostçusu",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0272759,
+        "lon": 28.3588719,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/akcapinartostcusu.png",
+      "hours": {
+        "open": "07:30",
+        "close": "22:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Quick toasties, breakfast and tea in Akçapınar.",
+        "tr": "Akçapınar'da tost, kahvaltı ve çay için hızlı durak."
+      },
+      "sim_scale": 30
+    },
+    {
+      "id": "sepia",
+      "background": "backgrounds/sepia.jpg",
+      "name": "Sepia",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0260481,
+        "lon": 28.3555526,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/sepia.png",
+      "hours": {
+        "open": "10:00",
+        "close": "00:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Restaurant in Akçapınar for relaxed dinners.",
+        "tr": "Akçapınar'da sakin akşam yemekleri için restoran."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "edit",
+      "name": "Edit.",
+      "type": "Kulüp",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0267831,
+        "lon": 28.3587541,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/edit.png",
+      "hours": {
+        "open": "21:00",
+        "close": "04:00"
+      },
+      "description": "",
+      "background": "backgrounds/edit.jpg",
+      "blurb": {
+        "en": "Night spot in Akçapınar with DJ nights.",
+        "tr": "Akçapınar'da DJ geceleri yapan gece mekânı."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "okapi-suites",
+      "name": "Okapi Suites",
+      "type": "Kulüp",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0261125,
+        "lon": 28.3531944,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/okapi.png",
+      "hours": {
+        "open": "22:00",
+        "close": "04:00"
+      },
+      "description": "",
+      "background": "backgrounds/okapi-suites.jpg",
+      "blurb": {
+        "en": "Hotel and night venue in Akçapınar.",
+        "tr": "Akçapınar'da otel ve gece mekânı."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "soul-fit",
+      "name": "Soul Fit",
+      "type": "Spor",
+      "folder": "soulfit-cctv",
+      "data": "data/soul-fit.json",
+      "location": {
+        "lat": 37.0560692,
+        "lon": 28.3369522,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/soulfit.png",
+      "hours": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "description": "",
+      "background": "backgrounds/soul-fit.jpg",
+      "blurb": {
+        "en": "Gym in Akyaka for training and fitness classes.",
+        "tr": "Antrenman ve fitness dersleri için Akyaka'da spor salonu."
+      },
+      "sim_scale": 30,
+      "simulated": true
+    },
+    {
+      "id": "motto-brew-coffee",
+      "background": "backgrounds/motto-brew-coffee.jpg",
+      "name": "Motto Coffee",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0517789,
+        "lon": 28.3261948,
+        "approx": false,
+        "label": "Karanfil Sk. 2/1, Akyaka"
+      },
+      "logo": "logos/motto-brew-coffee.png?v=2",
+      "logo_scale": 1,
+      "hours": {
+        "open": "08:00",
+        "close": "20:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Specialty coffee bar on Karanfil Street.",
+        "tr": "Karanfil Sokak'ta nitelikli kahve barı."
+      },
+      "sim_scale": 35
+    },
+    {
+      "id": "moy-beach",
+      "background": "backgrounds/moy-beach.jpg",
+      "name": "MOY Beach",
+      "type": "Plaj",
+      "location": {
+        "lat": 37.0494268,
+        "lon": 28.2996192,
+        "label": "MOY Beach, Akyaka",
+        "approx": false
+      },
+      "hours": {
+        "open": "09:00",
+        "close": "20:00"
+      },
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "description": "",
+      "blurb": {
+        "en": "Beach club in Akyaka for sun, swimming and drinks.",
+        "tr": "Güneş, deniz ve içki için Akyaka'da plaj kulübü."
+      },
+      "sim_scale": 55
+    }
+  ]
+}
