@@ -1700,6 +1700,7 @@ function placeLabels(placed,pins,clusters=[]) {
   for(const c of clusters){const p=map.latLngToContainerPoint(c.latlng),r=(64+Math.min(c.vs.length,8)*4)/2+6;obstacles.push({x:p.x-r,y:p.y-r,w:r*2,h:r*2});}
   const out=new Map(), labelled=[];
   for(const v of [...placed].sort((a,b)=>(b.latest?.people??-1)-(a.latest?.people??-1))) {
+    if(v.status?.state==='closed')continue;  // closed venues get no map label (hover still shows it)
     const p=map.latLngToContainerPoint(pins.get(v.id).latlng);
     const {w,h}=labelSize(v), found=findVenueLabel(p,w,h,venuePinRadius(v),obstacles,labelPlacementMemory.get(v.id));
     if(found) {out.set(v.id,found);obstacles.push(found.box);labelled.push(p);labelPlacementMemory.set(v.id,found);}
