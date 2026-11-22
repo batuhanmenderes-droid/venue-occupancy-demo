@@ -226,7 +226,40 @@
           "top": "Akyaka'nın",
           "main": "En yoğun pub'ı",
           "icon": "workspace_premium"
-        }
+        },
+        "statsViz": [
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 12,
+            "cols": 8
+          },
+          {
+            "icon": "chair",
+            "total": 10,
+            "fill": 6
+          },
+          {
+            "icon": "person",
+            "total": 15,
+            "fill": 15
+          },
+          {
+            "icon": "sports_bar",
+            "total": 4,
+            "fill": 2
+          },
+          {
+            "type": "meter",
+            "value": 0
+          },
+          {
+            "icon": "forum",
+            "total": 8,
+            "fill": 8,
+            "fade": true
+          }
+        ]
       },
       "hours": {
         "open": "12:00",
