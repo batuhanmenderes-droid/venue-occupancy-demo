@@ -23,7 +23,85 @@
       },
       "sim_scale": 60,
       "simulated": true,
-      "view_switch": true
+      "view_switch": true,
+      "landing": {
+        "title": "Akyaka'nın değişmeyen köşesi.",
+        "subtitle": "Bir bira içmeye gelirsin, gecenin nasıl bittiğini anlamazsın.",
+        "description": [
+          "Akyaka'nın en eski müdavimlerinden Poison Pub, Karanfil Sokak'ın köşesinde yıllardır aynı işi yapıyor: İnsanları bir araya getiriyor.",
+          "Buz gibi biralar, bitmek bilmeyen muhabbetler, dart kapışmaları, maç heyecanı ve kasabanın en güncel dedikoduları… Masalar dolarsa tabureye, tabureler dolarsa sokağa geçilir. Burada kimse yer sıkıntısı çekmez, sadece biraz daha yakınlaşır."
+        ],
+        "featuresTitle": "Mekân özellikleri",
+        "features": [
+          [
+            "🍺",
+            "Buz gibi biralar"
+          ],
+          [
+            "🎯",
+            "Dart ve tatlı rekabet"
+          ],
+          [
+            "⚽",
+            "Canlı maç yayınları"
+          ],
+          [
+            "🪑",
+            "Yüksek tabure, alçak gönüllülük"
+          ],
+          [
+            "🗣️",
+            "Kesintisiz muhabbet"
+          ],
+          [
+            "🌴",
+            "Sokak manzarası"
+          ],
+          [
+            "💸",
+            "Akyaka ortalamasında fiyatlar"
+          ],
+          [
+            "🌙",
+            "Gecenin son bira durağı"
+          ]
+        ],
+        "statsTitle": "Rakamlarla Poison",
+        "stats": [
+          [
+            "120 m²",
+            "Muhabbet alanı"
+          ],
+          [
+            "30",
+            "Oturma kapasitesi"
+          ],
+          [
+            "150'ye kadar",
+            "Ayakta sosyalleşme kapasitesi"
+          ],
+          [
+            "2",
+            "Genellikle 4'e çıkan bira sayısı"
+          ],
+          [
+            "0",
+            "Yabancılık çekme ihtimali"
+          ],
+          [
+            "∞",
+            "Anlatılacak hikâye"
+          ]
+        ],
+        "contactTitle": "Adres ve iletişim",
+        "address": "Karanfil Sokak, Akyaka, Ula / Muğla",
+        "instagram": "poison.pub",
+        "outroTitle": "Uğramadan dönme!",
+        "outro": [
+          "Akyaka'da herkesin yolu eninde sonunda Poison'a düşer. İster denizden çıkmış ol, ister gecenin sonuna gelmiş… Bir köşeye iliş, bir bira söyle. Tanıdık biri mutlaka çıkar.",
+          "Çıkmazsa da tanışırsın."
+        ]
+      }
     },
     {
       "id": "no22-riders-inn",
