@@ -215,7 +215,17 @@
             "text": "Tapes get rewound and the dance floor comes back. Every Thursday Poison plays the best-loved songs of the 80s and 90s; whoever knows the words sings along, and whoever doesn't, learns them."
           },
           "kicker": "Karanfil Street / Akyaka",
-          "instagramCta": "More on Instagram"
+          "instagramCta": "More on Instagram",
+          "badge": {
+            "top": "Akyaka's",
+            "main": "Busiest pub",
+            "icon": "workspace_premium"
+          }
+        },
+        "badge": {
+          "top": "Akyaka'nın",
+          "main": "En yoğun pub'ı",
+          "icon": "workspace_premium"
         }
       }
     },
