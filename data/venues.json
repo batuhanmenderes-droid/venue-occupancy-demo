@@ -34,35 +34,35 @@
         "featuresTitle": "Mekân özellikleri",
         "features": [
           [
-            "🍺",
+            "sports_bar",
             "Buz gibi biralar"
           ],
           [
-            "🎯",
+            "adjust",
             "Dart ve tatlı rekabet"
           ],
           [
-            "⚽",
+            "sports_soccer",
             "Canlı maç yayınları"
           ],
           [
-            "🪑",
+            "chair_alt",
             "Yüksek tabure, alçak gönüllülük"
           ],
           [
-            "🗣️",
+            "forum",
             "Kesintisiz muhabbet"
           ],
           [
-            "🌴",
+            "storefront",
             "Sokak manzarası"
           ],
           [
-            "💸",
+            "payments",
             "Akyaka ortalamasında fiyatlar"
           ],
           [
-            "🌙",
+            "nightlife",
             "Gecenin son bira durağı"
           ]
         ],
@@ -100,7 +100,38 @@
         "outro": [
           "Akyaka'da herkesin yolu eninde sonunda Poison'a düşer. İster denizden çıkmış ol, ister gecenin sonuna gelmiş… Bir köşeye iliş, bir bira söyle. Tanıdık biri mutlaka çıkar.",
           "Çıkmazsa da tanışırsın."
-        ]
+        ],
+        "palette": {
+          "primary": "#8CF04A",
+          "primaryDeep": "#3E9E2A",
+          "bg": "#1B0F28",
+          "bg2": "#2B1840",
+          "cream": "#F1E3C6",
+          "accent": "#FF8A2B"
+        },
+        "media": {
+          "video": "landing/poison/hero.mp4",
+          "poster": "landing/poison/photo-1.jpg",
+          "photos": [
+            "landing/poison/photo-1.jpg",
+            "landing/poison/photo-2.jpg",
+            "landing/poison/photo-3.jpg",
+            "landing/poison/photo-4.jpg",
+            "landing/poison/photo-5.jpg",
+            "landing/poison/photo-6.jpg"
+          ]
+        },
+        "weekly": {
+          "day": "Her Perşembe",
+          "title": "80'ler & 90'lar Gecesi",
+          "text": "Kasetler başa sarılır, dans pisti geri gelir. Her perşembe Poison'da 80'lerin ve 90'ların en sevilen şarkıları çalar; şarkıyı bilen eşlik eder, bilmeyen de öğrenir."
+        },
+        "plan": {
+          "w": 12,
+          "d": 10,
+          "seats": 30,
+          "standing": 150
+        }
       }
     },
     {
