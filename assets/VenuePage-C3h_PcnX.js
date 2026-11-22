@@ -1,4 +1,4 @@
-import{r as Jt,j as Zt}from"./react-C8ZyTkrN.js";import{B as z,t as g,u as _e,C as ot,n as Xt,D as lt,E as be,S as ct,F as dt,h as Be,r as ue,L as ne,l as je,G as pt,i as ke,H as Qt,I as ea,J as ta,K as aa,M as sa,N as ht,O as Pe,Q as na,T as ra}from"./index-CvFdUUpU.js";const ia=`
+import{r as Jt,j as Zt}from"./react-C8ZyTkrN.js";import{B as z,t as g,u as _e,C as ot,n as Xt,D as lt,E as be,S as ct,F as dt,h as Be,r as ue,L as ne,l as je,G as pt,i as ke,H as Qt,I as ea,J as ta,K as aa,M as sa,N as ht,O as Pe,Q as na,T as ra}from"./index-DmTsW8KI.js";const ia=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -128,8 +128,8 @@ import{r as Jt,j as Zt}from"./react-C8ZyTkrN.js";import{B as z,t as g,u as _e,C 
           </div>`:""}
         </div>
         ${(y=c.photos)!=null&&y.length?`<div class="lp-gallery">${c.photos.map((v,S)=>`<figure class="reveal" style="--d:${S*80}ms"><img src="${v}" alt="" loading="lazy" data-speed="${(S%3-1)*.06}"></figure>`).join("")}</div>`:""}
-        ${(m=c.photos)!=null&&m.length&&s.instagram?`<a class="lp-insta reveal" href="https://www.instagram.com/${a(s.instagram)}/" target="_blank" rel="noopener"><span class="lp-insta-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg></span><span><b>@${a(s.instagram)}</b><em>${a(s.instagramCta||"Instagram")}</em></span>${w("arrow_forward")}</a>`:""}
         ${x.map((v,S)=>`<p class="lp-body reveal" style="--d:${S*120}ms">${a(v)}</p>`).join("")}
+        ${(m=c.photos)!=null&&m.length&&s.instagram?`<a class="lp-insta reveal" href="https://www.instagram.com/${a(s.instagram)}/" target="_blank" rel="noopener"><span class="lp-insta-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg></span><span><b>@${a(s.instagram)}</b><em>${a(s.instagramCta||"Instagram")}</em></span>${w("arrow_forward")}</a>`:""}
       </section>
       ${s.weekly?`<section class="lp-sec lp-weekly">
         <div class="lp-weekly-glow" data-speed="0.18" aria-hidden="true"></div>
