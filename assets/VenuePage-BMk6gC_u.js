@@ -1,4 +1,4 @@
-import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as f,u as Pe,C as lt,n as Qt,D as ct,E as xe,S as dt,F as pt,h as Be,r as ge,L as se,l as je,G as ht,i as ke,H as ea,I as ta,J as aa,K as sa,M as na,N as mt,O as qe,Q as ra,T as ia}from"./index-NXCbAgfj.js";const oa=`
+import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as f,u as Pe,C as lt,n as Qt,D as ct,E as xe,S as dt,F as pt,h as Be,r as ge,L as se,l as je,G as ht,i as ke,H as ea,I as ta,J as aa,K as sa,M as na,N as mt,O as qe,Q as ra,T as ia}from"./index-Riu8BkEk.js";const oa=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -17,7 +17,7 @@ import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as f,u as Pe,C 
   </header>
 
   <nav class="vtabs" role="tablist">
-    <button role="tab" data-vtab="landing" data-i18n="tabLanding" hidden>Landing</button>
+    <button role="tab" data-vtab="landing" data-i18n="tabLanding" hidden>Overview</button>
     <button role="tab" data-vtab="density" data-i18n="tabDensity">Density</button>
     <button role="tab" data-vtab="calendar" data-i18n="tabCalendar">Activity calendar</button>
     <button role="tab" data-vtab="menu" data-i18n="tabMenu">Menu</button>
