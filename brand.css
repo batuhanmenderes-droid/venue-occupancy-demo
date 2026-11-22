@@ -373,3 +373,11 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 .vl-row .vsep { width: 1px; height: 14px; background: color-mix(in srgb, var(--ink) 22%, transparent); flex: none; }
 .vl-row .vtrend { width: auto; height: auto; background: none !important; border-radius: 0; margin-left: 2px; }
 .vl-row .vtrend svg { width: 15px; height: 15px; }
+
+/* No frosted-glass blur anywhere (it was the heaviest part of drawing the map). Surfaces that relied on the
+   blur for legibility get a more opaque fill instead. */
+*, *::before, *::after { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+:root { --glass-bg: rgba(255, 255, 255, 0.92); --material: rgba(255, 255, 255, 0.94); }
+:root[data-theme="dark"] { --glass-bg: rgba(28, 28, 33, 0.92); --material: rgba(26, 26, 30, 0.94); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --glass-bg: rgba(28, 28, 33, 0.92); --material: rgba(26, 26, 30, 0.94); } }
+.mainnav { background: color-mix(in srgb, var(--page, #fff) 96%, transparent) !important; }
