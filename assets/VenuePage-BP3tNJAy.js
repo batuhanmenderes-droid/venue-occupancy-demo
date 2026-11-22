@@ -1,4 +1,4 @@
-import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as $,u as Pe,C as dt,n as Qt,D as pt,E as xe,S as mt,F as ht,h as je,r as fe,L as se,l as qe,G as ut,i as Me,H as ea,I as ta,J as aa,K as sa,M as na,N as gt,O as ze,Q as ra,T as ia}from"./index-BzJjYb0O.js";const oa=`
+import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as $,u as Pe,C as dt,n as Qt,D as pt,E as xe,S as mt,F as ht,h as je,r as fe,L as se,l as qe,G as ut,i as Me,H as ea,I as ta,J as aa,K as sa,M as na,N as gt,O as ze,Q as ra,T as ia}from"./index-CuEclP8O.js";const oa=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -119,15 +119,6 @@ import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as $,u as Pe,C 
         </div>
         <span class="lp-scroll" aria-hidden="true"></span>
       </section>
-      ${s.weekly?`<section class="lp-sec lp-weekly">
-        <div class="lp-weekly-glow" data-speed="0.18" aria-hidden="true"></div>
-        <p class="lp-weekly-day reveal">${x("calendar_month")}${a($("upcomingEvents"))}</p>
-        <h3 class="lp-weekly-title reveal">${a(s.weekly.title)}</h3>
-        <p class="lp-weekly-text reveal">${a(s.weekly.text)}</p>
-        <div class="lp-eq" aria-hidden="true">${Array.from({length:24},(n,d)=>`<i style="--i:${d}"></i>`).join("")}</div>
-        <ul class="lp-upcoming">${L.map((n,d)=>`<li class="reveal${n.weekly?" wk":""}" style="--d:${d*70}ms" data-goto="calendar"><span class="up-date">${a(n.date)}</span><span class="up-name">${n.weekly?x("album"):""}${a(n.name)}</span><span class="up-time">${a(n.time)}</span></li>`).join("")}</ul>
-        <button class="lp-events-btn reveal" type="button" data-goto="calendar">${x("event")}<span class="lp-cta-tx">${$("seeEvents")}</span>${x("arrow_forward")}</button>
-      </section>`:""}
       <section class="lp-sec lp-story">
         <div class="lp-leadrow">
           <p class="lp-lead reveal">${M.includes(": ")?`${a(M.slice(0,M.indexOf(": ")+1))}<br><span class="lp-hl">${a(M.slice(M.indexOf(": ")+2))}</span>`:a(M)}</p>
@@ -141,6 +132,15 @@ import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as $,u as Pe,C 
         ${g.map((n,d)=>`<p class="lp-body reveal" style="--d:${d*120}ms">${a(n)}</p>`).join("")}
         ${(P=p.photos)!=null&&P.length&&s.instagram?`<a class="lp-insta reveal" href="https://www.instagram.com/${a(s.instagram)}/" target="_blank" rel="noopener"><span class="lp-insta-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg></span><span class="lp-cta-tx">${a(l.name)} Instagram</span>${x("arrow_forward")}</a>`:""}
       </section>
+      ${s.weekly?`<section class="lp-sec lp-weekly">
+        <div class="lp-weekly-glow" data-speed="0.18" aria-hidden="true"></div>
+        <p class="lp-weekly-day reveal">${x("calendar_month")}${a($("upcomingEvents"))}</p>
+        <h3 class="lp-weekly-title reveal">${a(s.weekly.title)}</h3>
+        <p class="lp-weekly-text reveal">${a(s.weekly.text)}</p>
+        <div class="lp-eq" aria-hidden="true">${Array.from({length:24},(n,d)=>`<i style="--i:${d}"></i>`).join("")}</div>
+        <ul class="lp-upcoming">${L.map((n,d)=>`<li class="reveal${n.weekly?" wk":""}" style="--d:${d*70}ms" data-goto="calendar"><span class="up-date">${a(n.date)}</span><span class="up-name">${n.weekly?x("album"):""}${a(n.name)}</span><span class="up-time">${a(n.time)}</span></li>`).join("")}</ul>
+        <button class="lp-events-btn reveal" type="button" data-goto="calendar">${x("event")}<span class="lp-cta-tx">${$("seeEvents")}</span>${x("arrow_forward")}</button>
+      </section>`:""}
       <section class="lp-sec lp-feat-sec">
         <h3 class="lp-h reveal">${a(s.featuresTitle)}</h3>
         <ul class="lp-feats">${s.features.map(([n,d],w)=>`<li class="reveal" style="--d:${w*70}ms">${x(n)}<span>${a(d)}</span></li>`).join("")}</ul>
