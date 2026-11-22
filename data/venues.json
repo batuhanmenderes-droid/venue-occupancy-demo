@@ -110,7 +110,7 @@
           "accent": "#FF8A2B"
         },
         "media": {
-          "video": "landing/poison/hero.mp4",
+          "video": "landing/poison/hero.mp4?v=3",
           "poster": "landing/poison/photo-1.jpg",
           "photos": [
             "landing/poison/photo-1.jpg",
@@ -227,6 +227,10 @@
           "main": "En yoğun pub'ı",
           "icon": "workspace_premium"
         }
+      },
+      "hours": {
+        "open": "12:00",
+        "close": "02:30"
       }
     },
     {
