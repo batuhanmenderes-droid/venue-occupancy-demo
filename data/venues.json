@@ -132,7 +132,91 @@
           "seats": 30,
           "standing": 150
         },
-        "kicker": "Karanfil Sokak / Akyaka"
+        "kicker": "Karanfil Sokak / Akyaka",
+        "instagramCta": "Daha fazlası Instagram'da",
+        "en": {
+          "title": "Akyaka's corner that never changes.",
+          "subtitle": "You come in for one beer and never quite know how the night ended.",
+          "description": [
+            "One of Akyaka's oldest regulars, Poison Pub has been doing the same thing on the corner of Karanfil Street for years: bringing people together.",
+            "Ice-cold beers, conversations that never end, darts showdowns, match-day nerves and the town's freshest gossip… When the tables fill up, people move to the stools; when the stools fill up, out to the street. Nobody runs short of space here, they just get a little closer."
+          ],
+          "featuresTitle": "What makes it Poison",
+          "features": [
+            [
+              "sports_bar",
+              "Ice-cold beers"
+            ],
+            [
+              "adjust",
+              "Darts and friendly rivalry"
+            ],
+            [
+              "sports_soccer",
+              "Live matches on screen"
+            ],
+            [
+              "chair_alt",
+              "High stools, low egos"
+            ],
+            [
+              "forum",
+              "Non-stop conversation"
+            ],
+            [
+              "storefront",
+              "Street views"
+            ],
+            [
+              "payments",
+              "Prices at the Akyaka average"
+            ],
+            [
+              "nightlife",
+              "The night's last beer stop"
+            ]
+          ],
+          "statsTitle": "Poison in numbers",
+          "stats": [
+            [
+              "120 m²",
+              "Room to talk"
+            ],
+            [
+              "30",
+              "Seats"
+            ],
+            [
+              "Up to 150",
+              "Standing and mingling"
+            ],
+            [
+              "2",
+              "Beers that usually turn into 4"
+            ],
+            [
+              "0",
+              "Chance of feeling like a stranger"
+            ],
+            [
+              "∞",
+              "Stories to tell"
+            ]
+          ],
+          "contactTitle": "Address and contact",
+          "outroTitle": "Don't leave without dropping by!",
+          "outro": [
+            "Sooner or later, everyone in Akyaka ends up at Poison. Whether you've just come out of the sea or reached the end of the night… grab a corner, order a beer. You'll always run into someone you know.",
+            "And if you don't, you'll make a new friend."
+          ],
+          "weekly": {
+            "day": "Every Thursday",
+            "title": "80s & 90s Night",
+            "text": "Tapes get rewound and the dance floor comes back. Every Thursday Poison plays the best-loved songs of the 80s and 90s; whoever knows the words sings along, and whoever doesn't, learns them."
+          },
+          "kicker": "Karanfil Street / Akyaka",
+          "instagramCta": "More on Instagram"
+        }
       }
     },
     {
