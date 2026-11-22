@@ -1,4 +1,4 @@
-import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as g,u as Be,C as lt,n as Qt,D as ct,E as xe,S as dt,F as pt,h as Pe,r as ge,L as se,l as je,G as mt,i as ke,H as ea,I as ta,J as aa,K as sa,M as na,N as ht,O as qe,Q as ra,T as ia}from"./index-Dpgnflog.js";const oa=`
+import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as g,u as Be,C as lt,n as Qt,D as ct,E as xe,S as dt,F as pt,h as Pe,r as ge,L as se,l as je,G as mt,i as ke,H as ea,I as ta,J as aa,K as sa,M as na,N as ht,O as qe,Q as ra,T as ia}from"./index-D-QfO9lg.js";const oa=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
