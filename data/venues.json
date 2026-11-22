@@ -119,7 +119,8 @@
             "landing/poison/photo-4.jpg",
             "landing/poison/photo-5.jpg",
             "landing/poison/photo-6.jpg"
-          ]
+          ],
+          "badge": "landing/poison/badge.webp"
         },
         "weekly": {
           "day": "Her Perşembe",

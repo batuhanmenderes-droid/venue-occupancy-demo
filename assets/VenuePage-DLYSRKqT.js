@@ -1,4 +1,4 @@
-import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as g,u as Be,C as lt,n as Qt,D as ct,E as xe,S as dt,F as pt,h as Pe,r as ge,L as se,l as je,G as mt,i as ke,H as ea,I as ta,J as aa,K as sa,M as na,N as ht,O as qe,Q as ra,T as ia}from"./index-CsBsQxbs.js";const oa=`
+import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as g,u as Be,C as lt,n as Qt,D as ct,E as xe,S as dt,F as pt,h as Pe,r as ge,L as se,l as je,G as mt,i as ke,H as ea,I as ta,J as aa,K as sa,M as na,N as ht,O as qe,Q as ra,T as ia}from"./index-SVw2bVOp.js";const oa=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -111,7 +111,7 @@ import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as g,u as Be,C 
           <p class="lp-kicker">${s(n.kicker||o.name)}</p>
           <div class="lp-titlerow">
             <h2 class="lp-title">${l(n.title)}</h2>
-            ${o.logo?`<img class="lp-logo reveal" src="${o.logo}" alt="${s(o.name)}">`:""}
+            ${d.badge||o.logo?`<img class="lp-logo reveal${d.badge?" lp-logo-badge":""}" src="${d.badge||o.logo}" alt="${s(o.name)}">`:""}
           </div>
           <p class="lp-sub reveal">${s(n.subtitle)}</p>
           <div class="tiles lp-tiles reveal" id="lpTiles"></div>
@@ -121,7 +121,7 @@ import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as g,u as Be,C 
       <section class="lp-sec lp-story">
         <div class="lp-leadrow">
           <p class="lp-lead reveal">${x.includes(": ")?`${s(x.slice(0,x.indexOf(": ")+1))}<br><span class="lp-hl">${s(x.slice(x.indexOf(": ")+2))}</span>`:s(x)}</p>
-          ${n.badge?`<div class="lp-badge reveal" role="img" aria-label="${s(n.badge.top)} ${s(n.badge.main)}">
+          ${!d.badge&&n.badge?`<div class="lp-badge reveal" role="img" aria-label="${s(n.badge.top)} ${s(n.badge.main)}">
             <svg class="lp-badge-ring" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="lpRing" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
               <text><textPath href="#lpRing">${s(n.badge.top+" · "+n.badge.main+" · ").toLocaleUpperCase(I==="tr"?"tr":"en").repeat(2)}</textPath></text></svg>
             <div class="lp-badge-core">${k(n.badge.icon||"workspace_premium")}<span>${s(n.badge.top)}</span><b>${s(n.badge.main)}</b></div>
