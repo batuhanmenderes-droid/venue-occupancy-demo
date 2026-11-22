@@ -762,6 +762,7 @@ const WindLayer = L.Layer.extend({
   _updateMask() {
     const m = this._map, gl = this._gl; if (!m || !gl || this._moving) return;
     const size = m.getSize(), q = 4, w = Math.ceil(size.x / q), h = Math.ceil(size.y / q);
+    if (!w || !h) return;  // map not laid out yet (0 px), nothing to mask
     let feats = [];
     try { feats = gl.querySourceFeatures('openmaptiles', { sourceLayer: 'water' }); } catch { return; }
     if (!feats.length) return;
