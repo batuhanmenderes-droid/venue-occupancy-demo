@@ -50,23 +50,76 @@ body {
 }
 :fullscreen .stage, .is-fit .stage { border-radius: 0; box-shadow: none; }
 
-/* Vertical scroll: slides are stacked like a page. Upcoming slides wait below, past ones above;
-   moving on pushes the current slide up and the next one in from the bottom (and back again). */
+/* Slides sit on top of each other; only the active one is shown. Moving between them plays a
+   transition picked by the kind of slide (deck.js sets .stage[data-fx], a slide's data-fx overrides):
+     bloom  title, dividers, thanks: the new slide opens as a growing circle, like a heat cloud,
+            while the old one sinks back into the dark
+     cube   problem slides (split): the stage turns like a cube onto its next face
+     wipe   panel / metric slides: a slanted edge sweeps the new slide in over the old one
+     depth  everything else: the old slide falls back, the new one comes forward out of the depth
+   Going back plays the same move in reverse (.stage[data-dir="back"]). */
+.stage { perspective: 2600px; }
 .slide {
   --ease-scroll: cubic-bezier(.76, 0, .24, 1);
   position: absolute; inset: 0;
   padding: var(--pad-y) var(--pad-x);
   background: var(--night);
   visibility: hidden;
-  transform: translateY(100%);
-  transition: transform .9s var(--ease-scroll), visibility 0s linear .9s;
 }
-.slide.is-prev { transform: translateY(-100%); }
-.slide.is-active {
-  visibility: visible; transform: none;
-  transition: transform .9s var(--ease-scroll), visibility 0s;
+.slide.is-active { visibility: visible; }
+.stage.no-anim .slide { transition: none !important; animation: none !important; }
+
+.slide.fx-out { visibility: visible; z-index: 1; pointer-events: none; }
+.slide.fx-in { z-index: 3; }
+.slide.fx-in, .slide.fx-out {
+  animation-duration: 1s; animation-fill-mode: both; animation-timing-function: var(--ease-scroll);
+  backface-visibility: hidden; will-change: transform, clip-path, filter, opacity;
 }
-.stage.no-anim .slide { transition: none !important; }
+
+/* bloom */
+.stage[data-fx="bloom"] .slide.fx-in { animation-name: fxBloomIn; animation-duration: 1.1s; }
+.stage[data-fx="bloom"] .slide.fx-out { animation-name: fxSinkBack; animation-duration: 1.1s; }
+.stage[data-fx="bloom"][data-dir="back"] .slide.fx-in { animation-name: fxRiseFront; }
+.stage[data-fx="bloom"][data-dir="back"] .slide.fx-out { z-index: 4; animation-name: fxBloomOut; }
+@keyframes fxBloomIn { from { clip-path: circle(0% at 50% 55%); filter: brightness(1.6) saturate(1.4); } 60% { filter: brightness(1.15) saturate(1.15); } to { clip-path: circle(75% at 50% 55%); filter: none; } }
+@keyframes fxBloomOut { from { clip-path: circle(75% at 50% 55%); } to { clip-path: circle(0% at 50% 55%); filter: brightness(1.6) saturate(1.4); } }
+@keyframes fxSinkBack { to { transform: scale(.9); filter: brightness(.3); } }
+@keyframes fxRiseFront { from { transform: scale(.9); filter: brightness(.3); } }
+
+/* cube */
+.stage[data-fx="cube"] .slide.fx-in { transform-origin: 0 50%; animation-name: fxCubeIn; }
+.stage[data-fx="cube"] .slide.fx-out { transform-origin: 100% 50%; animation-name: fxCubeOut; }
+.stage[data-fx="cube"][data-dir="back"] .slide.fx-in { transform-origin: 100% 50%; animation-name: fxCubeInBack; }
+.stage[data-fx="cube"][data-dir="back"] .slide.fx-out { transform-origin: 0 50%; animation-name: fxCubeOutBack; }
+@keyframes fxCubeIn { from { transform: translateX(100%) rotateY(90deg); filter: brightness(.4); } }
+@keyframes fxCubeOut { to { transform: translateX(-100%) rotateY(-90deg); filter: brightness(.4); } }
+@keyframes fxCubeInBack { from { transform: translateX(-100%) rotateY(-90deg); filter: brightness(.4); } }
+@keyframes fxCubeOutBack { to { transform: translateX(100%) rotateY(90deg); filter: brightness(.4); } }
+
+/* wipe */
+.stage[data-fx="wipe"] .slide.fx-in { animation-name: fxWipeIn; }
+.stage[data-fx="wipe"] .slide.fx-out { animation-name: fxWipeAway; }
+.stage[data-fx="wipe"][data-dir="back"] .slide.fx-in { animation-name: fxWipeInBack; }
+.stage[data-fx="wipe"][data-dir="back"] .slide.fx-out { animation-name: fxWipeAwayBack; }
+@keyframes fxWipeIn { from { clip-path: polygon(115% 0, 115% 0, 100% 100%, 100% 100%); } to { clip-path: polygon(0 0, 115% 0, 100% 100%, -15% 100%); } }
+@keyframes fxWipeInBack { from { clip-path: polygon(0 0, 0 0, -15% 100%, -15% 100%); } to { clip-path: polygon(0 0, 115% 0, 100% 100%, -15% 100%); } }
+@keyframes fxWipeAway { to { transform: translateX(-14%); filter: brightness(.35); } }
+@keyframes fxWipeAwayBack { to { transform: translateX(14%); filter: brightness(.35); } }
+
+/* depth */
+.stage[data-fx="depth"] .slide.fx-in { animation-name: fxDepthIn; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+.stage[data-fx="depth"] .slide.fx-out { animation-name: fxDepthOut; animation-duration: .7s; }
+.stage[data-fx="depth"][data-dir="back"] .slide.fx-in { animation-name: fxDepthInBack; }
+.stage[data-fx="depth"][data-dir="back"] .slide.fx-out { animation-name: fxDepthOutBack; }
+@keyframes fxDepthIn { from { transform: translateZ(-500px) translateY(4%); opacity: 0; } }
+@keyframes fxDepthOut { to { transform: translateZ(320px); opacity: 0; } }
+@keyframes fxDepthInBack { from { transform: translateZ(320px); opacity: 0; } }
+@keyframes fxDepthOutBack { to { transform: translateZ(-500px) translateY(4%); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .stage[data-fx] .slide.fx-in { animation: heldIn .3s ease both !important; }
+  .stage[data-fx] .slide.fx-out { animation: none !important; }
+}
 
 /* Held transition (slides in the same data-hold group): nothing moves, the new slide fades in
    on top of the old one, which disappears only once it is covered. */

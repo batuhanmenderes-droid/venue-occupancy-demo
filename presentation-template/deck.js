@@ -12,7 +12,17 @@
   const bar = document.getElementById('bar');
   const controls = document.querySelector('.controls');
   let index = 0;
-  let flowTimer;
+  let flowTimer, fxTimer;
+
+  // Which transition a slide gets (deck.css): its own data-fx, else by kind of slide.
+  function fxFor(s) {
+    if (s.dataset.fx) return s.dataset.fx;
+    const c = s.classList;
+    if (c.contains('slide--title') || c.contains('slide--divider') || c.contains('slide--section')) return 'bloom';
+    if (c.contains('slide--split')) return 'cube';
+    if (c.contains('slide--comp') || c.contains('slide--metrics')) return 'wipe';
+    return 'depth';
+  }
 
   // ---- Fit ----
   function fit() {
@@ -59,9 +69,19 @@
       from.classList.add('flow-out');
       flowTimer = setTimeout(() => { from.classList.remove('flow-out'); to.classList.remove('flow-in'); }, 700);
     }
+    // Ordinary moves get the transition of the slide being entered (going forward) or left (going
+    // back, so it plays in reverse); see the transitions in deck.css.
+    clearTimeout(fxTimer);
+    slides.forEach((s) => s.classList.remove('fx-in', 'fx-out'));
+    if (from !== to && !held && !flow && !stage.classList.contains('no-anim')) {
+      const back = slides.indexOf(from) > index;
+      stage.dataset.fx = fxFor(back ? from : to);
+      stage.dataset.dir = back ? 'back' : 'fwd';
+      to.classList.add('fx-in'); from.classList.add('fx-out');
+      fxTimer = setTimeout(() => { to.classList.remove('fx-in'); from.classList.remove('fx-out'); }, 1150);
+    }
     slides.forEach((s, n) => {
       s.classList.toggle('is-active', n === index);
-      s.classList.toggle('is-prev', n < index);
       s.setAttribute('aria-hidden', n === index ? 'false' : 'true');
       s.inert = n !== index;
     });
