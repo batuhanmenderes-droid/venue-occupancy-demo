@@ -22,7 +22,8 @@
         "tr": "Karanfil Sokak'ta tema geceleri yapan rock ağırlıklı pub."
       },
       "sim_scale": 60,
-      "simulated": true
+      "simulated": true,
+      "view_switch": true
     },
     {
       "id": "no22-riders-inn",

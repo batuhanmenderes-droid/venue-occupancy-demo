@@ -381,3 +381,9 @@ body.mapmode .filter-panel .fp-sort { display: none; }  /* sorting only applies 
 :root[data-theme="dark"] { --glass-bg: rgba(28, 28, 33, 0.92); --material: rgba(26, 26, 30, 0.94); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --glass-bg: rgba(28, 28, 33, 0.92); --material: rgba(26, 26, 30, 0.94); } }
 .mainnav { background: color-mix(in srgb, var(--page, #fff) 96%, transparent) !important; }
+
+/* Venue page: owner / customer view switch (same pill as TR / EN, icons) */
+.langswitch.viewswitch { left: auto; }
+.viewswitch button { display: grid; place-items: center; padding: 6px 10px !important; }
+.viewswitch button svg { width: 15px; height: 15px; display: block; }
+body.view-customer #shareCard, body.view-customer #evCrowdCard, body.view-customer .seasoncard, body.view-customer .lower { display: none !important; }

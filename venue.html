@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Inter:wght@400;500;600&family=Barlow:wght@700&display=swap">
-<script src="i18n.js?v=heat2"></script>
+<script src="i18n.js?v=view2"></script>
 <style>
 :root {
   --page: #f9f9f7; --surface: #fcfcfb; --ink: #0b0b0b; --ink-2: #52514e; --muted: #898781;
@@ -80,7 +80,7 @@ footer { color: var(--muted); font-size: 12px; margin-top: 16px; }
 }
 </style>
 <link rel="stylesheet" href="theme.css?v=stat9">
-<link rel="stylesheet" href="brand.css?v=68">
+<link rel="stylesheet" href="brand.css?v=69">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="rise" gradientUnits="userSpaceOnUse" x1="0" y1="82.5" x2="0" y2="5.5"><stop offset="0" stop-color="#1F6BFF"/><stop offset=".5" stop-color="#FFB400"/><stop offset="1" stop-color="#FF2D6F"/></linearGradient><symbol id="mk-bold" viewBox="0 5.5 132 102"><path d="M14 40C14 24 26 13 41 13C56 13 67 24 67 38C67 52 56 57 48 61C42 64 40 68 40 75" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round"/><circle cx="40" cy="96" r="11.5" fill="currentColor"/><rect x="87.5" y="5.5" width="21" height="77" rx="10.5" fill="url(#rise)"/><circle cx="98" cy="96" r="11.5" fill="#FF2D6F"/></symbol></defs></svg>
@@ -326,6 +326,7 @@ async function load() {
   venue = withSettings(found);
   document.title = `${venue.name} · herkez nerde?!`;
   $('title').textContent = venue.name;
+  setupViewSwitch();
   // Instagram link under the name (venues.json `instagram`: the account name).
   if (venue.blurb) { $('vblurb').textContent = venue.blurb[LANG] || venue.blurb.en; $('vblurb').hidden = false; }
   if (venue.instagram) { $('vinsta').href = `https://www.instagram.com/${venue.instagram}/`; $('vinsta').title = `@${venue.instagram}`; $('vinsta').hidden = false; }
@@ -709,6 +710,43 @@ function weeklyHistory() {
 
 // ---- All-time high by season (weekly, since 2021) ----
 const SEASON_COLORS = ['#64b5f6', '#4cd964', '#ffcc00', '#ff8a3d'];
+// ---- Owner / customer view (test: only venues with `view_switch` in venues.json, for now Poison Pub) ----
+// Same pill as the TR / EN switch, just left of it: a chart for the business owner, a smiley for the
+// customer. The customer view leaves out the business analysis cards.
+const VIEW_ICONS = {
+  owner: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  customer: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 14.2c1 1.5 2.4 2.3 4 2.3s3-.8 4-2.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="9.8" r="1.2" fill="currentColor"/><circle cx="15" cy="9.8" r="1.2" fill="currentColor"/></svg>',
+};
+function setupViewSwitch() {
+  document.querySelector('.viewswitch')?.remove();
+  document.body.classList.remove('view-owner', 'view-customer');
+  if (!venue?.view_switch) return;
+  let view = 'owner'; try { view = localStorage.getItem('venueView') === 'customer' ? 'customer' : 'owner'; } catch {}
+  const box = document.createElement('div');
+  box.className = 'langswitch viewswitch'; box.setAttribute('role', 'group'); box.setAttribute('aria-label', t('viewSwitch'));
+  box.innerHTML = ['owner', 'customer'].map(k => `<button data-view="${k}" title="${t('view_' + k)}" aria-label="${t('view_' + k)}">${VIEW_ICONS[k]}</button>`).join('');
+  const apply = () => {
+    document.body.classList.toggle('view-owner', view === 'owner');
+    document.body.classList.toggle('view-customer', view === 'customer');
+    box.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === view));
+  };
+  box.onclick = e => {
+    const b = e.target.closest('[data-view]'); if (!b || b.dataset.view === view) return;
+    view = b.dataset.view; try { localStorage.setItem('venueView', view); } catch {}
+    apply();
+    if (view === 'owner') { renderChart(); renderSeasons(); renderShare(); renderEventCrowd(); }
+  };
+  ($('tab-density')?.parentElement || document.body).appendChild(box);
+  // Sits just left of the language switch, on the same line.
+  const place = () => {
+    const ls = document.querySelector('.langswitch:not(.viewswitch)'); if (!ls || !box.isConnected) return;
+    const r = ls.getBoundingClientRect();
+    box.style.top = `${r.top}px`; box.style.right = `${innerWidth - r.left + 8}px`;
+  };
+  place(); requestAnimationFrame(place); addEventListener('resize', place);
+  apply();
+}
+
 // ---- Crowd by weekday and by hour (demo: simulated over the last 8 weeks) ----
 function patternData(v) {
   if (v._pat) return v._pat;
