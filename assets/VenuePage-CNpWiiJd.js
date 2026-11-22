@@ -1,4 +1,4 @@
-import{r as Jt,j as Zt}from"./react-C8ZyTkrN.js";import{B as N,t as g,u as _e,C as ot,n as Xt,D as lt,E as be,S as ct,F as dt,h as Be,r as ue,L as ne,l as je,G as pt,i as ke,H as Qt,I as ea,J as ta,K as aa,M as sa,N as ht,O as Pe,Q as na,T as ra}from"./index-BKBFHHn0.js";const ia=`
+import{r as Jt,j as Zt}from"./react-C8ZyTkrN.js";import{B as N,t as g,u as _e,C as ot,n as Xt,D as lt,E as be,S as ct,F as dt,h as Be,r as ue,L as ne,l as je,G as pt,i as ke,H as Qt,I as ea,J as ta,K as aa,M as sa,N as ht,O as Pe,Q as na,T as ra}from"./index-B9MP_lbc.js";const ia=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -108,7 +108,7 @@ import{r as Jt,j as Zt}from"./react-C8ZyTkrN.js";import{B as N,t as g,u as _e,C 
       <section class="lp-sec lp-hero">
         ${m.video?`<video class="lp-video" data-speed="0.25" autoplay muted loop playsinline preload="auto"${m.poster?` poster="${m.poster}"`:""}><source src="${m.video}" type="video/mp4"></video>`:`<div class="lp-bg" data-speed="0.35"${l.background?` style="background-image:url('${l.background}')"`:""}></div>`}
         <div class="lp-hero-tx">
-          <p class="lp-kicker">${s(l.name)}</p>
+          <p class="lp-kicker">${s(e.kicker||l.name)}</p>
           <div class="lp-titlerow">
             <h2 class="lp-title">${a(e.title)}</h2>
             ${l.logo?`<img class="lp-logo reveal" src="${l.logo}" alt="${s(l.name)}">`:""}
