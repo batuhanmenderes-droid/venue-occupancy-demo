@@ -1,4 +1,4 @@
-import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as $,u as Pe,C as dt,n as Qt,D as pt,E as xe,S as mt,F as ht,h as je,r as fe,L as se,l as qe,G as ut,i as Me,H as ea,I as ta,J as aa,K as sa,M as na,N as gt,O as ze,Q as ra,T as ia}from"./index-CIDPapVj.js";const oa=`
+import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as $,u as Pe,C as dt,n as Qt,D as pt,E as xe,S as mt,F as ht,h as je,r as fe,L as se,l as qe,G as ut,i as Me,H as ea,I as ta,J as aa,K as sa,M as na,N as gt,O as ze,Q as ra,T as ia}from"./index-BzJjYb0O.js";const oa=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -121,7 +121,7 @@ import{r as Zt,j as Xt}from"./react-C8ZyTkrN.js";import{B as I,t as $,u as Pe,C 
       </section>
       ${s.weekly?`<section class="lp-sec lp-weekly">
         <div class="lp-weekly-glow" data-speed="0.18" aria-hidden="true"></div>
-        <p class="lp-weekly-day reveal">${x("calendar_month")}${a(s.weekly.day)}</p>
+        <p class="lp-weekly-day reveal">${x("calendar_month")}${a($("upcomingEvents"))}</p>
         <h3 class="lp-weekly-title reveal">${a(s.weekly.title)}</h3>
         <p class="lp-weekly-text reveal">${a(s.weekly.text)}</p>
         <div class="lp-eq" aria-hidden="true">${Array.from({length:24},(n,d)=>`<i style="--i:${d}"></i>`).join("")}</div>
