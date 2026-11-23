@@ -12,18 +12,21 @@
     'list-food': ['Lemongrass Cafe', 'Motto', 'Backloop', 'Sepia', 'Chicken Loop'],
   };
   const SRC = {
-    'map': '../index.html?lang=tr#harita',
-    'list-ent': '../index.html?lang=tr#liste',
-    'list-food': '../index.html?lang=tr#liste',
+    'map': '{app}?lang=tr#harita',
+    // ?open=all opens the app's "All venues" section for this page only (the viewer's saved sections stay)
+    'list-ent': '{app}?lang=tr&open=all#liste',
+    'list-food': '{app}?lang=tr&open=all#liste',
     'detail-cal': '{app}?mekan=poison-pub&lang=tr&tab=calendar',
   };
   const norm = (s) => (s || '').normalize('NFC').toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]/g, '');
   const slides = Array.from(document.querySelectorAll('.slide'));
   const boxes = Array.from(document.querySelectorAll('.pe'));
 
-  // keep only the chosen venues, in the given order (re-applied when the app re-renders its list)
+  // keep only the chosen venues, in the given order (re-applied when the app re-renders its list);
+  // the list is the app's "All venues" section, shown without the section headers
+  const listGrid = (doc) => doc.querySelector('#sec-all .vgrid');
   function filterList(doc, keep) {
-    const grid = doc.getElementById('grid');
+    const grid = listGrid(doc);
     if (!grid) return;
     const cards = Array.from(grid.querySelectorAll('.venue'));
     const nameOf = (c) => ((c.querySelector('.name') || {}).textContent || '').trim();
@@ -38,10 +41,10 @@
   // zoom the map out over every venue marker so blue → red crowd levels are all in view
   function showAllLevels(win, doc) {
     try {
-      const map = win.eval('map'), L = win.L;
+      const map = win.herkezMap;  // the app exposes its map; Leaflet itself is bundled, so bounds come from the map's own classes
       const pts = [];
       map.eachLayer((l) => { if (l.getLatLng && l.options && l.options.icon) pts.push(l.getLatLng()); });
-      if (pts.length > 1) map.fitBounds(L.latLngBounds(pts), { padding: [24, 60], animate: false });
+      if (pts.length > 1) { const Bounds = map.getBounds().constructor; map.fitBounds(new Bounds(pts), { padding: [24, 60], animate: false }); }
     } catch (e) { /* the map is still usable without it */ }
   }
 
@@ -72,11 +75,10 @@
       doc.head.appendChild(st);
       if (mode === 'map') { setTimeout(() => showAllLevels(win, doc), 1200); }
       if (LISTS[mode]) {
-        // list view, not the photo gallery
-        // (set on the page only, so the viewer's own app setting is left alone)
-        const apply = () => { const g = doc.getElementById('grid'); if (g) g.classList.add('aslist'); filterList(doc, LISTS[mode]); };
-        apply(); setTimeout(apply, 800);
-        new win.MutationObserver(() => apply()).observe(doc.getElementById('grid'), { childList: true });
+        st.textContent += '#view-liste > div:not(:has(#sec-all)){display:none!important}#view-liste > div > button{display:none!important}';
+        const apply = () => filterList(doc, LISTS[mode]);
+        const watch = () => { const g = listGrid(doc); if (!g) return setTimeout(watch, 300); apply(); new win.MutationObserver(apply).observe(g, { childList: true }); };
+        watch();
       }
     });
   }

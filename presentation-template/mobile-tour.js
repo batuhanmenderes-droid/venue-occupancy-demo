@@ -24,7 +24,7 @@
   };
   function load() {
     if (loaded) return; loaded = true;
-    window.loadAppFrame(mapFrame, '../index.html?lang=tr#harita', (w, d) => { mapWin = w; mapDoc = d; hideStyle(d); render(); });
+    window.loadAppFrame(mapFrame, '{app}?lang=tr#harita', (w, d) => { mapWin = w; mapDoc = d; hideStyle(d); render(); });
     window.loadAppFrame(detailFrame, '{app}?mekan=poison-pub&lang=tr&tab=landing', (w, d) => { detailWin = w; hideStyle(d); });
   }
 
@@ -37,7 +37,7 @@
       return [label, logo];
     },
     3: () => [mapDoc.getElementById('filterBtn'), mapDoc.getElementById('filterPanel')],
-    4: () => [mapDoc.querySelector('.tabbar [data-nav="rec"]') || Array.from(mapDoc.querySelectorAll('.tabbar button')).find((b) => /Öneri/.test(b.textContent))],
+    4: () => [mapDoc.querySelector('.tabbar [data-nav="assistant"]')],
   };
   function pointAt(step) {
     const get = targets[step];
@@ -62,7 +62,7 @@
       const box = mapDoc.querySelector('.leaflet-container').getBoundingClientRect();
       const dx = you.left + you.width / 2 - (box.left + box.width / 2);
       const dy = you.top + you.height / 2 - (box.top + box.height * 0.42);
-      mapWin.eval('map').panBy([dx, dy], { animate: true, duration: 0.9 });
+      mapWin.herkezMap.panBy([dx, dy], { animate: true, duration: 0.9 });
       panned = true;
       setTimeout(then, 1000);
     } catch (e) { then(); }
