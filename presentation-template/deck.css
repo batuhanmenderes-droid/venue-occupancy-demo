@@ -314,11 +314,12 @@ body {
 .split-copy {
   --gap: 20px;
   display: flex; flex-direction: column; gap: var(--gap);
-  padding: 88px var(--pad-x);
+  /* the bottom also carries one --gap, matching the gap above the points, so the body sits exactly centred */
+  padding: 88px var(--pad-x) calc(88px + var(--gap));
   min-width: 0;
 }
 .split-copy .slide-body { flex: 1; min-height: 0; margin-top: 32px; }
-.split-copy .headline { font-size: 80px; line-height: 1; }
+.split-copy .headline { font-size: 72px; line-height: 1; }  /* fits the longest title on one line in the 800px block */
 .subhead { margin: 0; font: 500 32px/1.25 var(--font-text); color: var(--ink-2); }
 .split-copy > .points { margin-top: auto; }
 .split-copy > :last-child { margin-bottom: auto; }
