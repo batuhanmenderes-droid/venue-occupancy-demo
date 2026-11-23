@@ -308,22 +308,29 @@ body {
   padding: 0;
   overflow: hidden;
 }
+/* One block: the copy column has the same margin on both sides (--pad-x), so label, title, subtitle,
+   points and callout all share one width and one left / right edge. The heading group stays at the top;
+   points + callout are one group, centred in the space below it (same room above and below). */
 .split-copy {
-  display: flex; flex-direction: column; gap: 22px;
-  padding: 88px 80px 80px var(--pad-x);
+  --gap: 20px;
+  display: flex; flex-direction: column; gap: var(--gap);
+  padding: 88px var(--pad-x);
   min-width: 0;
 }
 .split-copy .slide-body { flex: 1; min-height: 0; margin-top: 32px; }
-.split-copy .headline { font-size: 80px; }
-.subhead { margin: -4px 0 6px; font: 500 32px/1.3 var(--font-text); color: var(--ink-2); }
+.split-copy .headline { font-size: 80px; line-height: 1; }
+.subhead { margin: 0; font: 500 32px/1.25 var(--font-text); color: var(--ink-2); }
+.split-copy > .points { margin-top: auto; }
+.split-copy > :last-child { margin-bottom: auto; }
+.split-copy > .points + .callout { margin-top: 8px; }
 
 .points { list-style: none; margin: 0; padding: 0; counter-reset: pt; border-top: 1px solid var(--border); }
 .points li {
   counter-increment: pt;
   display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 20px; align-items: start;
-  padding: 18px 0;
+  padding: 14px 0;
   border-bottom: 1px solid var(--border);
-  font: 400 23px/1.42 var(--font-text); color: var(--ink);
+  font: 400 23px/1.45 var(--font-text); color: var(--ink);
   text-wrap: pretty;
 }
 .points li::before {
@@ -333,13 +340,7 @@ body {
   background: rgba(31, 107, 255, .16); color: var(--calm-2);
   font: 700 20px/1 var(--font-display);
 }
-.points + .points, .headline + .points { margin-top: 18px; }
-.split-copy .points li { padding: 24px 0; }
-/* Fewer points: larger type so the column fills the slide */
-.slide--roomy .split-copy { justify-content: center; padding-top: 72px; padding-bottom: 72px; }
-.slide--roomy .points li { font-size: 24px; padding: 20px 0; }
-.slide--roomy .quote { font-size: 31px; padding-top: 18px; padding-bottom: 18px; }
-.slide--roomy .point-stack { gap: 12px; }
+.points + .points { margin-top: 18px; }
 /* One-line key message above a list */
 .statement {
   margin: 4px 0 6px; padding-left: 24px;
@@ -364,11 +365,11 @@ body {
 .quote::after { content: "\201D"; }
 .callout {
   display: grid; grid-template-columns: 44px minmax(0, 1fr); column-gap: 20px; align-items: start;
-  margin: 8px 0 0; padding: 24px 28px 24px 24px;
+  margin: 0; padding: 22px 24px;  /* same inset on every side */
   border-radius: 20px;
   background: linear-gradient(135deg, rgba(255, 45, 111, .16), rgba(255, 180, 0, .08));
   border: 1px solid rgba(255, 45, 111, .28);
-  font: 500 23px/1.42 var(--font-text); color: var(--ink);
+  font: 500 23px/1.45 var(--font-text); color: var(--ink);
   text-wrap: pretty;
 }
 .callout svg { justify-self: center; margin-top: 2px; color: var(--full); }
@@ -1533,18 +1534,6 @@ body {
 .rm-price--5 li::before { top: 25px; }
 .rm-price--5 li:not(:last-child)::after { top: 53px; bottom: -25px; }
 .rm-price--5 b { font-size: 30px; }
-/* slide 3: label + title at the same place as slide 2; the points sit in the middle of the space below */
-.slide--roomy .split-copy { justify-content: flex-start; padding-top: 88px; padding-bottom: 88px; }
-.slide--roomy .split-copy .points { margin-top: auto; margin-bottom: auto; }
-.slide--roomy .split-copy { padding-bottom: 250px; }
-/* slides 4–5: label/title/subtitle fixed at the top (as on slide 2); the points + closing box centred on the slide */
-.slide--vc .split-copy { justify-content: flex-start; padding-top: 88px; padding-bottom: var(--vc-bottom, 300px); }
-.slide--vc .split-copy .points { margin-top: auto; }
-.slide--vc .split-copy > :last-child { margin-bottom: auto; }
-.slide--vc { --vc-bottom: 286px; }
-.slide--vc .split-copy .points li { padding: 13px 0; }
-.slide--vc .split-copy .callout { padding: 18px 24px 18px 20px; }
-.slide--vc { --vc-bottom: 314px; }
 
 /* problem lists: white numbers, no separators, a little more room between points */
 .points { border-top: 0; display: flex; flex-direction: column; gap: 12px; }
