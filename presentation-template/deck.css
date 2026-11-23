@@ -1,8 +1,8 @@
-/* Venue occupancy deck template: the product's brand (Bricolage Grotesque + Inter, night background,
+/* Venue occupancy deck template: the product's brand (Bricolage Grotesque + Manrope, night background,
    calm → active → full signal colours) on a 1920 × 1080 canvas that deck.js scales to fit. */
 :root {
-  --font-display: "Bricolage Grotesque", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-text: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Bricolage Grotesque", "Manrope", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-text: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   --night: #0B0B10;
   --surface: #15151C;
