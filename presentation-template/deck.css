@@ -1564,3 +1564,8 @@ body {
 }
 /* slide 24: the live desktop heat map instead of a screenshot */
 .chat-map .app-embed { height: 760px; border-radius: 0; }
+
+/* ---------- 22 · Venue landing page, full screen at desktop width ---------- */
+.slide--landing { padding: 0; background: #000; }
+.slide--landing .app-embed { height: 100%; border-radius: 0; background: #000; }
+.slide--landing .app-embed iframe { background: #000; }

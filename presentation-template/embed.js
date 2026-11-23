@@ -12,7 +12,12 @@
   // settings are never touched.)
   // APP_VER busts the browser cache for the embedded app pages; bump it when the app changes.
   const APP_VER = '20261110a';
+  // {app} in an embed address is the React app: on the public demo it sits one level up, locally it is
+  // the build in react-app/dist (the root pages there are the frozen original).
+  const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  window.APP_BASE = local ? '../react-app/dist/index.html' : '../index.html';
   window.loadAppFrame = function (frame, src, onload) {
+    src = src.replace('{app}', window.APP_BASE);
     const [path, hash] = src.split('#');
     src = path + (path.includes('?') ? '&' : '?') + 'emb=' + APP_VER + (hash ? '#' + hash : '');
     frame.addEventListener('load', () => {

@@ -485,7 +485,7 @@
           <li data-s="3">Kullanıcı istediği mekanları filtreleyebilir.</li>
           <li data-s="4">AI Asistan ile mekanlar hakkında bilgi ve öneri alabilir.</li>
           <li data-s="5">
-            <span>POI’lere tıklayarak mekanların detay sayfasına girer. İşletmenin paylaşmak istediği şekilde mekanın adres, iletişim, fotoğraf, websitesi, konsept ve menü fiyatlarına ek olarak:</span>
+            <span>POI’lere tıklayarak mekanın landing sayfasına girer. İşletmenin paylaşmak istediği şekilde mekanın adres, iletişim, fotoğraf, websitesi, konsept ve menü fiyatlarına ek olarak:</span>
             <ul class="mob-sub">
               <li>Anlık kişi sayısı</li>
               <li>Mekanın yoğunluk trendi</li>
@@ -498,10 +498,16 @@
       <div class="mob-bezel" aria-hidden="true"><i class="mob-island"></i></div>
       <div class="mob-screen" aria-label="herkez nerde?! mobil uygulama">
         <div class="mob-frame mob-frame--map"><iframe title="Mobil harita" tabindex="-1"></iframe></div>
-        <div class="mob-frame mob-frame--detail"><iframe title="Kulüp detay sayfası" tabindex="-1"></iframe></div>
+        <div class="mob-frame mob-frame--detail"><iframe title="Poison Pub landing sayfası" tabindex="-1"></iframe></div>
         <div class="mob-spot" aria-hidden="true"></div>
         <div class="mob-desk" aria-hidden="true"><img src="assets/map-desk.jpg" alt="" width="2400" height="1350" decoding="async"></div>
       </div>
+    </section>
+
+    <!-- 22 · The same landing page as the venue's own site, full screen at desktop width (live React app).
+         Scrolling moves the page; at its end the deck moves on (embed.js). -->
+    <section class="slide slide--landing" aria-roledescription="slide" aria-label="Mekan landing sayfası: Poison Pub, masaüstü">
+      <div class="app-embed" data-src="{app}?mekan=poison-pub&amp;lang=tr&amp;tab=landing" data-mode="page" data-title="Poison Pub landing sayfası"></div>
     </section>
 
     <!-- AI assistant: the question, then the answer arriving in parts with venue cards in between (ai-chat.js plays it) -->

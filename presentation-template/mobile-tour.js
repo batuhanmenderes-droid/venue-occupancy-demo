@@ -3,7 +3,7 @@
 //  2 · point at Kulüp's POI and its label
 //  3 · point at the filter button
 //  4 · point at the AI assistant (Öneriler)
-//  5 · Kulüp's detail page slides in and scrolls slowly through its numbers
+//  5 · Poison Pub's landing page (React app) slides in and scrolls slowly down it
 (function () {
   const slide = document.querySelector('.slide--mobile');
   if (!slide) return;
@@ -25,7 +25,7 @@
   function load() {
     if (loaded) return; loaded = true;
     window.loadAppFrame(mapFrame, '../index.html?lang=tr#harita', (w, d) => { mapWin = w; mapDoc = d; hideStyle(d); render(); });
-    window.loadAppFrame(detailFrame, '../venue.html?mekan=kulup&lang=tr&tab=density', (w, d) => { detailWin = w; hideStyle(d); });
+    window.loadAppFrame(detailFrame, '{app}?mekan=poison-pub&lang=tr&tab=landing', (w, d) => { detailWin = w; hideStyle(d); });
   }
 
   // Elements to point at, inside the map iframe.
@@ -89,13 +89,13 @@
     if (step >= 1 && step <= 4) centreOnUser(() => { if ((+slide.dataset.step || 0) === step) pointAt(step); });
     else spot.classList.remove('on');
     if (step === 5 && detailWin) {
-      // read down the detail page slowly: numbers, trend, m², then back to the top
+      // read down the landing page slowly: live numbers, story, photos, then back to the top
       detailWin.scrollTo(0, 0);
       let y = 0, dir = 1;
       scrollTimer = setInterval(() => {
         const max = detailWin.document.documentElement.scrollHeight - detailWin.innerHeight;
         y += dir * 1.2;
-        if (y >= Math.min(max, 1500)) dir = -1;
+        if (y >= Math.min(max, 2600)) dir = -1;
         if (y <= 0) dir = 1;
         detailWin.scrollTo(0, y);
       }, 16);
