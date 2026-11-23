@@ -3,6 +3,7 @@
 //  list-ent   – list view with only No22 Riders Inn, Kulüp, Dane, Edit, Poison Pub (in that order)
 //  list-food  – list view with only Lemongrass Cafe, Motto, Back Loop, Sepia, Chicken Loop
 //  detail-cal – Poison Pub's venue page with the activity calendar tab open
+//  list-featured – the list as it opens, with the featured venues
 // A status bar sits above the app so the phone's island never covers it. Embeds load when the deck is
 // near their slide and do not take pointer input, so scrolling keeps moving the deck.
 (function () {
@@ -17,6 +18,7 @@
     'list-ent': '{app}?lang=tr&open=all#liste',
     'list-food': '{app}?lang=tr&open=all#liste',
     'detail-cal': '{app}?mekan=poison-pub&lang=tr&tab=calendar',
+    'list-featured': '{app}?lang=tr&open=featured#liste',  // the list as a visitor first sees it
   };
   const norm = (s) => (s || '').normalize('NFC').toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]/g, '');
   const slides = Array.from(document.querySelectorAll('.slide'));
