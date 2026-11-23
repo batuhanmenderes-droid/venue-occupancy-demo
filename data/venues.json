@@ -118,8 +118,8 @@
         }
       ],
       "blurb": {
-        "en": "Akyaka's oldest regulars' pub, on the corner of Karanfil Street.",
-        "tr": "Karanfil Sokak'ın köşesinde, Akyaka'nın en eski müdavim pub'ı."
+        "en": "Rock and pop pub.",
+        "tr": "Rock ve pop konseptli pub."
       },
       "sim_scale": 60,
       "simulated": true,
@@ -394,8 +394,8 @@
       "logo_scale": 1,
       "events": [],
       "blurb": {
-        "en": "Riders' bar with DJs and live music late into the night.",
-        "tr": "Gece geç saatlere kadar DJ ve canlı müzikli rider barı."
+        "en": "Rider bar with DJs and live music.",
+        "tr": "DJ ve canlı müzikli rider barı."
       },
       "sim_scale": 70,
       "simulated": true
@@ -563,8 +563,8 @@
       ],
       "instagram": "kulupakyaka",
       "blurb": {
-        "en": "A tree-filled garden in İnişdibi, from sunset beer to 4 am.",
-        "tr": "İnişdibinde ağaçlı bir bahçe; sunset birasından sabah 04:00'e kadar."
+        "en": "Night venue with a big garden.",
+        "tr": "Geniş bahçeli eğlence mekânı."
       },
       "simulated": true,
       "sim_scale": 60,
@@ -1074,8 +1074,8 @@
       ],
       "instagram": "lemongrasscommunity",
       "blurb": {
-        "en": "Coffee, yoga and community in Akçapınar: much more than a café.",
-        "tr": "Akçapınar'da kahve, yoga ve topluluk: bir kahveden çok daha fazlası."
+        "en": "Coffee, yoga and community.",
+        "tr": "Kahve, yoga ve topluluk mekânı."
       },
       "sim_scale": 45,
       "simulated": true,
@@ -1342,8 +1342,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Kitesurf beach on Gökova Bay with lessons and a beach bar.",
-        "tr": "Gökova Körfezi'nde ders ve plaj barı olan kitesurf plajı."
+        "en": "Kitesurf beach and beach bar.",
+        "tr": "Kitesurf plajı ve plaj barı."
       },
       "beach_peak": 140
     },
@@ -1371,8 +1371,8 @@
         "food"
       ],
       "blurb": {
-        "en": "Laid-back meyhane for meze, rakı and long dinners.",
-        "tr": "Meze, rakı ve uzun sofralar için rahat bir meyhane."
+        "en": "Meze and rakı tavern.",
+        "tr": "Meze ve rakı meyhanesi."
       },
       "sim_scale": 50
     },
@@ -1400,8 +1400,8 @@
       ],
       "background": "backgrounds/kucuk-akyaka.jpg",
       "blurb": {
-        "en": "Small cocktail bar in the heart of Akyaka.",
-        "tr": "Akyaka'nın merkezinde küçük bir kokteyl barı."
+        "en": "Small cocktail bar.",
+        "tr": "Küçük kokteyl barı."
       },
       "sim_scale": 40
     },
@@ -1427,8 +1427,8 @@
       "description": "",
       "instagram": "rahatsocial",
       "blurb": {
-        "en": "All-day café with wood-fired pizza, focaccia and coffee.",
-        "tr": "Odun fırını pizza, focaccia ve kahveyle gün boyu açık kafe."
+        "en": "All-day café with pizza and coffee.",
+        "tr": "Pizza ve kahveli gün boyu kafe."
       },
       "sim_scale": 50
     },
@@ -1453,8 +1453,8 @@
       "description": "",
       "background": "backgrounds/dane-gokova.jpg",
       "blurb": {
-        "en": "Night club in Akçapınar with DJ nights.",
-        "tr": "Akçapınar'da DJ geceleri yapan gece kulübü."
+        "en": "Night club with DJ nights.",
+        "tr": "DJ geceli gece kulübü."
       },
       "sim_scale": 55
     },
@@ -1479,8 +1479,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Restaurant in Akçapınar serving grills and home-style dishes.",
-        "tr": "Akçapınar'da ızgara ve ev yemekleri sunan restoran."
+        "en": "Grill and home cooking.",
+        "tr": "Izgara ve ev yemekleri."
       },
       "sim_scale": 50
     },
@@ -1505,8 +1505,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Kiters' restaurant in Akçapınar for burgers and casual meals.",
-        "tr": "Akçapınar'da burger ve günlük yemekler için kiter restoranı."
+        "en": "Kiters' burger restaurant.",
+        "tr": "Burgerci kiter restoranı."
       },
       "sim_scale": 45
     },
@@ -1534,8 +1534,8 @@
       ],
       "background": "backgrounds/back-loop.jpg",
       "blurb": {
-        "en": "Meyhane in Akçapınar with meze and evening drinks.",
-        "tr": "Akçapınar'da meze ve akşam içkileri sunan meyhane."
+        "en": "Meze and evening drinks.",
+        "tr": "Meze ve akşam içkileri."
       },
       "sim_scale": 45
     },
@@ -1560,8 +1560,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Cosy pub in Akyaka for beer and music.",
-        "tr": "Bira ve müzik için Akyaka'da samimi bir pub."
+        "en": "Cosy pub for beer and music.",
+        "tr": "Samimi bira ve müzik pub'ı."
       },
       "sim_scale": 45
     },
@@ -1586,8 +1586,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Restaurant in Akyaka for dinner and drinks.",
-        "tr": "Akyaka'da akşam yemeği ve içki için restoran."
+        "en": "Dinner restaurant.",
+        "tr": "Akşam yemeği restoranı."
       },
       "sim_scale": 50
     },
@@ -1612,8 +1612,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Bistro café in Akyaka for breakfast, lunch and coffee.",
-        "tr": "Kahvaltı, öğle yemeği ve kahve için Akyaka'da bistro kafe."
+        "en": "Breakfast and lunch bistro.",
+        "tr": "Kahvaltı ve öğle bistrosu."
       },
       "sim_scale": 40
     },
@@ -1639,8 +1639,8 @@
       "logo_scale": 1,
       "background": "backgrounds/yelken.jpg",
       "blurb": {
-        "en": "Pub in Akyaka for drinks and evening music.",
-        "tr": "Akyaka'da içki ve akşam müziği için pub."
+        "en": "Pub with evening music.",
+        "tr": "Akşam müzikli pub."
       },
       "sim_scale": 40
     },
@@ -1665,8 +1665,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Quick toasties, breakfast and tea in Akçapınar.",
-        "tr": "Akçapınar'da tost, kahvaltı ve çay için hızlı durak."
+        "en": "Toast and breakfast stop.",
+        "tr": "Tost ve kahvaltı durağı."
       },
       "sim_scale": 30
     },
@@ -1691,8 +1691,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Restaurant in Akçapınar for relaxed dinners.",
-        "tr": "Akçapınar'da sakin akşam yemekleri için restoran."
+        "en": "Quiet dinner restaurant.",
+        "tr": "Sakin akşam yemeği restoranı."
       },
       "sim_scale": 45
     },
@@ -1717,8 +1717,8 @@
       "description": "",
       "background": "backgrounds/edit.jpg",
       "blurb": {
-        "en": "Night spot in Akçapınar with DJ nights.",
-        "tr": "Akçapınar'da DJ geceleri yapan gece mekânı."
+        "en": "Night venue with DJ nights.",
+        "tr": "DJ geceli gece mekânı."
       },
       "sim_scale": 50
     },
@@ -1743,8 +1743,8 @@
       "description": "",
       "background": "backgrounds/okapi-suites.jpg",
       "blurb": {
-        "en": "Hotel and night venue in Akçapınar.",
-        "tr": "Akçapınar'da otel ve gece mekânı."
+        "en": "Hotel and night venue.",
+        "tr": "Otel ve gece mekânı."
       },
       "sim_scale": 45
     },
@@ -1768,8 +1768,8 @@
       "description": "",
       "background": "backgrounds/soul-fit.jpg",
       "blurb": {
-        "en": "Gym in Akyaka for training and fitness classes.",
-        "tr": "Antrenman ve fitness dersleri için Akyaka'da spor salonu."
+        "en": "Gym and fitness classes.",
+        "tr": "Spor salonu ve fitness dersleri."
       },
       "sim_scale": 30,
       "simulated": true
@@ -1796,8 +1796,8 @@
       },
       "description": "",
       "blurb": {
-        "en": "Specialty coffee bar on Karanfil Street.",
-        "tr": "Karanfil Sokak'ta nitelikli kahve barı."
+        "en": "Specialty coffee bar.",
+        "tr": "Nitelikli kahve barı."
       },
       "sim_scale": 35
     },
@@ -1821,8 +1821,8 @@
       "simulated": true,
       "description": "",
       "blurb": {
-        "en": "Beach club in Akyaka for sun, swimming and drinks.",
-        "tr": "Güneş, deniz ve içki için Akyaka'da plaj kulübü."
+        "en": "Beach club by the sea.",
+        "tr": "Deniz ve içki için plaj kulübü."
       },
       "sim_scale": 55
     }
