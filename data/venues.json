@@ -478,7 +478,235 @@
       },
       "avg_peak": 220,
       "demo_now": 287,
-      "demo_now_date": "2026-11-19"
+      "demo_now_date": "2026-11-19",
+      "view_switch": true,
+      "hours": {
+        "open": "17:00",
+        "close": "04:00"
+      },
+      "landing": {
+        "kicker": "İnişdibi / Akyaka",
+        "title": "Akyaka'nın bahçesinde gece başlar.",
+        "subtitle": "Sahilden dön, bir sunset birası al; gerisi sabah 04:00'e kadar kendiliğinden gelir.",
+        "description": [
+          "İnişdibinde, sahil yolu ile azmak arasında, ağaçların altında bir bahçe: Akyaka'nın en sıcak kalabalığı burada.",
+          "240 m² ağaçlı, yüksek bir bahçe ve 100 m² kapalı alan. DJ setinden pop'a her tarz müzik çalar; ister kanepelere yayıl, ister pistin ortasına karış. Gündüz sahilde tanıştığın insanlarla akşam burada buluşur, gece yenileriyle tanışırsın. Rakiplerinden daha yakın, daha sıcak, daha kalabalık. Bu sezon mekân baştan sona yenileniyor."
+        ],
+        "featuresTitle": "Mekân özellikleri",
+        "features": [
+          [
+            "park",
+            "240 m² ağaçlı bahçe"
+          ],
+          [
+            "weekend",
+            "Kanepelere yayılma keyfi"
+          ],
+          [
+            "nightlife",
+            "Sabah 04:00'e kadar eğlence"
+          ],
+          [
+            "headphones",
+            "DJ'den pop'a her tarz müzik"
+          ],
+          [
+            "wb_twilight",
+            "Sahil dönüşü sunset birası"
+          ],
+          [
+            "payments",
+            "Benzerleri arasında en uygun fiyatlar"
+          ],
+          [
+            "groups",
+            "Yeni insanlarla tanışmak için ideal"
+          ],
+          [
+            "auto_awesome",
+            "Bu sezon baştan sona yenilendi"
+          ]
+        ],
+        "statsTitle": "Rakamlarla Kulüp",
+        "stats": [
+          [
+            "240 m²",
+            "Ağaçlı açık bahçe"
+          ],
+          [
+            "100 m²",
+            "Kapalı alan"
+          ],
+          [
+            "04:00",
+            "Son şarkı"
+          ],
+          [
+            "7/7",
+            "Sunset'ten sabaha"
+          ],
+          [
+            "0",
+            "Yabancılık çekme ihtimali"
+          ],
+          [
+            "∞",
+            "Yeni tanışma"
+          ]
+        ],
+        "statsViz": [
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 11,
+            "cols": 8
+          },
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 5,
+            "cols": 8
+          },
+          {
+            "icon": "dark_mode",
+            "total": 11,
+            "fill": 11
+          },
+          {
+            "icon": "calendar_today",
+            "total": 7,
+            "fill": 7
+          },
+          {
+            "type": "meter",
+            "value": 0
+          },
+          {
+            "icon": "forum",
+            "total": 8,
+            "fill": 8,
+            "fade": true
+          }
+        ],
+        "contactTitle": "Adres ve iletişim",
+        "address": "İnişdibi, sahil yolu ile azmak arası, Akyaka, Ula / Muğla",
+        "instagram": "kulupakyaka",
+        "instagramCta": "Daha fazlası Instagram'da",
+        "outroTitle": "Sezon açılıyor. Yerini al!",
+        "outro": [
+          "Akşamüstü sahil dönüşü bir sunset birası, gece bahçede dans, sabaha karşı son şarkı. Akyaka'da gecenin nereye varacağını bilmiyorsan, Kulüp'ten başla.",
+          "Gerisi kendiliğinden gelir."
+        ],
+        "weekly": {
+          "day": "Her Cumartesi",
+          "weekday": 6,
+          "time": "22:30–01:00",
+          "title": "Berkan Cankurt Live",
+          "text": "Her cumartesi sahne Berkan Cankurt'un. Ağaçların altında, bahçede canlı performans; son şarkıdan sonra DJ devralır ve gece sabah 04:00'e kadar sürer."
+        },
+        "palette": {
+          "primary": "#FF3B2F",
+          "primaryDeep": "#B3120C",
+          "bg": "#140607",
+          "bg2": "#2A0B0C",
+          "cream": "#F4E4D0",
+          "accent": "#F4E4D0"
+        },
+        "media": {
+          "video": "landing/kulup/hero.mp4",
+          "poster": "landing/kulup/photo-1.jpg",
+          "heroLogo": "landing/kulup/logo-neon.png?v=2",
+          "photos": [
+            "landing/kulup/photo-1.jpg",
+            "landing/kulup/photo-2.jpg",
+            "landing/kulup/photo-3.jpg",
+            "landing/kulup/photo-4.jpg"
+          ]
+        },
+        "en": {
+          "kicker": "İnişdibi / Akyaka",
+          "title": "Akyaka's nights start in the garden.",
+          "subtitle": "Back from the beach, grab a sunset beer; the rest takes care of itself until 4 am.",
+          "description": [
+            "In İnişdibi, between the beach road and the river, a garden under the trees: Akyaka's warmest crowd is here.",
+            "A 240 m² raised garden full of trees plus 100 m² indoors. From DJ sets to pop, every kind of music plays; sprawl on a sofa or dive into the middle of the floor. The people you met on the beach by day meet you here in the evening, and new faces join by night. Closer, warmer and busier than its rivals. This season the whole place is being renewed."
+          ],
+          "featuresTitle": "What makes it Kulüp",
+          "features": [
+            [
+              "park",
+              "240 m² tree-filled garden"
+            ],
+            [
+              "weekend",
+              "Sofas to sprawl on"
+            ],
+            [
+              "nightlife",
+              "Party until 4 am"
+            ],
+            [
+              "headphones",
+              "From DJ sets to pop"
+            ],
+            [
+              "wb_twilight",
+              "Sunset beer after the beach"
+            ],
+            [
+              "payments",
+              "The best prices among its kind"
+            ],
+            [
+              "groups",
+              "Perfect for meeting new people"
+            ],
+            [
+              "auto_awesome",
+              "Fully renewed this season"
+            ]
+          ],
+          "statsTitle": "Kulüp in numbers",
+          "stats": [
+            [
+              "240 m²",
+              "Tree-filled garden"
+            ],
+            [
+              "100 m²",
+              "Indoor space"
+            ],
+            [
+              "04:00",
+              "Last song"
+            ],
+            [
+              "7/7",
+              "Sunset to sunrise"
+            ],
+            [
+              "0",
+              "Chance of feeling like a stranger"
+            ],
+            [
+              "∞",
+              "New people to meet"
+            ]
+          ],
+          "contactTitle": "Address and contact",
+          "outroTitle": "The season is opening. Take your spot!",
+          "outro": [
+            "A sunset beer after the beach, dancing in the garden at night, the last song before dawn. If you don't know where your night in Akyaka is headed, start at Kulüp.",
+            "The rest takes care of itself."
+          ],
+          "instagramCta": "More on Instagram",
+          "weekly": {
+            "day": "Every Saturday",
+            "title": "Berkan Cankurt Live",
+            "text": "Every Saturday the stage belongs to Berkan Cankurt. A live set in the garden under the trees; after the last song the DJ takes over and the night runs until 4 am."
+          }
+        }
+      }
     },
     {
       "id": "lemongrass-cafe",
