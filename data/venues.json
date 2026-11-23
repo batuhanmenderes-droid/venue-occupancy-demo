@@ -705,6 +705,11 @@
             "title": "Berkan Cankurt Live",
             "text": "Every Saturday the stage belongs to Berkan Cankurt. A live set in the garden under the trees; after the last song the DJ takes over and the night runs until 4 am."
           }
+        },
+        "plan": {
+          "kind": "garden",
+          "w": 20,
+          "d": 17
         }
       }
     },
@@ -969,7 +974,239 @@
         "tr": "Sabah yogası ve kahvesiyle Akçapınar'da bahçe kafe."
       },
       "sim_scale": 45,
-      "simulated": true
+      "simulated": true,
+      "view_switch": true,
+      "landing": {
+        "kicker": "Akçapınar / Akyaka",
+        "title": "Bir kahveden çok daha fazlası.",
+        "subtitle": "Sabah yogası, öğlen bir masa ve laptop, akşam sunset; hepsi Akçapınar'ın köşesinde, aynı topluluğun içinde.",
+        "description": [
+          "Akçapınar'ın eski köy kahvesinin yerinde, bir topluluğun içinde şekillendi: Lemongrass, rüzgârı beklerken herkesin buluştuğu yer.",
+          "Köşedeki 120 m² kahve alanında sabah kahveleri içilir, rüzgâr beklenir, yeni çevreler edinilir. Hemen yanındaki 150 m² alanda haftanın neredeyse her sabahı yoga yapılır; ders bitince aynı alan, bilgisayarını açıp çalışmak isteyenlerin sakin çalışma alanına dönüşür. Raflardaki butik ürünlerden fincandaki kahveye kadar her şey özenle seçilmiş. Akyaka'nın müdavimleri sezon boyu burada."
+        ],
+        "featuresTitle": "Mekân özellikleri",
+        "features": [
+          [
+            "coffee",
+            "Nitelikli kahve, özenle seçilmiş ürünler"
+          ],
+          [
+            "self_improvement",
+            "Neredeyse her sabah yoga"
+          ],
+          [
+            "laptop_mac",
+            "Gün boyu sakin çalışma alanı"
+          ],
+          [
+            "storefront",
+            "İçinde küçük bir butik"
+          ],
+          [
+            "wb_twilight",
+            "Akşamları sunset DJ partileri"
+          ],
+          [
+            "kitesurfing",
+            "Kite sahiline birkaç dakika"
+          ],
+          [
+            "groups",
+            "Kendi topluluğu olan bir mekân"
+          ],
+          [
+            "local_bar",
+            "Ruhsatlı; akşamları alkollü içki de var"
+          ]
+        ],
+        "statsTitle": "Rakamlarla Lemongrass",
+        "stats": [
+          [
+            "120 m²",
+            "Kahve ve sosyalleşme alanı"
+          ],
+          [
+            "150 m²",
+            "Yoga ve çalışma alanı"
+          ],
+          [
+            "6/7",
+            "Yogalı sabah"
+          ],
+          [
+            "1",
+            "Butik"
+          ],
+          [
+            "0",
+            "Yabancılık çekme ihtimali"
+          ],
+          [
+            "∞",
+            "Rüzgâr beklerken içilen kahve"
+          ]
+        ],
+        "statsViz": [
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 7,
+            "cols": 8
+          },
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 9,
+            "cols": 8
+          },
+          {
+            "icon": "self_improvement",
+            "total": 7,
+            "fill": 6
+          },
+          {
+            "icon": "storefront",
+            "total": 4,
+            "fill": 1
+          },
+          {
+            "type": "meter",
+            "value": 0
+          },
+          {
+            "icon": "coffee",
+            "total": 8,
+            "fill": 8,
+            "fade": true
+          }
+        ],
+        "plan": {
+          "kind": "cafe",
+          "w": 15,
+          "d": 18,
+          "sign": "Lemongrass"
+        },
+        "contactTitle": "Adres ve iletişim",
+        "address": "Akçapınar, Akyaka, Ula / Muğla",
+        "instagram": "lemongrasscommunity",
+        "instagramCta": "Topluluğu Instagram'da takip et",
+        "outroTitle": "Sabah kahven burada seni bekliyor.",
+        "outro": [
+          "İster matını sermek için gel, ister bilgisayarını açmak için, ister sadece rüzgârı beklemek için. Akçapınar'ın köşesinde bir fincan kahve ve tanıdık yüzler hep hazır.",
+          "Gerisi topluluğun işi."
+        ],
+        "weekly": {
+          "day": "Her Cuma",
+          "weekday": 5,
+          "time": "18:30–22:00",
+          "title": "Sunset DJ Partisi",
+          "text": "Gün batarken müzik yumuşar, Akçapınar'a altın bir ışık düşer. Her cuma akşamı sunset DJ setiyle kahveler yerini serin içkilere bırakır; günü topluluğun içinde, dans ederek kapatırsın."
+        },
+        "palette": {
+          "primary": "#6CC070",
+          "primaryDeep": "#3E8A44",
+          "bg": "#0F1A12",
+          "bg2": "#1B2C1F",
+          "cream": "#F4ECDD",
+          "accent": "#F0AE50",
+          "accent2": "#A796CC"
+        },
+        "media": {
+          "video": "landing/lemongrass/hero.mp4",
+          "poster": "landing/lemongrass/photo-1.jpg",
+          "photos": [
+            "landing/lemongrass/photo-1.jpg",
+            "landing/lemongrass/photo-2.jpg",
+            "landing/lemongrass/photo-3.jpg",
+            "landing/lemongrass/photo-4.jpg",
+            "landing/lemongrass/photo-5.jpg",
+            "landing/lemongrass/photo-6.jpg"
+          ]
+        },
+        "en": {
+          "kicker": "Akçapınar / Akyaka",
+          "title": "Much more than a coffee shop.",
+          "subtitle": "Morning yoga, a desk and a laptop by noon, a sunset in the evening; all on the corner of Akçapınar, inside the same community.",
+          "description": [
+            "Built where Akçapınar's old village coffee house once stood, and shaped by a community: Lemongrass is where everyone meets while waiting for the wind.",
+            "In the 120 m² café on the corner, morning coffees are drunk, the wind is waited for and new circles are made. In the 150 m² space next door there's yoga almost every morning; once class ends, the same room becomes a quiet workspace for anyone who wants to open a laptop. From the boutique shelves to the coffee in your cup, everything is chosen with care. Akyaka's regulars spend the whole season here."
+          ],
+          "featuresTitle": "What makes it Lemongrass",
+          "features": [
+            [
+              "coffee",
+              "Specialty coffee, carefully chosen goods"
+            ],
+            [
+              "self_improvement",
+              "Yoga almost every morning"
+            ],
+            [
+              "laptop_mac",
+              "A quiet workspace all day"
+            ],
+            [
+              "storefront",
+              "A small boutique inside"
+            ],
+            [
+              "wb_twilight",
+              "Sunset DJ parties in the evening"
+            ],
+            [
+              "kitesurfing",
+              "Minutes from the kite beach"
+            ],
+            [
+              "groups",
+              "A place with its own community"
+            ],
+            [
+              "local_bar",
+              "Licensed; drinks in the evening too"
+            ]
+          ],
+          "statsTitle": "Lemongrass in numbers",
+          "stats": [
+            [
+              "120 m²",
+              "Coffee and social space"
+            ],
+            [
+              "150 m²",
+              "Yoga and workspace"
+            ],
+            [
+              "6/7",
+              "Mornings with yoga"
+            ],
+            [
+              "1",
+              "Boutique"
+            ],
+            [
+              "0",
+              "Chance of feeling like a stranger"
+            ],
+            [
+              "∞",
+              "Coffees while waiting for the wind"
+            ]
+          ],
+          "contactTitle": "Address and contact",
+          "outroTitle": "Your morning coffee is waiting.",
+          "outro": [
+            "Come to roll out your mat, to open your laptop, or just to wait for the wind. On the corner of Akçapınar there's always a cup of coffee and a familiar face.",
+            "The community does the rest."
+          ],
+          "instagramCta": "Follow the community on Instagram",
+          "weekly": {
+            "day": "Every Friday",
+            "title": "Sunset DJ Party",
+            "text": "As the sun goes down the music softens and a golden light falls on Akçapınar. Every Friday evening a sunset DJ set swaps coffee for cold drinks; you close the day dancing with the community."
+          }
+        }
+      }
     },
     {
       "id": "kitebeach-akyaka",
