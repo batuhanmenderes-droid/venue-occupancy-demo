@@ -1,6 +1,6 @@
 // "Akyaka'daki kalabalığın payı" rebuilt from the app (venue.html renderShare): the same rounded ring
-// geometry, colours and data for Kulüp on 09.11.2026 16:00. Hover or tap a slice or a row to put it in
-// the centre; while the slide is idle the centre walks through the slices and comes back to Kulüp.
+// geometry, colours and data on 09.11.2026 16:00, centred on Poison Pub. Hover or tap a slice or a row to put
+// it in the centre; while the slide is idle the centre walks through the slices and comes back to Poison Pub.
 (function () {
   const card = document.getElementById('shareCard');
   if (!card) return;
@@ -8,9 +8,9 @@
   const L = 'assets/logos/';
   const VENUES = [
     { name: 'No22 Riders Inn', n: 344, logo: 'no22riders.png' },
-    { name: 'Kulüp', n: 287, logo: 'kulup.png', me: true },
+    { name: 'Kulüp', n: 287, logo: 'kulup.png' },
     { name: 'Dane Gökova', n: 230, logo: 'danegokova.png' },
-    { name: 'Poison Pub', n: 172, logo: 'poisonpub.png' },
+    { name: 'Poison Pub', n: 172, logo: 'poisonpub.png', me: true },
     { name: 'Kukla Pub', n: 139, logo: 'kukla.png' },
     { name: 'Back Loop', n: 135, logo: 'backloop.png' },
     { name: 'Edit.', n: 131, logo: 'edit.png' },
@@ -23,7 +23,7 @@
   const total = VENUES.reduce((a, v) => a + v.n, 0);
   const pct = (n) => Math.round(n / total * 100) + '%';
 
-  // Slices: Kulüp + the five busiest others, the rest as one grey slice (as in the app).
+  // Slices: Poison Pub + the five busiest others, the rest as one grey slice (as in the app).
   const me = VENUES.find((v) => v.me), others = VENUES.filter((v) => !v.me);
   let ci = 0;
   const slices = [me, ...others.slice(0, 5)].sort((a, b) => b.n - a.n)
@@ -60,7 +60,7 @@
     donut.appendChild(b);
   });
 
-  // List: every venue, busiest first; Kulüp highlighted.
+  // List: every venue, busiest first; Poison Pub highlighted.
   const list = card.querySelector('.sc-list');
   list.innerHTML = VENUES.slice().sort((x, y) => y.n - x.n).map((v, i) =>
     '<li class="sc-row' + (v.me ? ' me' : '') + '" data-name="' + v.name + '" style="--i:' + i + '">' +
@@ -99,7 +99,7 @@
   });
   card.addEventListener('mouseleave', () => { hovering = false; focus(meK); });
 
-  // Idle tour through the slices while the slide is on screen, ending back on Kulüp.
+  // Idle tour through the slices while the slide is on screen, ending back on Poison Pub.
   let timer = null, step = 0;
   const order = slices.map((_, k) => k).filter((k) => k !== meK);
   function tour() {

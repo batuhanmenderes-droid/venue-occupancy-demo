@@ -1,6 +1,6 @@
 // Slide 21: the live mobile app in a phone, walked through step by step (the deck's data-step 0–5).
 //  1 · pan the map to the user and point at "Buradasın" and the pictogram
-//  2 · point at Kulüp's POI and its label
+//  2 · point at Poison Pub's POI and its label
 //  3 · point at the filter button
 //  4 · point at the AI assistant (Öneriler)
 //  5 · Poison Pub's landing page (React app) slides in and scrolls slowly down it
@@ -32,8 +32,8 @@
   const targets = {
     1: () => [mapDoc.querySelector('.youmark'), ...Array.from(mapDoc.querySelectorAll('.you-label'))],
     2: () => {
-      const label = Array.from(mapDoc.querySelectorAll('.leaflet-tooltip')).find((t) => t.textContent.includes('Kulüp'));
-      const logo = Array.from(mapDoc.querySelectorAll('.leaflet-marker-icon')).find((m) => m.innerHTML.includes('kulup'));
+      const label = Array.from(mapDoc.querySelectorAll('.leaflet-tooltip')).find((t) => t.textContent.includes('Poison Pub'));
+      const logo = Array.from(mapDoc.querySelectorAll('.leaflet-marker-icon')).find((m) => m.innerHTML.includes('poisonpub'));
       return [label, logo];
     },
     3: () => [mapDoc.getElementById('filterBtn'), mapDoc.getElementById('filterPanel')],

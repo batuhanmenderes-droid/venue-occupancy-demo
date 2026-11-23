@@ -2,7 +2,7 @@
 //  map        – the heat map zoomed out over every venue, so all crowd levels show at once
 //  list-ent   – list view with only No22 Riders Inn, Kulüp, Dane, Edit, Poison Pub (in that order)
 //  list-food  – list view with only Lemongrass Cafe, Motto, Back Loop, Sepia, Chicken Loop
-//  detail-cal – Kulüp's venue page with the activity calendar tab open
+//  detail-cal – Poison Pub's venue page with the activity calendar tab open
 // A status bar sits above the app so the phone's island never covers it. Embeds load when the deck is
 // near their slide and do not take pointer input, so scrolling keeps moving the deck.
 (function () {
@@ -15,7 +15,7 @@
     'map': '../index.html?lang=tr#harita',
     'list-ent': '../index.html?lang=tr#liste',
     'list-food': '../index.html?lang=tr#liste',
-    'detail-cal': '../venue.html?mekan=kulup&lang=tr&tab=calendar',
+    'detail-cal': '{app}?mekan=poison-pub&lang=tr&tab=calendar',
   };
   const norm = (s) => (s || '').normalize('NFC').toLocaleLowerCase('tr').replace(/[^a-zçğıöşü0-9]/g, '');
   const slides = Array.from(document.querySelectorAll('.slide'));

@@ -90,7 +90,7 @@
 
     loadAppFrame(frame, box.dataset.src, (win, doc) => {
       const st = doc.createElement('style');
-      st.textContent = '#kitties{display:none!important}html{scrollbar-width:none}::-webkit-scrollbar{display:none}' + (mode === 'card' ? '.langswitch{display:none!important}' : '');
+      st.textContent = '#kitties{display:none!important}html{scrollbar-width:none}::-webkit-scrollbar{display:none}' + (mode === 'card' ? '.langswitch,.viewswitch,.va-fab,.va-panel{display:none!important}.vhead,.vtabs{position:static!important}' : '');
       doc.head.appendChild(st);
       forward(win, doc, mode);
       if (box.dataset.sort === 'events-desc') sortEvents(win, doc);
