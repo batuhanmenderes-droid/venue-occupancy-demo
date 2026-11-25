@@ -1,4 +1,4 @@
-import{r as va,j as fa}from"./react-C8ZyTkrN.js";import{r as dt,L as Be,t as M,x as Vt,E as ea,n as ya,F as at,h as Me,G as ta,H as ba,I as wt,S as aa,J as sa,k as Ut,l as _t,K as na,m as Pt,M as xa,N as oa,O as ka,Q as wa,T as Ma,V as Sa,W as ia,X as jt,Z as ra,_ as Ve,$ as La,a0 as Kt,a1 as Qt,a2 as Ca,a3 as Ta}from"./index-BxRIAmH4.js";const Aa=`
+import{r as va,j as fa}from"./react-C8ZyTkrN.js";import{r as dt,L as Be,t as M,x as Vt,E as ea,n as ya,F as at,h as Me,G as ta,H as ba,I as wt,S as aa,J as sa,k as Ut,l as _t,K as na,m as Pt,M as xa,N as oa,O as ka,Q as wa,T as Ma,V as Sa,W as ia,X as jt,Z as ra,_ as Ve,$ as La,a0 as Kt,a1 as Qt,a2 as Ca,a3 as Ta}from"./index-C0ZQ_AHh.js";const Aa=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -97,7 +97,7 @@ import{r as va,j as fa}from"./react-C8ZyTkrN.js";import{r as dt,L as Be,t as M,x
     <div class="pos-heading"><div><div class="pos-eyebrow">${y("BUSINESS ANALYTICS","İŞLETME ANALİTİĞİ")}</div><h2>${y("Sales & crowd performance","Satış ve kalabalık performansı")}</h2></div><span class="pill">${y("DEMO DATA","DEMO VERİ")}</span></div>
     <p class="hint">${y("Synthetic alcoholic beverage POS sales and estimated unique guests. Not actual camera or financial records.","Sentetik alkollü içecek POS satışları ve tahmini tekil misafirler. Gerçek kamera veya finans kayıtları değildir.")}</p>
     <section class="tiles">
-      ${mt(y("Net sales · May–Oct","Net ciro · Mayıs–Ekim"),$t(ie(We).replace(" ₺",""),"₺"),`${gt(Lt(We,St))}${Ye(`${y("This month","Bu ay")} · ${se(Dt.month)} ${ie(Dt.netSales)}`)}${Ye(Ee)}${Ye(`${y("Up from","Önceki dönem")} ${ie(St)}`)}`,Tt(Re.slice(-3).map($=>({v:$.netSales,label:se($.month),txt:vt($.netSales)})))," has-bars stacked")}
+      ${mt(y("Season net sales","Sezonluk net ciro"),$t(ie(We).replace(" ₺",""),"₺"),`${gt(Lt(We,St))}${Ye(`${y("This month","Bu ay")} · ${se(Dt.month)} ${ie(Dt.netSales)}`)}${Ye(Ee)}${Ye(`${y("Up from","Önceki dönem")} ${ie(St)}`)}`,Tt(Re.slice(-3).map($=>({v:$.netSales,label:se($.month),txt:vt($.netSales)})))," has-bars stacked")}
       ${mt(y("Guest conversion","Satışa dönüşüm"),$t((100*pe/r).toLocaleString(f,{maximumFractionDigits:1}),"%"),`${gt(`${y("from","önceki")} ${me(Ot)}`)}${Ye(`${ce(pe)} / ${ce(r)} ${y("guests","misafir")}`)}${Ye(Ee)}`,Ft(pe/r)," has-ring stacked")}
       ${mt(y("Revenue per guest","Misafir başı gelir"),$t(ce(We/r),"₺"),`${gt(`${y("from","önceki")} ${oe(ut)}`)}${Ye(`${Lt(We/r,ut)} · ${Ee}`)}${Ye(y("Net sales / estimated guests","Net ciro / tahmini misafir"))}`,Tt(At.map($=>({v:$.revenuePerVisitor,label:se($.month),txt:ce($.revenuePerVisitor)})))," has-bars stacked")}
     </section>
