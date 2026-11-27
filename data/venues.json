@@ -400,7 +400,7 @@
       "sim_scale": 70,
       "simulated": true,
       "landing": {
-        "title": "Entertainment is our territory.",
+        "title": "Eğlence bizim işimiz.",
         "subtitle": "Akyaka’da gece kulübü, canlı müzik ve DJ performansları. Bahçe, iyi yemek ve butik otel aynı adreste.",
         "kicker": "No22 Riders’ Inn / Akyaka geceleri",
         "description": [
@@ -443,31 +443,11 @@
             "Kitesurfçülerin uğrak mekânı"
           ]
         ],
-        "statsTitle": "Bir mekândan fazlası",
+        "statsTitle": "Rakamlarla No22",
         "stats": [
           [
             "14",
             "Butik otel odası"
-          ],
-          [
-            "3",
-            "Gece kulübü, restoran ve otel"
-          ],
-          [
-            "1",
-            "Bahçeden sahneye tek adres"
-          ],
-          [
-            "Akyaka",
-            "Gece hayatının tam ortasında"
-          ],
-          [
-            "∞",
-            "Bahçede başlayan sohbet"
-          ],
-          [
-            "Gece",
-            "Sahne ve DJ ritmi"
           ]
         ],
         "statsViz": [
@@ -475,32 +455,6 @@
             "icon": "hotel",
             "total": 14,
             "fill": 14
-          },
-          {
-            "icon": "storefront",
-            "total": 3,
-            "fill": 3
-          },
-          {
-            "icon": "nightlife",
-            "total": 1,
-            "fill": 1
-          },
-          {
-            "icon": "location_on",
-            "total": 1,
-            "fill": 1
-          },
-          {
-            "icon": "forum",
-            "total": 8,
-            "fill": 8,
-            "fade": true
-          },
-          {
-            "icon": "music_note",
-            "total": 6,
-            "fill": 6
           }
         ],
         "contactTitle": "Adres, rezervasyon ve iletişim",
@@ -582,31 +536,11 @@
               "A favourite hangout for kitesurfers"
             ]
           ],
-          "statsTitle": "More than one destination",
+          "statsTitle": "No22 in numbers",
           "stats": [
             [
               "14",
               "Boutique hotel rooms"
-            ],
-            [
-              "3",
-              "Nightclub, restaurant and hotel"
-            ],
-            [
-              "1",
-              "From garden to stage, one address"
-            ],
-            [
-              "Akyaka",
-              "In the heart of the nightlife"
-            ],
-            [
-              "∞",
-              "Conversations in the garden"
-            ],
-            [
-              "Night",
-              "Live performances and DJ sets"
             ]
           ],
           "contactTitle": "Address, reservations and contact",
@@ -1597,19 +1531,19 @@
       },
       "beach_peak": 140,
       "landing": {
-        "title": "Kitesurf, doğa ve müzik.",
-        "subtitle": "Türkiye’nin en iyi kitesurf noktasında unutulmaz bir deneyim yaşayın. Profesyonel eğitmenler, mükemmel rüzgâr ve eşsiz doğa sizi bekliyor.",
+        "title": "Kitesörf, doğa ve müzik.",
+        "subtitle": "Türkiye’nin en iyi kitesörf noktasında unutulmaz bir deneyim yaşayın. Profesyonel eğitmenler, mükemmel rüzgâr ve eşsiz doğa sizi bekliyor.",
         "kicker": "Gökova Körfezi / Akyaka",
         "description": [
           "Nehir kıyısında dinlenmek, denizde spor yapmak: Kite Beach Akyaka.",
-          "Kitebeach; kitesurf, yoga ve gün batımında müziği, butik konaklama ve Ege mutfağıyla bir araya getirir. Nehir kenarında güne başlayabilir, plajda vakit geçirebilir ve akşamı Sunset DJ Party ile devam ettirebilirsiniz.",
+          "Kitebeach; kitesörf, yoga ve gün batımında müziği, butik konaklama ve Ege mutfağıyla bir araya getirir. Nehir kenarında güne başlayabilir, plajda vakit geçirebilir ve akşamı gün batımında DJ partisi ile devam ettirebilirsiniz.",
           "Restoranda yerel lezzetler ve Ege mutfağı; konaklamada ise doğaya yakın bir Akyaka deneyimi öne çıkar. Aktivite seçenekleri ve özel paketler hakkında ekipten bilgi alabilirsiniz."
         ],
         "featuresTitle": "Kıyıda geçen bir gün",
         "features": [
           [
             "kitesurfing",
-            "Kitesurf deneyimi"
+            "Kitesörf deneyimi"
           ],
           [
             "waves",
@@ -1621,7 +1555,7 @@
           ],
           [
             "kayaking",
-            "SUP & su aktiviteleri"
+            "Kürek sörfü ve su aktiviteleri"
           ],
           [
             "restaurant",
@@ -1629,7 +1563,7 @@
           ],
           [
             "local_bar",
-            "Lounge & bar"
+            "Dinlenme alanı ve bar"
           ],
           [
             "music_note",
@@ -1640,76 +1574,18 @@
             "Butik konaklama"
           ]
         ],
-        "statsTitle": "Günün farklı ritimleri",
-        "stats": [
-          [
-            "Gökova",
-            "Rüzgârla buluşma noktası"
-          ],
-          [
-            "Azmak",
-            "Nehir kıyısında molalar"
-          ],
-          [
-            "Kite",
-            "Günün sportif ritmi"
-          ],
-          [
-            "Yoga",
-            "Daha sakin bir başlangıç"
-          ],
-          [
-            "SUP",
-            "Su üstünde keşif"
-          ],
-          [
-            "Sunset",
-            "Gün batımında müzik"
-          ]
-        ],
-        "statsViz": [
-          {
-            "icon": "waves",
-            "total": 6,
-            "fill": 6
-          },
-          {
-            "icon": "water",
-            "total": 5,
-            "fill": 5
-          },
-          {
-            "icon": "kitesurfing",
-            "total": 4,
-            "fill": 4
-          },
-          {
-            "icon": "self_improvement",
-            "total": 3,
-            "fill": 3
-          },
-          {
-            "icon": "kayaking",
-            "total": 3,
-            "fill": 3
-          },
-          {
-            "icon": "music_note",
-            "total": 5,
-            "fill": 5
-          }
-        ],
+        "stats": [],
         "contactTitle": "Kıyıda buluşalım",
         "address": "Akçapınar Mevkii, Akyaka / Ula / Muğla",
         "phone": "+90 544 504 03 10",
         "website": "https://kitebeachakyaka.com.tr/tr",
         "outroTitle": "Kite Beach Akyaka’yı keşfedin.",
         "outro": [
-          "Kitesurf, yoga, gün batımı etkinlikleri, restoran ve butik konaklama. Özel paketler, güncel program ve rezervasyon için bize ulaşın."
+          "Kitesörf, yoga, gün batımı etkinlikleri, restoran ve butik konaklama. Özel paketler, güncel program ve rezervasyon için bize ulaşın."
         ],
         "program": {
           "label": "Gün batımı & müzik",
-          "title": "Sunset DJ Party",
+          "title": "Gün batımında DJ partisi",
           "text": "Ege manzarası eşliğinde gün batımı ve DJ performansları. Güncel etkinlik tarihlerini ve programı Kitebeach ekibinden öğrenebilirsiniz."
         },
         "palette": {
@@ -1777,33 +1653,7 @@
               "Boutique stays"
             ]
           ],
-          "statsTitle": "The rhythms of the day",
-          "stats": [
-            [
-              "Gökova",
-              "A meeting point for wind lovers"
-            ],
-            [
-              "Azmak",
-              "Time out by the river"
-            ],
-            [
-              "Kite",
-              "The active side of the day"
-            ],
-            [
-              "Yoga",
-              "A slower start"
-            ],
-            [
-              "SUP",
-              "Explore on the water"
-            ],
-            [
-              "Sunset",
-              "Music as the sun goes down"
-            ]
-          ],
+          "stats": [],
           "contactTitle": "Meet by the shore",
           "outroTitle": "Discover Kite Beach Akyaka.",
           "outro": [
@@ -1844,24 +1694,24 @@
         },
         "sections": [
           {
-            "title": "Kitesurf, Yoga Wellness, Sunset DJ Party",
+            "title": "Kitesörf, yoga ve gün batımında müzik",
             "paragraphs": [
               "Rüzgârı, nehri ve gün batımını farklı deneyimlerle keşfedin. Aktivite saatleri, uygunluk ve özel paketler için Kitebeach ekibine ulaşabilirsiniz."
             ],
             "items": [
               {
                 "icon": "kitesurfing",
-                "title": "Kitesurf",
-                "text": "Akyaka’nın rüzgârında profesyonel eğitmenlerin rehberliğinde kitesurf ile tanışın ya da su üzerindeki deneyiminizi geliştirin."
+                "title": "Kitesörf",
+                "text": "Akyaka’nın rüzgârında profesyonel eğitmenlerin rehberliğinde kitesörf ile tanışın ya da su üzerindeki deneyiminizi geliştirin."
               },
               {
                 "icon": "self_improvement",
-                "title": "Yoga Wellness",
+                "title": "Yoga ve iyi yaşam",
                 "text": "Nehir kıyısında sabah yogasıyla güne başlayın veya gün batımı seansında dinlenmeye zaman ayırın."
               },
               {
                 "icon": "music_note",
-                "title": "Sunset DJ Party",
+                "title": "Gün batımında DJ partisi",
                 "text": "Ege manzarası eşliğinde gün batımını DJ müziğiyle karşılayın. Güncel programı mekândan öğrenebilirsiniz."
               }
             ],
