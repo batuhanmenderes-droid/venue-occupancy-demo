@@ -1,4 +1,4 @@
-import{r as ja,j as qa}from"./react-C8ZyTkrN.js";import{r as $t,L as Ne,t as w,x as ca,E as xa,n as Na,g as Se,F as ht,G as da,H as Ia,I as Ht,S as wa,J as Qt,m as pa,l as Rt,K as ka,p as Zt,M as Wa,N as Ma,O as za,Q as Ga,T as Ua,V as Ya,W as ua,X as Jt,Z as Sa,_ as Ze,$ as Va,a0 as ma,a1 as ha,a2 as Ka,a3 as Qa}from"./index-BtNX9CFb.js";const Za=`
+import{r as ja,j as qa}from"./react-C8ZyTkrN.js";import{r as $t,L as Ne,t as w,x as ca,E as xa,n as Na,g as Se,F as ht,G as da,H as Ia,I as Ht,S as wa,J as Qt,m as pa,l as Rt,K as ka,p as Zt,M as Wa,N as Ma,O as za,Q as Ga,T as Ua,V as Ya,W as ua,X as Jt,Z as Sa,_ as Ze,$ as Va,a0 as ma,a1 as ha,a2 as Ka,a3 as Qa}from"./index-DRiRlHNG.js";const Za=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -14,15 +14,14 @@ import{r as ja,j as qa}from"./react-C8ZyTkrN.js";import{r as $t,L as Ne,t as w,x
       <a class="directions" id="directions" hidden><span class="msym dir-ic" aria-hidden="true">turn_right</span><span class="msym dir-map" aria-hidden="true">map</span><span data-i18n="getDirections">Get directions</span></a>
     </div>
     <p class="sub" id="subtitle" hidden></p>
+    <nav class="vtabs" role="tablist">
+      <button role="tab" data-vtab="landing" data-i18n="tabLanding" hidden>Home</button>
+      <button role="tab" data-vtab="calendar" data-i18n="tabCalendar">Activity</button>
+      <button role="tab" data-vtab="density" data-i18n="tabDensity">Overview</button>
+      <button role="tab" data-vtab="menu" data-i18n="tabMenu">Menu</button>
+      <button role="tab" data-vtab="website" data-i18n="tabWebsite">Website</button>
+    </nav>
   </header>
-
-  <nav class="vtabs" role="tablist">
-    <button role="tab" data-vtab="landing" data-i18n="tabLanding" hidden>Home</button>
-    <button role="tab" data-vtab="calendar" data-i18n="tabCalendar">Activity</button>
-    <button role="tab" data-vtab="density" data-i18n="tabDensity">Overview</button>
-    <button role="tab" data-vtab="menu" data-i18n="tabMenu">Menu</button>
-    <button role="tab" data-vtab="website" data-i18n="tabWebsite">Website</button>
-  </nav>
 
   <section id="tab-density" role="tabpanel">
     <section class="tiles" id="tiles"></section>
