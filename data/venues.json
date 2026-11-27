@@ -394,79 +394,80 @@
       "logo_scale": 1,
       "events": [],
       "blurb": {
-        "tr": "Akyaka’da spor, mutfak, canlı müzik ve konaklama.",
-        "en": "Sport, food, live music and stays in Akyaka."
+        "tr": "Akyaka’da büyük gece kulübü, bahçe, mutfak ve butik otel.",
+        "en": "A major Akyaka nightclub, garden, kitchen and boutique hotel."
       },
       "sim_scale": 70,
       "simulated": true,
       "landing": {
-        "title": "Gündüz rüzgâr. Gece müzik.",
-        "subtitle": "Akyaka’da sporun, mutfağın ve sahnenin buluştuğu yer.",
-        "kicker": "No22 Riders’ Inn / Akyaka",
+        "title": "Akyaka gecelerinin büyük sahnesi.",
+        "subtitle": "Büyük bir gece kulübü. Bahçe, mutfak ve otel aynı adreste.",
+        "kicker": "No22 Riders’ Inn / Akyaka geceleri",
         "description": [
-          "Gökova’da rüzgârı takip edenlerin, iyi yemek ve müzik için buluşanların ortak adresi: No22 Riders’ Inn.",
-          "Güne açık havada başlayıp #Momomeets22 mutfağında bir mola verebilir, akşamı canlı müzik ve DJ performanslarıyla uzatabilirsin. Otel, restoran ve sahne aynı yerde; Akyaka’nın merkezinde günün ritmi değişir, buluşma noktası aynı kalır."
+          "Akyaka’da gece denince yolların kesiştiği büyük buluşma noktası: No22 Riders’ Inn.",
+          "Bahçede başlayan sohbet, mutfaktan gelen bir tabak ve barda verilen bir mola… Sonra sahne açılır, DJ kabini devralır ve gecenin ritmi yükselir. No22 her şeyden önce bir gece kulübü; restoranı, bahçesi ve butik oteliyle aynı adreste daha fazlasını bir araya getirir.",
+          "Kitesurfçülerin gün sonunda uğradığı, arkadaş gruplarının bahçede buluştuğu No22’de tanıdık yüzlere yenileri eklenir. İyi yemek, muhabbet ve müzik aynı gecede yan yana gelir."
         ],
-        "featuresTitle": "No22’de bir gün",
+        "featuresTitle": "No22’de geceye karış",
         "features": [
           [
-            "kitesurfing",
-            "Gökova’da kiteboard kültürü"
+            "nightlife",
+            "Büyük gece kulübü"
+          ],
+          [
+            "music_note",
+            "Canlı müzik ve DJ performansları"
+          ],
+          [
+            "park",
+            "Bahçede buluşma"
           ],
           [
             "restaurant",
             "Momomeets22 mutfağı"
           ],
           [
-            "music_note",
-            "Canlı müzik ve DJ setleri"
+            "local_bar",
+            "Bar ve kokteyller"
           ],
           [
             "hotel",
-            "Merkezde butik konaklama"
-          ],
-          [
-            "kayaking",
-            "Kano ve SUP aktiviteleri"
-          ],
-          [
-            "directions_bike",
-            "Bisiklet ve açık hava rotaları"
-          ],
-          [
-            "self_improvement",
-            "Yoga ve hareket"
+            "Butik otel"
           ],
           [
             "groups",
-            "Rider topluluğuyla buluşma"
+            "Akyaka gecelerinin buluşma noktası"
+          ],
+          [
+            "surfing",
+            "Kitesurfçülerin uğrak mekânı"
           ]
         ],
-        "statsTitle": "No22’yi yakından tanı",
+        "statsTitle": "Bir mekândan fazlası",
         "stats": [
           [
             "14",
-            "Konaklama odası"
-          ],
-          [
-            "9 saat",
-            "Başlangıç kiteboard kursu"
-          ],
-          [
-            "2",
-            "Kültürün odağı: spor ve eğlence"
+            "Butik otel odası"
           ],
           [
             "3",
-            "Otel, restoran ve bar"
+            "Gece kulübü, restoran ve otel"
           ],
           [
-            "Gökova",
-            "Su sporlarının buluşma noktası"
+            "1",
+            "Bahçeden sahneye tek adres"
           ],
           [
             "Akyaka",
-            "Merkezde bir yaşam alanı"
+            "Gece hayatının tam ortasında"
+          ],
+          [
+            "∞",
+            "Bahçede başlayan sohbet"
+          ],
+          [
+            "Gece",
+            "Sahne ve DJ ritmi"
           ]
         ],
         "statsViz": [
@@ -476,29 +477,30 @@
             "fill": 14
           },
           {
-            "icon": "schedule",
-            "total": 9,
-            "fill": 9
-          },
-          {
-            "icon": "bolt",
-            "total": 2,
-            "fill": 2
-          },
-          {
             "icon": "storefront",
             "total": 3,
             "fill": 3
           },
           {
-            "icon": "waves",
-            "total": 4,
-            "fill": 4
+            "icon": "nightlife",
+            "total": 1,
+            "fill": 1
           },
           {
             "icon": "location_on",
             "total": 1,
             "fill": 1
+          },
+          {
+            "icon": "forum",
+            "total": 8,
+            "fill": 8,
+            "fade": true
+          },
+          {
+            "icon": "music_note",
+            "total": 6,
+            "fill": 6
           }
         ],
         "contactTitle": "Adres, rezervasyon ve iletişim",
@@ -507,25 +509,25 @@
         "email": "hello@no22ridersinn.com",
         "website": "https://no22ridersinn.com/home/",
         "instagram": "no22ridersinn",
-        "outroTitle": "Rüzgârdan sahneye, aynı adreste.",
+        "outroTitle": "Buluşma bahçede. Gece No22’de.",
         "outro": [
-          "Su sporları, iyi yemek ve müzik için Akyaka’da bir buluşma noktası arıyorsan No22’ye uğra. Konaklama, aktiviteler ve güncel program için doğrudan ekiple iletişime geç."
+          "Akşam yemeği için gel, bahçede arkadaşlarınla buluş, sahnenin önünde geceye karış. Akyaka’da büyük bir geceyi aynı adreste yaşamak için No22’ye uğra."
         ],
         "program": {
           "label": "Sahne & müzik",
-          "title": "Günün son seti sahnede.",
-          "text": "No22’nin yaz sezonu programında canlı müzik ve DJ performansları yer alıyor. Resmî site, cuma ve cumartesi gecelerini DJ setleriyle; diğer akşamları canlı performanslarla anlatıyor. Tarihler ve rezervasyon için güncel Instagram duyurularını kontrol et."
+          "title": "Bahçe dolar. Sahne açılır.",
+          "text": "No22’nin yaz geceleri canlı müzik ve DJ performanslarıyla hareketlenir. Cuma ve cumartesi DJ setleri öne çıkarken diğer akşamlarda canlı performanslar sahneyi doldurur. Güncel program ve rezervasyon bilgisi için Instagram duyurularını takip et."
         },
         "palette": {
-          "primary": "#EF5A4F",
-          "primaryDeep": "#A9121A",
-          "bg": "#151519",
-          "bg2": "#2A1B23",
-          "cream": "#F6EDE0",
-          "accent": "#46BFB3"
+          "primary": "#F5F5F5",
+          "primaryDeep": "#A3A3A3",
+          "bg": "#080808",
+          "bg2": "#191919",
+          "cream": "#F2F2F2",
+          "accent": "#DF3535",
+          "veil": "#000000"
         },
         "media": {
-          "heroLogo": "landing/no22/logo.png",
           "poster": "landing/no22/photo-1.jpg",
           "photos": [
             "landing/no22/photo-1.jpg",
@@ -537,84 +539,85 @@
           ]
         },
         "en": {
-          "title": "Wind by day. Music by night.",
-          "subtitle": "Akyaka’s meeting point for sport, food and the stage.",
-          "kicker": "No22 Riders’ Inn / Akyaka",
+          "title": "Akyaka’s big night out.",
+          "subtitle": "A major nightclub. A garden, kitchen and hotel at one address.",
+          "kicker": "No22 Riders’ Inn / Akyaka nights",
           "description": [
-            "A meeting point in Gökova for riders chasing the wind and friends gathering for food and music: No22 Riders’ Inn.",
-            "Start outdoors, take a break at the #Momomeets22 kitchen and stay for live music or a DJ set. A hotel, restaurant and stage share one address in central Akyaka; the rhythm changes throughout the day, while the meeting point stays the same."
+            "A major meeting point where Akyaka’s nights come together: No22 Riders’ Inn.",
+            "A conversation in the garden, a plate from the kitchen and a pause at the bar… Then the stage opens, the DJ takes over and the night finds its rhythm. No22 is first and foremost a nightclub, with a restaurant, garden and boutique hotel sharing the same address.",
+            "Kitesurfers also make No22 their end-of-day hangout. The connection here is the community: familiar faces, food and a night together."
           ],
-          "featuresTitle": "A day at No22",
+          "featuresTitle": "Step into the No22 night",
           "features": [
             [
-              "kitesurfing",
-              "Gökova’s kiteboarding culture"
+              "nightlife",
+              "A major nightclub"
+            ],
+            [
+              "music_note",
+              "Live music and DJ performances"
+            ],
+            [
+              "park",
+              "Meet in the garden"
             ],
             [
               "restaurant",
               "Momomeets22 kitchen"
             ],
             [
-              "music_note",
-              "Live music and DJ sets"
+              "local_bar",
+              "Bar and cocktails"
             ],
             [
               "hotel",
-              "Boutique stays in town"
-            ],
-            [
-              "kayaking",
-              "Kayaking and SUP activities"
-            ],
-            [
-              "directions_bike",
-              "Cycling and outdoor routes"
-            ],
-            [
-              "self_improvement",
-              "Yoga and movement"
+              "Boutique hotel"
             ],
             [
               "groups",
-              "Meet the rider community"
+              "A meeting point for Akyaka nights"
+            ],
+            [
+              "surfing",
+              "A favourite hangout for kitesurfers"
             ]
           ],
-          "statsTitle": "Get to know No22",
+          "statsTitle": "More than one destination",
           "stats": [
             [
               "14",
-              "Guest rooms"
-            ],
-            [
-              "9 hours",
-              "Beginner kiteboarding course"
-            ],
-            [
-              "2",
-              "Cultural pillars: sport and entertainment"
+              "Boutique hotel rooms"
             ],
             [
               "3",
-              "Hotel, restaurant and bar"
+              "Nightclub, restaurant and hotel"
             ],
             [
-              "Gökova",
-              "A meeting point for water sports"
+              "1",
+              "From garden to stage, one address"
             ],
             [
               "Akyaka",
-              "A habitat in the town centre"
+              "In the heart of the nightlife"
+            ],
+            [
+              "∞",
+              "Conversations in the garden"
+            ],
+            [
+              "Night",
+              "Live performances and DJ sets"
             ]
           ],
           "contactTitle": "Address, reservations and contact",
           "program": {
             "label": "Stage & music",
-            "title": "The day’s last set is on stage.",
-            "text": "No22’s summer season brings live music and DJ performances. Its official site describes DJ sets on Friday and Saturday nights, with live performances on other evenings. Check the latest Instagram announcements for dates and reservations."
+            "title": "The garden fills. The stage opens.",
+            "text": "No22’s summer nights bring live music and DJ performances. Friday and Saturday lean into DJ sets, while other evenings bring live acts to the stage. Follow the latest Instagram announcements for the current programme and reservations."
           },
-          "outroTitle": "From the wind to the stage.",
+          "outroTitle": "Meet in the garden. Stay for the night.",
           "outro": [
-            "Drop into No22 for outdoor activities, food and music in Akyaka. Contact the team directly about accommodation, activities and the current programme."
+            "Come for dinner, meet your friends in the garden and join the crowd by the stage. For a big night out in Akyaka, meet at No22."
           ]
         }
       },
