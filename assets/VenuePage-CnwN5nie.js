@@ -1,4 +1,4 @@
-import{r as Pa,j as Oa}from"./react-C8ZyTkrN.js";import{r as gt,L as Ne,t as k,x as ia,E as ya,n as _a,g as Te,F as vt,G as la,H as ja,I as Ht,S as ba,J as ca,m as da,l as Qt,K as xa,p as Zt,M as qa,N as ka,O as Na,Q as Ia,T as Wa,V as za,W as pa,X as Jt,Z as wa,_ as Qe,$ as Ga,a0 as ua,a1 as ha,a2 as Ua,a3 as Va}from"./index-CM7E9ckS.js";const Ya=`
+import{r as Pa,j as Oa}from"./react-C8ZyTkrN.js";import{r as gt,L as Ne,t as k,x as ia,E as ya,n as _a,g as Te,F as vt,G as la,H as ja,I as Ht,S as ba,J as ca,m as da,l as Qt,K as xa,p as Zt,M as qa,N as ka,O as Na,Q as Ia,T as Wa,V as za,W as pa,X as Jt,Z as wa,_ as Qe,$ as Ga,a0 as ua,a1 as ha,a2 as Ua,a3 as Va}from"./index-CxHgZJgI.js";const Ya=`
   <header class="vhead">
     <a class="back" href="./" data-i18n="back">‹ Venues</a>
     <div class="vtitle">
@@ -11,15 +11,15 @@ import{r as Pa,j as Oa}from"./react-C8ZyTkrN.js";import{r as gt,L as Ne,t as k,x
         <p class="vupdated" id="updated" hidden></p>
         <p class="vhours" id="about"></p>
       </div>
-      <a class="directions" id="directions" hidden><span class="msym dir-ic" aria-hidden="true">turn_right</span><span data-i18n="getDirections">Get directions</span></a>
+      <a class="directions" id="directions" hidden><span class="msym dir-ic" aria-hidden="true">turn_right</span><span class="msym dir-map" aria-hidden="true">map</span><span data-i18n="getDirections">Get directions</span></a>
     </div>
     <p class="sub" id="subtitle" hidden></p>
   </header>
 
   <nav class="vtabs" role="tablist">
-    <button role="tab" data-vtab="landing" data-i18n="tabLanding" hidden>Overview</button>
-    <button role="tab" data-vtab="density" data-i18n="tabDensity">Density</button>
-    <button role="tab" data-vtab="calendar" data-i18n="tabCalendar">Activity calendar</button>
+    <button role="tab" data-vtab="landing" data-i18n="tabLanding" hidden>Home</button>
+    <button role="tab" data-vtab="calendar" data-i18n="tabCalendar">Activity</button>
+    <button role="tab" data-vtab="density" data-i18n="tabDensity">Overview</button>
     <button role="tab" data-vtab="menu" data-i18n="tabMenu">Menu</button>
     <button role="tab" data-vtab="website" data-i18n="tabWebsite">Website</button>
   </nav>
