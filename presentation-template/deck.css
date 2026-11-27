@@ -1630,19 +1630,3 @@ body {
 .roof-grid .msi { display: grid; place-items: center; flex: none; width: 40px; height: 40px; border-radius: 12px; background: rgba(31, 107, 255, .16); color: var(--calm-2); font-size: 24px; }
 .slide--roof .split-copy > .roof-grid + .callout { margin-top: 8px; }
 .slide--roof .callout { grid-template-columns: 44px minmax(0, 1fr); }
-
-/* Current app's map composer and venue conversation, in the deck's existing dark palette. */
-.slide--social-demo .social-demo-copy { position:absolute;left:120px;top:100px;width:770px; }
-.social-demo-copy .display { font-size:88px;line-height:1.03;letter-spacing:-4px;margin:32px 0; }
-.social-demo-lead { font:500 29px/1.5 'Manrope',sans-serif;color:var(--muted,#aaaab6);max-width:700px; }
-.social-demo-steps { list-style:none;counter-reset:social;display:grid;gap:30px;padding:0;margin:46px 0 0; }
-.social-demo-steps li { counter-increment:social;position:relative;padding-left:55px; }
-.social-demo-steps li::before { content:'0' counter(social);position:absolute;left:0;top:3px;color:#FFB400;font:700 22px 'Manrope',sans-serif; }
-.social-demo-steps b { display:block;font:700 27px/1.2 'Manrope',sans-serif;margin-bottom:10px; }
-.social-demo-steps span { display:block;font:500 22px/1.5 'Manrope',sans-serif;color:#aaaab6;max-width:650px; }
-.social-demo-phones { position:absolute;right:100px;top:112px;display:flex;gap:30px;align-items:center; }
-.social-demo-phones figure { margin:0;width:360px; }
-.social-demo-phones figure:nth-child(2) { transform:translateY(50px); }
-.social-demo-phones img { width:360px;height:auto;display:block;border:7px solid #28282d;border-radius:35px;box-shadow:0 30px 65px #0008; }
-.social-demo-phones figcaption { text-align:center;font:600 20px 'Manrope',sans-serif;margin-top:20px;color:#aaaab6; }
-.social-demo-note { position:absolute;left:120px;bottom:45px;font:500 17px 'Manrope',sans-serif;color:#858590; }
