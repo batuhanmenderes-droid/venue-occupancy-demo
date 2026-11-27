@@ -479,7 +479,8 @@
           "bg2": "#191919",
           "cream": "#F2F2F2",
           "accent": "#DF3535",
-          "veil": "#000000"
+          "veil": "#000000",
+          "onAccent": "#FFFFFF"
         },
         "media": {
           "poster": "landing/no22/photo-1.jpg",
