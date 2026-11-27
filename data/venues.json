@@ -381,7 +381,7 @@
         "lat": 37.0514953,
         "lon": 28.3276248,
         "approx": false,
-        "label": "Karanfil Sokak, Akyaka"
+        "label": "Sefa Sokak No: 22, Akyaka"
       },
       "logo": "logos/no22riders.png?v=2",
       "website": "https://no22ridersinn.com/home/",
@@ -394,11 +394,232 @@
       "logo_scale": 1,
       "events": [],
       "blurb": {
-        "en": "Rider bar with DJs and live music.",
-        "tr": "DJ ve canlı müzikli rider barı."
+        "tr": "Akyaka’da spor, mutfak, canlı müzik ve konaklama.",
+        "en": "Sport, food, live music and stays in Akyaka."
       },
       "sim_scale": 70,
-      "simulated": true
+      "simulated": true,
+      "landing": {
+        "title": "Gündüz rüzgâr. Gece müzik.",
+        "subtitle": "Akyaka’da sporun, mutfağın ve sahnenin buluştuğu yer.",
+        "kicker": "No22 Riders’ Inn / Akyaka",
+        "description": [
+          "Gökova’da rüzgârı takip edenlerin, iyi yemek ve müzik için buluşanların ortak adresi: No22 Riders’ Inn.",
+          "Güne açık havada başlayıp #Momomeets22 mutfağında bir mola verebilir, akşamı canlı müzik ve DJ performanslarıyla uzatabilirsin. Otel, restoran ve sahne aynı yerde; Akyaka’nın merkezinde günün ritmi değişir, buluşma noktası aynı kalır."
+        ],
+        "featuresTitle": "No22’de bir gün",
+        "features": [
+          [
+            "kitesurfing",
+            "Gökova’da kiteboard kültürü"
+          ],
+          [
+            "restaurant",
+            "Momomeets22 mutfağı"
+          ],
+          [
+            "music_note",
+            "Canlı müzik ve DJ setleri"
+          ],
+          [
+            "hotel",
+            "Merkezde butik konaklama"
+          ],
+          [
+            "kayaking",
+            "Kano ve SUP aktiviteleri"
+          ],
+          [
+            "directions_bike",
+            "Bisiklet ve açık hava rotaları"
+          ],
+          [
+            "self_improvement",
+            "Yoga ve hareket"
+          ],
+          [
+            "groups",
+            "Rider topluluğuyla buluşma"
+          ]
+        ],
+        "statsTitle": "No22’yi yakından tanı",
+        "stats": [
+          [
+            "14",
+            "Konaklama odası"
+          ],
+          [
+            "9 saat",
+            "Başlangıç kiteboard kursu"
+          ],
+          [
+            "2",
+            "Kültürün odağı: spor ve eğlence"
+          ],
+          [
+            "3",
+            "Otel, restoran ve bar"
+          ],
+          [
+            "Gökova",
+            "Su sporlarının buluşma noktası"
+          ],
+          [
+            "Akyaka",
+            "Merkezde bir yaşam alanı"
+          ]
+        ],
+        "statsViz": [
+          {
+            "icon": "hotel",
+            "total": 14,
+            "fill": 14
+          },
+          {
+            "icon": "schedule",
+            "total": 9,
+            "fill": 9
+          },
+          {
+            "icon": "bolt",
+            "total": 2,
+            "fill": 2
+          },
+          {
+            "icon": "storefront",
+            "total": 3,
+            "fill": 3
+          },
+          {
+            "icon": "waves",
+            "total": 4,
+            "fill": 4
+          },
+          {
+            "icon": "location_on",
+            "total": 1,
+            "fill": 1
+          }
+        ],
+        "contactTitle": "Adres, rezervasyon ve iletişim",
+        "address": "Akyaka Mahallesi, Sefa Sokak No: 22, Ula / Muğla",
+        "phone": "+90 532 420 08 22",
+        "email": "hello@no22ridersinn.com",
+        "website": "https://no22ridersinn.com/home/",
+        "instagram": "no22ridersinn",
+        "outroTitle": "Rüzgârdan sahneye, aynı adreste.",
+        "outro": [
+          "Su sporları, iyi yemek ve müzik için Akyaka’da bir buluşma noktası arıyorsan No22’ye uğra. Konaklama, aktiviteler ve güncel program için doğrudan ekiple iletişime geç."
+        ],
+        "program": {
+          "label": "Sahne & müzik",
+          "title": "Günün son seti sahnede.",
+          "text": "No22’nin yaz sezonu programında canlı müzik ve DJ performansları yer alıyor. Resmî site, cuma ve cumartesi gecelerini DJ setleriyle; diğer akşamları canlı performanslarla anlatıyor. Tarihler ve rezervasyon için güncel Instagram duyurularını kontrol et."
+        },
+        "palette": {
+          "primary": "#EF5A4F",
+          "primaryDeep": "#A9121A",
+          "bg": "#151519",
+          "bg2": "#2A1B23",
+          "cream": "#F6EDE0",
+          "accent": "#46BFB3"
+        },
+        "media": {
+          "heroLogo": "landing/no22/logo.png",
+          "poster": "landing/no22/photo-1.jpg",
+          "photos": [
+            "landing/no22/photo-1.jpg",
+            "landing/no22/photo-2.jpg",
+            "landing/no22/photo-3.jpg",
+            "landing/no22/photo-4.jpg",
+            "landing/no22/photo-5.jpg",
+            "landing/no22/photo-6.jpg"
+          ]
+        },
+        "en": {
+          "title": "Wind by day. Music by night.",
+          "subtitle": "Akyaka’s meeting point for sport, food and the stage.",
+          "kicker": "No22 Riders’ Inn / Akyaka",
+          "description": [
+            "A meeting point in Gökova for riders chasing the wind and friends gathering for food and music: No22 Riders’ Inn.",
+            "Start outdoors, take a break at the #Momomeets22 kitchen and stay for live music or a DJ set. A hotel, restaurant and stage share one address in central Akyaka; the rhythm changes throughout the day, while the meeting point stays the same."
+          ],
+          "featuresTitle": "A day at No22",
+          "features": [
+            [
+              "kitesurfing",
+              "Gökova’s kiteboarding culture"
+            ],
+            [
+              "restaurant",
+              "Momomeets22 kitchen"
+            ],
+            [
+              "music_note",
+              "Live music and DJ sets"
+            ],
+            [
+              "hotel",
+              "Boutique stays in town"
+            ],
+            [
+              "kayaking",
+              "Kayaking and SUP activities"
+            ],
+            [
+              "directions_bike",
+              "Cycling and outdoor routes"
+            ],
+            [
+              "self_improvement",
+              "Yoga and movement"
+            ],
+            [
+              "groups",
+              "Meet the rider community"
+            ]
+          ],
+          "statsTitle": "Get to know No22",
+          "stats": [
+            [
+              "14",
+              "Guest rooms"
+            ],
+            [
+              "9 hours",
+              "Beginner kiteboarding course"
+            ],
+            [
+              "2",
+              "Cultural pillars: sport and entertainment"
+            ],
+            [
+              "3",
+              "Hotel, restaurant and bar"
+            ],
+            [
+              "Gökova",
+              "A meeting point for water sports"
+            ],
+            [
+              "Akyaka",
+              "A habitat in the town centre"
+            ]
+          ],
+          "contactTitle": "Address, reservations and contact",
+          "program": {
+            "label": "Stage & music",
+            "title": "The day’s last set is on stage.",
+            "text": "No22’s summer season brings live music and DJ performances. Its official site describes DJ sets on Friday and Saturday nights, with live performances on other evenings. Check the latest Instagram announcements for dates and reservations."
+          },
+          "outroTitle": "From the wind to the stage.",
+          "outro": [
+            "Drop into No22 for outdoor activities, food and music in Akyaka. Contact the team directly about accommodation, activities and the current programme."
+          ]
+        }
+      },
+      "view_switch": true,
+      "instagram": "no22ridersinn"
     },
     {
       "id": "kulup",
