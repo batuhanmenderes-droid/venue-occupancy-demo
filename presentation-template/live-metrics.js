@@ -5,8 +5,8 @@
   if (!slide) return;
   const $ = (k) => slide.querySelector('[data-out="' + k + '"]');
   const bar = (k) => slide.querySelector('[data-bar="' + k + '"]');
-  const AREA = 160, PREV_HOUR = 60, AVG = 71;
-  let count = 126, record = 305, todayPeak = 126;
+  const AREA = 250, PREV_HOUR = 129, AVG = 220;
+  let count = 287, record = 305, todayPeak = 287;
   const shown = {};
   const fmtTR = (n, d) => n.toFixed(d).replace('.', ',');
   const signed = (n) => (n > 0 ? '+' : n < 0 ? '−' : '') + Math.abs(n);
@@ -54,10 +54,10 @@
 
   // Random walk around a busy night, with an occasional bigger jump (a group walking in or out).
   function step() {
-    // pulled back towards 126 so the night stays busy but below the 305 record
+    // pulled back towards 287 so the night stays busy but below the 305 record
     const big = Math.random() < 0.15;
     const noise = big ? (Math.random() < 0.5 ? -1 : 1) * (6 + Math.floor(Math.random() * 8)) : Math.round((Math.random() - 0.5) * 9);
-    count = Math.max(110, Math.min(145, Math.round(count + (126 - count) * 0.2 + noise)));
+    count = Math.max(262, Math.min(301, Math.round(count + (287 - count) * 0.2 + noise)));
     render();
   }
 
