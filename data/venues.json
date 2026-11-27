@@ -400,13 +400,13 @@
       "sim_scale": 70,
       "simulated": true,
       "landing": {
-        "title": "Akyaka gecelerinin büyük sahnesi.",
-        "subtitle": "Büyük bir gece kulübü. Bahçe, mutfak ve otel aynı adreste.",
+        "title": "Entertainment is our territory.",
+        "subtitle": "Akyaka’da gece kulübü, canlı müzik ve DJ performansları. Bahçe, iyi yemek ve butik otel aynı adreste.",
         "kicker": "No22 Riders’ Inn / Akyaka geceleri",
         "description": [
-          "Akyaka’da gece denince yolların kesiştiği büyük buluşma noktası: No22 Riders’ Inn.",
-          "Bahçede başlayan sohbet, mutfaktan gelen bir tabak ve barda verilen bir mola… Sonra sahne açılır, DJ kabini devralır ve gecenin ritmi yükselir. No22 her şeyden önce bir gece kulübü; restoranı, bahçesi ve butik oteliyle aynı adreste daha fazlasını bir araya getirir.",
-          "Kitesurfçülerin gün sonunda uğradığı, arkadaş gruplarının bahçede buluştuğu No22’de tanıdık yüzlere yenileri eklenir. İyi yemek, muhabbet ve müzik aynı gecede yan yana gelir."
+          "Ekstrem sporları, iyi yemeği ve eğlenceyi sevenlerin Gökova – Akyaka’daki buluşma noktası: No22 Riders’ Inn.",
+          "No22’de gündüz Momomeets22 mutfağı ve bahçe, gece ise canlı müzik ve DJ performansları öne çıkar. Gece kulübü, restoran, bar ve otel bir aradadır; sahne programı ve rezervasyon bilgileri için mekânla iletişime geçebilirsiniz.",
+          "Kitesurfçülerin de uğrak noktası olan No22, Akyaka’da yaşayanlarla buraya tatil için gelenleri aynı bahçede buluşturur. Sporla geçen bir günün ardından yemek ve gece hayatı için ortak bir adres."
         ],
         "featuresTitle": "No22’de geceye karış",
         "features": [
@@ -509,14 +509,14 @@
         "email": "hello@no22ridersinn.com",
         "website": "https://no22ridersinn.com/home/",
         "instagram": "no22ridersinn",
-        "outroTitle": "Buluşma bahçede. Gece No22’de.",
+        "outroTitle": "No22 Riders’ Inn’de buluşalım.",
         "outro": [
-          "Akşam yemeği için gel, bahçede arkadaşlarınla buluş, sahnenin önünde geceye karış. Akyaka’da büyük bir geceyi aynı adreste yaşamak için No22’ye uğra."
+          "Bahçe, Momomeets22 mutfağı, gece kulübü ve 14 odalı otel. Etkinlik programı, masa veya konaklama rezervasyonu için ekiple iletişime geçin."
         ],
         "program": {
           "label": "Sahne & müzik",
-          "title": "Bahçe dolar. Sahne açılır.",
-          "text": "No22’nin yaz geceleri canlı müzik ve DJ performanslarıyla hareketlenir. Cuma ve cumartesi DJ setleri öne çıkarken diğer akşamlarda canlı performanslar sahneyi doldurur. Güncel program ve rezervasyon bilgisi için Instagram duyurularını takip et."
+          "title": "Canlı müzik ve DJ performansları",
+          "text": "No22 sahnesinde yaz sezonu boyunca canlı müzik ve DJ performansları yer alır. Güncel sanatçı takvimi, etkinlik tarihleri ve rezervasyon için mekânın duyurularını takip edebilirsiniz."
         },
         "palette": {
           "primary": "#F5F5F5",
@@ -539,13 +539,13 @@
           ]
         },
         "en": {
-          "title": "Akyaka’s big night out.",
-          "subtitle": "A major nightclub. A garden, kitchen and hotel at one address.",
+          "title": "Entertainment is our territory.",
+          "subtitle": "Nightlife, live music and DJs in Akyaka. A garden, good food and a boutique hotel at the same address.",
           "kicker": "No22 Riders’ Inn / Akyaka nights",
           "description": [
-            "A major meeting point where Akyaka’s nights come together: No22 Riders’ Inn.",
-            "A conversation in the garden, a plate from the kitchen and a pause at the bar… Then the stage opens, the DJ takes over and the night finds its rhythm. No22 is first and foremost a nightclub, with a restaurant, garden and boutique hotel sharing the same address.",
-            "Kitesurfers also make No22 their end-of-day hangout. The connection here is the community: familiar faces, food and a night together."
+            "No22 Riders’ Inn is the habitat in Gökova – Akyaka for those who love extreme sports, good food and high time.",
+            "Start with the garden and Momomeets22 kitchen, then discover live music and DJ performances on the No22 stage. Nightclub, restaurant, bar and hotel come together here; contact the team for the current programme and reservations.",
+            "A favourite meeting place for visiting kitesurfers, No22 brings Akyaka locals and travellers together over food, conversation and music after a day outdoors."
           ],
           "featuresTitle": "Step into the No22 night",
           "features": [
@@ -612,14 +612,40 @@
           "contactTitle": "Address, reservations and contact",
           "program": {
             "label": "Stage & music",
-            "title": "The garden fills. The stage opens.",
-            "text": "No22’s summer nights bring live music and DJ performances. Friday and Saturday lean into DJ sets, while other evenings bring live acts to the stage. Follow the latest Instagram announcements for the current programme and reservations."
+            "title": "Live music and DJ performances",
+            "text": "The No22 stage hosts live music and DJ performances during the summer season. Follow the venue’s announcements for artists, event dates and reservations."
           },
-          "outroTitle": "Meet in the garden. Stay for the night.",
+          "outroTitle": "Meet at No22 Riders’ Inn.",
           "outro": [
-            "Come for dinner, meet your friends in the garden and join the crowd by the stage. For a big night out in Akyaka, meet at No22."
+            "A garden, the Momomeets22 kitchen, a nightclub and a 14-room hotel. Contact the team for the event programme, table bookings or accommodation."
+          ],
+          "sections": [
+            {
+              "title": "Stay where the night happens.",
+              "image": "landing/no22/photo-5.jpg",
+              "imageAlt": "A guest room at No22 Riders’ Inn",
+              "paragraphs": [
+                "No22 is also a 14-room hotel in central Akyaka, within walking distance of the Azmak River and the sea. Stay close to the town by day and return to its garden, restaurant and nightlife in the evening.",
+                "Rooms offer air conditioning and Wi-Fi. Shared facilities include a garden, pool, restaurant and bar. Contact the hotel for room options, availability and reservations."
+              ],
+              "url": "https://no22ridersinn.com/accommodation/",
+              "linkLabel": "Explore rooms and accommodation"
+            }
           ]
-        }
+        },
+        "sections": [
+          {
+            "title": "Gecenin adresi. Konaklamanın da.",
+            "image": "landing/no22/photo-5.jpg",
+            "imageAlt": "No22 Riders’ Inn otel odası",
+            "paragraphs": [
+              "No22 yalnızca bir gece mekânı değil, Akyaka’nın merkezinde 14 odalı bir otel. Azmak Nehri’ne ve denize yürüyerek ulaşılabilen konumuyla gündüz Akyaka’yı keşfetmek, akşam aynı adreste buluşmak için bir konaklama seçeneği sunar.",
+              "Odalarda klima ve Wi-Fi; ortak alanlarda bahçe, havuz, restoran ve bar bulunur. Güncel oda seçenekleri, müsaitlik ve rezervasyon için otelle iletişime geçebilirsiniz."
+            ],
+            "url": "https://no22ridersinn.com/accommodation/",
+            "linkLabel": "Odaları ve konaklamayı keşfet"
+          }
+        ]
       },
       "view_switch": true,
       "instagram": "no22ridersinn"
@@ -1571,12 +1597,13 @@
       },
       "beach_peak": 140,
       "landing": {
-        "title": "Günün rüzgârı burada.",
-        "subtitle": "Deniz, nehir ve gün batımı. Kite Beach Akyaka.",
+        "title": "Kitesurf, doğa ve müzik.",
+        "subtitle": "Türkiye’nin en iyi kitesurf noktasında unutulmaz bir deneyim yaşayın. Profesyonel eğitmenler, mükemmel rüzgâr ve eşsiz doğa sizi bekliyor.",
         "kicker": "Gökova Körfezi / Akyaka",
         "description": [
-          "Gökova’da gökyüzü uçurtmalarla dolarken gün tek bir kıyıda buluşur: Kite Beach Akyaka.",
-          "Kitesurfün enerjisi, nehir kenarında bir mola, mutfaktan çıkan bir tabak ve gün batımına eşlik eden müzik… Plajı, restoranı, barı ve konaklama alanıyla Kite Beach, Akyaka’da günü uzatmanın yollarını bir araya getirir."
+          "Nehir kıyısında dinlenmek, denizde spor yapmak: Kite Beach Akyaka.",
+          "Kitebeach; kitesurf, yoga ve gün batımında müziği, butik konaklama ve Ege mutfağıyla bir araya getirir. Nehir kenarında güne başlayabilir, plajda vakit geçirebilir ve akşamı Sunset DJ Party ile devam ettirebilirsiniz.",
+          "Restoranda yerel lezzetler ve Ege mutfağı; konaklamada ise doğaya yakın bir Akyaka deneyimi öne çıkar. Aktivite seçenekleri ve özel paketler hakkında ekipten bilgi alabilirsiniz."
         ],
         "featuresTitle": "Kıyıda geçen bir gün",
         "features": [
@@ -1676,22 +1703,14 @@
         "address": "Akçapınar Mevkii, Akyaka / Ula / Muğla",
         "phone": "+90 544 504 03 10",
         "website": "https://kitebeachakyaka.com.tr/tr",
-        "outroTitle": "Bir gün daha kıyıda kal.",
+        "outroTitle": "Kite Beach Akyaka’yı keşfedin.",
         "outro": [
-          "İster rüzgârın peşinde ol, ister kıyıda oturup renkli uçurtmaları izlemek iste. Mutfak, deniz ve gün batımı aynı güne sığar; güncel program ve rezervasyon için ekiple iletişime geç."
+          "Kitesurf, yoga, gün batımı etkinlikleri, restoran ve butik konaklama. Özel paketler, güncel program ve rezervasyon için bize ulaşın."
         ],
         "program": {
           "label": "Gün batımı & müzik",
-          "title": "Rüzgâr yavaşlar, müzik devam eder.",
-          "text": "Günün sportif temposu, kıyıda verilen bir mola ve gün batımına eşlik eden DJ setleriyle yerini daha sakin bir ritme bırakır. Sunset programının tarihleri için güncel duyuruları kontrol et."
-        },
-        "reviewSummary": {
-          "title": "Ziyaretçilerin gözünden",
-          "text": "Google kaynaklı ziyaretçi yorumlarında renkli uçurtmalar, rüzgâr, manzara ve sahilin atmosferi öne çıkıyor. Bazı ziyaretçiler giriş ve yiyecek-içecek fiyatlarını yüksek buluyor; güncel ücretleri ve kullanım koşullarını ziyaret öncesinde teyit edebilirsin.",
-          "sourceLabel": "Google yorumlarının derlemesi · Wanderlog",
-          "url": "https://wanderlog.com/place/details/4684840/kite-beach-akyaka",
-          "mapLabel": "Google Maps’te gör",
-          "mapUrl": "https://www.google.com/maps?cid=16389852765217585807"
+          "title": "Sunset DJ Party",
+          "text": "Ege manzarası eşliğinde gün batımı ve DJ performansları. Güncel etkinlik tarihlerini ve programı Kitebeach ekibinden öğrenebilirsiniz."
         },
         "palette": {
           "primary": "#ED996C",
@@ -1715,12 +1734,13 @@
           ]
         },
         "en": {
-          "title": "Where the day catches the wind.",
-          "subtitle": "Sea, river and sunset. Kite Beach Akyaka.",
+          "title": "Kitesurf, nature and music.",
+          "subtitle": "Discover an unforgettable kitesurf experience in Akyaka, with professional instructors, reliable winds and remarkable natural surroundings.",
           "kicker": "Gökova Bay / Akyaka",
           "description": [
-            "As colourful kites fill the sky above Gökova, the day comes together on one shore: Kite Beach Akyaka.",
-            "The energy of kitesurfing, a pause by the river, a meal from the kitchen and music at sunset… With its beach, restaurant, bar and accommodation, Kite Beach brings different ways to spend an Akyaka day together."
+            "Rest by the river, ride on the sea: Kite Beach Akyaka.",
+            "Kitebeach brings kitesurfing, yoga and sunset music together with boutique accommodation and Aegean food. Begin the day by the river, spend time at the beach and continue into the evening with a Sunset DJ Party.",
+            "The restaurant focuses on local flavours and Aegean cuisine, while the accommodation keeps you close to nature. Ask the team about available activities and combined experience packages."
           ],
           "featuresTitle": "A day by the shore",
           "features": [
@@ -1785,24 +1805,70 @@
             ]
           ],
           "contactTitle": "Meet by the shore",
-          "outroTitle": "Stay by the coast a little longer.",
+          "outroTitle": "Discover Kite Beach Akyaka.",
           "outro": [
-            "Chase the wind or settle by the shore and watch the colourful kites. Food, sea and sunset fit into the same day. Contact the team for the current programme and reservations."
+            "Kitesurfing, yoga, sunset events, a restaurant and boutique accommodation. Contact the team for tailored packages, the current programme and reservations."
           ],
           "program": {
             "label": "Sunset & music",
-            "title": "The wind softens. The music stays.",
-            "text": "An active day gives way to a slower rhythm: a pause by the coast and DJ sessions at sunset. Check current announcements for the latest sunset programme dates."
+            "title": "Sunset DJ Party",
+            "text": "Sunset views over the Aegean, accompanied by DJ music. Contact the Kitebeach team for upcoming event dates and programme details."
           },
-          "reviewSummary": {
-            "title": "Through visitors’ eyes",
-            "text": "Google-sourced visitor reviews highlight colourful kites, wind, scenery and the beach atmosphere. Some visitors find entry, food and drinks expensive; confirm current prices and access conditions before visiting.",
-            "sourceLabel": "Google review roundup · Wanderlog",
-            "url": "https://wanderlog.com/place/details/4684840/kite-beach-akyaka",
-            "mapLabel": "View on Google Maps",
-            "mapUrl": "https://www.google.com/maps?cid=16389852765217585807"
+          "sections": [
+            {
+              "title": "Kitesurf, Yoga Wellness & Sunset DJ Party",
+              "paragraphs": [
+                "Explore the wind, river and sunset through three different experiences. Contact Kitebeach for activity times, availability and tailored packages."
+              ],
+              "items": [
+                {
+                  "icon": "kitesurfing",
+                  "title": "Kitesurf",
+                  "text": "Experience Akyaka’s winds with professional instructors, whether you are discovering kitesurfing or developing your skills on the water."
+                },
+                {
+                  "icon": "self_improvement",
+                  "title": "Yoga Wellness",
+                  "text": "Begin with morning yoga by the river or take time to unwind in a sunset session."
+                },
+                {
+                  "icon": "music_note",
+                  "title": "Sunset DJ Party",
+                  "text": "Enjoy DJ music as the sun sets over the Aegean. Check with the venue for the current programme."
+                }
+              ],
+              "url": "https://kitebeachakyaka.com.tr/tr/aktiviteler",
+              "linkLabel": "Activities and tailored packages"
+            }
+          ]
+        },
+        "sections": [
+          {
+            "title": "Kitesurf, Yoga Wellness, Sunset DJ Party",
+            "paragraphs": [
+              "Rüzgârı, nehri ve gün batımını farklı deneyimlerle keşfedin. Aktivite saatleri, uygunluk ve özel paketler için Kitebeach ekibine ulaşabilirsiniz."
+            ],
+            "items": [
+              {
+                "icon": "kitesurfing",
+                "title": "Kitesurf",
+                "text": "Akyaka’nın rüzgârında profesyonel eğitmenlerin rehberliğinde kitesurf ile tanışın ya da su üzerindeki deneyiminizi geliştirin."
+              },
+              {
+                "icon": "self_improvement",
+                "title": "Yoga Wellness",
+                "text": "Nehir kıyısında sabah yogasıyla güne başlayın veya gün batımı seansında dinlenmeye zaman ayırın."
+              },
+              {
+                "icon": "music_note",
+                "title": "Sunset DJ Party",
+                "text": "Ege manzarası eşliğinde gün batımını DJ müziğiyle karşılayın. Güncel programı mekândan öğrenebilirsiniz."
+              }
+            ],
+            "url": "https://kitebeachakyaka.com.tr/tr/aktiviteler",
+            "linkLabel": "Aktiviteler ve özel paketler"
           }
-        }
+        ]
       },
       "view_switch": true,
       "website": "https://kitebeachakyaka.com.tr/tr"
