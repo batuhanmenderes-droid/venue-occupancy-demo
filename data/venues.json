@@ -1566,10 +1566,246 @@
       },
       "description": "",
       "blurb": {
-        "en": "Kitesurf beach and beach bar.",
-        "tr": "Kitesurf plajı ve plaj barı."
+        "tr": "Gökova’da kitesurf, kıyıda yemek, müzik ve konaklama.",
+        "en": "Kitesurfing, food, music and stays on Gökova’s coast."
       },
-      "beach_peak": 140
+      "beach_peak": 140,
+      "landing": {
+        "title": "Günün rüzgârı burada.",
+        "subtitle": "Deniz, nehir ve gün batımı. Kite Beach Akyaka.",
+        "kicker": "Gökova Körfezi / Akyaka",
+        "description": [
+          "Gökova’da gökyüzü uçurtmalarla dolarken gün tek bir kıyıda buluşur: Kite Beach Akyaka.",
+          "Kitesurfün enerjisi, nehir kenarında bir mola, mutfaktan çıkan bir tabak ve gün batımına eşlik eden müzik… Plajı, restoranı, barı ve konaklama alanıyla Kite Beach, Akyaka’da günü uzatmanın yollarını bir araya getirir."
+        ],
+        "featuresTitle": "Kıyıda geçen bir gün",
+        "features": [
+          [
+            "kitesurfing",
+            "Kitesurf deneyimi"
+          ],
+          [
+            "waves",
+            "Gökova plajı"
+          ],
+          [
+            "self_improvement",
+            "Nehir kenarında yoga"
+          ],
+          [
+            "kayaking",
+            "SUP & su aktiviteleri"
+          ],
+          [
+            "restaurant",
+            "Ege mutfağı"
+          ],
+          [
+            "local_bar",
+            "Lounge & bar"
+          ],
+          [
+            "music_note",
+            "Gün batımında DJ"
+          ],
+          [
+            "hotel",
+            "Butik konaklama"
+          ]
+        ],
+        "statsTitle": "Günün farklı ritimleri",
+        "stats": [
+          [
+            "Gökova",
+            "Rüzgârla buluşma noktası"
+          ],
+          [
+            "Azmak",
+            "Nehir kıyısında molalar"
+          ],
+          [
+            "Kite",
+            "Günün sportif ritmi"
+          ],
+          [
+            "Yoga",
+            "Daha sakin bir başlangıç"
+          ],
+          [
+            "SUP",
+            "Su üstünde keşif"
+          ],
+          [
+            "Sunset",
+            "Gün batımında müzik"
+          ]
+        ],
+        "statsViz": [
+          {
+            "icon": "waves",
+            "total": 6,
+            "fill": 6
+          },
+          {
+            "icon": "water",
+            "total": 5,
+            "fill": 5
+          },
+          {
+            "icon": "kitesurfing",
+            "total": 4,
+            "fill": 4
+          },
+          {
+            "icon": "self_improvement",
+            "total": 3,
+            "fill": 3
+          },
+          {
+            "icon": "kayaking",
+            "total": 3,
+            "fill": 3
+          },
+          {
+            "icon": "music_note",
+            "total": 5,
+            "fill": 5
+          }
+        ],
+        "contactTitle": "Kıyıda buluşalım",
+        "address": "Akçapınar Mevkii, Akyaka / Ula / Muğla",
+        "phone": "+90 544 504 03 10",
+        "website": "https://kitebeachakyaka.com.tr/tr",
+        "outroTitle": "Bir gün daha kıyıda kal.",
+        "outro": [
+          "İster rüzgârın peşinde ol, ister kıyıda oturup renkli uçurtmaları izlemek iste. Mutfak, deniz ve gün batımı aynı güne sığar; güncel program ve rezervasyon için ekiple iletişime geç."
+        ],
+        "program": {
+          "label": "Gün batımı & müzik",
+          "title": "Rüzgâr yavaşlar, müzik devam eder.",
+          "text": "Günün sportif temposu, kıyıda verilen bir mola ve gün batımına eşlik eden DJ setleriyle yerini daha sakin bir ritme bırakır. Sunset programının tarihleri için güncel duyuruları kontrol et."
+        },
+        "reviewSummary": {
+          "title": "Ziyaretçilerin gözünden",
+          "text": "Google kaynaklı ziyaretçi yorumlarında renkli uçurtmalar, rüzgâr, manzara ve sahilin atmosferi öne çıkıyor. Bazı ziyaretçiler giriş ve yiyecek-içecek fiyatlarını yüksek buluyor; güncel ücretleri ve kullanım koşullarını ziyaret öncesinde teyit edebilirsin.",
+          "sourceLabel": "Google yorumlarının derlemesi · Wanderlog",
+          "url": "https://wanderlog.com/place/details/4684840/kite-beach-akyaka",
+          "mapLabel": "Google Maps’te gör",
+          "mapUrl": "https://www.google.com/maps?cid=16389852765217585807"
+        },
+        "palette": {
+          "primary": "#ED996C",
+          "primaryDeep": "#3B869F",
+          "bg": "#0A1F27",
+          "bg2": "#12313D",
+          "cream": "#F8EDDF",
+          "accent": "#3B869F",
+          "veil": "#133744"
+        },
+        "media": {
+          "youtube": "V9AhK54xsxY",
+          "youtubeStart": 0,
+          "poster": "landing/kitebeach/poster.jpg",
+          "photos": [
+            "landing/kitebeach/photo-1.jpg",
+            "landing/kitebeach/photo-2.jpg",
+            "landing/kitebeach/photo-3.jpg",
+            "landing/kitebeach/photo-4.jpg",
+            "landing/kitebeach/photo-5.jpg"
+          ]
+        },
+        "en": {
+          "title": "Where the day catches the wind.",
+          "subtitle": "Sea, river and sunset. Kite Beach Akyaka.",
+          "kicker": "Gökova Bay / Akyaka",
+          "description": [
+            "As colourful kites fill the sky above Gökova, the day comes together on one shore: Kite Beach Akyaka.",
+            "The energy of kitesurfing, a pause by the river, a meal from the kitchen and music at sunset… With its beach, restaurant, bar and accommodation, Kite Beach brings different ways to spend an Akyaka day together."
+          ],
+          "featuresTitle": "A day by the shore",
+          "features": [
+            [
+              "kitesurfing",
+              "Kitesurfing experiences"
+            ],
+            [
+              "waves",
+              "Gökova beach"
+            ],
+            [
+              "self_improvement",
+              "Yoga by the river"
+            ],
+            [
+              "kayaking",
+              "SUP and water activities"
+            ],
+            [
+              "restaurant",
+              "Aegean cuisine"
+            ],
+            [
+              "local_bar",
+              "Lounge and bar"
+            ],
+            [
+              "music_note",
+              "Sunset DJ sessions"
+            ],
+            [
+              "hotel",
+              "Boutique stays"
+            ]
+          ],
+          "statsTitle": "The rhythms of the day",
+          "stats": [
+            [
+              "Gökova",
+              "A meeting point for wind lovers"
+            ],
+            [
+              "Azmak",
+              "Time out by the river"
+            ],
+            [
+              "Kite",
+              "The active side of the day"
+            ],
+            [
+              "Yoga",
+              "A slower start"
+            ],
+            [
+              "SUP",
+              "Explore on the water"
+            ],
+            [
+              "Sunset",
+              "Music as the sun goes down"
+            ]
+          ],
+          "contactTitle": "Meet by the shore",
+          "outroTitle": "Stay by the coast a little longer.",
+          "outro": [
+            "Chase the wind or settle by the shore and watch the colourful kites. Food, sea and sunset fit into the same day. Contact the team for the current programme and reservations."
+          ],
+          "program": {
+            "label": "Sunset & music",
+            "title": "The wind softens. The music stays.",
+            "text": "An active day gives way to a slower rhythm: a pause by the coast and DJ sessions at sunset. Check current announcements for the latest sunset programme dates."
+          },
+          "reviewSummary": {
+            "title": "Through visitors’ eyes",
+            "text": "Google-sourced visitor reviews highlight colourful kites, wind, scenery and the beach atmosphere. Some visitors find entry, food and drinks expensive; confirm current prices and access conditions before visiting.",
+            "sourceLabel": "Google review roundup · Wanderlog",
+            "url": "https://wanderlog.com/place/details/4684840/kite-beach-akyaka",
+            "mapLabel": "View on Google Maps",
+            "mapUrl": "https://www.google.com/maps?cid=16389852765217585807"
+          }
+        }
+      },
+      "view_switch": true,
+      "website": "https://kitebeachakyaka.com.tr/tr"
     },
     {
       "id": "rahat-meyhane",
