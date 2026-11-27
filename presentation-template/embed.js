@@ -11,7 +11,7 @@
   // Load an app page into an iframe. (The app opens in its dark theme by default, so the viewer's own
   // settings are never touched.)
   // APP_VER busts the browser cache for the embedded app pages; bump it when the app changes.
-  const APP_VER = '20261110a';
+  const APP_VER = '20261123a';
   // {app} in an embed address is the React app: on the public demo it sits one level up, locally it is
   // the build in react-app/dist (the root pages there are the frozen original).
   const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
