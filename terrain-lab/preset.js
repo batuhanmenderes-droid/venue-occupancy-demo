@@ -1,10 +1,10 @@
 const KEY='akyaka:default-preset:v1';
 export async function loadApplicationPreset(){
   let bundled={},local={};
-  try{const response=await fetch('./data/default-render-settings.json',{cache:'no-store'});if(response.ok)bundled=await response.json();}catch{}
+  try{const response=await fetch(new URL('./data/default-render-settings.json',import.meta.url),{cache:'no-store'});if(response.ok)bundled=await response.json();}catch{}
   try{local=JSON.parse(localStorage.getItem(KEY)||'{}');}catch{}
   const selected=local.savedAt&&(!bundled.savedAt||local.savedAt>=bundled.savedAt)?local:bundled;
-  return {...selected,mode:bundled.mode??selected.mode??'night'};
+  return {...selected,mode:selected.mode??bundled.mode??'night',dayRender:selected.dayRender??bundled.dayRender};
 }
 export async function saveApplicationPreset(preset){
   const value={version:1,savedAt:new Date().toISOString(),...preset};

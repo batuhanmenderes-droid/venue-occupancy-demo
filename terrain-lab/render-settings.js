@@ -1,9 +1,6 @@
 const $=id=>document.getElementById(id);
 
-// Artist-facing controls; all values are visible, persisted locally and applied live.
-export function createRenderSettings({mobile,maxSamples,onChange,presetDefaults={},onSavePreset}){
-  const defaults={particles:35,particleSize:1,clouds:100,fog:75,edgeFade:8,smoke:100,grassDensity:150,sun:2.5,ambient:1.75,exposure:1.03,azimuth:225,elevation:51,shading:'smooth',shadow:mobile?'2048':'3072',filter:'soft',aa:maxSamples>=4?'msaa4':maxSamples>=2?'msaa2':'fxaa',scale:100,waves:100,waveSpeed:100,foam:100,shoreRadius:20,cars:mobile?20:32,carSpeed:100,kites:16,boats:4};
-  const groups=[
+export function renderControlGroups(maxSamples=8){return [
     {title:'Atmosphere',controls:[
       {key:'particles',label:'Particle density',min:0,max:100,step:1,format:v=>`${v}%`},
       {key:'particleSize',label:'Particle size',min:.4,max:2.5,step:.1,format:v=>`${v.toFixed(1)}×`},
@@ -29,7 +26,11 @@ export function createRenderSettings({mobile,maxSamples,onChange,presetDefaults=
     ]},
     {title:'Water',controls:[{key:'waves',label:'Wave strength',min:0,max:200,step:5,format:v=>`${v}%`},{key:'waveSpeed',label:'Wave speed',min:0,max:200,step:5,format:v=>`${v}%`},{key:'foam',label:'Shore foam',min:0,max:200,step:5,format:v=>`${v}%`},{key:'shoreRadius',label:'Shoreline radius',min:0,max:50,step:5,format:v=>`${v} m`,note:'Deniz kıyıları ve Azmak kıvrımlarını yumuşatır.'},{key:'kites',label:'Kitesurfers',min:0,max:24,step:1,format:v=>String(v)},{key:'boats',label:'Azmak boats',min:0,max:8,step:1,format:v=>String(v)}]},
     {title:'Traffic',controls:[{key:'cars',label:'Car count',min:0,max:50,step:1,format:v=>String(v)},{key:'carSpeed',label:'Traffic speed',min:0,max:200,step:5,format:v=>`${v}%`}]},
-  ];
+  ];}
+// Artist-facing controls; all values are visible, persisted locally and applied live.
+export function createRenderSettings({mobile,maxSamples,onChange,presetDefaults={},onSavePreset}){
+  const defaults={particles:35,particleSize:1,clouds:100,fog:75,edgeFade:8,smoke:100,grassDensity:150,sun:2.5,ambient:1.75,exposure:1.03,azimuth:225,elevation:51,shading:'smooth',shadow:mobile?'2048':'3072',filter:'soft',aa:maxSamples>=4?'msaa4':maxSamples>=2?'msaa2':'fxaa',scale:100,waves:100,waveSpeed:100,foam:100,shoreRadius:20,cars:mobile?20:32,carSpeed:100,kites:16,boats:4};
+  const groups=renderControlGroups(maxSamples);
   const merge=(target,source)=>{for(const group of groups)for(const c of group.controls){const v=source[c.key];if(c.options){if(c.options.some(o=>o[0]===v&&!o[2]))target[c.key]=v;}else if(Number.isFinite(v))target[c.key]=Math.max(c.min,Math.min(c.max,v));}};
   merge(defaults,presetDefaults||{});
   const values={...defaults};try{const saved=JSON.parse(localStorage.getItem('akyaka:render-settings:v1')||'{}');if(!saved.kiteDensityV2&&Number.isFinite(saved.kites))saved.kites=Math.min(24,saved.kites*2);merge(values,saved);}catch{}
@@ -49,6 +50,8 @@ export function createRenderSettings({mobile,maxSamples,onChange,presetDefaults=
   $('render-settings').addEventListener('click',()=>openPanel($('render-panel').hidden));$('render-close').addEventListener('click',()=>openPanel(false));$('render-reset').addEventListener('click',()=>{for(const group of groups)for(const c of group.controls)applyControl(c,defaults[c.key]);});
   $('render-save-defaults').addEventListener('click',async()=>{Object.assign(defaults,values);const status=$('preset-status');status.textContent='Varsayılanlar kaydediliyor…';try{const result=await onSavePreset({...values});status.textContent=result==='file'?'JSON preset kaydedildi':result==='download'?'Preset indirildi · data klasörüne taşı':'Tarayıcı varsayılanı kaydedildi';}catch{status.textContent='Tarayıcı varsayılanı kaydedildi';}});
   openPanel(!document.body.classList.contains('embedded'));
+  try{localStorage.setItem('akyaka:render-capabilities:v1',JSON.stringify({maxSamples}));}catch{}
+  window.addEventListener('storage',event=>{if(event.key!=='akyaka:render-settings:v1'||!event.newValue)return;try{const next={...values};merge(next,JSON.parse(event.newValue));for(const group of groups)for(const c of group.controls)if(next[c.key]!==values[c.key]){applyControl(c,next[c.key],false);onChange(c.key,next[c.key],values);}}catch{}});
   return {values,applyAll(){Object.keys(values).forEach(key=>onChange(key,values[key],values));},
     setAll(next){const v={...values};merge(v,next||{});for(const group of groups)for(const c of group.controls)if(v[c.key]!==values[c.key])applyControl(c,v[c.key]);}};
 }

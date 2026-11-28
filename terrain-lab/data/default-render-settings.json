@@ -28,6 +28,45 @@
     "kites": 15,
     "boats": 0
   },
-  "view": { "position": [-72, 72, 70.2], "target": [0, 0, -1.8], "zoom": 1 },
-  "mode": "night"
+  "view": {
+    "position": [
+      -72,
+      72,
+      70.2
+    ],
+    "target": [
+      0,
+      0,
+      -1.8
+    ],
+    "zoom": 1
+  },
+  "mode": "night",
+  "dayRender": {
+    "particles": 0,
+    "particleSize": 0.4,
+    "clouds": 100,
+    "fog": 65,
+    "edgeFade": 10,
+    "smoke": 100,
+    "grassDensity": 150,
+    "sun": 2.45,
+    "ambient": 1.1,
+    "exposure": 1.26,
+    "azimuth": 267,
+    "elevation": 37,
+    "shading": "smooth",
+    "shadow": "3072",
+    "filter": "soft",
+    "aa": "fxaa",
+    "scale": 100,
+    "waves": 15,
+    "waveSpeed": 170,
+    "foam": 110,
+    "shoreRadius": 40,
+    "cars": 50,
+    "carSpeed": 100,
+    "kites": 15,
+    "boats": 0
+  }
 }
