@@ -33,7 +33,8 @@
     const cards = Array.from(grid.querySelectorAll('.venue'));
     const nameOf = (c) => ((c.querySelector('.name') || {}).textContent || '').trim();
     const pick = keep.map((k) => cards.find((c) => norm(nameOf(c)).startsWith(norm(k).slice(0, 3))));
-    cards.forEach((c) => { c.style.display = pick.includes(c) ? '' : 'none'; });
+    // !important: the app's list styles set the rows' display themselves
+    cards.forEach((c) => { if (pick.includes(c)) c.style.removeProperty('display'); else c.style.setProperty('display', 'none', 'important'); });
     const shown = pick.filter(Boolean);
     // compare against the visible cards only, or moving them would re-trigger the observer forever
     const visible = Array.from(grid.children).filter((c) => c.style.display !== 'none');
