@@ -1,0 +1,2207 @@
+{
+  "venues": [
+    {
+      "id": "poison-pub",
+      "background": "backgrounds/poison-pub.jpg",
+      "name": "Poison Pub",
+      "type": "Pub",
+      "folder": "poisonpub-cctv",
+      "data": "data/poison-pub.json",
+      "count_rule": "Yalnızca kameraya yakın kişiler sayılır.",
+      "location": {
+        "lat": 37.0518952,
+        "lon": 28.3260592,
+        "approx": false,
+        "label": "Karanfil Sokak, Akyaka"
+      },
+      "logo": "logos/poisonpub.png",
+      "count_rule_en": "Only people close to the camera are counted.",
+      "events": [
+        {
+          "date": "2026-10-02",
+          "name": "Rock Gecesi",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "21:30",
+          "to": "01:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-03",
+          "name": "Akustik · Canlı",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "21:00",
+          "to": "00:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-09",
+          "name": "Quiz Night",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "21:00",
+          "to": "23:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-10",
+          "name": "Metal Cuma",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-17",
+          "name": "80'ler Gecesi",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-24",
+          "name": "Kaan · Canlı Rock",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "21:30",
+          "to": "01:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-31",
+          "name": "Cadılar Bayramı Partisi",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "22:00",
+          "to": "02:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-07",
+          "name": "Rock Gecesi",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "21:30",
+          "to": "01:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-13",
+          "name": "Quiz Night",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "21:00",
+          "to": "23:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-14",
+          "name": "Akustik · Canlı",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "21:00",
+          "to": "00:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-21",
+          "name": "Karaoke Gecesi",
+          "kind": "show",
+          "title": "Poison Pub",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        }
+      ],
+      "blurb": {
+        "en": "Rock and pop pub.",
+        "tr": "Rock ve pop konseptli pub."
+      },
+      "sim_scale": 60,
+      "simulated": true,
+      "view_switch": true,
+      "landing": {
+        "title": "Akyaka'nın değişmeyen köşesi.",
+        "subtitle": "Bir bira içmeye gelirsin, gecenin nasıl bittiğini anlamazsın.",
+        "description": [
+          "Akyaka'nın en eski müdavimlerinden Poison Pub, Karanfil Sokak'ın köşesinde yıllardır aynı işi yapıyor: İnsanları bir araya getiriyor.",
+          "Buz gibi biralar, bitmek bilmeyen muhabbetler, dart kapışmaları, maç heyecanı ve kasabanın en güncel dedikoduları… Masalar dolarsa tabureye, tabureler dolarsa sokağa geçilir. Burada kimse yer sıkıntısı çekmez, sadece biraz daha yakınlaşır."
+        ],
+        "featuresTitle": "Mekân özellikleri",
+        "features": [
+          [
+            "sports_bar",
+            "Buz gibi biralar"
+          ],
+          [
+            "adjust",
+            "Dart ve tatlı rekabet"
+          ],
+          [
+            "sports_soccer",
+            "Canlı maç yayınları"
+          ],
+          [
+            "chair_alt",
+            "Yüksek tabure, alçak gönüllülük"
+          ],
+          [
+            "forum",
+            "Kesintisiz muhabbet"
+          ],
+          [
+            "storefront",
+            "Sokak manzarası"
+          ],
+          [
+            "payments",
+            "Akyaka ortalamasında fiyatlar"
+          ],
+          [
+            "nightlife",
+            "Gecenin son bira durağı"
+          ]
+        ],
+        "statsTitle": "Rakamlarla Poison",
+        "stats": [
+          [
+            "120 m²",
+            "Muhabbet alanı"
+          ],
+          [
+            "30",
+            "Oturma kapasitesi"
+          ],
+          [
+            "150'ye kadar",
+            "Ayakta sosyalleşme kapasitesi"
+          ],
+          [
+            "2",
+            "Genellikle 4'e çıkan bira sayısı"
+          ],
+          [
+            "0",
+            "Yabancılık çekme ihtimali"
+          ],
+          [
+            "∞",
+            "Anlatılacak hikâye"
+          ]
+        ],
+        "contactTitle": "Adres ve iletişim",
+        "address": "Karanfil Sokak, Akyaka, Ula / Muğla",
+        "instagram": "poison.pub",
+        "outroTitle": "Uğramadan dönme!",
+        "outro": [
+          "Akyaka'da herkesin yolu eninde sonunda Poison'a düşer. İster denizden çıkmış ol, ister gecenin sonuna gelmiş… Bir köşeye iliş, bir bira söyle. Tanıdık biri mutlaka çıkar.",
+          "Çıkmazsa da tanışırsın."
+        ],
+        "palette": {
+          "primary": "#8CF04A",
+          "primaryDeep": "#3E9E2A",
+          "bg": "#1B0F28",
+          "bg2": "#2B1840",
+          "cream": "#F1E3C6",
+          "accent": "#FF8A2B"
+        },
+        "media": {
+          "video": "landing/poison/hero.mp4?v=3",
+          "poster": "landing/poison/photo-1.jpg",
+          "photos": [
+            "landing/poison/photo-1.jpg",
+            "landing/poison/photo-2.jpg",
+            "landing/poison/photo-3.jpg",
+            "landing/poison/photo-4.jpg",
+            "landing/poison/photo-5.jpg",
+            "landing/poison/photo-6.jpg"
+          ],
+          "badge": "landing/poison/badge.webp?v=2"
+        },
+        "weekly": {
+          "day": "Her Perşembe",
+          "title": "80'ler & 90'lar Gecesi",
+          "text": "Kasetler başa sarılır, dans pisti geri gelir. Her perşembe Poison'da 80'lerin ve 90'ların en sevilen şarkıları çalar; şarkıyı bilen eşlik eder, bilmeyen de öğrenir."
+        },
+        "plan": {
+          "w": 12,
+          "d": 10,
+          "seats": 30,
+          "standing": 150
+        },
+        "kicker": "Karanfil Sokak / Akyaka",
+        "instagramCta": "Daha fazlası Instagram'da",
+        "en": {
+          "title": "Akyaka's corner that never changes.",
+          "subtitle": "You come in for one beer and never quite know how the night ended.",
+          "description": [
+            "One of Akyaka's oldest regulars, Poison Pub has been doing the same thing on the corner of Karanfil Street for years: bringing people together.",
+            "Ice-cold beers, conversations that never end, darts showdowns, match-day nerves and the town's freshest gossip… When the tables fill up, people move to the stools; when the stools fill up, out to the street. Nobody runs short of space here, they just get a little closer."
+          ],
+          "featuresTitle": "What makes it Poison",
+          "features": [
+            [
+              "sports_bar",
+              "Ice-cold beers"
+            ],
+            [
+              "adjust",
+              "Darts and friendly rivalry"
+            ],
+            [
+              "sports_soccer",
+              "Live matches on screen"
+            ],
+            [
+              "chair_alt",
+              "High stools, low egos"
+            ],
+            [
+              "forum",
+              "Non-stop conversation"
+            ],
+            [
+              "storefront",
+              "Street views"
+            ],
+            [
+              "payments",
+              "Prices at the Akyaka average"
+            ],
+            [
+              "nightlife",
+              "The night's last beer stop"
+            ]
+          ],
+          "statsTitle": "Poison in numbers",
+          "stats": [
+            [
+              "120 m²",
+              "Room to talk"
+            ],
+            [
+              "30",
+              "Seats"
+            ],
+            [
+              "Up to 150",
+              "Standing and mingling"
+            ],
+            [
+              "2",
+              "Beers that usually turn into 4"
+            ],
+            [
+              "0",
+              "Chance of feeling like a stranger"
+            ],
+            [
+              "∞",
+              "Stories to tell"
+            ]
+          ],
+          "contactTitle": "Address and contact",
+          "outroTitle": "Don't leave without dropping by!",
+          "outro": [
+            "Sooner or later, everyone in Akyaka ends up at Poison. Whether you've just come out of the sea or reached the end of the night… grab a corner, order a beer. You'll always run into someone you know.",
+            "And if you don't, you'll make a new friend."
+          ],
+          "weekly": {
+            "day": "Every Thursday",
+            "title": "80s & 90s Night",
+            "text": "Tapes get rewound and the dance floor comes back. Every Thursday Poison plays the best-loved songs of the 80s and 90s; whoever knows the words sings along, and whoever doesn't, learns them."
+          },
+          "kicker": "Karanfil Street / Akyaka",
+          "instagramCta": "More on Instagram",
+          "badge": {
+            "top": "Akyaka's",
+            "main": "Busiest pub",
+            "icon": "workspace_premium"
+          }
+        },
+        "badge": {
+          "top": "Akyaka'nın",
+          "main": "En yoğun pub'ı",
+          "icon": "workspace_premium"
+        },
+        "statsViz": [
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 12,
+            "cols": 8
+          },
+          {
+            "icon": "chair",
+            "total": 10,
+            "fill": 6
+          },
+          {
+            "icon": "person",
+            "total": 15,
+            "fill": 15
+          },
+          {
+            "icon": "sports_bar",
+            "total": 4,
+            "fill": 2
+          },
+          {
+            "type": "meter",
+            "value": 0
+          },
+          {
+            "icon": "forum",
+            "total": 8,
+            "fill": 8,
+            "fade": true
+          }
+        ]
+      },
+      "hours": {
+        "open": "12:00",
+        "close": "02:30"
+      },
+      "record": {
+        "people": 305,
+        "at": "2026-10-10T23:50:00"
+      }
+    },
+    {
+      "id": "no22-riders-inn",
+      "name": "No22 Riders Inn",
+      "type": "Kulüp",
+      "folder": "no22riders-cctv",
+      "data": "data/no22-riders-inn.json",
+      "location": {
+        "lat": 37.0514953,
+        "lon": 28.3276248,
+        "approx": false,
+        "label": "Sefa Sokak No: 22, Akyaka"
+      },
+      "logo": "logos/no22riders.png?v=2",
+      "website": "https://no22ridersinn.com/home/",
+      "background": "backgrounds/no22-riders-inn.jpg",
+      "record": {
+        "people": 137,
+        "at": "2023-08-12T23:42:00"
+      },
+      "area_m2": 250,
+      "logo_scale": 1,
+      "events": [],
+      "blurb": {
+        "tr": "Akyaka’da büyük gece kulübü, bahçe, mutfak ve butik otel.",
+        "en": "A major Akyaka nightclub, garden, kitchen and boutique hotel."
+      },
+      "sim_scale": 70,
+      "simulated": true,
+      "landing": {
+        "title": "Eğlence bizim işimiz.",
+        "subtitle": "Akyaka’da gece kulübü, canlı müzik ve DJ performansları. Bahçe, iyi yemek ve butik otel aynı adreste.",
+        "kicker": "No22 Riders’ Inn / Akyaka geceleri",
+        "description": [
+          "Ekstrem sporları, iyi yemeği ve eğlenceyi sevenlerin Gökova – Akyaka’daki buluşma noktası: No22 Riders’ Inn.",
+          "No22’de gündüz Momomeets22 mutfağı ve bahçe, gece ise canlı müzik ve DJ performansları öne çıkar. Gece kulübü, restoran, bar ve otel bir aradadır; sahne programı ve rezervasyon bilgileri için mekânla iletişime geçebilirsiniz.",
+          "Kitesurfçülerin de uğrak noktası olan No22, Akyaka’da yaşayanlarla buraya tatil için gelenleri aynı bahçede buluşturur. Sporla geçen bir günün ardından yemek ve gece hayatı için ortak bir adres."
+        ],
+        "featuresTitle": "No22’de geceye karış",
+        "features": [
+          [
+            "nightlife",
+            "Büyük gece kulübü"
+          ],
+          [
+            "music_note",
+            "Canlı müzik ve DJ performansları"
+          ],
+          [
+            "park",
+            "Bahçede buluşma"
+          ],
+          [
+            "restaurant",
+            "Momomeets22 mutfağı"
+          ],
+          [
+            "local_bar",
+            "Bar ve kokteyller"
+          ],
+          [
+            "hotel",
+            "Butik otel"
+          ],
+          [
+            "groups",
+            "Akyaka gecelerinin buluşma noktası"
+          ],
+          [
+            "surfing",
+            "Kitesurfçülerin uğrak mekânı"
+          ]
+        ],
+        "statsTitle": "Rakamlarla No22",
+        "stats": [
+          [
+            "14",
+            "Butik otel odası"
+          ]
+        ],
+        "statsViz": [
+          {
+            "icon": "hotel",
+            "total": 14,
+            "fill": 14
+          }
+        ],
+        "contactTitle": "Adres, rezervasyon ve iletişim",
+        "address": "Akyaka Mahallesi, Sefa Sokak No: 22, Ula / Muğla",
+        "phone": "+90 532 420 08 22",
+        "email": "hello@no22ridersinn.com",
+        "website": "https://no22ridersinn.com/home/",
+        "instagram": "no22ridersinn",
+        "outroTitle": "No22 Riders’ Inn’de buluşalım.",
+        "outro": [
+          "Bahçe, Momomeets22 mutfağı, gece kulübü ve 14 odalı otel. Etkinlik programı, masa veya konaklama rezervasyonu için ekiple iletişime geçin."
+        ],
+        "program": {
+          "label": "Sahne & müzik",
+          "title": "Canlı müzik ve DJ performansları",
+          "text": "No22 sahnesinde yaz sezonu boyunca canlı müzik ve DJ performansları yer alır. Güncel sanatçı takvimi, etkinlik tarihleri ve rezervasyon için mekânın duyurularını takip edebilirsiniz."
+        },
+        "palette": {
+          "primary": "#F5F5F5",
+          "primaryDeep": "#A3A3A3",
+          "bg": "#080808",
+          "bg2": "#191919",
+          "cream": "#F2F2F2",
+          "accent": "#DF3535",
+          "veil": "#000000",
+          "onAccent": "#FFFFFF"
+        },
+        "media": {
+          "poster": "landing/no22/photo-1.jpg",
+          "photos": [
+            "landing/no22/photo-1.jpg",
+            "landing/no22/photo-2.jpg",
+            "landing/no22/photo-3.jpg",
+            "landing/no22/photo-4.jpg",
+            "landing/no22/photo-5.jpg",
+            "landing/no22/photo-6.jpg"
+          ]
+        },
+        "en": {
+          "title": "Entertainment is our territory.",
+          "subtitle": "Nightlife, live music and DJs in Akyaka. A garden, good food and a boutique hotel at the same address.",
+          "kicker": "No22 Riders’ Inn / Akyaka nights",
+          "description": [
+            "No22 Riders’ Inn is the habitat in Gökova – Akyaka for those who love extreme sports, good food and high time.",
+            "Start with the garden and Momomeets22 kitchen, then discover live music and DJ performances on the No22 stage. Nightclub, restaurant, bar and hotel come together here; contact the team for the current programme and reservations.",
+            "A favourite meeting place for visiting kitesurfers, No22 brings Akyaka locals and travellers together over food, conversation and music after a day outdoors."
+          ],
+          "featuresTitle": "Step into the No22 night",
+          "features": [
+            [
+              "nightlife",
+              "A major nightclub"
+            ],
+            [
+              "music_note",
+              "Live music and DJ performances"
+            ],
+            [
+              "park",
+              "Meet in the garden"
+            ],
+            [
+              "restaurant",
+              "Momomeets22 kitchen"
+            ],
+            [
+              "local_bar",
+              "Bar and cocktails"
+            ],
+            [
+              "hotel",
+              "Boutique hotel"
+            ],
+            [
+              "groups",
+              "A meeting point for Akyaka nights"
+            ],
+            [
+              "surfing",
+              "A favourite hangout for kitesurfers"
+            ]
+          ],
+          "statsTitle": "No22 in numbers",
+          "stats": [
+            [
+              "14",
+              "Boutique hotel rooms"
+            ]
+          ],
+          "contactTitle": "Address, reservations and contact",
+          "program": {
+            "label": "Stage & music",
+            "title": "Live music and DJ performances",
+            "text": "The No22 stage hosts live music and DJ performances during the summer season. Follow the venue’s announcements for artists, event dates and reservations."
+          },
+          "outroTitle": "Meet at No22 Riders’ Inn.",
+          "outro": [
+            "A garden, the Momomeets22 kitchen, a nightclub and a 14-room hotel. Contact the team for the event programme, table bookings or accommodation."
+          ],
+          "sections": [
+            {
+              "title": "Stay where the night happens.",
+              "image": "landing/no22/photo-5.jpg",
+              "imageAlt": "A guest room at No22 Riders’ Inn",
+              "paragraphs": [
+                "No22 is also a 14-room hotel in central Akyaka, within walking distance of the Azmak River and the sea. Stay close to the town by day and return to its garden, restaurant and nightlife in the evening.",
+                "Rooms offer air conditioning and Wi-Fi. Shared facilities include a garden, pool, restaurant and bar. Contact the hotel for room options, availability and reservations."
+              ],
+              "url": "https://no22ridersinn.com/accommodation/",
+              "linkLabel": "Explore rooms and accommodation"
+            }
+          ]
+        },
+        "sections": [
+          {
+            "title": "Gecenin adresi. Konaklamanın da.",
+            "image": "landing/no22/photo-5.jpg",
+            "imageAlt": "No22 Riders’ Inn otel odası",
+            "paragraphs": [
+              "No22 yalnızca bir gece mekânı değil, Akyaka’nın merkezinde 14 odalı bir otel. Azmak Nehri’ne ve denize yürüyerek ulaşılabilen konumuyla gündüz Akyaka’yı keşfetmek, akşam aynı adreste buluşmak için bir konaklama seçeneği sunar.",
+              "Odalarda klima ve Wi-Fi; ortak alanlarda bahçe, havuz, restoran ve bar bulunur. Güncel oda seçenekleri, müsaitlik ve rezervasyon için otelle iletişime geçebilirsiniz."
+            ],
+            "url": "https://no22ridersinn.com/accommodation/",
+            "linkLabel": "Odaları ve konaklamayı keşfet"
+          }
+        ]
+      },
+      "view_switch": true,
+      "instagram": "no22ridersinn"
+    },
+    {
+      "id": "kulup",
+      "background": "backgrounds/kulup.jpg",
+      "name": "Kulüp",
+      "type": "Kulüp",
+      "folder": "kulup-cctv",
+      "data": "data/kulup.json",
+      "location": {
+        "lat": 37.053901,
+        "lon": 28.342248,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kulup.png?v=2",
+      "logo_scale": 1,
+      "events": [
+        {
+          "date": "2026-10-02",
+          "name": "Halil · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-03",
+          "name": "Techno Saturday",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "23:00",
+          "to": "04:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-09",
+          "name": "Özgün · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:30",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-10",
+          "name": "Retro Night",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-16",
+          "name": "Deniz · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-17",
+          "name": "Retro Night",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-23",
+          "name": "Selin · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-24",
+          "name": "Umutcan Genç",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:30",
+          "to": "03:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-30",
+          "name": "Mert Kaya · Live",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "21:30",
+          "to": "00:30",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-31",
+          "name": "Halloween Party",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "04:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Halil · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "01:00",
+          "source": "instagram"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Özgün · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "01:00",
+          "to": "04:00",
+          "source": "instagram"
+        },
+        {
+          "date": "2026-11-07",
+          "name": "Techno Saturday",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "23:00",
+          "to": "04:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-13",
+          "name": "Selin · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "02:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-14",
+          "name": "Deniz · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-19",
+          "name": "Burak · DJ set",
+          "kind": "show",
+          "title": "Kulüp",
+          "from": "22:00",
+          "to": "03:00",
+          "source": "demo"
+        }
+      ],
+      "instagram": "kulupakyaka",
+      "blurb": {
+        "en": "Night venue with a big garden.",
+        "tr": "Geniş bahçeli eğlence mekânı."
+      },
+      "simulated": true,
+      "sim_scale": 60,
+      "sim_full_day": true,
+      "area_m2": 250,
+      "share_rank": [
+        "kulup",
+        "no22-riders-inn",
+        "dane-gokova",
+        "poison-pub"
+      ],
+      "record": {
+        "people": 305,
+        "at": "2026-10-25T00:40:00"
+      },
+      "avg_peak": 220,
+      "demo_now": 287,
+      "demo_now_date": "2026-11-19",
+      "view_switch": true,
+      "hours": {
+        "open": "17:00",
+        "close": "04:00"
+      },
+      "landing": {
+        "kicker": "İnişdibi / Akyaka",
+        "title": "Bahçe dolup taşar, eğlence 04’e kadar!",
+        "subtitle": "Sahilden dön, bir sunset birası al; gerisi sabah 04:00'e kadar kendiliğinden gelir.",
+        "description": [
+          "İnişdibinde, sahil yolu ile azmak arasında, ağaçların altında bir bahçe: Akyaka'nın en sıcak kalabalığı burada.",
+          "240 m² ağaçlı, yüksek bir bahçe ve 100 m² kapalı alan. DJ setinden pop'a her tarz müzik çalar; ister kanepelere yayıl, ister pistin ortasına karış. Gündüz sahilde tanıştığın insanlarla akşam burada buluşur, gece yenileriyle tanışırsın. Rakiplerinden daha yakın, daha sıcak, daha kalabalık. Bu sezon mekân baştan sona yenileniyor."
+        ],
+        "featuresTitle": "Mekân özellikleri",
+        "features": [
+          [
+            "park",
+            "240 m² ağaçlı bahçe"
+          ],
+          [
+            "weekend",
+            "Kanepelere yayılma keyfi"
+          ],
+          [
+            "nightlife",
+            "Sabah 04:00'e kadar eğlence"
+          ],
+          [
+            "headphones",
+            "DJ'den pop'a her tarz müzik"
+          ],
+          [
+            "wb_twilight",
+            "Sahil dönüşü sunset birası"
+          ],
+          [
+            "payments",
+            "Benzerleri arasında en uygun fiyatlar"
+          ],
+          [
+            "groups",
+            "Yeni insanlarla tanışmak için ideal"
+          ],
+          [
+            "auto_awesome",
+            "Bu sezon baştan sona yenilendi"
+          ]
+        ],
+        "statsTitle": "Rakamlarla Kulüp",
+        "stats": [
+          [
+            "240 m²",
+            "Ağaçlı açık bahçe"
+          ],
+          [
+            "100 m²",
+            "Kapalı alan"
+          ],
+          [
+            "04:00",
+            "Son şarkı"
+          ],
+          [
+            "7/7",
+            "Sunset'ten sabaha"
+          ],
+          [
+            "0",
+            "Yabancılık çekme ihtimali"
+          ],
+          [
+            "∞",
+            "Yeni tanışma"
+          ]
+        ],
+        "statsViz": [
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 11,
+            "cols": 8
+          },
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 5,
+            "cols": 8
+          },
+          {
+            "icon": "dark_mode",
+            "total": 11,
+            "fill": 11
+          },
+          {
+            "icon": "calendar_today",
+            "total": 7,
+            "fill": 7
+          },
+          {
+            "type": "meter",
+            "value": 0
+          },
+          {
+            "icon": "forum",
+            "total": 8,
+            "fill": 8,
+            "fade": true
+          }
+        ],
+        "contactTitle": "Adres ve iletişim",
+        "address": "İnişdibi, sahil yolu ile azmak arası, Akyaka, Ula / Muğla",
+        "instagram": "kulupakyaka",
+        "instagramCta": "Daha fazlası Instagram'da",
+        "outroTitle": "Sezon açılıyor. Yerini al!",
+        "outro": [
+          "Akşamüstü sahil dönüşü bir sunset birası, gece bahçede dans, sabaha karşı son şarkı. Akyaka'da gecenin nereye varacağını bilmiyorsan, Kulüp'ten başla.",
+          "Gerisi kendiliğinden gelir."
+        ],
+        "weekly": {
+          "day": "Her Cumartesi",
+          "weekday": 6,
+          "time": "22:30–01:00",
+          "title": "Berkan Cankurt Live",
+          "text": "Her cumartesi sahne Berkan Cankurt'un. Ağaçların altında, bahçede canlı performans; son şarkıdan sonra DJ devralır ve gece sabah 04:00'e kadar sürer."
+        },
+        "palette": {
+          "primary": "#FF3B2F",
+          "primaryDeep": "#B3120C",
+          "bg": "#140607",
+          "bg2": "#2A0B0C",
+          "cream": "#F4E4D0",
+          "accent": "#F4E4D0"
+        },
+        "media": {
+          "video": "landing/kulup/hero.mp4",
+          "poster": "landing/kulup/photo-1.jpg",
+          "heroLogo": "landing/kulup/logo-neon.png?v=2",
+          "photos": [
+            "landing/kulup/photo-1.jpg",
+            "landing/kulup/photo-2.jpg",
+            "landing/kulup/photo-3.jpg",
+            "landing/kulup/photo-4.jpg"
+          ]
+        },
+        "en": {
+          "kicker": "İnişdibi / Akyaka",
+          "title": "A packed garden. Party until 4 AM!",
+          "subtitle": "Back from the beach, grab a sunset beer; the rest takes care of itself until 4 am.",
+          "description": [
+            "In İnişdibi, between the beach road and the river, a garden under the trees: Akyaka's warmest crowd is here.",
+            "A 240 m² raised garden full of trees plus 100 m² indoors. From DJ sets to pop, every kind of music plays; sprawl on a sofa or dive into the middle of the floor. The people you met on the beach by day meet you here in the evening, and new faces join by night. Closer, warmer and busier than its rivals. This season the whole place is being renewed."
+          ],
+          "featuresTitle": "What makes it Kulüp",
+          "features": [
+            [
+              "park",
+              "240 m² tree-filled garden"
+            ],
+            [
+              "weekend",
+              "Sofas to sprawl on"
+            ],
+            [
+              "nightlife",
+              "Party until 4 am"
+            ],
+            [
+              "headphones",
+              "From DJ sets to pop"
+            ],
+            [
+              "wb_twilight",
+              "Sunset beer after the beach"
+            ],
+            [
+              "payments",
+              "The best prices among its kind"
+            ],
+            [
+              "groups",
+              "Perfect for meeting new people"
+            ],
+            [
+              "auto_awesome",
+              "Fully renewed this season"
+            ]
+          ],
+          "statsTitle": "Kulüp in numbers",
+          "stats": [
+            [
+              "240 m²",
+              "Tree-filled garden"
+            ],
+            [
+              "100 m²",
+              "Indoor space"
+            ],
+            [
+              "04:00",
+              "Last song"
+            ],
+            [
+              "7/7",
+              "Sunset to sunrise"
+            ],
+            [
+              "0",
+              "Chance of feeling like a stranger"
+            ],
+            [
+              "∞",
+              "New people to meet"
+            ]
+          ],
+          "contactTitle": "Address and contact",
+          "outroTitle": "The season is opening. Take your spot!",
+          "outro": [
+            "A sunset beer after the beach, dancing in the garden at night, the last song before dawn. If you don't know where your night in Akyaka is headed, start at Kulüp.",
+            "The rest takes care of itself."
+          ],
+          "instagramCta": "More on Instagram",
+          "weekly": {
+            "day": "Every Saturday",
+            "title": "Berkan Cankurt Live",
+            "text": "Every Saturday the stage belongs to Berkan Cankurt. A live set in the garden under the trees; after the last song the DJ takes over and the night runs until 4 am."
+          }
+        },
+        "plan": {
+          "kind": "garden",
+          "w": 20,
+          "d": 17
+        }
+      }
+    },
+    {
+      "id": "lemongrass-cafe",
+      "background": "backgrounds/lemongrass-cafe.jpg",
+      "name": "Lemongrass Cafe",
+      "type": "Kafe",
+      "folder": "Lemongrass-cctv",
+      "data": "data/lemongrass-cafe.json",
+      "location": {
+        "lat": 37.0262,
+        "lon": 28.3585,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/lemongrass.png",
+      "events": [
+        {
+          "date": "2026-10-20",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-21",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-22",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-23",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-24",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-26",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-27",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-28",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-29",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-30",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-10-31",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-02",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-03",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-04",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-05",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
+        },
+        {
+          "date": "2026-11-06",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
+        },
+        {
+          "date": "2026-11-07",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
+        },
+        {
+          "date": "2026-11-08",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00"
+        },
+        {
+          "date": "2026-11-09",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-10",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-11",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-12",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-13",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-14",
+          "name": "Semra Gümüşalan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-16",
+          "name": "Gizem Civan",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-17",
+          "name": "Zeyneb Uras",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        },
+        {
+          "date": "2026-11-18",
+          "name": "Şeyma Yazıcıoğlu",
+          "kind": "yoga",
+          "title": "Lemongrass Yoga",
+          "from": "10:00",
+          "to": "11:00",
+          "source": "demo"
+        }
+      ],
+      "instagram": "lemongrasscommunity",
+      "blurb": {
+        "en": "Coffee, yoga and community.",
+        "tr": "Kahve, yoga ve topluluk mekânı."
+      },
+      "sim_scale": 45,
+      "simulated": true,
+      "view_switch": true,
+      "landing": {
+        "kicker": "Akçapınar / Akyaka",
+        "title": "Bir kahveden çok daha fazlası.",
+        "subtitle": "Sabah yogası, öğlen bir masa ve laptop, akşam sunset; hepsi Akçapınar'ın köşesinde, aynı topluluğun içinde.",
+        "description": [
+          "Akçapınar'ın eski köy kahvesinin yerinde, bir topluluğun içinde şekillendi: Lemongrass, rüzgârı beklerken herkesin buluştuğu yer.",
+          "Köşedeki 120 m² kahve alanında sabah kahveleri içilir, rüzgâr beklenir, yeni çevreler edinilir. Hemen yanındaki 150 m² alanda haftanın neredeyse her sabahı yoga yapılır; ders bitince aynı alan, bilgisayarını açıp çalışmak isteyenlerin sakin çalışma alanına dönüşür. Raflardaki butik ürünlerden fincandaki kahveye kadar her şey özenle seçilmiş. Akyaka'nın müdavimleri sezon boyu burada."
+        ],
+        "featuresTitle": "Mekân özellikleri",
+        "features": [
+          [
+            "coffee",
+            "Nitelikli kahve, özenle seçilmiş ürünler"
+          ],
+          [
+            "self_improvement",
+            "Neredeyse her sabah yoga"
+          ],
+          [
+            "laptop_mac",
+            "Gün boyu sakin çalışma alanı"
+          ],
+          [
+            "storefront",
+            "İçinde küçük bir butik"
+          ],
+          [
+            "wb_twilight",
+            "Akşamları sunset DJ partileri"
+          ],
+          [
+            "kitesurfing",
+            "Kite sahiline birkaç dakika"
+          ],
+          [
+            "groups",
+            "Kendi topluluğu olan bir mekân"
+          ],
+          [
+            "local_bar",
+            "Ruhsatlı; akşamları alkollü içki de var"
+          ]
+        ],
+        "statsTitle": "Rakamlarla Lemongrass",
+        "stats": [
+          [
+            "120 m²",
+            "Kahve ve sosyalleşme alanı"
+          ],
+          [
+            "150 m²",
+            "Yoga ve çalışma alanı"
+          ],
+          [
+            "6/7",
+            "Yogalı sabah"
+          ],
+          [
+            "1",
+            "Butik"
+          ],
+          [
+            "0",
+            "Yabancılık çekme ihtimali"
+          ],
+          [
+            "∞",
+            "Rüzgâr beklerken içilen kahve"
+          ]
+        ],
+        "statsViz": [
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 7,
+            "cols": 8
+          },
+          {
+            "type": "grid",
+            "total": 16,
+            "fill": 9,
+            "cols": 8
+          },
+          {
+            "icon": "self_improvement",
+            "total": 7,
+            "fill": 6
+          },
+          {
+            "icon": "storefront",
+            "total": 4,
+            "fill": 1
+          },
+          {
+            "type": "meter",
+            "value": 0
+          },
+          {
+            "icon": "coffee",
+            "total": 8,
+            "fill": 8,
+            "fade": true
+          }
+        ],
+        "plan": {
+          "kind": "cafe",
+          "w": 15,
+          "d": 18,
+          "sign": "Lemongrass"
+        },
+        "contactTitle": "Adres ve iletişim",
+        "address": "Akçapınar, Akyaka, Ula / Muğla",
+        "instagram": "lemongrasscommunity",
+        "instagramCta": "Topluluğu Instagram'da takip et",
+        "outroTitle": "Sabah kahven burada seni bekliyor.",
+        "outro": [
+          "İster matını sermek için gel, ister bilgisayarını açmak için, ister sadece rüzgârı beklemek için. Akçapınar'ın köşesinde bir fincan kahve ve tanıdık yüzler hep hazır.",
+          "Gerisi topluluğun işi."
+        ],
+        "weekly": {
+          "day": "Her Cuma",
+          "weekday": 5,
+          "time": "18:30–22:00",
+          "title": "Sunset DJ Partisi",
+          "text": "Gün batarken müzik yumuşar, Akçapınar'a altın bir ışık düşer. Her cuma akşamı sunset DJ setiyle kahveler yerini serin içkilere bırakır; günü topluluğun içinde, dans ederek kapatırsın."
+        },
+        "palette": {
+          "primary": "#6CC070",
+          "primaryDeep": "#3E8A44",
+          "bg": "#0F1A12",
+          "bg2": "#1B2C1F",
+          "cream": "#F4ECDD",
+          "accent": "#F0AE50",
+          "accent2": "#A796CC"
+        },
+        "media": {
+          "video": "landing/lemongrass/hero.mp4",
+          "poster": "landing/lemongrass/photo-1.jpg",
+          "photos": [
+            "landing/lemongrass/photo-1.jpg",
+            "landing/lemongrass/photo-2.jpg",
+            "landing/lemongrass/photo-3.jpg",
+            "landing/lemongrass/photo-4.jpg",
+            "landing/lemongrass/photo-5.jpg",
+            "landing/lemongrass/photo-6.jpg"
+          ]
+        },
+        "en": {
+          "kicker": "Akçapınar / Akyaka",
+          "title": "Much more than a coffee shop.",
+          "subtitle": "Morning yoga, a desk and a laptop by noon, a sunset in the evening; all on the corner of Akçapınar, inside the same community.",
+          "description": [
+            "Built where Akçapınar's old village coffee house once stood, and shaped by a community: Lemongrass is where everyone meets while waiting for the wind.",
+            "In the 120 m² café on the corner, morning coffees are drunk, the wind is waited for and new circles are made. In the 150 m² space next door there's yoga almost every morning; once class ends, the same room becomes a quiet workspace for anyone who wants to open a laptop. From the boutique shelves to the coffee in your cup, everything is chosen with care. Akyaka's regulars spend the whole season here."
+          ],
+          "featuresTitle": "What makes it Lemongrass",
+          "features": [
+            [
+              "coffee",
+              "Specialty coffee, carefully chosen goods"
+            ],
+            [
+              "self_improvement",
+              "Yoga almost every morning"
+            ],
+            [
+              "laptop_mac",
+              "A quiet workspace all day"
+            ],
+            [
+              "storefront",
+              "A small boutique inside"
+            ],
+            [
+              "wb_twilight",
+              "Sunset DJ parties in the evening"
+            ],
+            [
+              "kitesurfing",
+              "Minutes from the kite beach"
+            ],
+            [
+              "groups",
+              "A place with its own community"
+            ],
+            [
+              "local_bar",
+              "Licensed; drinks in the evening too"
+            ]
+          ],
+          "statsTitle": "Lemongrass in numbers",
+          "stats": [
+            [
+              "120 m²",
+              "Coffee and social space"
+            ],
+            [
+              "150 m²",
+              "Yoga and workspace"
+            ],
+            [
+              "6/7",
+              "Mornings with yoga"
+            ],
+            [
+              "1",
+              "Boutique"
+            ],
+            [
+              "0",
+              "Chance of feeling like a stranger"
+            ],
+            [
+              "∞",
+              "Coffees while waiting for the wind"
+            ]
+          ],
+          "contactTitle": "Address and contact",
+          "outroTitle": "Your morning coffee is waiting.",
+          "outro": [
+            "Come to roll out your mat, to open your laptop, or just to wait for the wind. On the corner of Akçapınar there's always a cup of coffee and a familiar face.",
+            "The community does the rest."
+          ],
+          "instagramCta": "Follow the community on Instagram",
+          "weekly": {
+            "day": "Every Friday",
+            "title": "Sunset DJ Party",
+            "text": "As the sun goes down the music softens and a golden light falls on Akçapınar. Every Friday evening a sunset DJ set swaps coffee for cold drinks; you close the day dancing with the community."
+          }
+        }
+      },
+      "hours": {
+        "open": "09:00",
+        "close": "21:00"
+      }
+    },
+    {
+      "id": "kitebeach-akyaka",
+      "name": "Kitebeach Akyaka",
+      "type": "Plaj",
+      "folder": null,
+      "data": null,
+      "location": {
+        "lat": 37.037453,
+        "lon": 28.3294399,
+        "approx": false,
+        "label": "Kite Plajı, Akyaka"
+      },
+      "logo": "logos/kitebeach.png?v=2",
+      "background_video": {
+        "youtube": "V9AhK54xsxY",
+        "start": 0
+      },
+      "logo_scale": 1,
+      "simulated": true,
+      "sim_profile": "beach",
+      "hours": {
+        "open": "08:00",
+        "close": "20:00"
+      },
+      "description": "",
+      "blurb": {
+        "tr": "Gökova’da kitesurf, kıyıda yemek, müzik ve konaklama.",
+        "en": "Kitesurfing, food, music and stays on Gökova’s coast."
+      },
+      "beach_peak": 140,
+      "landing": {
+        "title": "Kitesörf, doğa ve müzik.",
+        "subtitle": "Türkiye’nin en iyi kitesörf noktasında unutulmaz bir deneyim yaşayın. Profesyonel eğitmenler, mükemmel rüzgâr ve eşsiz doğa sizi bekliyor.",
+        "kicker": "Gökova Körfezi / Akyaka",
+        "description": [
+          "Nehir kıyısında dinlenmek, denizde spor yapmak: Kite Beach Akyaka.",
+          "Kitebeach; kitesörf, yoga ve gün batımında müziği, butik konaklama ve Ege mutfağıyla bir araya getirir. Nehir kenarında güne başlayabilir, plajda vakit geçirebilir ve akşamı gün batımında DJ partisi ile devam ettirebilirsiniz.",
+          "Restoranda yerel lezzetler ve Ege mutfağı; konaklamada ise doğaya yakın bir Akyaka deneyimi öne çıkar. Aktivite seçenekleri ve özel paketler hakkında ekipten bilgi alabilirsiniz."
+        ],
+        "featuresTitle": "Kıyıda geçen bir gün",
+        "features": [
+          [
+            "kitesurfing",
+            "Kitesörf deneyimi"
+          ],
+          [
+            "waves",
+            "Gökova plajı"
+          ],
+          [
+            "self_improvement",
+            "Nehir kenarında yoga"
+          ],
+          [
+            "kayaking",
+            "Kürek sörfü ve su aktiviteleri"
+          ],
+          [
+            "restaurant",
+            "Ege mutfağı"
+          ],
+          [
+            "local_bar",
+            "Dinlenme alanı ve bar"
+          ],
+          [
+            "music_note",
+            "Gün batımında DJ"
+          ],
+          [
+            "hotel",
+            "Butik konaklama"
+          ]
+        ],
+        "stats": [],
+        "contactTitle": "Kıyıda buluşalım",
+        "address": "Akçapınar Mevkii, Akyaka / Ula / Muğla",
+        "phone": "+90 544 504 03 10",
+        "website": "https://kitebeachakyaka.com.tr/tr",
+        "outroTitle": "Kite Beach Akyaka’yı keşfedin.",
+        "outro": [
+          "Kitesörf, yoga, gün batımı etkinlikleri, restoran ve butik konaklama. Özel paketler, güncel program ve rezervasyon için bize ulaşın."
+        ],
+        "program": {
+          "label": "Gün batımı & müzik",
+          "title": "Gün batımında DJ partisi",
+          "text": "Ege manzarası eşliğinde gün batımı ve DJ performansları. Güncel etkinlik tarihlerini ve programı Kitebeach ekibinden öğrenebilirsiniz."
+        },
+        "palette": {
+          "primary": "#ED996C",
+          "primaryDeep": "#3B869F",
+          "bg": "#0A1F27",
+          "bg2": "#12313D",
+          "cream": "#F8EDDF",
+          "accent": "#3B869F",
+          "veil": "#133744"
+        },
+        "media": {
+          "youtube": "V9AhK54xsxY",
+          "youtubeStart": 0,
+          "poster": "landing/kitebeach/poster.jpg",
+          "photos": [
+            "landing/kitebeach/photo-1.jpg",
+            "landing/kitebeach/photo-2.jpg",
+            "landing/kitebeach/photo-3.jpg",
+            "landing/kitebeach/photo-4.jpg",
+            "landing/kitebeach/photo-5.jpg"
+          ]
+        },
+        "en": {
+          "title": "Kitesurf, nature and music.",
+          "subtitle": "Discover an unforgettable kitesurf experience in Akyaka, with professional instructors, reliable winds and remarkable natural surroundings.",
+          "kicker": "Gökova Bay / Akyaka",
+          "description": [
+            "Rest by the river, ride on the sea: Kite Beach Akyaka.",
+            "Kitebeach brings kitesurfing, yoga and sunset music together with boutique accommodation and Aegean food. Begin the day by the river, spend time at the beach and continue into the evening with a Sunset DJ Party.",
+            "The restaurant focuses on local flavours and Aegean cuisine, while the accommodation keeps you close to nature. Ask the team about available activities and combined experience packages."
+          ],
+          "featuresTitle": "A day by the shore",
+          "features": [
+            [
+              "kitesurfing",
+              "Kitesurfing experiences"
+            ],
+            [
+              "waves",
+              "Gökova beach"
+            ],
+            [
+              "self_improvement",
+              "Yoga by the river"
+            ],
+            [
+              "kayaking",
+              "SUP and water activities"
+            ],
+            [
+              "restaurant",
+              "Aegean cuisine"
+            ],
+            [
+              "local_bar",
+              "Lounge and bar"
+            ],
+            [
+              "music_note",
+              "Sunset DJ sessions"
+            ],
+            [
+              "hotel",
+              "Boutique stays"
+            ]
+          ],
+          "stats": [],
+          "contactTitle": "Meet by the shore",
+          "outroTitle": "Discover Kite Beach Akyaka.",
+          "outro": [
+            "Kitesurfing, yoga, sunset events, a restaurant and boutique accommodation. Contact the team for tailored packages, the current programme and reservations."
+          ],
+          "program": {
+            "label": "Sunset & music",
+            "title": "Sunset DJ Party",
+            "text": "Sunset views over the Aegean, accompanied by DJ music. Contact the Kitebeach team for upcoming event dates and programme details."
+          },
+          "sections": [
+            {
+              "title": "Kitesurf, Yoga Wellness & Sunset DJ Party",
+              "paragraphs": [
+                "Explore the wind, river and sunset through three different experiences. Contact Kitebeach for activity times, availability and tailored packages."
+              ],
+              "items": [
+                {
+                  "icon": "kitesurfing",
+                  "title": "Kitesurf",
+                  "text": "Experience Akyaka’s winds with professional instructors, whether you are discovering kitesurfing or developing your skills on the water."
+                },
+                {
+                  "icon": "self_improvement",
+                  "title": "Yoga Wellness",
+                  "text": "Begin with morning yoga by the river or take time to unwind in a sunset session."
+                },
+                {
+                  "icon": "music_note",
+                  "title": "Sunset DJ Party",
+                  "text": "Enjoy DJ music as the sun sets over the Aegean. Check with the venue for the current programme."
+                }
+              ],
+              "url": "https://kitebeachakyaka.com.tr/tr/aktiviteler",
+              "linkLabel": "Activities and tailored packages"
+            }
+          ]
+        },
+        "sections": [
+          {
+            "title": "Kitesörf, yoga ve gün batımında müzik",
+            "paragraphs": [
+              "Rüzgârı, nehri ve gün batımını farklı deneyimlerle keşfedin. Aktivite saatleri, uygunluk ve özel paketler için Kitebeach ekibine ulaşabilirsiniz."
+            ],
+            "items": [
+              {
+                "icon": "kitesurfing",
+                "title": "Kitesörf",
+                "text": "Akyaka’nın rüzgârında profesyonel eğitmenlerin rehberliğinde kitesörf ile tanışın ya da su üzerindeki deneyiminizi geliştirin."
+              },
+              {
+                "icon": "self_improvement",
+                "title": "Yoga ve iyi yaşam",
+                "text": "Nehir kıyısında sabah yogasıyla güne başlayın veya gün batımı seansında dinlenmeye zaman ayırın."
+              },
+              {
+                "icon": "music_note",
+                "title": "Gün batımında DJ partisi",
+                "text": "Ege manzarası eşliğinde gün batımını DJ müziğiyle karşılayın. Güncel programı mekândan öğrenebilirsiniz."
+              }
+            ],
+            "url": "https://kitebeachakyaka.com.tr/tr/aktiviteler",
+            "linkLabel": "Aktiviteler ve özel paketler"
+          }
+        ]
+      },
+      "view_switch": true,
+      "website": "https://kitebeachakyaka.com.tr/tr"
+    },
+    {
+      "id": "rahat-meyhane",
+      "background": "backgrounds/rahat-meyhane.jpg",
+      "name": "Rahat Meyhane",
+      "type": "Meyhane",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0520866,
+        "lon": 28.3277923,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/rahatmeyhane.png",
+      "hours": {
+        "open": "18:00",
+        "close": "01:00"
+      },
+      "description": "",
+      "categories": [
+        "food"
+      ],
+      "blurb": {
+        "en": "Meze and rakı tavern.",
+        "tr": "Meze ve rakı meyhanesi."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "kucuk-akyaka",
+      "name": "Küçük",
+      "type": "Bar",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0539959,
+        "lon": 28.3432161,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kucukakyaka.png",
+      "hours": {
+        "open": "17:00",
+        "close": "02:00"
+      },
+      "description": "",
+      "categories": [
+        "activity"
+      ],
+      "background": "backgrounds/kucuk-akyaka.jpg",
+      "blurb": {
+        "en": "Small cocktail bar.",
+        "tr": "Küçük kokteyl barı."
+      },
+      "sim_scale": 40
+    },
+    {
+      "id": "rahat-social",
+      "background": "backgrounds/rahat-social.jpg",
+      "name": "Rahat Social",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.057157,
+        "lon": 28.3262423,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/rahatsocial.png",
+      "hours": {
+        "open": "09:00",
+        "close": "00:00"
+      },
+      "description": "",
+      "instagram": "rahatsocial",
+      "blurb": {
+        "en": "All-day café with pizza and coffee.",
+        "tr": "Pizza ve kahveli gün boyu kafe."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "dane-gokova",
+      "name": "Dane Gökova",
+      "type": "Kulüp",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.028469,
+        "lon": 28.3588752,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/danegokova.png",
+      "hours": {
+        "open": "22:00",
+        "close": "04:00"
+      },
+      "description": "",
+      "background": "backgrounds/dane-gokova.jpg",
+      "blurb": {
+        "en": "Night club with DJ nights.",
+        "tr": "DJ geceli gece kulübü."
+      },
+      "sim_scale": 55
+    },
+    {
+      "id": "muhtar",
+      "background": "backgrounds/muhtar.jpg",
+      "name": "Muhtar",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0261761,
+        "lon": 28.3591953,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/muhtar.png",
+      "hours": {
+        "open": "11:00",
+        "close": "23:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Grill and home cooking.",
+        "tr": "Izgara ve ev yemekleri."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "chicken-loop",
+      "background": "backgrounds/chicken-loop.jpg",
+      "name": "Chicken Loop",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0265205,
+        "lon": 28.358654,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/chickenloop.png",
+      "hours": {
+        "open": "11:00",
+        "close": "23:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Kiters' burger restaurant.",
+        "tr": "Burgerci kiter restoranı."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "back-loop",
+      "name": "Back Loop",
+      "type": "Meyhane",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0258867,
+        "lon": 28.3556907,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/backloop.png",
+      "hours": {
+        "open": "16:00",
+        "close": "01:00"
+      },
+      "description": "",
+      "categories": [
+        "food"
+      ],
+      "background": "backgrounds/back-loop.jpg",
+      "blurb": {
+        "en": "Meze and evening drinks.",
+        "tr": "Meze ve akşam içkileri."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "kukla",
+      "background": "backgrounds/kukla.jpg",
+      "name": "Kukla Pub",
+      "type": "Pub",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0518376,
+        "lon": 28.3258831,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/kukla.png",
+      "hours": {
+        "open": "19:00",
+        "close": "03:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Cosy pub for beer and music.",
+        "tr": "Samimi bira ve müzik pub'ı."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "suma",
+      "background": "backgrounds/suma.jpg",
+      "name": "Suma Restorant",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.052071,
+        "lon": 28.3269782,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/suma.png",
+      "hours": {
+        "open": "12:00",
+        "close": "00:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Dinner restaurant.",
+        "tr": "Akşam yemeği restoranı."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "west-cafe-bistro",
+      "background": "backgrounds/west-cafe-bistro.jpg",
+      "name": "West Bistro",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0547467,
+        "lon": 28.3404817,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/westcafebistro.png",
+      "hours": {
+        "open": "08:30",
+        "close": "23:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Breakfast and lunch bistro.",
+        "tr": "Kahvaltı ve öğle bistrosu."
+      },
+      "sim_scale": 40
+    },
+    {
+      "id": "yelken",
+      "name": "Yelken Pub",
+      "type": "Pub",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0522577,
+        "lon": 28.3257767,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/yelken.png?v=2",
+      "hours": {
+        "open": "17:00",
+        "close": "02:00"
+      },
+      "description": "",
+      "logo_scale": 1,
+      "background": "backgrounds/yelken.jpg",
+      "blurb": {
+        "en": "Pub with evening music.",
+        "tr": "Akşam müzikli pub."
+      },
+      "sim_scale": 40
+    },
+    {
+      "id": "akcapinar-tostcusu",
+      "background": "backgrounds/akcapinar-tostcusu.jpg",
+      "name": "Akçapınar Tostçusu",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0272759,
+        "lon": 28.3588719,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/akcapinartostcusu.png",
+      "hours": {
+        "open": "07:30",
+        "close": "22:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Toast and breakfast stop.",
+        "tr": "Tost ve kahvaltı durağı."
+      },
+      "sim_scale": 30
+    },
+    {
+      "id": "sepia",
+      "background": "backgrounds/sepia.jpg",
+      "name": "Sepia",
+      "type": "Restoran",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0260481,
+        "lon": 28.3555526,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/sepia.png",
+      "hours": {
+        "open": "10:00",
+        "close": "00:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Quiet dinner restaurant.",
+        "tr": "Sakin akşam yemeği restoranı."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "edit",
+      "name": "Edit.",
+      "type": "Kulüp",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0267831,
+        "lon": 28.3587541,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/edit.png",
+      "hours": {
+        "open": "21:00",
+        "close": "04:00"
+      },
+      "description": "",
+      "background": "backgrounds/edit.jpg",
+      "blurb": {
+        "en": "Night venue with DJ nights.",
+        "tr": "DJ geceli gece mekânı."
+      },
+      "sim_scale": 50
+    },
+    {
+      "id": "okapi-suites",
+      "name": "Okapi Suites",
+      "type": "Kulüp",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0261125,
+        "lon": 28.3531944,
+        "approx": false,
+        "label": "Akçapınar"
+      },
+      "logo": "logos/okapi.png",
+      "hours": {
+        "open": "22:00",
+        "close": "04:00"
+      },
+      "description": "",
+      "background": "backgrounds/okapi-suites.jpg",
+      "blurb": {
+        "en": "Hotel and night venue.",
+        "tr": "Otel ve gece mekânı."
+      },
+      "sim_scale": 45
+    },
+    {
+      "id": "soul-fit",
+      "name": "Soul Fit",
+      "type": "Spor",
+      "folder": "soulfit-cctv",
+      "data": "data/soul-fit.json",
+      "location": {
+        "lat": 37.0560692,
+        "lon": 28.3369522,
+        "approx": false,
+        "label": "Akyaka"
+      },
+      "logo": "logos/soulfit.png",
+      "hours": {
+        "open": "07:00",
+        "close": "22:00"
+      },
+      "description": "",
+      "background": "backgrounds/soul-fit.jpg",
+      "blurb": {
+        "en": "Gym and fitness classes.",
+        "tr": "Spor salonu ve fitness dersleri."
+      },
+      "sim_scale": 30,
+      "simulated": true
+    },
+    {
+      "id": "motto-brew-coffee",
+      "background": "backgrounds/motto-brew-coffee.jpg",
+      "name": "Motto Coffee",
+      "type": "Kafe",
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "location": {
+        "lat": 37.0517789,
+        "lon": 28.3261948,
+        "approx": false,
+        "label": "Karanfil Sk. 2/1, Akyaka"
+      },
+      "logo": "logos/motto-brew-coffee.png?v=2",
+      "logo_scale": 1,
+      "hours": {
+        "open": "08:00",
+        "close": "20:00"
+      },
+      "description": "",
+      "blurb": {
+        "en": "Specialty coffee bar.",
+        "tr": "Nitelikli kahve barı."
+      },
+      "sim_scale": 35
+    },
+    {
+      "id": "moy-beach",
+      "background": "backgrounds/moy-beach.jpg",
+      "name": "MOY Beach",
+      "type": "Plaj",
+      "location": {
+        "lat": 37.0494268,
+        "lon": 28.2996192,
+        "label": "MOY Beach, Akyaka",
+        "approx": false
+      },
+      "hours": {
+        "open": "09:00",
+        "close": "20:00"
+      },
+      "folder": null,
+      "data": null,
+      "simulated": true,
+      "description": "",
+      "blurb": {
+        "en": "Beach club by the sea.",
+        "tr": "Deniz ve içki için plaj kulübü."
+      },
+      "sim_scale": 55
+    }
+  ]
+}

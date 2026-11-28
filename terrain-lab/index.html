@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Akyaka — Terrain Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}
+  </script>
+</head>
+<body>
+  <main id="scene" aria-label="Akyaka üç boyutlu interaktif dünya" tabindex="0"></main>
+  <div class="edge-fog" aria-hidden="true"></div>
+  <div id="labels" aria-label="Harita konumları"></div>
+  <header class="brand">
+    <div class="crest" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M4 31 14 9l7 12 5-8 10 18H4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m11 16 3 4 3-4M6 34h28" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+    <div><div class="eyebrow">VENUE · WORLD STUDIES</div><h1>AKYAKA<span> / GÖKOVA</span></h1><div class="subtitle">COASTAL REALM · 3D TERRAIN LAB</div></div>
+  </header>
+  <div class="studio-toolbar" aria-label="Harita görünümü">
+    <button id="places" class="tool" aria-pressed="false" title="Mekânları göster"><svg viewBox="0 0 24 24" fill="none"><path d="M20 10c0 5.5-8 11-8 11S4 15.5 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.6"/></svg><span>Mekânlar</span></button>
+    <button id="lighting" class="tool" aria-pressed="false" title="Gündüz / akşam"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/></svg><span>Gündüz</span></button>
+    <button id="render-settings" class="tool" aria-expanded="true" aria-controls="render-panel" title="Render ayarları"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16M4 12h16M4 19h16"/><circle cx="8" cy="5" r="2.5" fill="currentColor"/><circle cx="16" cy="12" r="2.5" fill="currentColor"/><circle cx="10" cy="19" r="2.5" fill="currentColor"/></svg><span>Render</span></button>
+  </div>
+  <aside class="render-panel" id="render-panel" aria-label="Three.js render ayarları">
+    <div class="render-head"><div><span class="render-kicker">WORLD STUDIO / LIVE</span><h2>Render settings</h2></div><button id="render-close" type="button" aria-label="Ayarları kapat">×</button></div>
+    <div class="render-stats"><div><span>FPS</span><b id="metric-fps">—</b></div><div><span>TRIANGLES</span><b id="metric-triangles">—</b></div><div><span>RENDER PX</span><b id="metric-resolution">—</b></div></div>
+    <div class="render-scroll" id="render-controls"></div>
+    <div class="render-footer"><span id="preset-status">Değişiklikler canlı uygulanır</span><div class="preset-actions"><button id="render-save-defaults" type="button" title="Geçerli ayarları uygulamanın varsayılan preset dosyasına kaydet">Save defaults</button><button id="render-reset" type="button">Reset</button></div></div>
+  </aside>
+  <aside class="map-info">
+    <div class="info-line"><span class="status-dot" id="status-dot"></span><strong id="data-state">Dünya hazırlanıyor</strong></div>
+    <p id="data-detail">Akyaka'nın arazisi, yolları ve kıyıları yükleniyor…</p>
+    <div class="scale"><span></span><i id="scale-text">1 km</i></div>
+    <div class="credits">© OpenStreetMap contributors · Mapterhorn · Three.js</div>
+  </aside>
+  <div class="nav" aria-label="Harita kamera kontrolleri">
+    <button id="lock-view" class="nav-btn" aria-label="Mevcut görünümü harita sınırı olarak kaydet" title="Mevcut görünümü sınır olarak kaydet · Shift tık: varsayılan"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></button>
+    <button id="reset" class="nav-btn" aria-label="Haritayı başlangıç konumuna getir" title="Başlangıç görünümü"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="7"/><path d="M12 1v5m0 12v5M1 12h5m12 0h5"/><circle cx="12" cy="12" r="2"/></svg></button>
+    <div class="zoom-group"><button id="zoom-in" class="nav-btn" aria-label="Yakınlaştır" title="Yakınlaştır">+</button><button id="zoom-out" class="nav-btn" aria-label="Uzaklaştır" title="Uzaklaştır">−</button></div>
+    <div class="compass" id="compass"><span>N</span><svg viewBox="0 0 44 44"><path d="M22 4 30 31 22 26 14 31Z" fill="#d6e6c1"/><path d="M22 4 22 26 14 31Z" fill="#849f7c"/></svg></div>
+  </div>
+  <div class="hint">Sürükle: keşfet <span>·</span> Tekerlek: yakınlaş <span>·</span> Sağ tık: döndür</div>
+  <div class="loading" id="loading"><div class="loader"><div class="loader-ring"></div><b>Yeryüzü şekilleniyor</b><small id="load-message">3D motoru başlatılıyor…</small></div></div>
+  <div id="venue-popup" class="venue-popup" hidden></div>
+  <script type="module">
+    import('./main.js').catch(error => {
+      console.error(error);
+      document.getElementById('load-message').textContent = '3D motoru yüklenemedi. İnternet bağlantısını kontrol edip sayfayı yenile.';
+      document.getElementById('data-state').textContent = 'Motor bağlantısı yok';
+      document.querySelector('.loader-ring').style.animation = 'none';
+      if(window.parent!==window&&new URLSearchParams(location.search).get('embedded')==='1')window.parent.postMessage({type:'venue-map:error'},location.origin);
+    });
+  </script>
+</body>
+</html>

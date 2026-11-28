@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "savedAt": "2026-11-28T12:50:48Z",
+  "render": {
+    "particles": 0,
+    "particleSize": 0.4,
+    "clouds": 100,
+    "fog": 80,
+    "edgeFade": 8,
+    "smoke": 100,
+    "grassDensity": 150,
+    "sun": 2.3,
+    "ambient": 3.25,
+    "exposure": 1.16,
+    "azimuth": 147,
+    "elevation": 22,
+    "shading": "smooth",
+    "shadow": "3072",
+    "filter": "soft",
+    "aa": "fxaa",
+    "scale": 100,
+    "waves": 15,
+    "waveSpeed": 170,
+    "foam": 110,
+    "shoreRadius": 40,
+    "cars": 50,
+    "carSpeed": 100,
+    "kites": 15,
+    "boats": 0
+  },
+  "view": { "position": [-72, 72, 70.2], "target": [0, 0, -1.8], "zoom": 1 },
+  "mode": "night"
+}
