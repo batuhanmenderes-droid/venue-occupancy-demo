@@ -23,3 +23,4 @@ body.embedded .studio-toolbar{top:calc(78px + env(safe-area-inset-top,0px));righ
 
 /* in the app the map's own buttons live in Settings › Map */
 body.embedded .studio-toolbar,body.embedded .nav{display:none!important}
+body.backdrop .map-info,body.backdrop .loading,body.backdrop #labels,body.backdrop .venue-popup{display:none!important}

@@ -16,6 +16,8 @@ import { loadApplicationPreset, saveApplicationPreset } from './preset.js';
 
 const $=id=>document.getElementById(id);
 const embedded=new URLSearchParams(location.search).get('embedded')==='1'&&window.parent!==window;
+// ?backdrop=1: the map as a page background (no labels, credits or loading card; nothing to click).
+if(embedded&&new URLSearchParams(location.search).get('backdrop')==='1')document.body.classList.add('backdrop');
 if(embedded)document.body.classList.add('embedded');
 let embeddedActive=true,pendingVenueData=null,embeddedReady=false;
 const notifyParent=(type,data={})=>{if(embedded)window.parent.postMessage({type:`venue-map:${type}`,...data},location.origin);};
@@ -175,10 +177,13 @@ function addVenuePins(venues=local?.venues||[]){
   }setLabelHeights();
   // App: the first time the venues arrive, the starting view is centred on them (as the 2D map is).
   const real=venuePins.filter(p=>!p.venue.isYou);
-  if(embedded&&!centredOnVenues&&real.length){centredOnVenues=true;const [cx,cz]=toWorld(APP_START.lon,APP_START.lat),o=new THREE.Vector3(...lockedView.position).sub(new THREE.Vector3(...lockedView.target));
+  if(embedded&&!centredOnVenues&&real.length)centreOn(APP_START.lat,APP_START.lon);
+}
+// The view centred on a spot at the app's start scale (the map's start view, or a venue page's backdrop).
+function centreOn(lat,lon){centredOnVenues=true;{const [cx,cz]=toWorld(lon,lat),o=new THREE.Vector3(...lockedView.position).sub(new THREE.Vector3(...lockedView.target));
     lockedView.target=[cx,lockedView.target[1],cz];lockedView.position=[cx+o.x,lockedView.target[1]+o.y,cz+o.z];resetView();
     // zoom so a metre is APP_START.ppm pixels across, the same detail on every screen
-    camera.updateMatrixWorld();const [x1,z1]=toWorld(APP_START.lon+.01,APP_START.lat),a=new THREE.Vector3(cx,0,cz).project(camera),b=new THREE.Vector3(x1,0,z1).project(camera),ppm=Math.abs(a.x-b.x)*.5*innerWidth/(1113.2*Math.cos(APP_START.lat*Math.PI/180));
+    camera.updateMatrixWorld();const [x1,z1]=toWorld(lon+.01,lat),a=new THREE.Vector3(cx,0,cz).project(camera),b=new THREE.Vector3(x1,0,z1).project(camera),ppm=Math.abs(a.x-b.x)*.5*innerWidth/(1113.2*Math.cos(lat*Math.PI/180));
     if(ppm>0){camera.zoom=Math.min(controls.maxZoom,Math.max(controls.minZoom,camera.zoom*APP_START.ppm/ppm));targetZoom=camera.zoom;camera.updateProjectionMatrix();}clampCamera();}
 }
 // The app opens here: centre of the view and its scale (pixels per metre), set from the chosen start view.
@@ -204,7 +209,7 @@ function reportView(){const c=venuePins.find(p=>!p.venue.isYou);if(!c)return;con
   const ppm=Math.hypot(s1[0]-s0[0],s1[1]-s0[1])/(1113.2*Math.cos(lat*Math.PI/180));
   const pts=showVenues?reported.splice(0):(reported.length=0,[]);const msg=JSON.stringify([pts,affine.ax,affine.ay]);if(msg!==lastReport){lastReport=msg;notifyParent('view',{pts,ppm,affine,w:innerWidth,h:innerHeight});}}
 
-if(embedded)window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent)return;if(event.data?.type==='venue-map:zoom'){$(event.data.dir>0?'zoom-in':'zoom-out').click();return;}if(event.data?.type!=='venue-map:state')return;lastReport='';if(event.data.theme)useAppTheme(event.data.theme);if(Number.isFinite(event.data.tilt))setAppTilt(event.data.tilt);embeddedActive=event.data.active!==false;showVenues=event.data.showPins!==false;const incoming=Array.isArray(event.data.venues)?event.data.venues:[];pendingVenueData=event.data.you?[event.data.you,...incoming]:incoming;if(embeddedReady)addVenuePins(pendingVenueData);if(!showVenues)for(const v of venuePins){v.el.hidden=true;if(v.heat)v.heat.hidden=true;}});
+if(embedded)window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent)return;if(event.data?.type==='venue-map:zoom'){$(event.data.dir>0?'zoom-in':'zoom-out').click();return;}if(event.data?.type!=='venue-map:state')return;lastReport='';if(event.data.theme)useAppTheme(event.data.theme);if(event.data.center&&!centredOnVenues&&Number.isFinite(event.data.center.lat))centreOn(event.data.center.lat,event.data.center.lon);if(Number.isFinite(event.data.tilt))setAppTilt(event.data.tilt);embeddedActive=event.data.active!==false;showVenues=event.data.showPins!==false;const incoming=Array.isArray(event.data.venues)?event.data.venues:[];pendingVenueData=event.data.you?[event.data.you,...incoming]:incoming;if(embeddedReady)addVenuePins(pendingVenueData);if(!showVenues)for(const v of venuePins){v.el.hidden=true;if(v.heat)v.heat.hidden=true;}});
 
 function updateScale(){const worldWidth=(camera.right-camera.left)/camera.zoom,metersPerPixel=worldWidth*100/innerWidth;const desired=metersPerPixel*70;const steps=[50,100,200,500,1000,2000];let best=steps[0];for(const m of steps)if(Math.abs(m-desired)<Math.abs(best-desired))best=m;$('scale-text').textContent=best>=1000?`${best/1000} km`:`${best} m`;document.querySelector('.scale span').style.width=`${best/metersPerPixel}px`;}
 function updateCompass(){const angle=controls.getAzimuthalAngle();$('compass').querySelector('svg').style.transform=`rotate(${angle*180/Math.PI}deg)`;}
