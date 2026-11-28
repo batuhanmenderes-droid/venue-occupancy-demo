@@ -62,7 +62,6 @@ let lockedView=embedded?northView(structuredClone(applicationPreset.view?.positi
 function groundFootprint(cam,u,v){cam.updateMatrixWorld(true);const dir=cam.getWorldDirection(new THREE.Vector3()),bounds={u0:Infinity,u1:-Infinity,v0:Infinity,v1:-Infinity};for(const a of [-1,1])for(const b of [-1,1]){const p=new THREE.Vector3(a,b,0).unproject(cam);p.addScaledVector(dir,-p.y/dir.y);const q=u.x*p.x+u.z*p.z,r=v.x*p.x+v.z*p.z;bounds.u0=Math.min(bounds.u0,q);bounds.u1=Math.max(bounds.u1,q);bounds.v0=Math.min(bounds.v0,r);bounds.v1=Math.max(bounds.v1,r);}return bounds;}
 function persistLock(){if(embedded)return;try{localStorage.setItem(LOCK_KEY,JSON.stringify(lockedView));}catch{}}
 function rebuildLock(){const ref=camera.clone();ref.position.fromArray(lockedView.position);ref.zoom=lockedView.zoom;ref.lookAt(new THREE.Vector3(...lockedView.target));ref.updateProjectionMatrix();ref.updateMatrixWorld(true);const u=new THREE.Vector3(1,0,0).applyQuaternion(ref.quaternion);u.y=0;u.normalize();const v=new THREE.Vector3(-u.z,0,u.x);const bounds=lockedView.bounds&&['u0','u1','v0','v1'].every(k=>Number.isFinite(lockedView.bounds[k]))?lockedView.bounds:groundFootprint(ref,u,v);lockedView.bounds=bounds;
-// In the app the pannable area is 15% taller (north–south) than the starting view.
 // In the app the whole map can be panned to, up to the cloud banks at its edges.
 const EDGE=6;viewReference=embedded?{u,v,u0:-WIDTH/2+EDGE,u1:WIDTH/2-EDGE,v0:-DEPTH/2+EDGE+4,v1:DEPTH/2-EDGE}:{u,v,...bounds};controls.minZoom=lockedView.zoom;persistLock();}
 function configureCamera(){
@@ -194,7 +193,7 @@ function reportView(){const c=venuePins.find(p=>!p.venue.isYou);if(!c)return;con
   const ppm=Math.hypot(s1[0]-s0[0],s1[1]-s0[1])/(1113.2*Math.cos(lat*Math.PI/180));
   const pts=showVenues?reported.splice(0):(reported.length=0,[]);const msg=JSON.stringify([pts,affine.ax,affine.ay]);if(msg!==lastReport){lastReport=msg;notifyParent('view',{pts,ppm,affine,w:innerWidth,h:innerHeight});}}
 
-if(embedded)window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='venue-map:state')return;embeddedActive=event.data.active!==false;showVenues=event.data.showPins!==false;const incoming=Array.isArray(event.data.venues)?event.data.venues:[];pendingVenueData=event.data.you?[event.data.you,...incoming]:incoming;if(embeddedReady)addVenuePins(pendingVenueData);if(!showVenues)for(const v of venuePins){v.el.hidden=true;if(v.heat)v.heat.hidden=true;}});
+if(embedded)window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='venue-map:state')return;lastReport='';embeddedActive=event.data.active!==false;showVenues=event.data.showPins!==false;const incoming=Array.isArray(event.data.venues)?event.data.venues:[];pendingVenueData=event.data.you?[event.data.you,...incoming]:incoming;if(embeddedReady)addVenuePins(pendingVenueData);if(!showVenues)for(const v of venuePins){v.el.hidden=true;if(v.heat)v.heat.hidden=true;}});
 
 function updateScale(){const worldWidth=(camera.right-camera.left)/camera.zoom,metersPerPixel=worldWidth*100/innerWidth;const desired=metersPerPixel*70;const steps=[50,100,200,500,1000,2000];let best=steps[0];for(const m of steps)if(Math.abs(m-desired)<Math.abs(best-desired))best=m;$('scale-text').textContent=best>=1000?`${best/1000} km`:`${best} m`;document.querySelector('.scale span').style.width=`${best/metersPerPixel}px`;}
 function updateCompass(){const angle=controls.getAzimuthalAngle();$('compass').querySelector('svg').style.transform=`rotate(${angle*180/Math.PI}deg)`;}
@@ -205,7 +204,10 @@ $('zoom-out').addEventListener('click',()=>{targetZoom=Math.max(controls.minZoom
 $('reset').addEventListener('click',resetView);
 $('lock-view').addEventListener('click',e=>{if(e.shiftKey){lockedView={...DEFAULT_VIEW};rebuildLock();resetView();}else lockCurrentView();});
 $('places').addEventListener('click',()=>{showVenues=!showVenues;$('places').setAttribute('aria-pressed',String(showVenues));$('venue-popup').hidden=true;});
-$('lighting').addEventListener('click',()=>{dusk=!dusk;document.body.classList.toggle('dusk',dusk);$('lighting').setAttribute('aria-pressed',String(dusk));$('lighting').querySelector('span').textContent=dusk?'Gece':'Gündüz';updateLightPosition(settings.values);});
+function setLightingMode(mode,persist=false){dusk=mode==='night';document.body.classList.toggle('dusk',dusk);$('lighting').setAttribute('aria-pressed',String(dusk));$('lighting').querySelector('span').textContent=dusk?'Gece':'Gündüz';updateLightPosition(settings.values);if(persist)try{localStorage.setItem('akyaka:lighting-mode:v1',mode);}catch{}}
+$('lighting').addEventListener('click',()=>setLightingMode(dusk?'day':'night',true));
+window.addEventListener('storage',e=>{if(e.key==='akyaka:lighting-mode:v1'&&['day','night'].includes(e.newValue))setLightingMode(e.newValue);});
+try{const mode=localStorage.getItem('akyaka:lighting-mode:v1');if(['day','night'].includes(mode))setLightingMode(mode);}catch{}
 if(dusk){document.body.classList.add('dusk');$('lighting').setAttribute('aria-pressed','true');$('lighting').querySelector('span').textContent='Gece';}
 window.addEventListener('resize',()=>{configureCamera();resizeRendering(settings.values.scale);updateScale();});
 renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());
