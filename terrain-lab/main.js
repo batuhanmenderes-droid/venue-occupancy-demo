@@ -35,6 +35,10 @@ const hemisphere=new THREE.HemisphereLight('#e4f4dd','#72734e',1.44),ambient=new
 const sun=new THREE.DirectionalLight('#ffd08a',2.5);sun.position.set(-43,74,42);sun.target.position.set(0,0,0);sun.castShadow=true;
 sun.shadow.mapSize.set(mobile?2048:3072,mobile?2048:3072);sun.shadow.camera.left=-63;sun.shadow.camera.right=63;sun.shadow.camera.top=58;sun.shadow.camera.bottom=-58;sun.shadow.camera.near=.5;sun.shadow.camera.far=220;sun.shadow.bias=-.00015;sun.shadow.normalBias=.055;sun.shadow.radius=3;sun.shadow.autoUpdate=false;
 scene.add(sun,sun.target);
+// Moonlight on land (night only): a cool light from the north, the same side as the moon path on the bay, so
+// slopes, trees and bushes facing the viewer catch a silver sheen; the matte materials turn a little glossy at night.
+const moonLight=new THREE.DirectionalLight('#bcd0ff',0);moonLight.position.set(-18,46,-80);moonLight.target.position.set(0,0,0);scene.add(moonLight,moonLight.target);
+const moonSheen=[];
 
 const camera=new THREE.OrthographicCamera(-55,55,42,-42,.1,320);
 const gl=renderer.getContext();
@@ -104,7 +108,7 @@ function buildWorld(dem,geo){
   chimneySmoke=addChimneySmoke(group,houses);grassMesh=nature.grassMesh;windowLights=[];
   const previous=world;world=group;field=newField;waterMaterial=water;terrainMesh=terrain;particleSystem=addParticles(group,newField);traffic=addTraffic(group,newField,local.roads);waterActivity=addWaterActivity(group,newField);
   // Nothing behind the cloud boundary participates in the playable world's draw.
-  group.traverse(o=>{for(const mat of o.material?(Array.isArray(o.material)?o.material:[o.material]):[]){if(mat.userData.nightWindows&&!windowLights.includes(mat))windowLights.push(mat);if(!mat.isShaderMaterial){mat.clippingPlanes=cloudBounds;mat.clipShadows=true;installEdgeFade(mat,edgeFadeUniforms);mat.needsUpdate=true;if(o.isMesh&&!mat.transparent){o.castShadow=o!==grassMesh;o.receiveShadow=true;}}}});
+  group.traverse(o=>{for(const mat of o.material?(Array.isArray(o.material)?o.material:[o.material]):[]){if(mat.isMeshStandardMaterial&&mat.roughness>=.8&&!moonSheen.some(m=>m.mat===mat))moonSheen.push({mat,base:mat.roughness});if(mat.userData.nightWindows&&!windowLights.includes(mat))windowLights.push(mat);if(!mat.isShaderMaterial){mat.clippingPlanes=cloudBounds;mat.clipShadows=true;installEdgeFade(mat,edgeFadeUniforms);mat.needsUpdate=true;if(o.isMesh&&!mat.transparent){o.castShadow=o!==grassMesh;o.receiveShadow=true;}}}});
   scene.add(world);disposeWorld(previous,world);sun.shadow.needsUpdate=true;
   settings.applyAll();
   setLabelHeights();
@@ -239,6 +243,7 @@ function frame(now){
   controls.update();clampCamera();
   const v=settings.values,palette=dusk?colorDusk:colorDay,fill=v.ambient*(dusk?.49:1);nightMix=THREE.MathUtils.lerp(nightMix,dusk?1:0,.065);scene.background.lerp(palette.sky,.035);scene.fog.color.lerp(palette.fog,.035);sun.color.lerp(palette.sun,.035);hemisphere.color.lerp(palette.hemi,.035);hemisphere.groundColor.lerp(palette.ground,.035);ambient.color.lerp(palette.hemi,.035);sun.intensity=THREE.MathUtils.lerp(sun.intensity,v.sun*(dusk?.43:1),.12);hemisphere.intensity=THREE.MathUtils.lerp(hemisphere.intensity,fill*.82,.12);ambient.intensity=THREE.MathUtils.lerp(ambient.intensity,fill*.18,.12);renderer.toneMappingExposure=THREE.MathUtils.lerp(renderer.toneMappingExposure,v.exposure*(dusk?.79:1),.12);
   for(const m of windowLights)m.emissiveIntensity=nightMix*1.65;
+  moonLight.intensity=nightMix*1.35;for(const m of moonSheen)m.mat.roughness=m.base-nightMix*.38;
   if(waterMaterial){if(!preferReduced)waterClock+=dt*v.waveSpeed/100;const u=waterMaterial.uniforms;u.time.value=waterClock;u.moon.value=nightMix;u.moonX.value=(placeLabels.find(l=>l.water)?.x??controls.target.x);u.sun.value=THREE.MathUtils.lerp(u.sun.value,dusk?.70:1,.025);u.lightDirection.value.copy(sun.position).normalize();u.lightColor.value.copy(sun.color);u.skyColor.value.copy(scene.background);for(const k of ['deep','ocean','shallows','foam'])u[k].value.lerp(palette[k],.035);}
   for(const cloud of clouds){cloud.sprite.position.x=cloud.x+(preferReduced?0:Math.sin(t*.045+cloud.phase)*.8);cloud.sprite.position.z=cloud.z+(preferReduced?0:Math.cos(t*.032+cloud.phase)*.5);cloud.sprite.material.color.lerp(dusk?duskCloud:dayCloud,.02);}
   if(particleSystem){const u=particleSystem.points.material.uniforms;u.time.value=preferReduced?0:t;u.pixelRatio.value=renderer.getPixelRatio();u.zoom.value=camera.zoom;}
