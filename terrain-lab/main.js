@@ -74,6 +74,8 @@ function configureCamera(){
   // App: start zoomed in just enough that the map fills the screen (no sky or cloud bank around it).
   if(embedded){const inner=12;lockedView.zoom=Math.max(1,span/Math.cos(APP_TILT)/(DEPTH-inner-4),span*aspect/(WIDTH-inner));delete lockedView.bounds;}
   rebuildLock();
+  // App: you can zoom out past the screen-filling view (to 60% of it) and see the whole bay with the clouds around it.
+  if(embedded)controls.minZoom=lockedView.zoom*.6;
 }
 configureCamera();
 if(embedded){const o=new THREE.Vector3(...lockedView.position).sub(new THREE.Vector3(...lockedView.target)),polar=Math.acos(o.y/o.length());controls.minAzimuthAngle=controls.maxAzimuthAngle=0;controls.minPolarAngle=controls.maxPolarAngle=polar;}
@@ -206,7 +208,7 @@ if(embedded)window.addEventListener('message',event=>{if(event.origin!==location
 
 function updateScale(){const worldWidth=(camera.right-camera.left)/camera.zoom,metersPerPixel=worldWidth*100/innerWidth;const desired=metersPerPixel*70;const steps=[50,100,200,500,1000,2000];let best=steps[0];for(const m of steps)if(Math.abs(m-desired)<Math.abs(best-desired))best=m;$('scale-text').textContent=best>=1000?`${best/1000} km`:`${best} m`;document.querySelector('.scale span').style.width=`${best/metersPerPixel}px`;}
 function updateCompass(){const angle=controls.getAzimuthalAngle();$('compass').querySelector('svg').style.transform=`rotate(${angle*180/Math.PI}deg)`;}
-function clampCamera(){if(!viewReference)return;const ref=viewReference;let view=groundFootprint(camera,ref.u,ref.v);const fit=Math.max(1,(view.u1-view.u0)/Math.max(.001,ref.u1-ref.u0),(view.v1-view.v0)/Math.max(.001,ref.v1-ref.v0));if(fit>1.00001){camera.zoom=Math.min(controls.maxZoom,camera.zoom*fit);targetZoom=Math.max(targetZoom,camera.zoom);camera.updateProjectionMatrix();view=groundFootprint(camera,ref.u,ref.v);}const shift=(lo,hi,a,b)=>hi-lo>b-a?(a+b-lo-hi)/2:Math.max(a-lo,Math.min(b-hi,0));const du=shift(view.u0,view.u1,ref.u0,ref.u1),dv=shift(view.v0,view.v1,ref.v0,ref.v1);if(Math.abs(du)+Math.abs(dv)>.00001){const dx=ref.u.x*du+ref.v.x*dv,dz=ref.u.z*du+ref.v.z*dv;camera.position.x+=dx;camera.position.z+=dz;controls.target.x+=dx;controls.target.z+=dz;}}
+function clampCamera(){if(!viewReference)return;const ref=viewReference;let view=groundFootprint(camera,ref.u,ref.v);const fit=embedded?1:Math.max(1,(view.u1-view.u0)/Math.max(.001,ref.u1-ref.u0),(view.v1-view.v0)/Math.max(.001,ref.v1-ref.v0));if(fit>1.00001){camera.zoom=Math.min(controls.maxZoom,camera.zoom*fit);targetZoom=Math.max(targetZoom,camera.zoom);camera.updateProjectionMatrix();view=groundFootprint(camera,ref.u,ref.v);}const shift=(lo,hi,a,b)=>hi-lo>b-a?(a+b-lo-hi)/2:Math.max(a-lo,Math.min(b-hi,0));const du=shift(view.u0,view.u1,ref.u0,ref.u1),dv=shift(view.v0,view.v1,ref.v0,ref.v1);if(Math.abs(du)+Math.abs(dv)>.00001){const dx=ref.u.x*du+ref.v.x*dv,dz=ref.u.z*du+ref.v.z*dv;camera.position.x+=dx;camera.position.z+=dz;controls.target.x+=dx;controls.target.z+=dz;}}
 
 $('zoom-in').addEventListener('click',()=>{targetZoom=Math.min(controls.maxZoom,Math.max(targetZoom,camera.zoom)*1.36);});
 $('zoom-out').addEventListener('click',()=>{targetZoom=Math.max(controls.minZoom,Math.min(targetZoom,camera.zoom)/1.36);});
