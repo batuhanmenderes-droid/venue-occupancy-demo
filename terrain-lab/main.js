@@ -55,16 +55,21 @@ const DEFAULT_VIEW={position:[-72,72,70.2],target:[0,0,-1.8],zoom:1};
 const LOCK_KEY='akyaka:locked-view:v1';
 function readLockedView(){const valid=s=>s&&s.position?.length===3&&s.target?.length===3&&[...s.position,...s.target,s.zoom].every(Number.isFinite)&&s.zoom>=1&&s.zoom<=10;try{const saved=JSON.parse(localStorage.getItem(LOCK_KEY)||'null');if(valid(saved))return saved;}catch{}return valid(applicationPreset.view)?structuredClone(applicationPreset.view):{...DEFAULT_VIEW};}
 // In the app the map always faces north: the preset's tilt and zoom, turned so the camera looks due north.
-function northView(v){const o=v.position.map((n,i)=>n-v.target[i]);return {position:[v.target[0],v.target[1]+o[1],v.target[2]+Math.hypot(o[0],o[2])],target:[...v.target],zoom:v.zoom};}
+// Seen more from above than the lab's preset: 35° from straight down, same distance.
+const APP_TILT=35*Math.PI/180;
+function northView(v){const o=v.position.map((n,i)=>n-v.target[i]),d=Math.hypot(...o);return {position:[v.target[0],v.target[1]+d*Math.cos(APP_TILT),v.target[2]+d*Math.sin(APP_TILT)],target:[...v.target],zoom:v.zoom};}
 let lockedView=embedded?northView(structuredClone(applicationPreset.view?.position?applicationPreset.view:DEFAULT_VIEW)):readLockedView(),viewReference=null,targetZoom=lockedView.zoom;
 function groundFootprint(cam,u,v){cam.updateMatrixWorld(true);const dir=cam.getWorldDirection(new THREE.Vector3()),bounds={u0:Infinity,u1:-Infinity,v0:Infinity,v1:-Infinity};for(const a of [-1,1])for(const b of [-1,1]){const p=new THREE.Vector3(a,b,0).unproject(cam);p.addScaledVector(dir,-p.y/dir.y);const q=u.x*p.x+u.z*p.z,r=v.x*p.x+v.z*p.z;bounds.u0=Math.min(bounds.u0,q);bounds.u1=Math.max(bounds.u1,q);bounds.v0=Math.min(bounds.v0,r);bounds.v1=Math.max(bounds.v1,r);}return bounds;}
 function persistLock(){if(embedded)return;try{localStorage.setItem(LOCK_KEY,JSON.stringify(lockedView));}catch{}}
 function rebuildLock(){const ref=camera.clone();ref.position.fromArray(lockedView.position);ref.zoom=lockedView.zoom;ref.lookAt(new THREE.Vector3(...lockedView.target));ref.updateProjectionMatrix();ref.updateMatrixWorld(true);const u=new THREE.Vector3(1,0,0).applyQuaternion(ref.quaternion);u.y=0;u.normalize();const v=new THREE.Vector3(-u.z,0,u.x);const bounds=lockedView.bounds&&['u0','u1','v0','v1'].every(k=>Number.isFinite(lockedView.bounds[k]))?lockedView.bounds:groundFootprint(ref,u,v);lockedView.bounds=bounds;
 // In the app the pannable area is 15% taller (north–south) than the starting view.
-const ext=embedded?(bounds.v1-bounds.v0)*.075:0;viewReference={u,v,...bounds,v0:bounds.v0-ext,v1:bounds.v1+ext};controls.minZoom=lockedView.zoom;persistLock();}
+// In the app the whole map can be panned to, up to the cloud banks at its edges.
+const EDGE=6;viewReference=embedded?{u,v,u0:-WIDTH/2+EDGE,u1:WIDTH/2-EDGE,v0:-DEPTH/2+EDGE+4,v1:DEPTH/2-EDGE}:{u,v,...bounds};controls.minZoom=lockedView.zoom;persistLock();}
 function configureCamera(){
   const aspect=innerWidth/Math.max(1,innerHeight),span=Math.max(69,Math.min(155,95/aspect));
   camera.left=-span*aspect/2;camera.right=span*aspect/2;camera.top=span/2;camera.bottom=-span/2;camera.updateProjectionMatrix();
+  // App: start zoomed in just enough that the map fills the screen (no sky or cloud bank around it).
+  if(embedded){const inner=12;lockedView.zoom=Math.max(1,span/Math.cos(APP_TILT)/(DEPTH-inner-4),span*aspect/(WIDTH-inner));delete lockedView.bounds;}
   rebuildLock();
 }
 configureCamera();
@@ -163,7 +168,12 @@ function addVenuePins(venues=local?.venues||[]){
     el.addEventListener('click',()=>{if(embedded){if(!v.isYou)notifyParent('open',{id:v.id});return;}popup.replaceChildren();const title=document.createElement('b'),subtitle=document.createElement('small');title.textContent=v.name;subtitle.textContent=v.type||'Akyaka';popup.append(title,subtitle);popup.hidden=false;setTimeout(()=>popup.hidden=true,2800);});
     labelRoot.appendChild(el);venuePins.push({el,heat,x,z,y:0,venue:v,water:false});
   }setLabelHeights();
+  // App: the first time the venues arrive, the starting view is centred on them (as the 2D map is).
+  const real=venuePins.filter(p=>!p.venue.isYou);
+  if(embedded&&!centredOnVenues&&real.length){centredOnVenues=true;const cx=real.reduce((a,p)=>a+p.x,0)/real.length,cz=real.reduce((a,p)=>a+p.z,0)/real.length,o=new THREE.Vector3(...lockedView.position).sub(new THREE.Vector3(...lockedView.target));
+    lockedView.target=[cx,lockedView.target[1],cz];lockedView.position=[cx+o.x,lockedView.target[1]+o.y,cz+o.z];resetView();clampCamera();}
 }
+let centredOnVenues=false;
 function updateLabels(){
   for(const label of placeLabels){const {el,x,y,z}=label;projectVec.set(x,y,z).project(camera);const visible=projectVec.z>-1&&projectVec.z<1&&Math.abs(projectVec.x)<1.08&&Math.abs(projectVec.y)<1.08;el.style.visibility=visible?'visible':'hidden';if(visible){el.style.left=`${(projectVec.x*.5+.5)*innerWidth}px`;el.style.top=`${(-projectVec.y*.5+.5)*innerHeight}px`;el.style.opacity=label.el.classList.contains('local-label')&&camera.zoom<1.25?.7:1;}}
   const packed=[];
