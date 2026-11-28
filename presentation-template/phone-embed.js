@@ -26,7 +26,7 @@
 
   // keep only the chosen venues, in the given order (re-applied when the app re-renders its list);
   // the list is the app's "All venues" section, shown without the section headers
-  const listGrid = (doc) => doc.querySelector('#sec-all .vgrid');
+  const listGrid = (doc) => doc.querySelector('#sec-all .vgrid') || doc.querySelector('.vgrid');  // sections (older app) or one list
   function filterList(doc, keep) {
     const grid = listGrid(doc);
     if (!grid) return;
@@ -77,7 +77,7 @@
       doc.head.appendChild(st);
       if (mode === 'map') { setTimeout(() => showAllLevels(win, doc), 1200); }
       if (LISTS[mode]) {
-        st.textContent += '#view-liste > div:not(:has(#sec-all)){display:none!important}#view-liste > div > button{display:none!important}';
+        st.textContent += '#view-liste:has(#sec-all) > div:not(:has(#sec-all)){display:none!important}#view-liste:has(#sec-all) > div > button{display:none!important}';  // only when the list has sections
         const apply = () => filterList(doc, LISTS[mode]);
         const watch = () => { const g = listGrid(doc); if (!g) return setTimeout(watch, 300); apply(); new win.MutationObserver(apply).observe(g, { childList: true }); };
         watch();
