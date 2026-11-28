@@ -147,12 +147,12 @@ function depthTexture(field){
 }
 
 export function addWater(scene,field,shoreTexture){
-  const material=new THREE.ShaderMaterial({uniforms:{time:{value:0},moon:{value:0},edgeWidth:{value:8},waveStrength:{value:1},foamStrength:{value:1},shorelineMask:{value:shoreTexture},depthMap:{value:depthTexture(field)},extent:{value:new THREE.Vector2(WIDTH,DEPTH)},deep:{value:C('#2e7184')},ocean:{value:C('#42989c')},shallows:{value:C('#8ec5a7')},foam:{value:C('#d7ebc3')},sun:{value:1},lightDirection:{value:new THREE.Vector3(-.4,.8,.4)},lightColor:{value:C('#ffd08a')},skyColor:{value:C('#bacbb2')}},vertexShader:`
+  const material=new THREE.ShaderMaterial({uniforms:{time:{value:0},moon:{value:0},moonX:{value:0},moonColor:{value:C('#d6e4ff')},edgeWidth:{value:8},waveStrength:{value:1},foamStrength:{value:1},shorelineMask:{value:shoreTexture},depthMap:{value:depthTexture(field)},extent:{value:new THREE.Vector2(WIDTH,DEPTH)},deep:{value:C('#2e7184')},ocean:{value:C('#42989c')},shallows:{value:C('#8ec5a7')},foam:{value:C('#d7ebc3')},sun:{value:1},lightDirection:{value:new THREE.Vector3(-.4,.8,.4)},lightColor:{value:C('#ffd08a')},skyColor:{value:C('#bacbb2')}},vertexShader:`
     uniform float time,waveStrength;varying vec3 wpos;
     vec3 gerstner(vec2 p,vec2 direction,float amplitude,float wavelength,float speed,float steepness){vec2 d=normalize(direction);float k=6.2831853/wavelength,phase=k*dot(d,p)+time*speed;return vec3(d.x*amplitude*steepness*cos(phase),amplitude*sin(phase),d.y*amplitude*steepness*cos(phase));}
     void main(){vec4 w=modelMatrix*vec4(position,1.);vec2 p=w.xz;w.xyz+=waveStrength*(gerstner(p,vec2(.81,.59),.018,2.05,.89,.55)+gerstner(p,vec2(-.88,.47),.009,1.15,-.66,.48)+gerstner(p,vec2(.82,.57),.004,.53,1.5,.35));wpos=w.xyz;gl_Position=projectionMatrix*viewMatrix*w;}
   `,fragmentShader:`
-    uniform float time,waveStrength,foamStrength,moon,edgeWidth;uniform sampler2D depthMap,shorelineMask;uniform vec2 extent;uniform vec3 deep,ocean,shallows,foam,lightDirection,lightColor,skyColor;uniform float sun;varying vec3 wpos;
+    uniform float time,waveStrength,foamStrength,moon,edgeWidth,moonX;uniform vec3 moonColor;uniform sampler2D depthMap,shorelineMask;uniform vec2 extent;uniform vec3 deep,ocean,shallows,foam,lightDirection,lightColor,skyColor;uniform float sun;varying vec3 wpos;
     const float TAU=6.2831853;
     float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453123);}
     float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
@@ -177,6 +177,16 @@ export function addWater(scene,field,shoreTexture){
       float caustics=pow(.5+.5*sin(p.x*18.+sin(p.y*11.+time*.65)*1.6)*sin(p.y*16.+time*.44),7.);
       col*=.92+.15*slow+(sin(a)*.57+sin(b)*.43)*.027*waveStrength+swell*.075*coastEnergy*waveStrength;
       col=mix(col,foam,caustics*(1.-d)*.042);col=mix(col,skyColor,.11+fresnel*.27);col+=lightColor*(spec*.14+moon*pow(max(dot(N,H),0.),17.)*.20)*sun*waveStrength;
+      // Moonlight (night): a shimmering path running north from the middle of the view, broken up by the waves,
+      // and small glints that flash on and off across the bay.
+      if(moon>.01){
+        float wob=(noise(vec2(p.y*.35,time*.12))-.5)*2.2+(sin(a)*.6+sin(b)*.4)*.35;
+        float lane=exp(-pow((p.x-moonX-wob)/(2.4+1.2*noise(vec2(p.y*.21,1.7))),2.));
+        float ripple=pow(.5+.5*sin(a*1.3+b*.9+noise(p*2.3)*3.),6.);
+        vec2 cell=floor(p*vec2(22.,34.));float g=hash(cell+floor(time*2.6+hash(cell)*7.));
+        float spark=smoothstep(.965,1.,g)*(.55+.45*sin(time*9.+hash(cell)*TAU));
+        col+=moonColor*moon*(lane*(.10+ripple*.45+spark*1.8)+spark*.38*(.35+.65*d));
+      }
       float broken=smoothstep(.22,.65,noise(p*4.4+vec2(time*.025,-time*.034)));
       float band=crest*coastEnergy*(1.-smoothstep(2.2,3.6,shoreDist))*(.32+.68*broken);
       float trail=pow(.5+.5*cos(phase+.75),6.)*coastEnergy*broken*.20;
@@ -190,7 +200,7 @@ export function addWater(scene,field,shoreTexture){
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
     }`});
-  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(WIDTH,DEPTH,260,226),material);mesh.rotation.x=-Math.PI/2;mesh.position.y=-.015;mesh.name='Animated Gulf of Gökova';scene.add(mesh);return material;
+  const mesh=new THREE.Mesh(new THREE.PlaneGeometry(WIDTH,DEPTH,260,Math.round(260*DEPTH/WIDTH)),material);mesh.rotation.x=-Math.PI/2;mesh.position.y=-.015;mesh.name='Animated Gulf of Gökova';scene.add(mesh);return material;
 }
 
 function roadMesh(field,paths,major,edge=false){
