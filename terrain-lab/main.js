@@ -56,7 +56,7 @@ const LOCK_KEY='akyaka:locked-view:v1';
 function readLockedView(){const valid=s=>s&&s.position?.length===3&&s.target?.length===3&&[...s.position,...s.target,s.zoom].every(Number.isFinite)&&s.zoom>=1&&s.zoom<=10;try{const saved=JSON.parse(localStorage.getItem(LOCK_KEY)||'null');if(valid(saved))return saved;}catch{}return valid(applicationPreset.view)?structuredClone(applicationPreset.view):{...DEFAULT_VIEW};}
 // In the app the map always faces north: the preset's tilt and zoom, turned so the camera looks due north.
 // Seen more from above than the lab's preset: 35° from straight down, same distance.
-const APP_TILT=35*Math.PI/180;
+let APP_TILT=35*Math.PI/180;  // set by the app's Map tilt setting (degrees from straight down)
 function northView(v){const o=v.position.map((n,i)=>n-v.target[i]),d=Math.hypot(...o);return {position:[v.target[0],v.target[1]+d*Math.cos(APP_TILT),v.target[2]+d*Math.sin(APP_TILT)],target:[...v.target],zoom:v.zoom};}
 let lockedView=embedded?northView(structuredClone(applicationPreset.view?.position?applicationPreset.view:DEFAULT_VIEW)):readLockedView(),viewReference=null,targetZoom=lockedView.zoom;
 function groundFootprint(cam,u,v){cam.updateMatrixWorld(true);const dir=cam.getWorldDirection(new THREE.Vector3()),bounds={u0:Infinity,u1:-Infinity,v0:Infinity,v1:-Infinity};for(const a of [-1,1])for(const b of [-1,1]){const p=new THREE.Vector3(a,b,0).unproject(cam);p.addScaledVector(dir,-p.y/dir.y);const q=u.x*p.x+u.z*p.z,r=v.x*p.x+v.z*p.z;bounds.u0=Math.min(bounds.u0,q);bounds.u1=Math.max(bounds.u1,q);bounds.v0=Math.min(bounds.v0,r);bounds.v1=Math.max(bounds.v1,r);}return bounds;}
@@ -198,7 +198,7 @@ function reportView(){const c=venuePins.find(p=>!p.venue.isYou);if(!c)return;con
   const ppm=Math.hypot(s1[0]-s0[0],s1[1]-s0[1])/(1113.2*Math.cos(lat*Math.PI/180));
   const pts=showVenues?reported.splice(0):(reported.length=0,[]);const msg=JSON.stringify([pts,affine.ax,affine.ay]);if(msg!==lastReport){lastReport=msg;notifyParent('view',{pts,ppm,affine,w:innerWidth,h:innerHeight});}}
 
-if(embedded)window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent)return;if(event.data?.type==='venue-map:zoom'){$(event.data.dir>0?'zoom-in':'zoom-out').click();return;}if(event.data?.type!=='venue-map:state')return;lastReport='';if(event.data.theme)useAppTheme(event.data.theme);embeddedActive=event.data.active!==false;showVenues=event.data.showPins!==false;const incoming=Array.isArray(event.data.venues)?event.data.venues:[];pendingVenueData=event.data.you?[event.data.you,...incoming]:incoming;if(embeddedReady)addVenuePins(pendingVenueData);if(!showVenues)for(const v of venuePins){v.el.hidden=true;if(v.heat)v.heat.hidden=true;}});
+if(embedded)window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent)return;if(event.data?.type==='venue-map:zoom'){$(event.data.dir>0?'zoom-in':'zoom-out').click();return;}if(event.data?.type!=='venue-map:state')return;lastReport='';if(event.data.theme)useAppTheme(event.data.theme);if(Number.isFinite(event.data.tilt))setAppTilt(event.data.tilt);embeddedActive=event.data.active!==false;showVenues=event.data.showPins!==false;const incoming=Array.isArray(event.data.venues)?event.data.venues:[];pendingVenueData=event.data.you?[event.data.you,...incoming]:incoming;if(embeddedReady)addVenuePins(pendingVenueData);if(!showVenues)for(const v of venuePins){v.el.hidden=true;if(v.heat)v.heat.hidden=true;}});
 
 function updateScale(){const worldWidth=(camera.right-camera.left)/camera.zoom,metersPerPixel=worldWidth*100/innerWidth;const desired=metersPerPixel*70;const steps=[50,100,200,500,1000,2000];let best=steps[0];for(const m of steps)if(Math.abs(m-desired)<Math.abs(best-desired))best=m;$('scale-text').textContent=best>=1000?`${best/1000} km`:`${best} m`;document.querySelector('.scale span').style.width=`${best/metersPerPixel}px`;}
 function updateCompass(){const angle=controls.getAzimuthalAngle();$('compass').querySelector('svg').style.transform=`rotate(${angle*180/Math.PI}deg)`;}
@@ -215,6 +215,12 @@ if(!embedded){window.addEventListener('storage',e=>{if(e.key==='akyaka:lighting-
 try{const mode=localStorage.getItem('akyaka:lighting-mode:v1');if(['day','night'].includes(mode))setLightingMode(mode);}catch{}}
 // In the app the theme picks the lighting: light = day with the day preset, dark = night with the night preset.
 let appMode=null;
+// The app's Map tilt slider: the camera keeps its spot and distance and swings to that angle from straight down.
+function setAppTilt(deg){const t=Math.max(.5,Math.min(70,deg))*Math.PI/180;if(Math.abs(t-APP_TILT)<1e-4)return;APP_TILT=t;
+  const swing=(pos,target)=>{const d=new THREE.Vector3(...pos).distanceTo(new THREE.Vector3(...target));return [target[0],target[1]+d*Math.cos(t),target[2]+d*Math.sin(t)];};
+  lockedView.position=swing(lockedView.position,lockedView.target);
+  const d=camera.position.distanceTo(controls.target);camera.position.set(controls.target.x,controls.target.y+d*Math.cos(t),controls.target.z+d*Math.sin(t));
+  controls.minPolarAngle=controls.maxPolarAngle=t;const z=camera.zoom;configureCamera();camera.zoom=Math.max(controls.minZoom,z);targetZoom=camera.zoom;camera.updateProjectionMatrix();controls.update();clampCamera();}
 function useAppTheme(theme){const mode=theme==='light'?'day':'night';if(mode===appMode)return;appMode=mode;setLightingMode(mode);const values=mode==='day'?applicationPreset.dayRender:applicationPreset.render;if(values)settings.setAll(values);}
 if(dusk){document.body.classList.add('dusk');$('lighting').setAttribute('aria-pressed','true');$('lighting').querySelector('span').textContent='Gece';}
 window.addEventListener('resize',()=>{configureCamera();resizeRendering(settings.values.scale);updateScale();});
