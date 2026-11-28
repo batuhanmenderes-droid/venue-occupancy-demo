@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0&display=block">
-<link rel="stylesheet" href="deck.css?v=75">
+<link rel="stylesheet" href="deck.css?v=76">
 </head>
 <body>
 
@@ -349,56 +349,23 @@
 
     <!-- 12 · Live metric cards taken out of the panel page: explanations left, cards right.
          live-metrics.js ticks the numbers while this slide is on screen. -->
-    <section class="slide slide--metrics" aria-roledescription="slide" aria-label="Anlık metrikler">
+    <section class="slide slide--comp slide--comp-trio" aria-roledescription="slide" aria-label="Anlık metrikler">
       <div class="heat" aria-hidden="true"><i class="h1"></i><i class="h2"></i></div>
       <p class="eyebrow metrics-eyebrow"><span class="live-dot"></span>Poison Pub · Örnek ölçüm</p>
-
-      <div class="m-explain">
+      <div class="comp-explain">
         <h3>Güncel ziyaretçi sayımı</h3>
-        <p>Mekanda kaç kişi olduğunu gösterir. Yandaki çubuklar son 3 saati gösterir.</p>
+        <p>Mekanda kaç kişi olduğunu gösterir. Yandaki grafik son saatleri gösterir.</p>
       </div>
-      <div class="mcard" data-live="last">
-        <div class="mcard-main">
-          <div class="mlabel">Son ölçüm</div>
-          <div class="mvalue"><b data-out="last">126</b><svg class="mperson" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="4.5"/><path d="M3.5 21c.6-4.6 4.1-7.5 8.5-7.5s7.9 2.9 8.5 7.5z"/></svg></div>
-          <div class="mmeta"><span class="mstatus">Çok kalabalık</span><span class="mchip mchip--up" data-out="hourChip">▲ +66 son 1 saatte</span></div>
-        </div>
-        <div class="mbars">
-          <div class="mbar"><span class="bv">0</span><i style="--h:0"></i><span class="bl">21:00</span></div>
-          <div class="mbar"><span class="bv">60</span><i style="--h:.6"></i><span class="bl">22:00</span></div>
-          <div class="mbar is-now"><span class="bv" data-out="hourBar">95</span><i data-bar="hourBar" style="--h:1"></i><span class="bl">23:00</span></div>
-        </div>
-      </div>
-
-      <div class="m-explain">
+      <div class="comp-explain">
         <h3>Tüm zamanların en yükseği</h3>
         <p>Ölçülen en yüksek kalabalık ile güncel durumu karşılaştırır. Yandaki çubuklar Rekor, Ortalama ve Bugün’ü kıyaslar.</p>
       </div>
-      <div class="mcard" data-live="record">
-        <div class="mcard-main">
-          <div class="mlabel">Tüm zamanların en yükseği</div>
-          <div class="mvalue"><b data-out="record">305</b><svg class="mperson" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="4.5"/><path d="M3.5 21c.6-4.6 4.1-7.5 8.5-7.5s7.9 2.9 8.5 7.5z"/></svg></div>
-          <div class="mmeta"><span class="mstatus">Çok kalabalık</span><span class="mchip mchip--down" data-out="recordChip">▼ -179 bugün rekora göre</span></div>
-        </div>
-        <div class="mbars">
-          <div class="mbar"><span class="bv" data-out="recordBar">305</span><i data-bar="recordBar" style="--h:1"></i><span class="bl">Rekor</span></div>
-          <div class="mbar"><span class="bv">71</span><i data-bar="avgBar" style="--h:.23"></i><span class="bl">Ortalama</span></div>
-          <div class="mbar is-now"><span class="bv" data-out="todayBar">126</span><i data-bar="todayBar" style="--h:.41"></i><span class="bl">bugün</span></div>
-        </div>
-      </div>
-
-      <div class="m-explain">
+      <div class="comp-explain">
         <h3>m² başına düşen kişi</h3>
-        <p>Ziyaretçi sayısının mekanın büyüklüğüne  bölünmesi ile üretilir.</p>
+        <p>Ziyaretçi sayısının mekanın büyüklüğüne bölünmesi ile üretilir.</p>
       </div>
-      <div class="mcard mcard--density" data-live="density">
-        <div class="mcard-main">
-          <div class="mlabel">m² başına kişi (tahmini)</div>
-          <div class="mvalue"><b data-out="density">0,79</b><span class="munit">/ m²</span></div>
-          <div class="m2grid" data-out="grid" aria-hidden="true"></div>
-          <div class="mfoot">tahmini alan 160 m²</div>
-        </div>
-      </div>
+      <!-- the app's own three measurement widgets, as they are in the app -->
+      <figure class="comp-card"><img src="assets/cmp-tiles-current.png?v=1" alt="Poison Pub: son ölçüm, tüm zamanların en yükseği ve m² başına kişi" width="2720" height="504" decoding="async"></figure>
     </section>
 
     <!-- 13 · Panel component: Gün boyu kişi sayısı -->
@@ -440,27 +407,8 @@
         <h3>Akyaka'daki kalabalığın payı</h3>
         <p>Benzer mekanlar arasında, seçilen saatte kalabalığın ne kadarının sizde olduğu. Rakiplere göre konumunuzu şu an için ya da geçmiş herhangi bir saat için karşılaştırın.</p>
       </div>
-      <!-- Rebuilt in HTML/SVG from the app's data (share-chart.js draws the ring and the list) -->
-      <figure class="comp-card share-card" id="shareCard">
-        <header class="sc-head">
-          <div>
-            <h4>Akyaka'daki kalabalığın payı</h4>
-            <p>Benzer 11 mekân arasında (Gece kulübü, Pub, Meyhane, Bar): seçilen saatte her birindeki kişi sayısı. Demo verisi.</p>
-          </div>
-          <div class="sc-controls" aria-hidden="true">
-            <span class="sc-pill">09.11.2026<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></span>
-            <span class="sc-pill">16:00</span>
-            <span class="sc-pill sc-pill--ghost">Şimdi</span>
-          </div>
-        </header>
-        <div class="sc-body">
-          <div class="sc-donut">
-            <svg viewBox="0 0 400 400" role="img" aria-label="Akyaka'daki kalabalığın payı"></svg>
-            <div class="sc-center" aria-live="polite"><b></b><span></span><small></small></div>
-          </div>
-          <ol class="sc-list"></ol>
-        </div>
-      </figure>
+      <!-- the app's own card, as it is in the app -->
+      <figure class="comp-card"><img src="assets/cmp-share-current.png?v=1" alt="Akyaka'daki kalabalığın payı" width="2720" height="1048" decoding="async"></figure>
     </section>
 
     <!-- 16 · Panel component: Etkinliğe göre kalabalık -->

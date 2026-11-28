@@ -1646,3 +1646,10 @@ body {
 .social-demo-phones img { width:360px;height:auto;display:block;border:7px solid #28282d;border-radius:35px;box-shadow:0 30px 65px #0008; }
 .social-demo-phones figcaption { text-align:center;font:600 20px 'Manrope',sans-serif;margin-top:20px;color:#aaaab6; }
 .social-demo-note { position:absolute;left:120px;bottom:45px;font:500 17px 'Manrope',sans-serif;color:#858590; }
+
+/* Slide "Anlık metrikler": the app's three measurement widgets side by side, each explained above it */
+.slide--comp-trio { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: auto auto; column-gap: 40px; row-gap: 30px; }
+.slide--comp.slide--comp-trio .comp-explain { flex-direction: column; align-items: flex-start; gap: 10px; }
+.slide--comp.slide--comp-trio .comp-explain h3 { font-size: 36px; max-width: none; }
+.slide--comp.slide--comp-trio .comp-explain p { font-size: 21px; max-width: none; text-align: left; }
+.slide--comp-trio .comp-card { grid-column: 1 / -1; }
