@@ -169,9 +169,14 @@ function addVenuePins(venues=local?.venues||[]){
   }setLabelHeights();
   // App: the first time the venues arrive, the starting view is centred on them (as the 2D map is).
   const real=venuePins.filter(p=>!p.venue.isYou);
-  if(embedded&&!centredOnVenues&&real.length){centredOnVenues=true;const cx=real.reduce((a,p)=>a+p.x,0)/real.length,cz=real.reduce((a,p)=>a+p.z,0)/real.length,o=new THREE.Vector3(...lockedView.position).sub(new THREE.Vector3(...lockedView.target));
-    lockedView.target=[cx,lockedView.target[1],cz];lockedView.position=[cx+o.x,lockedView.target[1]+o.y,cz+o.z];resetView();clampCamera();}
+  if(embedded&&!centredOnVenues&&real.length){centredOnVenues=true;const [cx,cz]=toWorld(APP_START.lon,APP_START.lat),o=new THREE.Vector3(...lockedView.position).sub(new THREE.Vector3(...lockedView.target));
+    lockedView.target=[cx,lockedView.target[1],cz];lockedView.position=[cx+o.x,lockedView.target[1]+o.y,cz+o.z];resetView();
+    // zoom so a metre is APP_START.ppm pixels across, the same detail on every screen
+    camera.updateMatrixWorld();const [x1,z1]=toWorld(APP_START.lon+.01,APP_START.lat),a=new THREE.Vector3(cx,0,cz).project(camera),b=new THREE.Vector3(x1,0,z1).project(camera),ppm=Math.abs(a.x-b.x)*.5*innerWidth/(1113.2*Math.cos(APP_START.lat*Math.PI/180));
+    if(ppm>0){camera.zoom=Math.min(controls.maxZoom,Math.max(controls.minZoom,camera.zoom*APP_START.ppm/ppm));targetZoom=camera.zoom;camera.updateProjectionMatrix();}clampCamera();}
 }
+// The app opens here: centre of the view and its scale (pixels per metre), set from the chosen start view.
+const APP_START={lat:37.0430,lon:28.3230,ppm:.191};
 let centredOnVenues=false;
 function updateLabels(){
   for(const label of placeLabels){const {el,x,y,z}=label;projectVec.set(x,y,z).project(camera);const visible=projectVec.z>-1&&projectVec.z<1&&Math.abs(projectVec.x)<1.08&&Math.abs(projectVec.y)<1.08;el.style.visibility=visible?'visible':'hidden';if(visible){el.style.left=`${(projectVec.x*.5+.5)*innerWidth}px`;el.style.top=`${(-projectVec.y*.5+.5)*innerHeight}px`;el.style.opacity=label.el.classList.contains('local-label')&&camera.zoom<1.25?.7:1;}}
@@ -193,7 +198,7 @@ function reportView(){const c=venuePins.find(p=>!p.venue.isYou);if(!c)return;con
   const ppm=Math.hypot(s1[0]-s0[0],s1[1]-s0[1])/(1113.2*Math.cos(lat*Math.PI/180));
   const pts=showVenues?reported.splice(0):(reported.length=0,[]);const msg=JSON.stringify([pts,affine.ax,affine.ay]);if(msg!==lastReport){lastReport=msg;notifyParent('view',{pts,ppm,affine,w:innerWidth,h:innerHeight});}}
 
-if(embedded)window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='venue-map:state')return;lastReport='';embeddedActive=event.data.active!==false;showVenues=event.data.showPins!==false;const incoming=Array.isArray(event.data.venues)?event.data.venues:[];pendingVenueData=event.data.you?[event.data.you,...incoming]:incoming;if(embeddedReady)addVenuePins(pendingVenueData);if(!showVenues)for(const v of venuePins){v.el.hidden=true;if(v.heat)v.heat.hidden=true;}});
+if(embedded)window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent)return;if(event.data?.type==='venue-map:zoom'){$(event.data.dir>0?'zoom-in':'zoom-out').click();return;}if(event.data?.type!=='venue-map:state')return;lastReport='';if(event.data.theme)useAppTheme(event.data.theme);embeddedActive=event.data.active!==false;showVenues=event.data.showPins!==false;const incoming=Array.isArray(event.data.venues)?event.data.venues:[];pendingVenueData=event.data.you?[event.data.you,...incoming]:incoming;if(embeddedReady)addVenuePins(pendingVenueData);if(!showVenues)for(const v of venuePins){v.el.hidden=true;if(v.heat)v.heat.hidden=true;}});
 
 function updateScale(){const worldWidth=(camera.right-camera.left)/camera.zoom,metersPerPixel=worldWidth*100/innerWidth;const desired=metersPerPixel*70;const steps=[50,100,200,500,1000,2000];let best=steps[0];for(const m of steps)if(Math.abs(m-desired)<Math.abs(best-desired))best=m;$('scale-text').textContent=best>=1000?`${best/1000} km`:`${best} m`;document.querySelector('.scale span').style.width=`${best/metersPerPixel}px`;}
 function updateCompass(){const angle=controls.getAzimuthalAngle();$('compass').querySelector('svg').style.transform=`rotate(${angle*180/Math.PI}deg)`;}
@@ -206,8 +211,11 @@ $('lock-view').addEventListener('click',e=>{if(e.shiftKey){lockedView={...DEFAUL
 $('places').addEventListener('click',()=>{showVenues=!showVenues;$('places').setAttribute('aria-pressed',String(showVenues));$('venue-popup').hidden=true;});
 function setLightingMode(mode,persist=false){dusk=mode==='night';document.body.classList.toggle('dusk',dusk);$('lighting').setAttribute('aria-pressed',String(dusk));$('lighting').querySelector('span').textContent=dusk?'Gece':'Gündüz';updateLightPosition(settings.values);if(persist)try{localStorage.setItem('akyaka:lighting-mode:v1',mode);}catch{}}
 $('lighting').addEventListener('click',()=>setLightingMode(dusk?'day':'night',true));
-window.addEventListener('storage',e=>{if(e.key==='akyaka:lighting-mode:v1'&&['day','night'].includes(e.newValue))setLightingMode(e.newValue);});
-try{const mode=localStorage.getItem('akyaka:lighting-mode:v1');if(['day','night'].includes(mode))setLightingMode(mode);}catch{}
+if(!embedded){window.addEventListener('storage',e=>{if(e.key==='akyaka:lighting-mode:v1'&&['day','night'].includes(e.newValue))setLightingMode(e.newValue);});
+try{const mode=localStorage.getItem('akyaka:lighting-mode:v1');if(['day','night'].includes(mode))setLightingMode(mode);}catch{}}
+// In the app the theme picks the lighting: light = day with the day preset, dark = night with the night preset.
+let appMode=null;
+function useAppTheme(theme){const mode=theme==='light'?'day':'night';if(mode===appMode)return;appMode=mode;setLightingMode(mode);const values=mode==='day'?applicationPreset.dayRender:applicationPreset.render;if(values)settings.setAll(values);}
 if(dusk){document.body.classList.add('dusk');$('lighting').setAttribute('aria-pressed','true');$('lighting').querySelector('span').textContent='Gece';}
 window.addEventListener('resize',()=>{configureCamera();resizeRendering(settings.values.scale);updateScale();});
 renderer.domElement.addEventListener('contextmenu',e=>e.preventDefault());

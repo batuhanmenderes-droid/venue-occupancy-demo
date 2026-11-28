@@ -49,5 +49,6 @@ export function createRenderSettings({mobile,maxSamples,onChange,presetDefaults=
   $('render-settings').addEventListener('click',()=>openPanel($('render-panel').hidden));$('render-close').addEventListener('click',()=>openPanel(false));$('render-reset').addEventListener('click',()=>{for(const group of groups)for(const c of group.controls)applyControl(c,defaults[c.key]);});
   $('render-save-defaults').addEventListener('click',async()=>{Object.assign(defaults,values);const status=$('preset-status');status.textContent='Varsayılanlar kaydediliyor…';try{const result=await onSavePreset({...values});status.textContent=result==='file'?'JSON preset kaydedildi':result==='download'?'Preset indirildi · data klasörüne taşı':'Tarayıcı varsayılanı kaydedildi';}catch{status.textContent='Tarayıcı varsayılanı kaydedildi';}});
   openPanel(!document.body.classList.contains('embedded'));
-  return {values,applyAll(){Object.keys(values).forEach(key=>onChange(key,values[key],values));}};
+  return {values,applyAll(){Object.keys(values).forEach(key=>onChange(key,values[key],values));},
+    setAll(next){const v={...values};merge(v,next||{});for(const group of groups)for(const c of group.controls)if(v[c.key]!==values[c.key])applyControl(c,v[c.key]);}};
 }
